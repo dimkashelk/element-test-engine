@@ -8,7 +8,8 @@ import shutil
 import time
 import uuid
 
-from .indexer import METHOD, mask_noncode
+from .indexer import METHOD, mask_noncode, split_parameters
+from .generated_types import ProjectTypes
 from .yaml_io import InputError
 
 REPO = Path(__file__).resolve().parent.parent
@@ -35,26 +36,94 @@ def execute_engine(command, model, assignment, temporary):
         raise InputError(f"Некорректный JSON движка: {result.stdout[:1000]}") from exc
 
 
-def extract_method(source, name):
+def extract_method(source, name, *, allow_void=False):
     code = mask_noncode(source)
     matches = [m for m in METHOD.finditer(code) if m[1] == name]
     if len(matches) != 1:
         raise InputError("Метод отсутствует или неоднозначен")
     match = matches[0]
-    # Initial PoC only supports standalone methods ending with a separate ';' line.
-    end = re.search(r"^\s*;\s*$", code[match.end():], re.MULTILINE)
-    if not end:
+    # Track line-oriented blocks conservatively; never truncate at a loop's ';'.
+    depth, body_end = 1, None
+    offset = match.end()
+    for line in code[match.end():].splitlines(keepends=True):
+        stripped = line.strip()
+        if re.match(r"^(если|пока|для|выбор|попытка)\b", stripped):
+            depth += 1
+        elif re.search(r"\bметод\b", stripped):
+            raise InputError("Вложенные методы или незакрытый метод не поддерживаются")
+        elif stripped == ";":
+            depth -= 1
+            if depth == 0:
+                body_end = offset + len(line)
+                break
+        offset += len(line)
+    if body_end is None:
         raise InputError("Не удалось определить границу метода")
-    body_end = match.end() + end.end()
-    body = code[match.end():body_end]
-    if re.search(r"\b(если|пока|для|выбор|попытка|метод)\b", body):
-        raise InputError("PoC пока поддерживает только чистые методы без вложенных блоков")
-    signature_types = [p.split(":", 1)[1].strip() for p in match[2].split(",") if ":" in p]
-    if any(t not in {"Строка", "Число", "Булево"} for t in signature_types) or match[3] is None:
-        raise InputError("Для PoC требуются скалярные параметры и результат")
-    if match[3].strip() not in {"Строка", "Число", "Булево"}:
-        raise InputError("Тип результата пока не поддерживается")
+    parameters = split_parameters(match[2])
+    if any(":" not in p or "=" in p for p in parameters) or (match[3] is None and not allow_void):
+        raise InputError("Требуются явно типизированные параметры без значений по умолчанию и результат")
+    signature_types = [p.split(":", 1)[1].strip() for p in parameters]
     return source[match.start():body_end], signature_types
+
+
+def prepare_script(root, model, check, sandbox):
+    """Copy the original method and generate only its required data contracts."""
+    target = check.get("target", {})
+    modules = [m for m in model["modules"] if m["name"] == target.get("module")
+               and ("namespace" not in target or m["namespace"] == target["namespace"])]
+    if len(modules) != 1:
+        raise InputError("Целевой модуль отсутствует или неоднозначен")
+    module = modules[0]
+    original = (root / module["sourceFile"]).read_text(encoding="utf-8-sig")
+    context = check.get("context")
+    object_module = module.get("moduleType") == "object"
+    is_object = "context" in check
+    if is_object and not object_module:
+        raise InputError("context допустим только для модуля Объект")
+    if is_object and not isinstance(context, dict):
+        raise InputError("Для объектного метода требуется context с начальными полями")
+    method, types = extract_method(original, target.get("method"), allow_void=is_object)
+    if not is_object and re.search(r"\bэтот\b", mask_noncode(method)):
+        raise InputError("Для объектного метода требуется context с начальными полями")
+    args = check.get("args", [])
+    if len(args) != len(types):
+        raise InputError("Количество аргументов не совпадает с сигнатурой")
+    contracts = ProjectTypes(model, module["namespace"])
+    signature = METHOD.search(mask_noncode(method))
+    return_type = signature[3].strip() if signature[3] else None
+    if not is_object and return_type == "ничто":
+        raise InputError("Для метода без результата требуется объектный context")
+    signature_types = types + ([return_type] if return_type and return_type != "ничто" else [])
+    for type_name in signature_types:
+        contracts.require(type_name)
+    # Qualify only enum types in the declaration, never rewrite the method body.
+    replacements = [(signature.start(2), signature.end(2), ",".join(
+        p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
+        for p in split_parameters(signature[2])))]
+    if return_type:
+        replacements.append((signature.start(3), signature.end(3), contracts.sbsl_type(signature[3])))
+    for start, end, replacement in reversed(replacements):
+        method = method[:start] + replacement + method[end:]
+    call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
+    setup = ""
+    expression = target["method"] + '(' + call + ')'
+    if is_object:
+        object_type = module["name"]
+        contracts.attach_method(object_type, method, signature_types)
+        setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
+        expression = 'Контекст.' + expression
+        method = ""
+    if return_type and return_type != "ничто":
+        invocation = '    знч Результат = ' + expression + '\n'
+        actual = '{"return": Результат, "context": Контекст}' if is_object else 'Результат'
+    else:
+        invocation = '    ' + expression + '\n'
+        actual = 'Контекст'
+    imports = contracts.write(sandbox)
+    script = sandbox / "test.sbsl"
+    script.write_text(imports + "\n" + method + '\n\nметод Скрипт()\n' + setup + invocation
+                      + '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": ' + actual + '}))\n;\n', encoding="utf-8")
+    return script
 
 
 def sbsl_literal(value, type_name):
@@ -71,7 +140,7 @@ def sbsl_literal(value, type_name):
 
 
 def run_pure(root, model, check, temporary):
-    """Run one scalar method in Docker; return evidence, never award points."""
+    """Run one standalone method in Docker; return evidence, never award points."""
     def status(name, message):
         return {"status": name, "message": message}
 
@@ -89,21 +158,11 @@ def run_pure(root, model, check, temporary):
     process = None
     created = False
     try:
-        target = check.get("target", {})
-        modules = [m for m in model["modules"] if m["name"] == target.get("module")]
-        if len(modules) != 1:
-            return status("ERROR", "Целевой модуль отсутствует или неоднозначен")
-        original = (root / modules[0]["sourceFile"]).read_text(encoding="utf-8-sig")
-        method, types = extract_method(original, target.get("method"))
-        args = check.get("args", [])
-        if len(args) != len(types):
-            return status("ERROR", "Количество аргументов не совпадает с сигнатурой")
-        call = ", ".join(sbsl_literal(v, t) for v, t in zip(args, types))
         sandbox = temporary / uuid.uuid4().hex
         sandbox.mkdir()
-        script = sandbox / "test.sbsl"
-        script.write_text(method + '\n\nметод Скрипт()\n    знч Результат = ' + target["method"] + '(' + call + ')\n'
-                          '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": Результат}))\n;\n', encoding="utf-8")
+        generated = sandbox / "generated"
+        generated.mkdir()
+        script = prepare_script(root, model, check, generated)
         home = Path(os.environ.get("ELEMENT_SCRIPT_HOME", REPO / runtime["directory"])).resolve()
         image = os.environ.get("ELEMENT_TEST_DOCKER_IMAGE", runtime["image"])
         command = ["docker", "create", "--name", container, "--pull", "never",
@@ -113,13 +172,13 @@ def run_pure(root, model, check, temporary):
                    "--ulimit", "cpu=8:8", "--ulimit", "fsize=2097152:2097152", "--log-driver", "none",
                    "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m", "--workdir", "/tmp",
                    "--mount", f"type=bind,source={home},target=/runtime,readonly",
-                   "--mount", f"type=bind,source={script},target=/test.sbsl,readonly", image,
+                   "--mount", f"type=bind,source={script.parent},target=/generated,readonly", image,
                    "java", "-Xmx128m", "-XX:MaxMetaspaceSize=128m", "-XX:+UseSerialGC",
                    "--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens", "java.base/java.nio=ALL-UNNAMED",
                    "-Dfile.encoding=UTF-8", "-Djava.io.tmpdir=/tmp", "-Dlogs.root=/tmp",
                    "-Dlogback.configurationFile=/runtime/config/logback.xml", "-Dexecutor.location=/runtime",
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
-                   "-c", model["compatibilityVersion"], "/test.sbsl"]
+                   "-c", model["compatibilityVersion"], "/generated/test.sbsl"]
         timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
         if not 0 < timeout <= 30:
             return status("ERROR", "timeout должен быть в диапазоне (0, 30] секунд")
@@ -147,6 +206,8 @@ def run_pure(root, model, check, temporary):
         return {"status": "EXECUTED", "actual": decode_output(stdout)["actual"]}
     except InputError as exc:
         return status("UNSUPPORTED", str(exc))
+    except subprocess.TimeoutExpired:
+        return status("TIMEOUT", "Превышен timeout операции Docker")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return status("ERROR", str(exc))
     finally:

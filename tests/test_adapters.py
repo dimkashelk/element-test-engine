@@ -146,8 +146,10 @@ class AdaptersTest(unittest.TestCase):
         self.assertIn('возврат "${Фамилия.Сократить()}"', method)
         self.assertNotIn("@Локально", method)
         self.assertEqual(types, ["Строка"])
+        nested = 'метод Цикл(): Строка\n пока Истина\n ;\n возврат "готово"\n;\n'
+        self.assertEqual(extract_method(nested, "Цикл")[0], nested)
         with self.assertRaises(InputError):
-            extract_method('метод Цикл(): Строка\n пока Истина\n ;\n;\n', "Цикл")
+            extract_method('метод Цикл(): Строка\n пока Истина\n ;\n', "Цикл")
         self.assertIn('\\${', sbsl_literal('${ОпасныйВызов()}', "Строка"))
 
     def test_assignment_rejects_bad_weights_and_duplicate_ids(self):

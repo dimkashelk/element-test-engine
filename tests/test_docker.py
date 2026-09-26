@@ -8,13 +8,35 @@ import unittest
 from element_test.assignment import load_assignment
 from element_test.loader import open_project
 from element_test.model import analyze
-from element_test.runtime import run_pure
+from element_test.runtime import run_pure, execute_engine
+import json
 
 REPO = Path(__file__).resolve().parent.parent
 
 
 @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
 class DockerTest(unittest.TestCase):
+    def test_object_context_and_sbsl_grading(self):
+        from test_object_context import fixture, checks
+        with tempfile.TemporaryDirectory() as directory:
+            temp = Path(directory)
+            root = temp / "fixture"
+            root.mkdir()
+            model = fixture(root)
+            assignment = {"name": "Объектный контекст", "checks": checks()}
+            wrong = copy.deepcopy(assignment["checks"][1])
+            wrong.update(id="wrong_context", expected={"Номер": "wrong"})
+            assignment["checks"].append(wrong)
+            for check in assignment["checks"]:
+                check["execution"] = run_pure(root, model, check, temp)
+                self.assertEqual(check["execution"]["status"], "EXECUTED", check["execution"])
+            m, a = temp / "model.json", temp / "assignment.json"
+            m.write_text(json.dumps(model, ensure_ascii=False))
+            a.write_text(json.dumps(assignment, ensure_ascii=False))
+            result = execute_engine("test", m, a, temp)
+            self.assertEqual([c["status"] for c in result["checks"]], ["PASS", "PASS", "FAIL"])
+            self.assertEqual((result["score"], result["maxScore"]), (2, 3))
+
     def run_case(self, modify):
         archive = REPO / "Движок.tar"
         before = archive.read_bytes()
@@ -38,6 +60,27 @@ class DockerTest(unittest.TestCase):
     def test_unconfigured_version(self):
         result = self.run_case(lambda check, model: model.update(compatibilityVersion="999.0"))
         self.assertEqual(result["status"], "UNSUPPORTED")
+
+    def test_order_rows_and_sbsl_grading(self):
+        archive = REPO / "Движок.tar"
+        before = archive.read_bytes()
+        with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
+            temp = Path(directory)
+            model = analyze(root)
+            assignment = load_assignment(REPO / "assignments/poc-order")
+            wrong = copy.deepcopy(assignment["checks"][1])
+            wrong.update(id="wrong_total", expected={"Строк": 2, "Товаров": 5, "Сумма": 351})
+            assignment["checks"].append(wrong)
+            for check in assignment["checks"]:
+                check["execution"] = run_pure(root, model, check, temp)
+                self.assertEqual(check["execution"]["status"], "EXECUTED", check["execution"])
+            m, a = temp / "model.json", temp / "assignment.json"
+            m.write_text(json.dumps(model, ensure_ascii=False))
+            a.write_text(json.dumps(assignment, ensure_ascii=False))
+            result = execute_engine("test", m, a, temp)
+            self.assertEqual([c["status"] for c in result["checks"]], ["PASS", "PASS", "PASS", "FAIL"])
+            self.assertEqual((result["score"], result["maxScore"]), (3, 4))
+        self.assertEqual(archive.read_bytes(), before)
 
 
 if __name__ == "__main__":
