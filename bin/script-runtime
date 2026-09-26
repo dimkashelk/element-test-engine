@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+task_root="$(cd "$(dirname "$0")/.." && pwd)"
+runtime_dir="${ELEMENT_SCRIPT_HOME:-$task_root/script_u_10.0.2_1}"
+if [[ ! -d "$runtime_dir/lib" ]]; then
+    echo 'Не найден runtime. Укажите ELEMENT_SCRIPT_HOME.' >&2
+    exit 2
+fi
+runtime_java="${JAVA_HOME:+$JAVA_HOME/bin/}java"
+# JVM wildcard сохраняет пробелы в абсолютном пути до дистрибутива.
+exec "$runtime_java" -Xmx256m -XX:+TieredCompilation \
+    --add-opens java.base/java.lang=ALL-UNNAMED \
+    --add-opens java.base/java.nio=ALL-UNNAMED \
+    -Dfile.encoding=UTF-8 -Djava.io.tmpdir="${TMPDIR:-/tmp}" \
+    -Dlogback.configurationFile="$runtime_dir/config/logback.xml" \
+    -Dlogs.root="${TMPDIR:-/tmp}/element-test-logs" \
+    -Dexecutor.location="$runtime_dir" \
+    -cp "$runtime_dir/lib/*" \
+    com.e1c.g5rt.executor.boot.ExecutorBootstrap "$@"

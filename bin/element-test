@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+task_root="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="$task_root${PYTHONPATH:+:$PYTHONPATH}"
+exec "${ELEMENT_TEST_PYTHON:-python3}" -m element_test.bridge "$@"

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "element-test-engine"
+version = "0.1.0"
+description = "Read-only structural testing of 1C:Element student projects"
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0,<7"]
+
+[tool.setuptools.packages.find]
+include = ["element_test*"]

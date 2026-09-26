@@ -1,0 +1,42 @@
+name: Движок — проверка первого MVP
+checks:
+  - id: order_exists
+    type: element
+    elementType: Документ
+    name: Заказ
+    points: 1
+  - id: order_client
+    type: field
+    element: Заказ
+    field: Клиент
+    expectedType: Контрагенты.Ссылка?
+    points: 1
+  - id: order_table
+    type: tableSection
+    element: Заказ
+    name: Товары
+    points: 1
+  - id: order_sum_scale
+    type: field
+    element: Заказ.Товары
+    field: Сумма
+    expectedType: Число
+    scale: 2
+    points: 1
+  - id: fio_handler
+    type: method
+    module: ФизическиеЛица.Объект
+    name: ПередЗаписью
+    annotations: [Обработчик]
+    parameterCount: 2
+    points: 1
+  - id: fio_signature
+    type: method
+    module: ФизическиеЛица.Объект
+    name: СформироватьФИО
+    returnType: Строка
+    parameterCount: 3
+    parameters:
+      - name: ФамилияЧеловека
+        type: Строка
+    points: 1
