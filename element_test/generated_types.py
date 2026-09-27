@@ -1,11 +1,22 @@
 """Lazy YAML → SBSL contracts and explicit, per-check object API fakes."""
 import re
+from datetime import datetime
 
 from .indexer import IDENT, split_parameters
 from .model import resolve
 from .yaml_io import InputError
 
 SCALARS = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент"}
+
+
+def union_members(type_name):
+    depth, start, parts = 0, 0, []
+    for i, char in enumerate(type_name):
+        depth += (char == '<') - (char == '>')
+        if char == '|' and depth == 0:
+            parts.append(type_name[start:i])
+            start = i + 1
+    return parts + [type_name[start:]] if parts else []
 
 
 class ProjectTypes:
@@ -49,6 +60,17 @@ class ProjectTypes:
         if type_name in self.definitions:
             return
         namespace = self.namespace if namespace is None else namespace
+        members = union_members(type_name)
+        if members:
+            from .types import parse_type
+            try:
+                parse_type(type_name)
+            except ValueError as exc:
+                raise InputError(str(exc)) from exc
+            for member in members:
+                if member != '?':
+                    self.require(member, namespace)
+            return
         if type_name.endswith("?"):
             self.require(type_name[:-1], namespace)
             return
@@ -172,10 +194,38 @@ class ProjectTypes:
     def literal(self, value, type_name):
         from .runtime import sbsl_literal
         type_name = self.canonical_type(type_name)
+        members = union_members(type_name)
+        if members:
+            if value is None and members[-1] == '?':
+                return 'Неопределено'
+            variants = [m for m in members if m != '?']
+            if isinstance(value, dict) and set(value) == {'type', 'value'}:
+                selected = self.canonical_type(value['type'])
+                if selected not in variants:
+                    raise InputError(f'Вариант {selected} не входит в {type_name}')
+                return self.literal(value['value'], selected)
+            candidates = []
+            for variant in variants:
+                try:
+                    candidates.append(self.literal(value, variant))
+                except InputError:
+                    pass
+            if len(candidates) != 1:
+                raise InputError(f'Для {type_name} требуется явный вариант {{type, value}}')
+            return candidates[0]
         if type_name.endswith("?"):
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
         if type_name in {"Строка", "Число", "Булево"}:
             return sbsl_literal(value, type_name)
+        if type_name == 'ДатаВремя':
+            if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}', value):
+                raise InputError('ДатаВремя требует строку YYYY-MM-DDTHH:MM:SS без часового пояса')
+            try:
+                date = datetime.fromisoformat(value)
+            except ValueError as exc:
+                raise InputError('Некорректная ДатаВремя') from exc
+            return 'новый ДатаВремя(' + ', '.join(str(n) for n in (
+                date.year, date.month, date.day, date.hour, date.minute, date.second)) + ')'
         if type_name in self.enums:
             if not isinstance(value, str):
                 raise InputError(f"Ожидалось имя элемента {type_name}")

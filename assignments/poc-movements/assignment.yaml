@@ -1,0 +1,240 @@
+name: 'Движения: оригинальный Отгрузка.ПослеЗаписи'
+checks:
+- id: movements_empty
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары: []
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+- id: movements_one
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 5
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+- id: movements_multiple
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 2
+    - Номенклатура:
+        Идентификатор: product-2
+      Количество: 7
+    - Номенклатура:
+        Идентификатор: product-3
+      Количество: 3
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 2
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-2
+        Количество: 7
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-3
+        Количество: 3
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+- id: movements_fractional
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 0.125
+    - Номенклатура:
+        Идентификатор: product-2
+      Количество: 2.75
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 0.125
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-2
+        Количество: 2.75
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата

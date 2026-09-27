@@ -4,16 +4,78 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
 
 from element_test.assignment import load_assignment
 from element_test.loader import open_project
 from element_test.model import analyze
 from element_test.runtime import REPO, decode_output, method_closure, prepare_script
 from element_test.platform_mocks import PlatformMocks
+from element_test.generated_types import ProjectTypes
 from element_test.yaml_io import InputError
 
 
 class PlatformMocksTest(unittest.TestCase):
+    @unittest.skipUnless((REPO / 'script_u_10.0.2_1/lib').is_dir(), 'Требуется Script executor')
+    def test_trusted_union_literals_and_register_defaults_in_executor(self):
+        # Generated contract probe only; no student handler runs on the host.
+        model = {'elements': [
+            {'name': name, 'namespace': '', 'elementType': 'Документ', 'properties': {}}
+            for name in ('Отгрузка', 'Поступление')
+        ] + [{'name': 'Движения', 'namespace': '', 'elementType': 'РегистрНакопления', 'properties': {
+            'Реквизиты': [{'Имя': 'Регистратор', 'Тип': 'Отгрузка.Ссылка|Поступление.Ссылка|?'}],
+            'Измерения': [{'Имя': 'Описание', 'Тип': 'Строка', 'ЗначениеПоУмолчанию': 'default'}],
+            'Ресурсы': [{'Имя': 'Количество', 'Тип': 'Число', 'ЗначениеПоУмолчанию': 1.25}]}}]}
+        types = ProjectTypes(model)
+        platform = PlatformMocks(types, {'registers': ['Движения']}, {'captureCalls': True})
+        platform.finish()
+        union = 'Отгрузка.Ссылка|Поступление.Ссылка|?'
+        values = [types.literal({'type': owner + '.Ссылка', 'value': {'Идентификатор': 'same-id'}}, union)
+                  for owner in ('Отгрузка', 'Поступление')]
+        values.append(types.literal(None, union))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            imports = types.write(path)
+            script = path / 'Probe.sbsl'
+            script.write_text(imports + '\nметод Скрипт()\n'
+                '    знч Набор = новый Движения.НаборЗаписей()\n' + ''.join(
+                    '    Набор.Фильтр.Установить(Регистратор = ' + v + ')\n' for v in values)
+                + '    Набор.ДобавитьЗапись(Период = новый ДатаВремя(2024, 2, 29, 1, 2, 3), '
+                  'ВидЗаписи = ВидЗаписиРегистраНакопления.Расход)\n'
+                  '    Набор.Записать()\n'
+                  '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({'
+                  '"actual": {"calls": новый Массив<Объект?>()}, "_captureCalls": Истина}))\n;\n')
+            result = subprocess.run([str(REPO / 'bin/script-runtime'), '-c', '9.0', str(script)],
+                                    capture_output=True, text=True, timeout=30, cwd=path)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            calls = decode_output(result.stdout)['actual']['calls']
+            self.assertEqual([c['args']['Регистратор'] for c in calls[:3]],
+                             [{'Идентификатор': 'same-id'}, {'Идентификатор': 'same-id'}, None])
+            self.assertEqual(calls[3]['args'], {'Период': '2024-02-29T01:02:03', 'ВидЗаписи': 'Расход',
+                                              'Описание': 'default', 'Количество': 1.25})
+            self.assertEqual(calls[4]['args'], {'Замещать': True})
+
+    def test_real_movement_body_and_union_filter_contract(self):
+        archive = REPO / 'Движок.tar'
+        if not archive.is_file():
+            self.skipTest('Требуется исходный архив')
+        check = load_assignment(REPO / 'assignments/poc-movements')['checks'][1]
+        with open_project(archive) as root, tempfile.TemporaryDirectory() as directory:
+            model, path = analyze(root), Path(directory)
+            prepare_script(root, model, check, path)
+            module = next(m for m in model['modules'] if m['name'] == 'Отгрузка.Объект')
+            method = method_closure((root / module['sourceFile']).read_text(), 'ПослеЗаписи')[0][0]
+            self.assertIn(method, (path / 'ТестКонтекст.sbsl').read_text())
+            register = (path / 'РегистрТовары.sbsl').read_text()
+            self.assertIn('Регистратор: Отгрузка.Ссылка|ПоступлениеТоваров.Ссылка|?', register)
+            self.assertIn('#требуется ПоступлениеТоваров.sbsl', register)
+            self.assertIn('Период: ДатаВремя', register)
+            self.assertIn('метод Записать(Замещать: Булево = Истина)', register)
+            bad = copy.deepcopy(model)
+            next(e for e in bad['elements'] if e['name'] == 'РегистрТовары')['properties']['ВидРегистра'] = 'Обороты'
+            with self.assertRaisesRegex(InputError, 'только Остатки'):
+                prepare_script(root, bad, check, path)
+
     def test_query_matching_preserves_strings_and_token_boundaries(self):
         key = PlatformMocks.query_key
         self.assertEqual(key('ВЫБРАТЬ\n  A /* comment */ КАК B'), key('ВЫБРАТЬ A КАК B'))

@@ -51,6 +51,20 @@ class EngineTest(unittest.TestCase):
         self.assertEqual([c["status"] for c in result["checks"]], ["PASS", "FAIL", "TIMEOUT"])
         self.assertEqual(result["score"], 1)
 
+    def test_runtime_date_snapshot_resolves_expected_only(self):
+        date = '2026-09-27T12:34:56.789'
+        base = {'type': 'runtime', 'runtimeDateTime': 'Дата',
+                'expected': {'calls': [{'Период': '__runtimeDateTime__'}]},
+                'execution': {'status': 'EXECUTED', 'runtimeDateTime': date,
+                              'actual': {'calls': [{'Период': date}]}}}
+        passed, failed, missing = [copy.deepcopy(base) for _ in range(3)]
+        passed['id'], failed['id'], missing['id'] = 'snapshot', 'wrong_period', 'missing_snapshot'
+        failed['execution']['actual']['calls'][0]['Период'] = '2000-01-01T00:00:00'
+        del missing['execution']['runtimeDateTime']
+        result = self.execute([passed, failed, missing, {**passed, 'id': 'continues'}])
+        self.assertEqual([c['status'] for c in result['checks']], ['PASS', 'FAIL', 'ERROR', 'PASS'])
+        self.assertEqual(result['checks'][0]['expected']['calls'][0]['Период'], date)
+
     @unittest.skipUnless((REPO / "Движок.tar").is_file(), "Требуется реальная работа Движок.tar")
     def test_real_project_semantics_and_negative_checks(self):
         with open_project(REPO / "Движок.tar") as root:

@@ -22,6 +22,25 @@ def model():
 
 
 class GeneratedTypesTest(unittest.TestCase):
+    def test_union_variants_dates_and_strict_inputs(self):
+        types = ProjectTypes(model())
+        union = 'Заказ.Ссылка|Номенклатура.Ссылка|?'
+        types.require(union)
+        self.assertEqual(types.literal(None, union), 'Неопределено')
+        self.assertIn('новый Заказ.Ссылка', types.literal(
+            {'type': 'Заказ.Ссылка', 'value': {'Идентификатор': 'same-id'}}, union))
+        for value in ({'Идентификатор': 'same-id'}, {'type': 'Строка', 'value': 'x'},
+                      {'type': 'Заказ.Ссылка', 'value': {'НетПоля': 1}}, 5):
+            with self.subTest(value=value), self.assertRaises(InputError):
+                types.literal(value, union)
+        types.require('Массив<Число|Строка|?>')
+        self.assertIn('Неопределено', types.literal([1, 'text', None], 'Массив<Число|Строка|?>'))
+        self.assertEqual(types.literal('2024-02-29T13:14:15', 'ДатаВремя'),
+                         'новый ДатаВремя(2024, 2, 29, 13, 14, 15)')
+        for date in ('2023-02-29T13:14:15', '2024-02-29T13:14:15Z', '${probe()}', None):
+            with self.subTest(date=date), self.assertRaises(InputError):
+                types.literal(date, 'ДатаВремя')
+
     def test_lazy_rows_references_and_invalid_inputs(self):
         types = ProjectTypes(model(), "Продажи")
         types.require("Массив<Заказ.Товары>")
@@ -42,7 +61,7 @@ class GeneratedTypesTest(unittest.TestCase):
         data["elements"].append({**data["elements"][0], "namespace": "Другие"})
         with self.assertRaises(InputError):
             ProjectTypes(data).require("Заказ.Товары")
-        for name in ("Заказ.Нет", "НеНужен.НеизвестныеПараметры", "Заказ.Ссылка|Строка", "Массив<Число,Строка>"):
+        for name in ("Заказ.Нет", "НеНужен.НеизвестныеПараметры", "Массив<Число,Строка>"):
             with self.subTest(name=name), self.assertRaises(InputError):
                 ProjectTypes(model()).require(name)
 

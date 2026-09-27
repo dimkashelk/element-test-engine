@@ -43,14 +43,34 @@ class PlatformMocks:
         if not isinstance(name, str) or not re.fullmatch(IDENT, name):
             raise InputError('Мок регистра требует краткое имя')
         matches = resolve(self.contracts.model['elements'], name, self.contracts.namespace)
-        if len(matches) != 1 or matches[0]['elementType'] != 'РегистрСведений':
-            raise InputError('Поддержан только однозначный РегистрСведений: ' + name)
+        if len(matches) != 1 or matches[0]['elementType'] not in {'РегистрСведений', 'РегистрНакопления'}:
+            raise InputError('Требуется однозначный РегистрСведений или РегистрНакопления: ' + name)
         element = matches[0]
         self.contracts.claim_owner(name, element)
         properties = element['properties']
+        accumulation = element['elementType'] == 'РегистрНакопления'
         dimensions = properties.get('Измерения', [])
         fields = dimensions + properties.get('Ресурсы', []) + properties.get('Реквизиты', [])
-        if properties.get('Периодичность', 'Непериодический') != 'Непериодический':
+        if accumulation:
+            if properties.get('ВидРегистра', 'Остатки') != 'Остатки':
+                raise InputError('Мок регистра накопления поддерживает только Остатки')
+            registrars = [f for f in properties.get('Реквизиты', []) if f['Имя'] == 'Регистратор']
+            if len(registrars) != 1:
+                raise InputError('Регистр накопления требует типизированный Регистратор')
+            dimensions = registrars
+            fields = [{'Имя': 'Период', 'Тип': 'ДатаВремя'},
+                      {'Имя': 'ВидЗаписи', 'Тип': 'ВидЗаписиРегистраНакопления'}] + [
+                          f for f in fields if f['Имя'] != 'Регистратор']
+            enum = 'ВидЗаписиРегистраНакопления'
+            if any(e['name'] == enum for e in self.contracts.model['elements']):
+                raise InputError('Проект использует зарезервированное имя ' + enum)
+            self.contracts.enums[enum] = ['Приход', 'Расход']
+            self.contracts.enum_types[enum] = enum + '.Значение'
+            self.contracts.definitions[enum] = ('@Глобально\nперечисление Значение\n'
+                '    Приход умолчание,\n    Расход\n;\n'
+                '@Глобально\nконст Приход = Значение.Приход\n'
+                '@Глобально\nконст Расход = Значение.Расход\n')
+        elif properties.get('Периодичность', 'Непериодический') != 'Непериодический':
             if properties['Периодичность'] != 'Момент':
                 raise InputError('Периодичность мока пока поддерживается только Момент')
             fields = [{'Имя': 'Период', 'Тип': 'Момент'}] + fields
@@ -59,12 +79,31 @@ class PlatformMocks:
             raise InputError('Некорректные поля регистра ' + name)
         for field in fields:
             self.contracts.require(field['Тип'], element['namespace'])
+        for field in dimensions:
+            self.contracts.require(field['Тип'], element['namespace'])
         signature = lambda fs: ', '.join(f['Имя'] + ': ' + self.contracts.sbsl_type(f['Тип']) for f in fs)
+        def add_signature():
+            parameters = []
+            for field in fields:
+                declaration = signature([field])
+                if accumulation and field['Имя'] not in {'Период', 'ВидЗаписи'}:
+                    if 'ЗначениеПоУмолчанию' in field:
+                        default = self.contracts.literal(field['ЗначениеПоУмолчанию'], field['Тип'])
+                    elif field['Тип'].endswith('?'):
+                        default = 'Неопределено'
+                    elif field['Тип'] in {'Число', 'Строка', 'Булево'}:
+                        default = self.contracts.literal({'Число': 0, 'Строка': '', 'Булево': False}[field['Тип']], field['Тип'])
+                    else:
+                        raise InputError('Значение по умолчанию мока не поддерживается: ' + field['Тип'])
+                    declaration += ' = ' + default
+                parameters.append(declaration)
+            return ', '.join(parameters)
         record = name + '.Запись'
         filter_type = name + '.ФильтрНабора'
         self.contracts.fields[record] = fields
         self.contracts.definitions[record] = '@Глобально\nструктура Запись\n' + '\n'.join(
-            '    пер ' + signature([f]) for f in fields) + '\n;\n'
+            '    пер ' + signature([f]) + (' = ' + self.contracts.literal(f['ЗначениеПоУмолчанию'], f['Тип'])
+                if 'ЗначениеПоУмолчанию' in f else '') for f in fields) + '\n;\n'
         self.contracts.fields[filter_type] = []
         self.contracts.definitions[filter_type] = ('@Глобально\nструктура ФильтрНабора\n'
             '    @Глобально\n    метод Установить(' + signature(dimensions) + ')\n        '
@@ -74,14 +113,15 @@ class PlatformMocks:
                                          {'Имя': 'Записи', 'Тип': 'Массив<' + record + '>'}]
         self.contracts.definitions[set_type] = ('@Глобально\nструктура НаборЗаписей\n'
             '    пер Фильтр: ФильтрНабора\n    пер Записи: Массив<Запись>\n'
-            '    @Глобально\n    метод ДобавитьЗапись(' + signature(fields) + '): Запись\n'
+            '    @Глобально\n' + ('    @ИменованныеПараметры\n' if accumulation else '')
+            + '    метод ДобавитьЗапись(' + add_signature() + '): Запись\n'
             '        знч НоваяЗапись = новый Запись(' + ', '.join(n + ' = ' + n for n in names) + ')\n'
             '        Записи.Добавить(НоваяЗапись)\n        ' + self.log(name, 'ДобавитьЗапись', names)
             + '\n        возврат НоваяЗапись\n    ;\n'
             '    @Глобально\n    метод Записать(Замещать: Булево = Истина)\n        '
             + self.log(name, 'Записать', ['Замещать']) + '\n    ;\n;\n')
         self.contracts.method_dependencies[set_type] = ['ТестПлатформа.Вызовы']
-        self.contracts.method_dependencies[filter_type] = ['ТестПлатформа.Вызовы']
+        self.contracts.method_dependencies[filter_type] = ['ТестПлатформа.Вызовы'] + [f['Тип'] for f in dimensions]
 
     @staticmethod
     def query_key(text):

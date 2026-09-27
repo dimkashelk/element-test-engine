@@ -16,6 +16,50 @@ REPO = Path(__file__).resolve().parent.parent
 
 @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
 class DockerTest(unittest.TestCase):
+    def test_real_movements_and_negative_grading(self):
+        from element_test.bridge import report, write_json
+        archive = REPO / 'Движок.tar'
+        before = archive.read_bytes()
+        assignment = load_assignment(REPO / 'assignments/poc-movements')
+        for field, value in [('Регистратор', {'Идентификатор': 'wrong'}),
+                             ('Склад', {'Идентификатор': 'wrong'}),
+                             ('Количество', 99), ('ВидЗаписи', 'Приход'),
+                             ('Номенклатура', {'Идентификатор': 'wrong'}),
+                             ('Период', '2000-01-01T00:00:00')]:
+            wrong = copy.deepcopy(assignment['checks'][1])
+            wrong['id'] = 'wrong_' + field
+            call = wrong['expected']['calls'][0 if field == 'Регистратор' else 1]
+            call['args'][field] = value
+            assignment['checks'].append(wrong)
+        wrong = copy.deepcopy(assignment['checks'][1])
+        wrong['id'] = 'wrong_order'
+        wrong['expected']['calls'].reverse()
+        assignment['checks'].append(wrong)
+        missing = copy.deepcopy(assignment['checks'][1])
+        missing.update(id='unsupported_register_contract', mocks={'registers': ['Отгрузка']})
+        assignment['checks'].append(missing)
+        resumed = copy.deepcopy(assignment['checks'][0])
+        resumed['id'] = 'after_unsupported'
+        assignment['checks'].append(resumed)
+        with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
+            temp, model = Path(directory), analyze(root)
+            for check in assignment['checks']:
+                check['execution'] = run_pure(root, model, check, temp)
+                self.assertEqual(check['execution']['status'],
+                    'UNSUPPORTED' if check['id'] == missing['id'] else 'EXECUTED', check['execution'])
+            m, a = temp / 'model.json', temp / 'assignment.json'
+            write_json(m, model)
+            write_json(a, assignment)
+            result = execute_engine('test', m, a, temp)
+            self.assertEqual([c['status'] for c in result['checks']],
+                             ['PASS'] * 4 + ['FAIL'] * 7 + ['UNSUPPORTED', 'PASS'])
+            self.assertEqual((result['score'], result['maxScore'], result['unavailablePoints']), (5, 12, 1))
+            output = REPO / 'result/poc-movements-negative'
+            output.mkdir(parents=True, exist_ok=True)
+            write_json(output / 'result.json', result)
+            (output / 'report.html').write_text(report(result), encoding='utf-8')
+        self.assertEqual(archive.read_bytes(), before)
+
     def test_real_register_query_handlers_and_negative_grading(self):
         archive = REPO / 'Движок.tar'
         before = archive.read_bytes()

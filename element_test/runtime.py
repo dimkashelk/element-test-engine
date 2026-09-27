@@ -168,6 +168,7 @@ def prepare_script(root, model, check, sandbox):
     method = "\n".join(adapted)
     call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
     setup = ""
+    runtime_metadata = ''
     expression = target["method"] + '(' + call + ')'
     observed = "Контекст"
     if "observe" in check:
@@ -195,6 +196,14 @@ def prepare_script(root, model, check, sandbox):
             [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
             + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
+        if 'runtimeDateTime' in check:
+            field = check['runtimeDateTime']
+            date_fields = {f['Имя'] for f in contracts.fields[object_type] if f['Тип'] == 'ДатаВремя'}
+            if not isinstance(field, str) or field not in date_fields or field in context:
+                raise InputError('runtimeDateTime требует поле ДатаВремя, отсутствующее в context')
+            setup += ('    Контекст.' + field + ' = ДатаВремя.Сейчас(ЧасовойПояс{UTC})\n'
+                      '    знч ВремяТеста = Контекст.' + field + '\n')
+            runtime_metadata = ', "runtimeDateTime": ВремяТеста'
         expression = 'Контекст.' + expression
         method = ""
     if return_type and return_type != "ничто":
@@ -214,9 +223,11 @@ def prepare_script(root, model, check, sandbox):
                       + '    ;\n')
         actual = '{"result": ' + actual + ', "exception": ИсключениеРезультат}'
     imports = contracts.write(sandbox)
-    metadata = ''
+    if 'runtimeDateTime' in check and not is_object:
+        raise InputError('runtimeDateTime требует объектный context')
+    metadata = runtime_metadata
     if platform.capture:
-        metadata = ', "_captureCalls": Истина, "_captureException": ' + ('Истина' if check.get('captureException') else 'Ложь')
+        metadata += ', "_captureCalls": Истина, "_captureException": ' + ('Истина' if check.get('captureException') else 'Ложь')
         if platform.observe is not None:
             metadata += ', "_observeCallArguments": ' + contracts.literal(platform.observe, 'Массив<Строка>')
     script = sandbox / "test.sbsl"
@@ -302,7 +313,11 @@ def run_pure(root, model, check, temporary):
             return status("UNSUPPORTED", (stderr or "Docker runtime недоступен")[:4000])
         if process.returncode:
             return status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000])
-        return {"status": "EXECUTED", "actual": decode_output(stdout)["actual"]}
+        decoded = decode_output(stdout)
+        evidence = {"status": "EXECUTED", "actual": decoded['actual']}
+        if 'runtimeDateTime' in check:
+            evidence['runtimeDateTime'] = decoded.get('runtimeDateTime')
+        return evidence
     except InputError as exc:
         return status("UNSUPPORTED", str(exc))
     except subprocess.TimeoutExpired:
