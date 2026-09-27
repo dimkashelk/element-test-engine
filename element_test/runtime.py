@@ -14,6 +14,8 @@ from .platform_mocks import PlatformMocks
 from .yaml_io import InputError
 
 REPO = Path(__file__).resolve().parent.parent
+# Runtime constructors that need no YAML contract. Keep this allowlist explicit.
+RUNTIME_CONSTRUCTORS = {'ИсключениеНедопустимоеСостояние'}
 
 
 def decode_output(text):
@@ -107,6 +109,28 @@ def method_closure(source, name):
     return methods
 
 
+def constructor_types(method):
+    """Return constructor type token spans, including interpolation expressions.
+
+    Only the token between `новый` and `(` is eligible for adaptation.
+    This is deliberately not general expression or external-call resolution.
+    """
+    declaration = METHOD.search(mask_noncode(method))
+    code = call_code(method)
+    found = []
+    for match in re.finditer(r'\bновый\s+', code[declaration.end():]):
+        start = declaration.end() + match.end()
+        end = code.find('(', start)
+        if end < 0:
+            raise InputError('Не удалось определить тип конструктора новый')
+        token = code[start:end].rstrip()
+        atom = rf'{IDENT}(?:::{IDENT})*(?:\.{IDENT})?'
+        if not re.fullmatch(rf'{atom}(?:\s*<[^()\n]+>)?', token):
+            raise InputError('Неподдержанная форма типа конструктора: ' + token)
+        found.append((start, start + len(token), re.sub(r'\s+', '', token)))
+    return found
+
+
 def prepare_script(root, model, check, sandbox):
     """Copy the original method and generate only its required data contracts."""
     target = check.get("target", {})
@@ -152,16 +176,26 @@ def prepare_script(root, model, check, sandbox):
             signature_types.append(declaration[3].strip())
     for type_name in signature_types:
         contracts.require(type_name)
+    body_types = []
+    for dependency, _ in methods:
+        for _, _, type_name in constructor_types(dependency):
+            if type_name in RUNTIME_CONSTRUCTORS:
+                continue
+            contracts.require(type_name)
+            body_types.append(type_name)
     adapted = []
     for dependency, _ in methods:
         declaration = METHOD.search(mask_noncode(dependency))
-        # Adapt declarations only; the original business logic remains verbatim.
+        # Adapt declarations and resolved constructor type tokens only.
         replacements = [(declaration.start(2), declaration.end(2), ",".join(
             p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
             for p in split_parameters(declaration[2])))]
         if declaration[3]:
             replacements.append((declaration.start(3), declaration.end(3), contracts.sbsl_type(declaration[3])))
-        for start, end, replacement in reversed(replacements):
+        replacements.extend((start, end, contracts.sbsl_type(type_name))
+                            for start, end, type_name in constructor_types(dependency)
+                            if contracts.sbsl_type(type_name) != dependency[start:end])
+        for start, end, replacement in sorted(replacements, reverse=True):
             dependency = dependency[:start] + replacement + dependency[end:]
         adapted.append(platform.adapt(dependency))
     calls = platform.finish()
@@ -191,7 +225,7 @@ def prepare_script(root, model, check, sandbox):
             contracts.fields[context_type] = contracts.fields[object_type]
             contracts.definitions[context_type] = contracts.definitions[object_type]
             object_type = context_type
-        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types)
+        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types + body_types)
         contracts.method_dependencies[object_type].extend(
             [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
             + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))

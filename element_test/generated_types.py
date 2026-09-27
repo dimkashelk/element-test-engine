@@ -56,9 +56,8 @@ class ProjectTypes:
         return re.sub(IDENT, lambda m: self.enum_types.get(m[0], m[0]), self.canonical_type(type_name))
 
     def require(self, type_name, namespace=None):
-        type_name = self.canonical_type(type_name)
-        if type_name in self.definitions:
-            return
+        if not isinstance(type_name, str):
+            raise InputError('Имя типа должно быть строкой')
         namespace = self.namespace if namespace is None else namespace
         members = union_members(type_name)
         if members:
@@ -83,6 +82,19 @@ class ProjectTypes:
                 raise InputError(f"Некорректный тип: {type_name}")
             for argument in arguments:
                 self.require(argument.strip(), namespace)
+            return
+        qualified = '::' in type_name
+        type_name = self.canonical_type(type_name)
+        if re.fullmatch(rf'{IDENT}(?:\.{IDENT})?', type_name) and type_name not in SCALARS:
+            owner = type_name.split('.')[0]
+            lookup_namespace = self.owners[owner][0] if qualified else namespace
+            matches = resolve(self.model['elements'], owner, lookup_namespace)
+            if len(matches) == 1:
+                self.claim_owner(owner, matches[0])
+            elif owner in self.owners:
+                raise InputError(f'Объект типа {type_name} отсутствует или неоднозначен')
+            namespace = lookup_namespace
+        if type_name in self.definitions:
             return
         if re.fullmatch(IDENT, type_name):
             matches = resolve(self.model["elements"], type_name, namespace)

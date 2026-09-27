@@ -16,6 +16,60 @@ REPO = Path(__file__).resolve().parent.parent
 
 @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
 class DockerTest(unittest.TestCase):
+    def test_real_receipt_and_negative_grading(self):
+        from element_test.bridge import report, write_json
+        archive = REPO / 'Движок.tar'
+        before = archive.read_bytes()
+        assignment = load_assignment(REPO / 'assignments/poc-receipt')
+        positive = copy.deepcopy(assignment)
+        for field, value in [('Склад', {'Идентификатор': 'wrong'}),
+                             ('Номенклатура', {'Идентификатор': 'wrong'}),
+                             ('Количество', 99), ('Цена', 99), ('Сумма', 99),
+                             ('order', None)]:
+            wrong = copy.deepcopy(positive['checks'][2])
+            wrong['id'] = 'wrong_' + field
+            if field == 'Склад':
+                wrong['expected'][field] = value
+            elif field == 'order':
+                wrong['expected']['Товары'].reverse()
+            else:
+                wrong['expected']['Товары'][0][field] = value
+            resumed = copy.deepcopy(positive['checks'][1])
+            resumed['id'] = 'after_' + wrong['id']
+            assignment['checks'].extend([wrong, resumed])
+        missing = copy.deepcopy(positive['checks'][1])
+        missing.update(id='missing_shipment', args=[{'Идентификатор': 'absent'}])
+        unsupported = copy.deepcopy(positive['checks'][1])
+        unsupported.update(id='unsupported_reference_contract', mocks={'objects': {'Отгрузка.Нет': {}}})
+        for unavailable in (missing, unsupported):
+            resumed = copy.deepcopy(positive['checks'][0])
+            resumed['id'] = 'after_' + unavailable['id']
+            assignment['checks'].extend([unavailable, resumed])
+        with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
+            temp, model = Path(directory), analyze(root)
+            for check in assignment['checks']:
+                check['execution'] = run_pure(root, model, check, temp)
+                expected_status = {'missing_shipment': 'ERROR',
+                                   'unsupported_reference_contract': 'UNSUPPORTED'}.get(check['id'], 'EXECUTED')
+                self.assertEqual(check['execution']['status'], expected_status, check['execution'])
+            m, a = temp / 'model.json', temp / 'assignment.json'
+            write_json(m, model)
+            write_json(a, {**assignment, 'checks': assignment['checks'][:5]})
+            result = execute_engine('test', m, a, temp)
+            self.assertEqual([c['status'] for c in result['checks']], ['PASS'] * 5)
+            for output_name, data in [('poc-receipt', result), ('poc-receipt-negative', None)]:
+                if data is None:
+                    write_json(a, assignment)
+                    data = execute_engine('test', m, a, temp)
+                    self.assertEqual([c['status'] for c in data['checks']],
+                        ['PASS'] * 5 + ['FAIL', 'PASS'] * 6 + ['ERROR', 'PASS', 'UNSUPPORTED', 'PASS'])
+                    self.assertEqual((data['score'], data['maxScore'], data['unavailablePoints']), (13, 20, 1))
+                output = REPO / 'result' / output_name
+                output.mkdir(parents=True, exist_ok=True)
+                write_json(output / 'result.json', data)
+                (output / 'report.html').write_text(report(data), encoding='utf-8')
+        self.assertEqual(archive.read_bytes(), before)
+
     def test_real_movements_and_negative_grading(self):
         from element_test.bridge import report, write_json
         archive = REPO / 'Движок.tar'
