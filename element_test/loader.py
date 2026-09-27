@@ -7,6 +7,7 @@ import zipfile
 import stat
 
 from .yaml_io import InputError
+from .xdump import convert_to_tar
 
 MAX_FILES = 10000
 MAX_BYTES = 128 * 1024 * 1024
@@ -105,7 +106,7 @@ def extract(source, root):
                     with archive.extractfile(entry) as stream:
                         copy(entry.name, entry.size, stream)
         else:
-            raise InputError("Поддерживаются каталог, ZIP, TAR и TAR.GZ")
+            raise InputError("Поддерживаются каталог, ZIP, TAR, TAR.GZ и XDUMP")
     except (OSError, EOFError, zipfile.BadZipFile, tarfile.TarError, RuntimeError) as exc:
         raise InputError(f"Ошибка распаковки архива: {exc}") from exc
 
@@ -122,7 +123,18 @@ def open_project(source):
             raise InputError("Входной архив превышает лимит 128 MiB")
         with TemporaryDirectory(prefix="element-test-") as temporary:
             root = Path(temporary)
-            extract(source, root)
-            yield discover(root)
+            if source.suffix.lower() == ".xdump":
+                try:
+                    archive = convert_to_tar(source, root)
+                except (OSError, ValueError, EOFError, RuntimeError,
+                        zipfile.BadZipFile, NotImplementedError) as exc:
+                    raise InputError(f"Ошибка конвертации xdump: {exc}") from exc
+                extracted = root / "project"
+                extracted.mkdir()
+                extract(archive, extracted)
+            else:
+                extracted = root
+                extract(source, extracted)
+            yield discover(extracted)
     else:
         raise InputError(f"Проект не найден: {source}")

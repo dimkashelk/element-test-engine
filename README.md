@@ -9,7 +9,7 @@ Script executor, а не переводится в Python.
 
 ## Что работает
 
-- `inspect`: каталог / ZIP / TAR / TAR.GZ → JSON-модель метаданных и индекс методов.
+- `inspect`: каталог / ZIP / TAR / TAR.GZ / XDUMP → JSON-модель метаданных и индекс методов.
 - `validate`: диагностика повторяющихся имён, некорректных типов, недоступных и
   отсутствующих ссылочных типов. Это базовый анализ, не замена компиляции платформой.
 - `test` / `run`: элементы, поля, табличные части, элементы перечисления, свойства,
@@ -33,6 +33,34 @@ Script executor, а не переводится в Python.
 
 ## Запуск
 
+### Извлечение проекта из xdump
+
+Скрипт требует только Python 3.10+ и стандартную библиотеку:
+
+```bash
+python3 extract_xdump.py Dvizhok.xdump
+python3 extract_xdump.py Dvizhok.xdump --output result/imported
+```
+
+По умолчанию результат — `result/xdump/Движок/` со структурой как в
+`Движок.tar`: `Проект.yaml`, `Проект.xbsl` и папки подсистем. Также рядом с исходным
+дампом создаётся архив с тем же именем и расширением `.tar`: например,
+`Dvizhok.xdump → Dvizhok.tar`. Внутри архива сохраняется папка проекта `Движок/`.
+Используется обычный tar, как в эталоне (без gzip). Существующий архив не
+перезаписывается. Исходники берутся
+из `application.zip → src/<поставщик>/<проект>/`; служебная `.asm` исключается.
+Содержимое файлов, включая пустые, сохраняется без изменений; имена приводятся
+к Unicode NFC. Данные приложения и пользователи не извлекаются. Уже существующая
+папка проекта не перезаписывается. Если в дампе несколько проектов, каждый
+извлекается в свою папку; совпадающие имена отклоняются.
+
+### Проверка проекта
+
+Все команды принимают `.xdump` напрямую. Загрузчик извлекает исходники из
+`application.zip`, создаёт промежуточный tar во временном каталоге и передаёт его
+обычной проверке. Временные файлы удаляются после запуска, исходный дамп и tar
+рядом с ним не изменяются. Для проверки в дампе должен быть ровно один проект.
+
 Нужны Bash, Python 3.10+, PyYAML 6 и Java 11+ (проверено с Java 17).
 Для runtime-тестов нужен Docker. Дистрибутив Script executor 10.0.2-1 уже лежит
 локально в `script_u_10.0.2_1/`; он исключён из Git.
@@ -45,6 +73,10 @@ export ELEMENT_TEST_PYTHON="$PWD/.venv/bin/python"
 bin/element-test inspect Движок.tar --output result/inspection.json
 bin/element-test validate Движок.tar
 bin/element-test test --project Движок.tar --assignment assignments/demo --output result/demo
+
+bin/element-test inspect Dvizhok.xdump --output result/xdump-inspection.json
+bin/element-test validate Dvizhok.xdump
+bin/element-test test --project Dvizhok.xdump --assignment assignments/demo --output result/xdump-demo
 
 docker pull eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0
 bin/element-test test --project Движок.tar --assignment assignments/poc-fio --output result/poc-fio
@@ -64,6 +96,9 @@ bin/element-test test --project Движок.tar --assignment assignments/poc-mo
 печатает в stdout; преобразование в реальный код CLI выполняет обёртка.
 
 ## Задания
+
+Подробный контракт и примеры для преподавателя/ИИ: [руководство по тестам](docs/test-authoring-guide.md).
+Готовый промпт генерации: [ai-test-generation-prompt.md](docs/ai-test-generation-prompt.md).
 
 Задание хранится отдельно от студенческой работы: `assignment.yaml` с `checks`,
 дополнительные проверки можно положить в `structural/*.yaml` и `runtime/*.yaml`.
