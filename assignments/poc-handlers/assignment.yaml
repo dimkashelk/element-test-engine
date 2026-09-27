@@ -1,0 +1,57 @@
+name: Реальные обработчики — зависимости методов и fake-ссылки
+checks:
+  - id: person_before_write
+    type: runtime
+    target: {module: ФизическиеЛица.Объект, namespace: CRM, method: ПередЗаписью}
+    context:
+      Фамилия: " Иванов "
+      Имя: " Иван "
+      Отчество: " Иванович "
+      ФИО: устаревшее значение
+      Телефон: " +7 999 123-45-67 "
+      Почта: " ivan@example.com "
+    args: [{}, {}]
+    observe: [ФИО, Телефон, Почта]
+    expected: {ФИО: Иванов Иван Иванович, Телефон: "+7 999 123-45-67", Почта: ivan@example.com}
+  - id: person_empty
+    type: runtime
+    target: {module: ФизическиеЛица.Объект, method: ПередЗаписью}
+    context: {Фамилия: " ", Имя: "", Отчество: " ", Телефон: " ", Почта: " "}
+    args: [{}, {}]
+    observe: [ФИО, Телефон, Почта]
+    expected: {ФИО: "", Телефон: "", Почта: ""}
+  - id: order_from_deal
+    type: runtime
+    target: {module: Заказ.Объект, namespace: Продажи, method: ПриСозданииНаОсновании}
+    context: {Клиент: {Идентификатор: previous-client}}
+    args: [{Идентификатор: deal-1}]
+    mocks:
+      objects:
+        Сделка.Ссылка:
+          deal-1: {Клиент: {Идентификатор: client-1}}
+          deal-2: {Клиент: {Идентификатор: client-2}}
+    observe: [Клиент, Сделка]
+    expected: {Клиент: {Идентификатор: client-1}, Сделка: {Идентификатор: deal-1}}
+  - id: order_from_other_deal
+    type: runtime
+    target: {module: Заказ.Объект, method: ПриСозданииНаОсновании}
+    context: {}
+    args: [{Идентификатор: deal-2}]
+    mocks:
+      objects:
+        Сделка.Ссылка:
+          deal-1: {Клиент: {Идентификатор: client-1}}
+          deal-2: {Клиент: {Идентификатор: client-2}}
+    observe: [Клиент, Сделка]
+    expected: {Клиент: {Идентификатор: client-2}, Сделка: {Идентификатор: deal-2}}
+  - id: order_without_client
+    type: runtime
+    target: {module: Заказ.Объект, method: ПриСозданииНаОсновании}
+    context: {Клиент: {Идентификатор: previous-client}}
+    args: [{Идентификатор: deal-empty}]
+    mocks:
+      objects:
+        Сделка.Ссылка:
+          deal-empty: {Клиент: null}
+    observe: [Клиент, Сделка]
+    expected: {Клиент: null, Сделка: {Идентификатор: deal-empty}}

@@ -42,7 +42,7 @@ class GeneratedTypesTest(unittest.TestCase):
         data["elements"].append({**data["elements"][0], "namespace": "Другие"})
         with self.assertRaises(InputError):
             ProjectTypes(data).require("Заказ.Товары")
-        for name in ("Заказ.Нет", "НеНужен.ПараметрыЗаписи", "Заказ.Ссылка|Строка", "Массив<Число,Строка>"):
+        for name in ("Заказ.Нет", "НеНужен.НеизвестныеПараметры", "Заказ.Ссылка|Строка", "Массив<Число,Строка>"):
             with self.subTest(name=name), self.assertRaises(InputError):
                 ProjectTypes(model()).require(name)
 

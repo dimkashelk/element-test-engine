@@ -16,6 +16,35 @@ REPO = Path(__file__).resolve().parent.parent
 
 @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
 class DockerTest(unittest.TestCase):
+    def test_real_handlers_fakes_and_sbsl_grading(self):
+        archive = REPO / 'Движок.tar'
+        before = archive.read_bytes()
+        with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
+            temp = Path(directory)
+            model = analyze(root)
+            assignment = load_assignment(REPO / 'assignments/poc-handlers')
+            wrong = copy.deepcopy(assignment['checks'][0])
+            wrong.update(id='wrong_person', expected={'ФИО': 'wrong', 'Телефон': '', 'Почта': ''})
+            missing = copy.deepcopy(assignment['checks'][2])
+            missing.update(id='missing_deal', args=[{'Идентификатор': 'missing'}])
+            escaped = copy.deepcopy(assignment['checks'][2])
+            identifier = '${Консоль.Записать("probe")}'
+            escaped.update(id='escaped_fake_id', args=[{'Идентификатор': identifier}])
+            escaped['mocks']['objects']['Сделка.Ссылка'] = {identifier: {'Клиент': {'Идентификатор': identifier}}}
+            escaped['expected'] = {'Клиент': {'Идентификатор': identifier}, 'Сделка': {'Идентификатор': identifier}}
+            assignment['checks'].extend([wrong, missing, escaped])
+            for check in assignment['checks']:
+                check['execution'] = run_pure(root, model, check, temp)
+                expected_status = 'ERROR' if check['id'] == 'missing_deal' else 'EXECUTED'
+                self.assertEqual(check['execution']['status'], expected_status, check['execution'])
+            m, a = temp / 'model.json', temp / 'assignment.json'
+            m.write_text(json.dumps(model, ensure_ascii=False))
+            a.write_text(json.dumps(assignment, ensure_ascii=False))
+            result = execute_engine('test', m, a, temp)
+            self.assertEqual([c['status'] for c in result['checks']], ['PASS'] * 5 + ['FAIL', 'ERROR', 'PASS'])
+            self.assertEqual((result['score'], result['maxScore']), (6, 8))
+        self.assertEqual(archive.read_bytes(), before)
+
     def test_object_context_and_sbsl_grading(self):
         from test_object_context import fixture, checks
         with tempfile.TemporaryDirectory() as directory:

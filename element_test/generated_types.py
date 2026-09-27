@@ -1,4 +1,4 @@
-"""Lazy YAML → SBSL data contracts. No persistence or platform API emulation."""
+"""Lazy YAML → SBSL contracts and explicit, per-check object API fakes."""
 import re
 
 from .indexer import IDENT, split_parameters
@@ -15,12 +15,37 @@ class ProjectTypes:
         self.active = set()
         self.enums, self.methods, self.method_dependencies = {}, {}, {}
         self.enum_types = {}
+        self.reference_mocks = {}
+
+    def canonical_type(self, type_name):
+        """Resolve explicit project namespaces before shortening SBSL names."""
+        if not isinstance(type_name, str):
+            raise InputError("Имя типа должно быть строкой")
+        pattern = rf"(?:{IDENT}::)+{IDENT}(?:\.{IDENT})?"
+
+        def shorten(match):
+            qualified = match[0]
+            owner, dot, variant = qualified.partition(".")
+            properties = self.model.get("properties", {})
+            project_names = [properties.get(k) for k in ("Поставщик", "Имя")]
+            prefix = "::".join(project_names) + "::" if all(isinstance(n, str) and n for n in project_names) else None
+            if prefix and owner.startswith(prefix):
+                owner = owner[len(prefix):]
+            matches = resolve(self.model["elements"], owner, self.namespace)
+            if len(matches) != 1:
+                raise InputError(f"Квалифицированный тип отсутствует или неоднозначен: {qualified}")
+            element = matches[0]
+            self.claim_owner(element["name"], element)
+            return element["name"] + (dot + variant if dot else "")
+
+        return re.sub(pattern, shorten, type_name)
 
     def sbsl_type(self, type_name):
         """Enums live in script modules; constants retain their XBSL spelling."""
-        return re.sub(IDENT, lambda m: self.enum_types.get(m[0], m[0]), type_name)
+        return re.sub(IDENT, lambda m: self.enum_types.get(m[0], m[0]), self.canonical_type(type_name))
 
     def require(self, type_name, namespace=None):
+        type_name = self.canonical_type(type_name)
         namespace = self.namespace if namespace is None else namespace
         if type_name.endswith("?"):
             self.require(type_name[:-1], namespace)
@@ -76,6 +101,9 @@ class ProjectTypes:
         self.active.add(type_name)
         if variant == "Ссылка":
             fields = [{"Имя": "Идентификатор", "Тип": "Строка"}]
+        elif variant == "ПараметрыЗаписи":
+            # Empty test contract: no platform flags or write semantics are invented.
+            fields = []
         elif variant in {"Объект", "Данные"}:
             fields = list(element["properties"].get("Реквизиты", []))
             fields += [{"Имя": t["Имя"], "Тип": f"Массив<{owner}.{t['Имя']}>"}
@@ -108,11 +136,35 @@ class ProjectTypes:
 
     def attach_method(self, type_name, method, signature_types):
         self.require(type_name)
-        self.methods[type_name] = "@Глобально\n" + method
-        self.method_dependencies[type_name] = signature_types
+        self.methods[type_name] = self.methods.get(type_name, "") + "@Глобально\n" + method
+        self.method_dependencies.setdefault(type_name, []).extend(signature_types)
+
+    def configure_references(self, mocks):
+        """Known IDs load fresh typed snapshots; absent IDs fail in the executor."""
+        if not isinstance(mocks, dict):
+            raise InputError("mocks.objects должен быть объектом")
+        for reference_type, objects in mocks.items():
+            reference_type = self.canonical_type(reference_type)
+            if not re.fullmatch(rf"{IDENT}\.Ссылка", reference_type) or not isinstance(objects, dict):
+                raise InputError("mocks.objects: требуются тип Ссылка и отображение идентификаторов")
+            if reference_type in self.reference_mocks:
+                raise InputError(f"Повторяющийся тип fake-ссылки: {reference_type}")
+            self.reference_mocks[reference_type] = objects
+            owner = reference_type.split(".")[0]
+            object_type = owner + ".Объект"
+            self.require(reference_type)
+            self.require(object_type)
+            lines = [f"метод ЗагрузитьОбъект(): {object_type}",
+                     f"    знч Объекты = новый Соответствие<Строка, {object_type}>()"]
+            for identifier, value in objects.items():
+                lines.append("    Объекты.Вставить(" + self.literal(identifier, "Строка") + ", "
+                             + self.literal(value, object_type) + ")")
+            lines += ["    возврат Объекты.Получить(Идентификатор)", ";\n"]
+            self.attach_method(reference_type, "\n".join(lines), [object_type])
 
     def literal(self, value, type_name):
         from .runtime import sbsl_literal
+        type_name = self.canonical_type(type_name)
         if type_name.endswith("?"):
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
         if type_name in {"Строка", "Число", "Булево"}:

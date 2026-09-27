@@ -8,7 +8,7 @@ import shutil
 import time
 import uuid
 
-from .indexer import METHOD, mask_noncode, split_parameters
+from .indexer import IDENT, METHOD, call_code, mask_noncode, split_parameters
 from .generated_types import ProjectTypes
 from .yaml_io import InputError
 
@@ -66,6 +66,31 @@ def extract_method(source, name, *, allow_void=False):
     return source[match.start():body_end], signature_types
 
 
+def method_closure(source, name):
+    """Reachable same-module bare/этот calls, including string interpolation."""
+    available = {match[1] for match in METHOD.finditer(mask_noncode(source))}
+    visited, methods = set(), []
+
+    def visit(current):
+        if current in visited:
+            return
+        visited.add(current)
+        method, parameters = extract_method(source, current, allow_void=True)
+        methods.append((method, parameters))
+        signature = METHOD.search(mask_noncode(method))
+        body = call_code(method[signature.end():])
+        calls = re.finditer(rf"(?<![\w.:])(?:этот\s*\.\s*)?({IDENT})\s*\(", body)
+        for call in calls:
+            prefix = body[:call.start()].rstrip()
+            if prefix.endswith((".", ":")) or re.search(r"\bновый$", prefix):
+                continue
+            if call[1] in available:
+                visit(call[1])
+
+    visit(name)
+    return methods
+
+
 def prepare_script(root, model, check, sandbox):
     """Copy the original method and generate only its required data contracts."""
     target = check.get("target", {})
@@ -89,36 +114,63 @@ def prepare_script(root, model, check, sandbox):
     if len(args) != len(types):
         raise InputError("Количество аргументов не совпадает с сигнатурой")
     contracts = ProjectTypes(model, module["namespace"])
+    mocks = check.get("mocks", {})
+    if not isinstance(mocks, dict) or set(mocks) - {"objects"}:
+        raise InputError("Поддерживаются только mocks.objects")
+    contracts.configure_references(mocks.get("objects", {}))
     signature = METHOD.search(mask_noncode(method))
     return_type = signature[3].strip() if signature[3] else None
     if not is_object and return_type == "ничто":
         raise InputError("Для метода без результата требуется объектный context")
-    signature_types = types + ([return_type] if return_type and return_type != "ничто" else [])
+    methods = method_closure(original, target.get("method"))
+    if not is_object and any(re.search(r"\bэтот\b", call_code(m)) for m, _ in methods):
+        raise InputError("Для объектного метода требуется context с начальными полями")
+    signature_types = []
+    for dependency, parameter_types in methods:
+        declaration = METHOD.search(mask_noncode(dependency))
+        signature_types.extend(parameter_types)
+        if declaration[3] and declaration[3].strip() != "ничто":
+            signature_types.append(declaration[3].strip())
     for type_name in signature_types:
         contracts.require(type_name)
-    # Qualify only enum types in the declaration, never rewrite the method body.
-    replacements = [(signature.start(2), signature.end(2), ",".join(
-        p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
-        for p in split_parameters(signature[2])))]
-    if return_type:
-        replacements.append((signature.start(3), signature.end(3), contracts.sbsl_type(signature[3])))
-    for start, end, replacement in reversed(replacements):
-        method = method[:start] + replacement + method[end:]
+    adapted = []
+    for dependency, _ in methods:
+        declaration = METHOD.search(mask_noncode(dependency))
+        # Adapt declarations only; the original business logic remains verbatim.
+        replacements = [(declaration.start(2), declaration.end(2), ",".join(
+            p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
+            for p in split_parameters(declaration[2])))]
+        if declaration[3]:
+            replacements.append((declaration.start(3), declaration.end(3), contracts.sbsl_type(declaration[3])))
+        for start, end, replacement in reversed(replacements):
+            dependency = dependency[:start] + replacement + dependency[end:]
+        adapted.append(dependency)
+    method = "\n".join(adapted)
     call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
     setup = ""
     expression = target["method"] + '(' + call + ')'
+    observed = "Контекст"
+    if "observe" in check:
+        fields = check["observe"]
+        if not is_object or not isinstance(fields, list) or not fields or any(not isinstance(f, str) for f in fields):
+            raise InputError("observe требует объектный context и непустой список полей")
+        contracts.require(module["name"])
+        known = {f["Имя"] for f in contracts.fields[module["name"]]}
+        if len(set(fields)) != len(fields) or set(fields) - known:
+            raise InputError("observe содержит неизвестные или повторяющиеся поля")
+        observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
     if is_object:
         object_type = module["name"]
-        contracts.attach_method(object_type, method, signature_types)
+        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types)
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
         expression = 'Контекст.' + expression
         method = ""
     if return_type and return_type != "ничто":
         invocation = '    знч Результат = ' + expression + '\n'
-        actual = '{"return": Результат, "context": Контекст}' if is_object else 'Результат'
+        actual = '{"return": Результат, "context": ' + observed + '}' if is_object else 'Результат'
     else:
         invocation = '    ' + expression + '\n'
-        actual = 'Контекст'
+        actual = observed
     imports = contracts.write(sandbox)
     script = sandbox / "test.sbsl"
     script.write_text(imports + "\n" + method + '\n\nметод Скрипт()\n' + setup + invocation
