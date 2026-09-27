@@ -10,6 +10,7 @@ import uuid
 
 from .indexer import IDENT, METHOD, call_code, mask_noncode, split_parameters
 from .generated_types import ProjectTypes
+from .platform_mocks import PlatformMocks
 from .yaml_io import InputError
 
 REPO = Path(__file__).resolve().parent.parent
@@ -17,10 +18,25 @@ REPO = Path(__file__).resolve().parent.parent
 
 def decode_output(text):
     """executor prints the entry method return value after its console output."""
+    calls = []
+    while text.startswith('ELEMENT_CALL '):
+        text = text[len('ELEMENT_CALL '):]
+        call, end = json.JSONDecoder().raw_decode(text)
+        calls.append(call)
+        text = text[end:].lstrip()
     value, end = json.JSONDecoder().raw_decode(text.lstrip())
     remainder = text.lstrip()[end:].strip()
     if remainder not in {"", "0", "1"}:
         raise InputError("Runtime вывел посторонние данные после JSON")
+    if value.pop('_captureCalls', False):
+        observe = value.pop('_observeCallArguments', None)
+        if observe is not None:
+            calls = [{**call, 'args': {k: v for k, v in call['args'].items() if k in observe}}
+                     for call in calls]
+        actual = value['actual']
+        if value.pop('_captureException', False):
+            actual = actual['result']
+        actual['calls'] = calls
     return value
 
 
@@ -115,9 +131,12 @@ def prepare_script(root, model, check, sandbox):
         raise InputError("Количество аргументов не совпадает с сигнатурой")
     contracts = ProjectTypes(model, module["namespace"])
     mocks = check.get("mocks", {})
-    if not isinstance(mocks, dict) or set(mocks) - {"objects"}:
-        raise InputError("Поддерживаются только mocks.objects")
+    if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
+        raise InputError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
     contracts.configure_references(mocks.get("objects", {}))
+    platform = PlatformMocks(contracts, mocks, check)
+    if not isinstance(check.get('captureException', False), bool):
+        raise InputError('captureException должен быть Булево')
     signature = METHOD.search(mask_noncode(method))
     return_type = signature[3].strip() if signature[3] else None
     if not is_object and return_type == "ничто":
@@ -144,7 +163,8 @@ def prepare_script(root, model, check, sandbox):
             replacements.append((declaration.start(3), declaration.end(3), contracts.sbsl_type(declaration[3])))
         for start, end, replacement in reversed(replacements):
             dependency = dependency[:start] + replacement + dependency[end:]
-        adapted.append(dependency)
+        adapted.append(platform.adapt(dependency))
+    calls = platform.finish()
     method = "\n".join(adapted)
     call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
     setup = ""
@@ -161,7 +181,19 @@ def prepare_script(root, model, check, sandbox):
         observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
     if is_object:
         object_type = module["name"]
+        if mocks.get('registers'):
+            # A handler needs the register, whose dimensions need the owner's
+            # reference. Put executable context in a separate module to keep
+            # SBSL imports acyclic without changing the handler body.
+            contracts.require(object_type)
+            context_type = 'ТестКонтекст.Объект'
+            contracts.fields[context_type] = contracts.fields[object_type]
+            contracts.definitions[context_type] = contracts.definitions[object_type]
+            object_type = context_type
         contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types)
+        contracts.method_dependencies[object_type].extend(
+            [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
+            + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
         expression = 'Контекст.' + expression
         method = ""
@@ -171,10 +203,25 @@ def prepare_script(root, model, check, sandbox):
     else:
         invocation = '    ' + expression + '\n'
         actual = observed
+    if platform.capture:
+        actual = '{"context": ' + actual + ', "calls": ' + calls + '}'
+    if check.get('captureException', False):
+        if not is_object or (return_type and return_type != 'ничто'):
+            raise InputError('captureException поддерживает только объектный метод без результата')
+        invocation = ('    пер ИсключениеРезультат: Объект? = Неопределено\n    попытка\n'
+                      + '    ' + invocation + '    поймать Ошибка: Исключение\n'
+                      + '        ИсключениеРезультат = {"type": Ошибка.ПолучитьТип().ВСтроку(), "message": Ошибка.Описание}\n'
+                      + '    ;\n')
+        actual = '{"result": ' + actual + ', "exception": ИсключениеРезультат}'
     imports = contracts.write(sandbox)
+    metadata = ''
+    if platform.capture:
+        metadata = ', "_captureCalls": Истина, "_captureException": ' + ('Истина' if check.get('captureException') else 'Ложь')
+        if platform.observe is not None:
+            metadata += ', "_observeCallArguments": ' + contracts.literal(platform.observe, 'Массив<Строка>')
     script = sandbox / "test.sbsl"
     script.write_text(imports + "\n" + method + '\n\nметод Скрипт()\n' + setup + invocation
-                      + '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": ' + actual + '}))\n;\n', encoding="utf-8")
+                      + '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": ' + actual + metadata + '}))\n;\n', encoding="utf-8")
     return script
 
 

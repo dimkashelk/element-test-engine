@@ -16,6 +16,34 @@ REPO = Path(__file__).resolve().parent.parent
 
 @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
 class DockerTest(unittest.TestCase):
+    def test_real_register_query_handlers_and_negative_grading(self):
+        archive = REPO / 'Движок.tar'
+        before = archive.read_bytes()
+        with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
+            temp = Path(directory)
+            model = analyze(root)
+            assignment = load_assignment(REPO / 'assignments/poc-platform')
+            wrong = copy.deepcopy(assignment['checks'][0])
+            wrong.update(id='wrong_replace')
+            wrong['expected']['calls'][-1]['args']['Замещать'] = True
+            unexpected = copy.deepcopy(assignment['checks'][3])
+            unexpected.update(id='wrong_no_exception')
+            unexpected['expected']['exception'] = None
+            missing_mock = copy.deepcopy(assignment['checks'][1])
+            missing_mock.update(id='missing_query', mocks={})
+            assignment['checks'].extend([wrong, unexpected, missing_mock])
+            for check in assignment['checks']:
+                check['execution'] = run_pure(root, model, check, temp)
+                status = 'UNSUPPORTED' if check['id'] == 'missing_query' else 'EXECUTED'
+                self.assertEqual(check['execution']['status'], status, check['execution'])
+            m, a = temp / 'model.json', temp / 'assignment.json'
+            m.write_text(json.dumps(model, ensure_ascii=False))
+            a.write_text(json.dumps(assignment, ensure_ascii=False))
+            result = execute_engine('test', m, a, temp)
+            self.assertEqual([c['status'] for c in result['checks']], ['PASS'] * 5 + ['FAIL', 'FAIL', 'UNSUPPORTED'])
+            self.assertEqual((result['score'], result['maxScore']), (5, 7))
+        self.assertEqual(archive.read_bytes(), before)
+
     def test_real_handlers_fakes_and_sbsl_grading(self):
         archive = REPO / 'Движок.tar'
         before = archive.read_bytes()

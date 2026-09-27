@@ -46,6 +46,8 @@ class ProjectTypes:
 
     def require(self, type_name, namespace=None):
         type_name = self.canonical_type(type_name)
+        if type_name in self.definitions:
+            return
         namespace = self.namespace if namespace is None else namespace
         if type_name.endswith("?"):
             self.require(type_name[:-1], namespace)
@@ -105,7 +107,12 @@ class ProjectTypes:
             # Empty test contract: no platform flags or write semantics are invented.
             fields = []
         elif variant in {"Объект", "Данные"}:
-            fields = list(element["properties"].get("Реквизиты", []))
+            fields = [dict(f) for f in element["properties"].get("Реквизиты", [])]
+            for field in fields:
+                if field['Имя'] == 'Наименование' and element['elementType'] == 'Справочник':
+                    field.setdefault('Тип', 'Строка')
+            if variant == "Объект":
+                fields = [{"Имя": "Ссылка", "Тип": owner + ".Ссылка"}] + fields
             fields += [{"Имя": t["Имя"], "Тип": f"Массив<{owner}.{t['Имя']}>"}
                        for t in element["properties"].get("ТабличныеЧасти", [])]
         else:
