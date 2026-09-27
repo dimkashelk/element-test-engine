@@ -1,0 +1,76 @@
+name: 'SQL smoke: отдельный PostgreSQL, без XBQL'
+checks:
+- id: sql_smoke_1
+  type: runtime
+  integration:
+    backend: postgres
+    operation: sql-smoke
+  expected:
+    before: []
+    inserted: 4
+    first:
+    - item: a
+      quantity: 1.25
+    - item: b
+      quantity: 2.5
+    second:
+    - item: a
+      quantity: 7.125
+    otherWarehouse:
+    - item: a
+      quantity: 99.75
+    updated: 1
+    after:
+    - item: a
+      quantity: 3.375
+    - item: b
+      quantity: 2.5
+    secondAfter:
+    - item: a
+      quantity: 7.125
+    deleted: 4
+    emptyAfter: []
+    secondEmptyAfter: []
+    initialCount: 0
+    remainingCount: 0
+    privileges:
+      superuser: false
+      createDb: false
+      createRole: false
+- id: sql_smoke_2
+  type: runtime
+  integration:
+    backend: postgres
+    operation: sql-smoke
+  expected:
+    before: []
+    inserted: 4
+    first:
+    - item: a
+      quantity: 1.25
+    - item: b
+      quantity: 2.5
+    second:
+    - item: a
+      quantity: 7.125
+    otherWarehouse:
+    - item: a
+      quantity: 99.75
+    updated: 1
+    after:
+    - item: a
+      quantity: 3.375
+    - item: b
+      quantity: 2.5
+    secondAfter:
+    - item: a
+      quantity: 7.125
+    deleted: 4
+    emptyAfter: []
+    secondEmptyAfter: []
+    initialCount: 0
+    remainingCount: 0
+    privileges:
+      superuser: false
+      createDb: false
+      createRole: false

@@ -288,6 +288,8 @@ def run_pure(root, model, check, temporary):
     def status(name, message):
         return {"status": name, "message": message}
 
+    if 'integration' in check:
+        return status("UNSUPPORTED", "Интеграционный контракт требует отдельного run_integration и --integration")
     if not shutil.which("docker"):
         return status("UNSUPPORTED", "Для runtime-тестов требуется Docker")
     config_path = Path(os.environ.get("ELEMENT_TEST_RUNTIMES", REPO / "config/runtimes.json"))

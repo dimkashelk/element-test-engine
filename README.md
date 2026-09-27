@@ -454,6 +454,61 @@ YAML-контракты дают `UNSUPPORTED`. Проверка владель�
 остаются отдельным интеграционным этапом. Исходный архив не меняется;
 бизнес-логика исполняется только в Docker с прежними ограничениями.
 
+## Интеграционное окружение (этап №9)
+
+Добавлен явный `--integration` и доверенный **SQL smoke** на одноразовом
+PostgreSQL 17 в закрытой Docker-сети. Script executor выполняет настоящие
+INSERT/SELECT/UPDATE/DELETE через `СоединениеSql`; сравнение и баллы вычисляет SBSL.
+Два независимых запуска проверяют фильтрацию по набору/складу, дробные значения,
+изменение одного набора, отсутствие исходных данных, удаление и ограниченную роль.
+После ошибки запроса БД и сеть также удаляются; следующие проверки продолжаются.
+Прежние студенческие runtime-тесты сохраняют Docker с `--network none`.
+
+```bash
+docker pull postgres:17@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f
+export ELEMENT_TEST_INTEGRATION_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_hex(24))')"
+bin/element-test test --project Движок.tar \
+  --assignment assignments/poc-integration-environment \
+  --integration --output result/poc-integration-environment
+unset ELEMENT_TEST_INTEGRATION_PASSWORD
+```
+
+Конфигурация — `config/integration.json`; переопределение
+`ELEMENT_TEST_INTEGRATION_CONFIG`. Секрет поступает только из окружения.
+Preflight выдаёт UNSUPPORTED для выключенного режима, отсутствующего runtime,
+драйвера, секрета, Docker/образа, неподдержанного backend/операции. Подставной
+выборки в этом режиме нет. CLI без `--integration` возвращает incomplete и код 2.
+Студенческие target/mocks/args/context в SQL smoke не принимаются.
+
+Документация API Элемента 9.1 проверена после авторизации; сигнатуры для 9.0,
+основания выбора, жизненный цикл, безопасность и граница SQL/XBQL описаны в
+[docs/integration-environment.md](docs/integration-environment.md).
+Хранение документов/движений и XBQL ещё не реализованы. Следующее задание —
+[оригинальные обработчики отгрузки с хранением](docs/next-task.md).
+Завершённое задание выбора окружения —
+[docs/tasks/009-integration-environment.md](docs/tasks/009-integration-environment.md).
+
+Проверка всех существующих сценариев и нового набора:
+
+```bash
+ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_INTEGRATION_TESTS=1 \
+  python3 -m unittest discover -s tests -v
+# Только интеграционный набор:
+ELEMENT_TEST_INTEGRATION_TESTS=1 \
+  python3 -m unittest discover -s tests -p 'test_integration.py' -v
+```
+
+JSON/HTML и журналы — `result/poc-integration-environment`: положительный отчёт
+`result.json`/`report.html`, отрицательный `negative.json`/`negative.html`.
+Отрицательный набор ожидаемо имеет failed: 1 FAIL, 1 ERROR, 2 UNSUPPORTED,
+5 PASS, включая успешное продолжение после каждого недоступного/ошибочного случая.
+Результат неверного ожидания сравнивается настоящим SBSL-движком.
+
+Полная регрессия с Docker и интеграцией: **66/66**, без пропусков
+(`result/poc-integration-environment/tests.log`). Это прежние 49 проверок,
+10 уже существовавших проверок xdump и 7 новых проверок интеграции.
+Отдельный интеграционный набор — 7/7 (`integration-tests.log`).
+
 ## Текущие ограничения
 
 Адаптер выделяет методы с типизированными параметрами; объектные методы могут не возвращать результат,

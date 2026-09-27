@@ -10,6 +10,7 @@ from .assignment import load_assignment
 from .loader import open_project
 from .model import analyze
 from .runtime import execute_engine, run_pure
+from .integration import run_integration
 from .types import parse_type
 from .yaml_io import InputError
 
@@ -42,6 +43,7 @@ def main():
     test.add_argument("--project", required=True)
     test.add_argument("--assignment", required=True)
     test.add_argument("--output", type=Path, required=True)
+    test.add_argument("--integration", action="store_true", help="Разрешить доверенный SQL smoke в отдельном PostgreSQL")
     args = parser.parse_args()
     try:
         source = Path(args.project).resolve()
@@ -74,7 +76,10 @@ def main():
                     assignment = load_assignment(args.assignment)
                     for check in assignment["checks"]:
                         if check["type"] == "runtime" and not check.get("skip"):
-                            check["execution"] = run_pure(root, model, check, temporary)
+                            if 'integration' in check:
+                                check["execution"] = run_integration(check, model, temporary, enabled=args.integration)
+                            else:
+                                check["execution"] = run_pure(root, model, check, temporary)
                     write_json(assignment_path, assignment)
                 result = execute_engine(command, model_path, assignment_path, temporary)
         if command == "test":
