@@ -1,0 +1,656 @@
+name: 'Отгрузка: ограниченный SQL-адаптер хранения'
+checks:
+- id: fractional_fresh_snapshot
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 8.125
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: b
+    warehouse: other
+    quantity: 7.75
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 1.25
+        Цена: 2.5
+        Сумма: 8.125
+      - Номенклатура:
+          Идентификатор: b
+        Количество: 2.75
+        Цена: 7.125
+        Сумма: 99.75
+  - action: load-fresh
+    reference:
+      Идентификатор: shipment
+  - action: load
+    reference:
+      Идентификатор: unknown
+  expected:
+    actions:
+    - written
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 1.25
+        Цена: 2.5
+        Сумма: 8.125
+      - Номенклатура:
+          Идентификатор: b
+        Количество: 2.75
+        Цена: 7.125
+        Сумма: 99.75
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 1.25
+        Цена: 2.5
+        Сумма: 8.125
+      - Номенклатура:
+          Идентификатор: b
+        Количество: 2.75
+        Цена: 7.125
+        Сумма: 99.75
+    - null
+    database:
+      documents:
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        item: a
+        quantity: 1.25
+        price: 2.5
+        amount: 8.125
+      - kind: Отгрузка
+        id: shipment
+        position: 1
+        item: b
+        quantity: 2.75
+        price: 7.125
+        amount: 99.75
+      movements:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: a
+        warehouse: main
+        quantity: 1.25
+      - kind: Отгрузка
+        id: shipment
+        position: 1
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: b
+        warehouse: main
+        quantity: 2.75
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 8.125
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 1
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: b
+        warehouse: other
+        quantity: 7.75
+- id: empty_table
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock: []
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары: []
+  - action: load
+    reference:
+      Идентификатор: shipment
+  expected:
+    actions:
+    - written
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары: []
+    database:
+      documents:
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines: []
+      movements: []
+- id: equal_balance
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 5
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  expected:
+    actions:
+    - written
+    database:
+      documents:
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        item: a
+        quantity: 5
+        price: 2
+        amount: 10
+      movements:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: a
+        warehouse: main
+        quantity: 5
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 5
+- id: insufficient_balance
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 4.999
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  - action: load
+    reference:
+      Идентификатор: shipment
+  expected:
+    actions:
+    - rejected
+    - null
+    database:
+      documents: []
+      lines: []
+      movements:
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 4.999
+- id: missing_item
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock: []
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  - action: load
+    reference:
+      Идентификатор: shipment
+  expected:
+    actions:
+    - rejected
+    - null
+    database:
+      documents: []
+      lines: []
+      movements: []
+- id: replace_and_empty_write
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 20
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 3.375
+        Цена: 1.25
+        Сумма: 42.125
+  - action: load
+    reference:
+      Идентификатор: shipment
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары: []
+  - action: load
+    reference:
+      Идентификатор: shipment
+  expected:
+    actions:
+    - written
+    - written
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 3.375
+        Цена: 1.25
+        Сумма: 42.125
+    - written
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары: []
+    database:
+      documents:
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines: []
+      movements:
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 20
+- id: typed_registrar_isolation
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: shipment
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 20
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: other-shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 2
+        Цена: 9
+        Сумма: 18
+  - action: clear
+    reference:
+      type: Отгрузка.Ссылка
+      value:
+        Идентификатор: shipment
+  - action: load
+    reference:
+      Идентификатор: shipment
+  - action: load
+    reference:
+      Идентификатор: other-shipment
+  expected:
+    actions:
+    - written
+    - written
+    - cleared
+    - Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+    - Ссылка:
+        Идентификатор: other-shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 2
+        Цена: 9
+        Сумма: 18
+    database:
+      documents:
+      - kind: Отгрузка
+        id: other-shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines:
+      - kind: Отгрузка
+        id: other-shipment
+        position: 0
+        item: a
+        quantity: 2
+        price: 9
+        amount: 18
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        item: a
+        quantity: 5
+        price: 2
+        amount: 10
+      movements:
+      - kind: Отгрузка
+        id: other-shipment
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: a
+        warehouse: main
+        quantity: 2
+      - kind: ПоступлениеТоваров
+        id: shipment
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 20
+- id: multiple_movements
+  type: runtime
+  integration:
+    backend: postgres
+    operation: shipment-storage
+  stock:
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 2
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Приход
+    item: a
+    warehouse: main
+    quantity: 4
+  - reference:
+      type: ПоступлениеТоваров.Ссылка
+      value:
+        Идентификатор: receipt
+    period: '2026-09-27T12:30:45'
+    direction: Расход
+    item: a
+    warehouse: main
+    quantity: 0.5
+  steps:
+  - action: write
+    document:
+      Ссылка:
+        Идентификатор: shipment
+      Дата: '2026-09-27T12:30:45'
+      Номер: OT-1
+      Склад:
+        Идентификатор: main
+      Товары:
+      - Номенклатура:
+          Идентификатор: a
+        Количество: 5
+        Цена: 2
+        Сумма: 10
+  expected:
+    actions:
+    - written
+    database:
+      documents:
+      - kind: Отгрузка
+        id: shipment
+        date: '2026-09-27T12:30:45'
+        number: OT-1
+        warehouse: main
+      lines:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        item: a
+        quantity: 5
+        price: 2
+        amount: 10
+      movements:
+      - kind: Отгрузка
+        id: shipment
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: a
+        warehouse: main
+        quantity: 5
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 0
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 2
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 1
+        period: '2026-09-27T12:30:45'
+        direction: Приход
+        item: a
+        warehouse: main
+        quantity: 4
+      - kind: ПоступлениеТоваров
+        id: receipt
+        position: 2
+        period: '2026-09-27T12:30:45'
+        direction: Расход
+        item: a
+        warehouse: main
+        quantity: 0.5

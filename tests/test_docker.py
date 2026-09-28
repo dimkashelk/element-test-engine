@@ -63,7 +63,7 @@ class DockerTest(unittest.TestCase):
                     data = execute_engine('test', m, a, temp)
                     self.assertEqual([c['status'] for c in data['checks']],
                         ['PASS'] * 5 + ['FAIL', 'PASS'] * 6 + ['ERROR', 'PASS', 'UNSUPPORTED', 'PASS'])
-                    self.assertEqual((data['score'], data['maxScore'], data['unavailablePoints']), (13, 20, 1))
+                    self.assertEqual((data['score'], data['maxScore'], data['unavailablePoints']), (13, 19, 2))
                 output = REPO / 'result' / output_name
                 output.mkdir(parents=True, exist_ok=True)
                 write_json(output / 'result.json', data)
@@ -168,7 +168,7 @@ class DockerTest(unittest.TestCase):
             a.write_text(json.dumps(assignment, ensure_ascii=False))
             result = execute_engine('test', m, a, temp)
             self.assertEqual([c['status'] for c in result['checks']], ['PASS'] * 5 + ['FAIL', 'ERROR', 'PASS'])
-            self.assertEqual((result['score'], result['maxScore']), (6, 8))
+            self.assertEqual((result['score'], result['maxScore'], result['unavailablePoints']), (6, 7, 1))
         self.assertEqual(archive.read_bytes(), before)
 
     def test_object_context_and_sbsl_grading(self):

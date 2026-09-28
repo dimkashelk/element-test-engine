@@ -36,12 +36,30 @@ class EngineTest(unittest.TestCase):
             {"id": "skipped", "type": "element", "skip": True, "points": 3},
             {"id": "absence", "type": "element", "name": "Нет", "exists": False}])
         self.assertEqual([c["status"] for c in result["checks"]], ["FAIL", "ERROR", "UNSUPPORTED", "SKIPPED", "PASS"])
-        self.assertEqual((result["score"], result["maxScore"], result["unavailablePoints"]), (1, 3, 8))
+        self.assertEqual((result["score"], result["maxScore"], result["unavailablePoints"]), (1, 2, 9))
 
     def test_only_unsupported_is_incomplete_not_student_failure(self):
         result = self.execute([{"id": "future", "type": "query", "points": 4}])
         self.assertEqual(result["status"], "incomplete")
         self.assertEqual(result["maxScore"], 0)
+
+    def test_error_and_timeout_only_are_incomplete(self):
+        result = self.execute([
+            {"id": "error", "type": "field", "points": 2},
+            {"id": "timeout", "type": "runtime", "points": 3,
+             "execution": {"status": "TIMEOUT", "message": "executor timeout"}},
+            {"id": "continues", "type": "element", "name": "Нет", "exists": False}])
+        self.assertEqual([c["status"] for c in result["checks"]], ["ERROR", "TIMEOUT", "PASS"])
+        self.assertEqual((result["status"], result["score"], result["maxScore"], result["unavailablePoints"]),
+                         ("incomplete", 1, 1, 5))
+
+    def test_unknown_runtime_status_is_error_not_failure(self):
+        result = self.execute([
+            {"id": "unknown", "type": "runtime", "execution": {"status": "BROKEN"}, "points": 2},
+            {"id": "continues", "type": "element", "name": "Нет", "exists": False}])
+        self.assertEqual([c["status"] for c in result["checks"]], ["ERROR", "PASS"])
+        self.assertEqual((result["status"], result["maxScore"], result["unavailablePoints"]),
+                         ("incomplete", 1, 2))
 
     def test_runtime_result_is_compared_in_sbsl(self):
         result = self.execute([
@@ -50,6 +68,7 @@ class EngineTest(unittest.TestCase):
             {"id": "timeout", "type": "runtime", "expected": "x", "execution": {"status": "TIMEOUT", "message": "test timeout"}}])
         self.assertEqual([c["status"] for c in result["checks"]], ["PASS", "FAIL", "TIMEOUT"])
         self.assertEqual(result["score"], 1)
+        self.assertEqual((result["maxScore"], result["unavailablePoints"]), (2, 1))
 
     def test_runtime_date_snapshot_resolves_expected_only(self):
         date = '2026-09-27T12:34:56.789'

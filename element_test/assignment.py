@@ -28,6 +28,8 @@ def load_assignment(source):
         if check["id"] in seen:
             raise InputError(f"Повторяющийся id проверки: {check['id']}")
         seen.add(check["id"])
+        if "group" in check and (not isinstance(check["group"], str) or not check["group"].strip()):
+            raise InputError(f"{check['id']}: group должен быть непустой строкой")
         try:
             points = Decimal(str(check.get("points", check.get("weight", 1))))
             if not points.is_finite() or points < 0:

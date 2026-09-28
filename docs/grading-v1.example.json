@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "studentId": "student-001",
+  "assignmentId": "demo",
+  "runId": "local-001",
+  "assignmentName": "Движок — проверка первого MVP",
+  "project": "Движок",
+  "sourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+  "compatibilityVersion": "9.0",
+  "runMode": "isolated",
+  "status": "passed",
+  "score": 6,
+  "maxScore": 6,
+  "unavailablePoints": 0,
+  "feedback": [
+    {
+      "criterionId": "order_exists",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    },
+    {
+      "criterionId": "order_client",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    },
+    {
+      "criterionId": "order_table",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    },
+    {
+      "criterionId": "order_sum_scale",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    },
+    {
+      "criterionId": "fio_handler",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    },
+    {
+      "criterionId": "fio_signature",
+      "status": "PASS",
+      "points": 1,
+      "score": 1,
+      "expected": null,
+      "actual": null,
+      "message": "Критерий выполнен"
+    }
+  ]
+}

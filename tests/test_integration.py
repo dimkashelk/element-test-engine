@@ -178,7 +178,7 @@ class SqlSmokeTest(unittest.TestCase):
             negative = execute_engine('test', m, a, temp)
             self.assertEqual([c['status'] for c in negative['checks']],
                              ['PASS', 'PASS', 'FAIL', 'ERROR', 'PASS', 'UNSUPPORTED', 'PASS', 'UNSUPPORTED', 'PASS'])
-            self.assertEqual((negative['score'], negative['maxScore'], negative['unavailablePoints']), (5, 7, 2))
+            self.assertEqual((negative['score'], negative['maxScore'], negative['unavailablePoints']), (5, 6, 3))
             write_json(output / 'negative.json', negative)
             (output / 'negative.html').write_text(report(negative))
             for data in (result, negative):

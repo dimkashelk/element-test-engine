@@ -127,6 +127,9 @@ class XdumpLoaderTest(unittest.TestCase):
                                        else output).read_text(encoding="utf-8"))
                     if command in ("test", "run"):
                         self.assertEqual(data["checks"][0]["status"], "PASS")
+                        grading = json.loads((output / "grading.json").read_text(encoding="utf-8"))
+                        self.assertEqual((grading["schemaVersion"], grading["status"]), ("1.0", "passed"))
+                        self.assertEqual(grading["feedback"][0]["criterionId"], "order")
                         self.assertTrue((output / "report.html").is_file())
                     elif command == "validate":
                         self.assertTrue(data["valid"])

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:element-test:grading:v1",
+  "title": "Element Test Engine grading transport v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "studentId", "assignmentId", "runId", "assignmentName", "project", "sourceHash", "compatibilityVersion", "runMode", "status", "score", "maxScore", "unavailablePoints", "feedback"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "studentId": {"$ref": "#/$defs/identifier"},
+    "assignmentId": {"$ref": "#/$defs/identifier"},
+    "runId": {"$ref": "#/$defs/identifier"},
+    "assignmentName": {"type": "string"},
+    "project": {"type": "string"},
+    "sourceHash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "compatibilityVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "runMode": {"enum": ["isolated", "integration"]},
+    "status": {"enum": ["passed", "failed", "incomplete"]},
+    "score": {"$ref": "#/$defs/points"},
+    "maxScore": {"$ref": "#/$defs/points"},
+    "unavailablePoints": {"$ref": "#/$defs/points"},
+    "feedback": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/feedback"}}
+  },
+  "$defs": {
+    "identifier": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}]},
+    "points": {"type": "number", "minimum": 0},
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterionId", "status", "points", "score", "expected", "actual", "message"],
+      "properties": {
+        "criterionId": {"type": "string"},
+        "group": {"type": "string"},
+        "status": {"enum": ["PASS", "FAIL", "ERROR", "TIMEOUT", "UNSUPPORTED", "SKIPPED"]},
+        "points": {"$ref": "#/$defs/points"},
+        "score": {"$ref": "#/$defs/points"},
+        "expected": {},
+        "actual": {},
+        "message": {"type": "string"}
+      }
+    }
+  }
+}
