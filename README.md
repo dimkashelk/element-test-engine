@@ -660,7 +660,8 @@ dependency closure внешних методов и прочих форм тип
 11 пропусков; отдельные Docker runtime/SQL партии с двумя workers прошли и
 совпали с одиночным CLI (`result/poc-batch-runner`).
 План — [docs/roadmap.md](docs/roadmap.md); следующее
-[задание №13](docs/next-task.md) посвящено доставке результатов в LMS.
+[задание №13](docs/next-task.md) посвящено улучшению алгоритма проверки.
+LMS и микросервис приёма архивов отложены.
 
 Проверка этапа №7: `ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -v`
 — 43 теста, все прошли; журнал: `result/poc-movements/tests.log`.
