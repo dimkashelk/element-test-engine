@@ -13,7 +13,7 @@ class GradingTest(unittest.TestCase):
             "checks": [
                 {"id": "ok", "group": "Основное", "status": "PASS", "points": 2, "score": 2},
                 {"id": "wait", "status": "TIMEOUT", "points": 3, "score": 0,
-                 "message": "executor /Users/test/private", "expected": {"result": 5}},
+                 "message": "executor /Users/test/private", "reasonCode": "timeout", "expected": {"result": 5}},
             ],
         }
         self.assignment = {"name": "Задание"}
@@ -28,11 +28,17 @@ class GradingTest(unittest.TestCase):
         self.assertEqual(package["feedback"][0]["expected"], None)
         self.assertEqual(package["feedback"][1]["expected"], {"result": 5})
         self.assertEqual(package["feedback"][1]["message"], "[redacted]")
+        self.assertEqual(package["feedback"][1]["reasonCode"], "timeout")
         self.assertNotIn("/Users", str(package))
 
     def test_invalid_identity_rejected(self):
         with self.assertRaises(InputError):
             grading_package(self.result, self.assignment, self.model, student_id="/tmp/student")
+
+    def test_unknown_reason_code_is_not_published(self):
+        self.result["checks"][1]["reasonCode"] = "arbitrary details"
+        package = grading_package(self.result, self.assignment, self.model)
+        self.assertNotIn("reasonCode", package["feedback"][1])
 
 
 if __name__ == "__main__":

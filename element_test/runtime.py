@@ -12,7 +12,7 @@ from .indexer import IDENT, call_code, lex, method_calls, mask_noncode, parse_mo
 from .resolution import import_specs, qualified, resolve_call_modules, resolve_symbols
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
-from .yaml_io import InputError
+from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 
 REPO = Path(__file__).resolve().parent.parent
 # Runtime constructors that need no YAML contract. Keep this allowlist explicit.
@@ -58,13 +58,13 @@ def execute_engine(command, model, assignment, temporary):
 def _selected_method(source, name, *, allow_void=False):
     methods, _, errors = parse_module(source)
     if errors:
-        raise InputError("Некорректный XBSL: " + "; ".join(errors))
+        raise UnsupportedSyntaxError("Некорректный XBSL: " + "; ".join(errors))
     matches = [method for method in methods if method.name == name]
     if len(matches) != 1:
         raise InputError("Метод отсутствует или неоднозначен")
     method = matches[0]
     if method.end is None:
-        raise InputError("Не удалось определить границу метода")
+        raise UnsupportedSyntaxError("Не удалось определить границу метода")
     parameters = method.parameters(source)
     if any(":" not in p or "=" in p for p in parameters) or (method.return_span is None and not allow_void):
         raise InputError("Требуются явно типизированные параметры без значений по умолчанию и результат")
@@ -81,7 +81,7 @@ def method_closure(source, name):
     """Reachable same-module methods, including calls inside interpolation."""
     parsed, _, errors = parse_module(source)
     if errors:
-        raise InputError("Некорректный XBSL: " + "; ".join(errors))
+        raise UnsupportedSyntaxError("Некорректный XBSL: " + "; ".join(errors))
     available = {method.name for method in parsed}
     visited, methods = set(), []
     def visit(current):
@@ -170,11 +170,11 @@ def constructor_types(method):
         start = declaration.header_end + match.end()
         end = code.find('(', start)
         if end < 0:
-            raise InputError('Не удалось определить тип конструктора новый')
+            raise UnsupportedSyntaxError('Не удалось определить тип конструктора новый')
         token = code[start:end].rstrip()
         atom = rf'{IDENT}(?:::{IDENT})*(?:\.{IDENT})?'
         if not re.fullmatch(rf'{atom}(?:\s*<[^()\n]+>)?', token):
-            raise InputError('Неподдержанная форма типа конструктора: ' + token)
+            raise UnsupportedSyntaxError('Неподдержанная форма типа конструктора: ' + token)
         found.append((start, start + len(token), re.sub(r'\s+', '', token)))
     return found
 
@@ -194,7 +194,7 @@ def body_type_references(method):
         else:
             continue
         if first >= len(tokens):
-            raise InputError("Тип в теле метода не указан")
+            raise UnsupportedSyntaxError("Тип в теле метода не указан")
         depth, last = 0, first
         while last < len(tokens):
             value = tokens[last].value
@@ -215,12 +215,12 @@ def body_type_references(method):
                 break
             last += 1
         if last == first or depth != 0:
-            raise InputError("Некорректный тип в теле метода")
+            raise UnsupportedSyntaxError("Некорректный тип в теле метода")
         ending = last - 1
         while ending >= first and tokens[ending].value == "\n":
             ending -= 1
         if ending < first:
-            raise InputError("Тип в теле метода не указан")
+            raise UnsupportedSyntaxError("Тип в теле метода не указан")
         start, end = tokens[first].start, tokens[ending].end
         references.append((start, end, re.sub(r"\s+", "", method[start:end])))
     return references
@@ -239,30 +239,30 @@ def prepare_script(root, model, check, sandbox):
     modules = [m for m in model["modules"] if m["name"] == target.get("module")
                and ("namespace" not in target or m["namespace"] == target["namespace"])]
     if len(modules) != 1:
-        raise InputError("Целевой модуль отсутствует или неоднозначен")
+        raise InvalidTestError("Целевой модуль отсутствует или неоднозначен")
     module = modules[0]
     original = (root / module["sourceFile"]).read_text(encoding="utf-8-sig")
     context = check.get("context")
     object_module = module.get("moduleType") == "object"
     is_object = "context" in check
     if is_object and not object_module:
-        raise InputError("context допустим только для модуля Объект")
+        raise InvalidTestError("context допустим только для модуля Объект")
     if is_object and not isinstance(context, dict):
-        raise InputError("Для объектного метода требуется context с начальными полями")
+        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
     method, types = extract_method(original, target.get("method"), allow_void=is_object)
     if not is_object and re.search(r"\bэтот\b", mask_noncode(method)):
-        raise InputError("Для объектного метода требуется context с начальными полями")
+        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
     args = check.get("args", [])
     if len(args) != len(types):
-        raise InputError("Количество аргументов не совпадает с сигнатурой")
+        raise InvalidTestError("Количество аргументов не совпадает с сигнатурой")
     contracts = ProjectTypes(model, module["namespace"], module.get("imports", []))
     mocks = check.get("mocks", {})
     if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
-        raise InputError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
+        raise InvalidTestError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
     contracts.configure_references(mocks.get("objects", {}))
     platform = PlatformMocks(contracts, mocks, check)
     if not isinstance(check.get('captureException', False), bool):
-        raise InputError('captureException должен быть Булево')
+        raise InvalidTestError('captureException должен быть Булево')
     signature = parse_module(method)[0][0]
     return_type = signature.return_type(method)
     if not is_object and return_type == "ничто":
@@ -270,7 +270,7 @@ def prepare_script(root, model, check, sandbox):
     reachable, aliases = project_method_closure(root, model, module, target.get("method"))
     methods = [(m, types) for owner, m, types in reachable if owner["sourceFile"] == module["sourceFile"]]
     if not is_object and any(re.search(r"\bэтот\b", call_code(m)) for m, _ in methods):
-        raise InputError("Для объектного метода требуется context с начальными полями")
+        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
     signature_types = []
     for owner, dependency, parameter_types in reachable:
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
@@ -329,11 +329,11 @@ def prepare_script(root, model, check, sandbox):
     if "observe" in check:
         fields = check["observe"]
         if not is_object or not isinstance(fields, list) or not fields or any(not isinstance(f, str) for f in fields):
-            raise InputError("observe требует объектный context и непустой список полей")
+            raise InvalidTestError("observe требует объектный context и непустой список полей")
         contracts.require(module["name"])
         known = {f["Имя"] for f in contracts.fields[module["name"]]}
         if len(set(fields)) != len(fields) or set(fields) - known:
-            raise InputError("observe содержит неизвестные или повторяющиеся поля")
+            raise InvalidTestError("observe содержит неизвестные или повторяющиеся поля")
         observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
     if is_object:
         object_type = module["name"]
@@ -355,7 +355,7 @@ def prepare_script(root, model, check, sandbox):
             field = check['runtimeDateTime']
             date_fields = {f['Имя'] for f in contracts.fields[object_type] if f['Тип'] == 'ДатаВремя'}
             if not isinstance(field, str) or field not in date_fields or field in context:
-                raise InputError('runtimeDateTime требует поле ДатаВремя, отсутствующее в context')
+                raise InvalidTestError('runtimeDateTime требует поле ДатаВремя, отсутствующее в context')
             setup += ('    Контекст.' + field + ' = ДатаВремя.Сейчас(ЧасовойПояс{UTC})\n'
                       '    знч ВремяТеста = Контекст.' + field + '\n')
             runtime_metadata = ', "runtimeDateTime": ВремяТеста'
@@ -371,7 +371,7 @@ def prepare_script(root, model, check, sandbox):
         actual = '{"context": ' + actual + ', "calls": ' + calls + '}'
     if check.get('captureException', False):
         if not is_object or (return_type and return_type != 'ничто'):
-            raise InputError('captureException поддерживает только объектный метод без результата')
+            raise InvalidTestError('captureException поддерживает только объектный метод без результата')
         invocation = ('    пер ИсключениеРезультат: Объект? = Неопределено\n    попытка\n'
                       + '    ' + invocation + '    поймать Ошибка: Исключение\n'
                       + '        ИсключениеРезультат = {"type": Ошибка.ПолучитьТип().ВСтроку(), "message": Ошибка.Описание}\n'
@@ -385,7 +385,7 @@ def prepare_script(root, model, check, sandbox):
     if external:
         imports = "\n".join(f"#требуется {alias}.sbsl" for alias in sorted(external)) + "\n" + imports
     if 'runtimeDateTime' in check and not is_object:
-        raise InputError('runtimeDateTime требует объектный context')
+        raise InvalidTestError('runtimeDateTime требует объектный context')
     metadata = runtime_metadata
     if platform.capture:
         metadata += ', "_captureCalls": Истина, "_captureException": ' + ('Истина' if check.get('captureException') else 'Ложь')
@@ -407,26 +407,26 @@ def sbsl_literal(value, type_name):
         import math
         if math.isfinite(value):
             return str(value)
-    raise InputError(f"Вход не соответствует типу {type_name}")
+    raise InvalidTestError(f"Вход не соответствует типу {type_name}")
 
 
 def run_pure(root, model, check, temporary):
     """Run one standalone method in Docker; return evidence, never award points."""
-    def status(name, message):
-        return {"status": name, "message": message}
+    def status(name, message, reason):
+        return {"status": name, "message": message, "reasonCode": reason}
 
     if 'integration' in check:
-        return status("UNSUPPORTED", "Интеграционный контракт требует отдельного run_integration и --integration")
+        return status("UNSUPPORTED", "Интеграционный контракт требует отдельного run_integration и --integration", "unsupported_contract")
     if not shutil.which("docker"):
-        return status("UNSUPPORTED", "Для runtime-тестов требуется Docker")
+        return status("UNSUPPORTED", "Для runtime-тестов требуется Docker", "backend_unavailable")
     config_path = Path(os.environ.get("ELEMENT_TEST_RUNTIMES", REPO / "config/runtimes.json"))
     try:
         runtimes = json.loads(config_path.read_text(encoding="utf-8"))
         runtime = runtimes.get(model["compatibilityVersion"])
         if runtime is None:
-            return status("UNSUPPORTED", "Для режима совместимости проекта не настроен runtime")
+            return status("UNSUPPORTED", "Для режима совместимости проекта не настроен runtime", "backend_unavailable")
     except (OSError, ValueError) as exc:
-        return status("UNSUPPORTED", f"Не удалось прочитать конфигурацию runtime: {exc}")
+        return status("UNSUPPORTED", f"Не удалось прочитать конфигурацию runtime: {exc}", "backend_unavailable")
     container = "element-test-" + uuid.uuid4().hex
     process = None
     created = False
@@ -452,12 +452,15 @@ def run_pure(root, model, check, temporary):
                    "-Dlogback.configurationFile=/runtime/config/logback.xml", "-Dexecutor.location=/runtime",
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
                    "-c", model["compatibilityVersion"], "/generated/test.sbsl"]
-        timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
+        try:
+            timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
+        except ValueError:
+            return status("ERROR", "timeout должен быть числом секунд", "invalid_test")
         if not 0 < timeout <= 30:
-            return status("ERROR", "timeout должен быть в диапазоне (0, 30] секунд")
+            return status("ERROR", "timeout должен быть в диапазоне (0, 30] секунд", "invalid_test")
         creation = subprocess.run(command, capture_output=True, text=True, timeout=30)
         if creation.returncode:
-            return status("UNSUPPORTED", creation.stderr[:4000])
+            return status("UNSUPPORTED", creation.stderr[:4000], "backend_unavailable")
         created = True
         stdout_path, stderr_path = sandbox / "stdout", sandbox / "stderr"
         with stdout_path.open("w+b") as out, stderr_path.open("w+b") as err:
@@ -465,28 +468,35 @@ def run_pure(root, model, check, temporary):
             deadline = time.monotonic() + timeout
             while process.poll() is None:
                 if time.monotonic() > deadline:
-                    return status("TIMEOUT", f"Превышен timeout {timeout}s")
+                    return status("TIMEOUT", f"Превышен timeout {timeout}s", "timeout")
                 if stdout_path.stat().st_size + stderr_path.stat().st_size > 1024 * 1024:
-                    return status("ERROR", "Превышен лимит вывода runtime (1 MiB)")
+                    return status("ERROR", "Превышен лимит вывода runtime (1 MiB)", "execution_error")
                 time.sleep(0.05)
             out.seek(0)
             err.seek(0)
             stdout, stderr = out.read(1024 * 1024).decode("utf-8", errors="replace"), err.read(1024 * 1024).decode("utf-8", errors="replace")
         if process.returncode in {125, 126, 127}:
-            return status("UNSUPPORTED", (stderr or "Docker runtime недоступен")[:4000])
+            return status("UNSUPPORTED", (stderr or "Docker runtime недоступен")[:4000], "backend_unavailable")
         if process.returncode:
-            return status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000])
-        decoded = decode_output(stdout)
+            return status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000], "execution_error")
+        try:
+            decoded = decode_output(stdout)
+        except (InputError, ValueError, KeyError, TypeError):
+            return status("ERROR", "Runtime вернул некорректный результат", "execution_error")
         evidence = {"status": "EXECUTED", "actual": decoded['actual']}
         if 'runtimeDateTime' in check:
             evidence['runtimeDateTime'] = decoded.get('runtimeDateTime')
         return evidence
+    except UnsupportedSyntaxError as exc:
+        return status("UNSUPPORTED", str(exc), "unsupported_syntax")
+    except InvalidTestError as exc:
+        return status("UNSUPPORTED", str(exc), "invalid_test")
     except InputError as exc:
-        return status("UNSUPPORTED", str(exc))
+        return status("UNSUPPORTED", str(exc), "unsupported_contract")
     except subprocess.TimeoutExpired:
-        return status("TIMEOUT", "Превышен timeout операции Docker")
+        return status("TIMEOUT", "Превышен timeout операции Docker", "timeout")
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        return status("ERROR", str(exc))
+        return status("ERROR", str(exc), "execution_error")
     finally:
         if created:
             subprocess.run(["docker", "rm", "-f", container], capture_output=True, timeout=10)

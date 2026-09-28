@@ -16,7 +16,9 @@ from .runtime import REPO, decode_output
 
 
 class BackendUnavailable(Exception):
-    pass
+    def __init__(self, message, reason_code='backend_unavailable'):
+        super().__init__(message)
+        self.reason_code = reason_code
 
 
 def docker(*args, input=None, env=None, timeout=30):
@@ -37,13 +39,13 @@ def preflight(check, model, *, enabled=False):
         raise BackendUnavailable('Интеграционный режим выключен; требуется --integration')
     contract = check.get('integration')
     if not isinstance(contract, dict) or set(contract) != {'backend', 'operation'}:
-        raise BackendUnavailable('integration требует только backend и operation')
+        raise BackendUnavailable('integration требует только backend и operation', 'invalid_test')
     if contract['backend'] != 'postgres':
-        raise BackendUnavailable('Неподдержанный integration backend')
+        raise BackendUnavailable('Неподдержанный integration backend', 'unsupported_contract')
     if contract['operation'] not in {'sql-smoke', 'shipment-storage'}:
-        raise BackendUnavailable('Неподдержанная операция: реализован только доверенный sql-smoke; XBQL и объектный API отсутствуют')
+        raise BackendUnavailable('Неподдержанная операция: реализован только доверенный sql-smoke; XBQL и объектный API отсутствуют', 'unsupported_contract')
     if any(key in check for key in ('target', 'mocks', 'context', 'args', 'runtimeDateTime')):
-        raise BackendUnavailable('sql-smoke не принимает студенческий target, mocks, context или args')
+        raise BackendUnavailable('sql-smoke не принимает студенческий target, mocks, context или args', 'invalid_test')
     try:
         config = json.loads(Path(os.environ.get('ELEMENT_TEST_INTEGRATION_CONFIG',
                                                 REPO / 'config/integration.json')).read_text())
@@ -137,16 +139,16 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
     try:
         config, runtime, home, password = preflight(check, model, enabled=enabled)
     except BackendUnavailable as exc:
-        return {'status': 'UNSUPPORTED', 'message': str(exc)}
+        return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': exc.reason_code}
     operation = check['integration']['operation']
     if operation == 'shipment-storage' and root is None:
-        return {'status': 'UNSUPPORTED', 'message': 'shipment-storage требует исходный проект'}
+        return {'status': 'UNSUPPORTED', 'message': 'shipment-storage требует исходный проект', 'reasonCode': 'backend_unavailable'}
     role_password = secrets.token_hex(32)
     run_id = uuid.uuid4().hex
     network, database, executor = ['element-integration-' + run_id + suffix
                                    for suffix in ('-net', '-db', '-exec')]
     resources = []
-    result = {'status': 'ERROR', 'message': 'SQL smoke: незавершённое выполнение'}
+    result = {'status': 'ERROR', 'message': 'SQL smoke: незавершённое выполнение', 'reasonCode': 'execution_error'}
     phase = 'provision'
     # Directory must outlive containers; no credentials are copied to reports.
     with TemporaryDirectory(prefix='integration-', dir=temporary) as work:
@@ -158,7 +160,7 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
                 try:
                     prepare(root, model, check, directory, inject_failure=inject_failure)
                 except InputError as exc:
-                    return {'status': 'UNSUPPORTED', 'message': str(exc)}
+                    return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': 'unsupported_contract'}
             resources.append(('network', network))
             docker('network', 'create', '--internal', network)
             resources.append(('container', database))
@@ -212,16 +214,16 @@ ALTER ROLE smoke SET statement_timeout = '3s';
             stdout = executor_output(executor, directory)
             state = json.loads(docker('inspect', executor, '--format', '{{json .State}}'))
             if state.get('ExitCode') != 0 or state.get('OOMKilled'):
-                result = {'status': 'ERROR', 'message': 'Интеграция: Script executor завершился с ошибкой'}
+                result = {'status': 'ERROR', 'message': 'Интеграция: Script executor завершился с ошибкой', 'reasonCode': 'execution_error'}
             else:
                 decoded = decode_output(stdout)
                 if decoded.get('status') == 'EXECUTED' and isinstance(decoded.get('actual'), dict):
                     result = {'status': 'EXECUTED', 'actual': decoded['actual']}
 
                 elif operation == 'shipment-storage' and decoded.get('status') == 'UNSUPPORTED':
-                    result = {'status': 'UNSUPPORTED', 'message': 'shipment-storage: неоднозначная проекция остатков по нескольким складам'}
+                    result = {'status': 'UNSUPPORTED', 'message': 'shipment-storage: неоднозначная проекция остатков по нескольким складам', 'reasonCode': 'unsupported_contract'}
                 else:
-                    result = {'status': 'ERROR', 'message': 'Интеграция: ошибка выполнения запроса'}
+                    result = {'status': 'ERROR', 'message': 'Интеграция: ошибка выполнения запроса', 'reasonCode': 'execution_error'}
                 if operation == 'shipment-storage':
                     committed = audit(database, docker)
                     if result['status'] == 'EXECUTED':
@@ -229,9 +231,10 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                     else:
                         result['storageEvidence'] = committed
         except BackendUnavailable as exc:
-            result = {'status': 'UNSUPPORTED' if phase == 'provision' else 'ERROR', 'message': str(exc)}
+            result = {'status': 'UNSUPPORTED' if phase == 'provision' else 'ERROR', 'message': str(exc),
+                      'reasonCode': exc.reason_code if phase == 'provision' else 'execution_error'}
         except (OSError, ValueError, KeyError, TypeError):
-            result = {'status': 'ERROR', 'message': 'Интеграция: некорректный результат или ошибка инфраструктуры'}
+            result = {'status': 'ERROR', 'message': 'Интеграция: некорректный результат или ошибка инфраструктуры', 'reasonCode': 'execution_error'}
         finally:
             cleanup = True
             for kind, name in reversed(resources):
@@ -247,10 +250,10 @@ ALTER ROLE smoke SET statement_timeout = '3s';
             # Drop any student output/DB value containing this run's credentials.
             serialized = json.dumps(result, ensure_ascii=False)
             if password in serialized or role_password in serialized or 'jdbc:' in serialized:
-                result = {'status': 'ERROR', 'message': 'Интеграция: запрещён вывод данных подключения'}
+                result = {'status': 'ERROR', 'message': 'Интеграция: запрещён вывод данных подключения', 'reasonCode': 'execution_error'}
             # Cleanup is required even for injected failure or an executor timeout.
             if not cleanup:
-                result = {'status': 'ERROR', 'message': 'SQL smoke: очистка ресурсов Docker не завершена'}
+                result = {'status': 'ERROR', 'message': 'SQL smoke: очистка ресурсов Docker не завершена', 'reasonCode': 'execution_error'}
             result['integration'] = {'backend': 'postgres', 'operation': operation,
                                      'runId': run_id, 'cleanup': cleanup}
     return result

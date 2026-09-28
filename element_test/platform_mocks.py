@@ -2,7 +2,7 @@
 import re
 
 from .indexer import IDENT, mask_noncode
-from .yaml_io import InputError
+from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 
 
 class PlatformMocks:
@@ -14,18 +14,18 @@ class PlatformMocks:
         self.capture = check.get('captureCalls', False)
         self.observe = check.get('observeCallArguments')
         if not isinstance(self.capture, bool):
-            raise InputError('captureCalls должен быть Булево')
+            raise InvalidTestError('captureCalls должен быть Булево')
         if self.observe is not None and (not self.capture or not isinstance(self.observe, list)
                 or any(not isinstance(n, str) for n in self.observe)
                 or len(set(self.observe)) != len(self.observe)):
-            raise InputError('observeCallArguments требует captureCalls и список уникальных имён')
+            raise InvalidTestError('observeCallArguments требует captureCalls и список уникальных имён')
         registers = mocks.get('registers', [])
         if not isinstance(registers, list) or len(set(str(r) for r in registers)) != len(registers):
-            raise InputError('mocks.registers должен быть списком уникальных имён')
+            raise InvalidTestError('mocks.registers должен быть списком уникальных имён')
         for register in registers:
             self.register(register)
         if not isinstance(self.queries, list):
-            raise InputError('mocks.queries должен быть списком')
+            raise InvalidTestError('mocks.queries должен быть списком')
         self.used_queries = set()
         self.query_definitions = []
 
@@ -140,12 +140,12 @@ class PlatformMocks:
                 depth += (code[end] == '{') - (code[end] == '}')
                 end += 1
             if depth:
-                raise InputError('Незакрытый литерал Запрос')
+                raise UnsupportedSyntaxError('Незакрытый литерал Запрос')
             text = method[start:end - 1]
             found = [i for i, q in enumerate(self.queries) if isinstance(q, dict)
                      and isinstance(q.get('text'), str) and self.query_key(q['text']) == self.query_key(text)]
             if len(found) != 1:
-                raise InputError('Для литерала Запрос требуется ровно один mocks.queries с совпадающим text')
+                raise InvalidTestError('Для литерала Запрос требуется ровно один mocks.queries с совпадающим text')
             i = found[0]
             expressions = list(re.finditer(r'%\{([^{}]+)\}', text))
             if len(expressions) != 1:
@@ -162,12 +162,12 @@ class PlatformMocks:
     def query(self, index):
         q = self.queries[index]
         if set(q) != {'text', 'fields', 'rows', 'parameterType'} or not isinstance(q['fields'], dict) or not q['fields']:
-            raise InputError('Мок запроса требует text, fields, rows, parameterType')
+            raise InvalidTestError('Мок запроса требует text, fields, rows, parameterType')
         row_type = 'ТестПлатформа.СтрокаЗапроса' + str(index)
         fields = [{'Имя': n, 'Тип': t} for n, t in q['fields'].items()]
         for f in fields:
             if not isinstance(f['Имя'], str) or not re.fullmatch(IDENT, f['Имя']):
-                raise InputError('Некорректное поле результата запроса')
+                raise InvalidTestError('Некорректное поле результата запроса')
             self.contracts.require(f['Тип'])
         self.contracts.require(q['parameterType'])
         self.contracts.fields[row_type] = fields
@@ -186,7 +186,7 @@ class PlatformMocks:
 
     def finish(self):
         if len(self.used_queries) != len(self.queries):
-            raise InputError('Есть неиспользованные mocks.queries')
+            raise InvalidTestError('Есть неиспользованные mocks.queries')
         self.contracts.definitions['ТестПлатформа'] = (
             '@Глобально\nметод ЗаписатьВызов(Вызов: Соответствие<Строка, Объект?>)\n'
             '    Консоль.Записать("ELEMENT_CALL " + СериализацияJson.ЗаписатьОбъект(Вызов))\n;\n'

@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .indexer import IDENT, split_parameters
 from .resolution import import_specs, resolve_symbols
-from .yaml_io import InputError
+from .yaml_io import InputError, InvalidTestError
 
 SCALARS = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент"}
 
@@ -195,13 +195,13 @@ class ProjectTypes:
     def configure_references(self, mocks):
         """Known IDs load fresh typed snapshots; absent IDs fail in the executor."""
         if not isinstance(mocks, dict):
-            raise InputError("mocks.objects должен быть объектом")
+            raise InvalidTestError("mocks.objects должен быть объектом")
         for reference_type, objects in mocks.items():
             reference_type = self.canonical_type(reference_type)
             if not re.fullmatch(rf"{IDENT}\.Ссылка", reference_type) or not isinstance(objects, dict):
-                raise InputError("mocks.objects: требуются тип Ссылка и отображение идентификаторов")
+                raise InvalidTestError("mocks.objects: требуются тип Ссылка и отображение идентификаторов")
             if reference_type in self.reference_mocks:
-                raise InputError(f"Повторяющийся тип fake-ссылки: {reference_type}")
+                raise InvalidTestError(f"Повторяющийся тип fake-ссылки: {reference_type}")
             self.reference_mocks[reference_type] = objects
             owner = reference_type.split(".")[0]
             object_type = owner + ".Объект"
@@ -226,7 +226,7 @@ class ProjectTypes:
             if isinstance(value, dict) and set(value) == {'type', 'value'}:
                 selected = self.canonical_type(value['type'])
                 if selected not in variants:
-                    raise InputError(f'Вариант {selected} не входит в {type_name}')
+                    raise InvalidTestError(f'Вариант {selected} не входит в {type_name}')
                 return self.literal(value['value'], selected)
             candidates = []
             for variant in variants:
@@ -235,7 +235,7 @@ class ProjectTypes:
                 except InputError:
                     pass
             if len(candidates) != 1:
-                raise InputError(f'Для {type_name} требуется явный вариант {{type, value}}')
+                raise InvalidTestError(f'Для {type_name} требуется явный вариант {{type, value}}')
             return candidates[0]
         if type_name.endswith("?"):
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
@@ -243,32 +243,32 @@ class ProjectTypes:
             return sbsl_literal(value, type_name)
         if type_name == 'ДатаВремя':
             if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}', value):
-                raise InputError('ДатаВремя требует строку YYYY-MM-DDTHH:MM:SS без часового пояса')
+                raise InvalidTestError('ДатаВремя требует строку YYYY-MM-DDTHH:MM:SS без часового пояса')
             try:
                 date = datetime.fromisoformat(value)
             except ValueError as exc:
-                raise InputError('Некорректная ДатаВремя') from exc
+                raise InvalidTestError('Некорректная ДатаВремя') from exc
             return 'новый ДатаВремя(' + ', '.join(str(n) for n in (
                 date.year, date.month, date.day, date.hour, date.minute, date.second)) + ')'
         if type_name in self.enums:
             if not isinstance(value, str):
-                raise InputError(f"Ожидалось имя элемента {type_name}")
+                raise InvalidTestError(f"Ожидалось имя элемента {type_name}")
             name = value.removeprefix(type_name + ".")
             if name not in self.enums[type_name]:
-                raise InputError(f"Неизвестный элемент {type_name}: {value}")
+                raise InvalidTestError(f"Неизвестный элемент {type_name}: {value}")
             return f"{type_name}.{name}"
         if type_name.startswith("Массив<") and type_name.endswith(">"):
             if not isinstance(value, list):
-                raise InputError(f"Ожидался массив для {type_name}")
+                raise InvalidTestError(f"Ожидался массив для {type_name}")
             inner = type_name[7:-1].strip()
             # Explicit constructor keeps the element type even for an empty array.
             return f"новый {self.sbsl_type(type_name)}([" + ", ".join(self.literal(v, inner) for v in value) + "])"
         if type_name in self.fields:
             if not isinstance(value, dict):
-                raise InputError(f"Ожидался объект для {type_name}")
+                raise InvalidTestError(f"Ожидался объект для {type_name}")
             fields = {f["Имя"]: f["Тип"] for f in self.fields[type_name]}
             if set(value) - fields.keys():
-                raise InputError(f"Неизвестные поля {type_name}: {sorted(set(value) - fields.keys())}")
+                raise InvalidTestError(f"Неизвестные поля {type_name}: {sorted(set(value) - fields.keys())}")
             arguments = [f"{key} = {self.literal(v, fields[key])}" for key, v in value.items()]
             return f"новый {type_name}(" + ", ".join(arguments) + ")"
         raise InputError(f"Вход для типа {type_name} пока не поддерживается")

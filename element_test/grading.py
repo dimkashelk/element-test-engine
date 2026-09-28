@@ -4,6 +4,9 @@ import re
 from .yaml_io import InputError
 
 VERSION = "1.0"
+REASON_CODES = {"invalid_test", "unsupported_syntax", "unsupported_contract",
+                "backend_unavailable", "execution_error", "timeout",
+                "result_mismatch", "skipped"}
 IDENTIFIER = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}\Z")
 SENSITIVE = re.compile(
     r"(?:jdbc:|(?:password|passwd|secret|token|api[_-]?key)\s*[:=]|"
@@ -43,6 +46,8 @@ def grading_package(result, assignment, model, *, student_id=None, assignment_id
                 }.get(check["status"], "Статус проверки неизвестен"))}
         if "group" in check:
             item["group"] = safe(check["group"])
+        if check.get("reasonCode") in REASON_CODES:
+            item["reasonCode"] = check["reasonCode"]
         feedback.append(item)
     return {
         "schemaVersion": VERSION,

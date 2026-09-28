@@ -69,6 +69,27 @@ class EngineTest(unittest.TestCase):
         self.assertEqual([c["status"] for c in result["checks"]], ["PASS", "FAIL", "TIMEOUT"])
         self.assertEqual(result["score"], 1)
         self.assertEqual((result["maxScore"], result["unavailablePoints"]), (2, 1))
+        self.assertEqual([c["reasonCode"] for c in result["checks"] if c["status"] != "PASS"],
+                         ["result_mismatch", "timeout"])
+
+    def test_reason_codes_keep_unavailable_points_out_of_grade(self):
+        result = self.execute([
+            {"id": "invalid", "type": "runtime", "points": 2,
+             "execution": {"status": "ERROR", "reasonCode": "invalid_test"}},
+            {"id": "syntax", "type": "runtime", "points": 3,
+             "execution": {"status": "UNSUPPORTED", "reasonCode": "unsupported_syntax"}},
+            {"id": "docker", "type": "runtime", "points": 4,
+             "execution": {"status": "UNSUPPORTED", "reasonCode": "backend_unavailable"}},
+            {"id": "execute", "type": "runtime", "points": 5,
+             "execution": {"status": "ERROR", "reasonCode": "execution_error"}},
+            {"id": "wrong", "type": "runtime", "points": 6,
+             "expected": 1, "execution": {"status": "EXECUTED", "actual": 2}},
+            {"id": "next", "type": "runtime", "points": 1,
+             "expected": 3, "execution": {"status": "EXECUTED", "actual": 3}}])
+        self.assertEqual([c["reasonCode"] for c in result["checks"][:-1]],
+                         ["invalid_test", "unsupported_syntax", "backend_unavailable",
+                          "execution_error", "result_mismatch"])
+        self.assertEqual((result["score"], result["maxScore"], result["unavailablePoints"]), (1, 7, 14))
 
     def test_structural_absence_namespace_collection_and_mismatch_reason(self):
         model = {"name": "Структура", "sourceHash": "fixture", "diagnostics": [],

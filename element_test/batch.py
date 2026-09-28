@@ -176,7 +176,7 @@ def _valid_cache(stored, key, source_hash, config, integration):
     for check, feedback, specification in zip(result["checks"], package["feedback"], config["checks"]):
         if (not isinstance(check, dict) or not isinstance(feedback, dict)
                 or not {"criterionId", "status", "points", "score", "expected", "actual", "message"} <= set(feedback)
-                or set(feedback) - {"criterionId", "status", "points", "score", "expected", "actual", "message", "group"}
+                or set(feedback) - {"criterionId", "status", "points", "score", "expected", "actual", "message", "group", "reasonCode"}
                 or not isinstance(feedback.get("message"), str)
                 or check.get("id") != specification["id"]
                 or feedback.get("criterionId") != check["id"]

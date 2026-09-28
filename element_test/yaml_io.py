@@ -7,6 +7,14 @@ class InputError(ValueError):
     pass
 
 
+class InvalidTestError(InputError):
+    """The teacher's check cannot be executed as specified."""
+
+
+class UnsupportedSyntaxError(InputError):
+    """The student's XBSL cannot be safely interpreted by this adapter."""
+
+
 class Loader(yaml.SafeLoader):
     pass
 

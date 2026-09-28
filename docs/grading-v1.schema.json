@@ -32,6 +32,7 @@
         "criterionId": {"type": "string"},
         "group": {"type": "string"},
         "status": {"enum": ["PASS", "FAIL", "ERROR", "TIMEOUT", "UNSUPPORTED", "SKIPPED"]},
+        "reasonCode": {"enum": ["invalid_test", "unsupported_syntax", "unsupported_contract", "backend_unavailable", "execution_error", "timeout", "result_mismatch", "skipped"]},
         "points": {"$ref": "#/$defs/points"},
         "score": {"$ref": "#/$defs/points"},
         "expected": {},
