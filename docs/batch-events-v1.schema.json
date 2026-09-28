@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:element-test:batch-events:v1",
+  "title": "One JSONL batch event v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "batchId", "type"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "batchId": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "type": {"enum": ["batchStarted", "submissionStarted", "checkFinished", "submissionFinished", "batchFinished"]},
+    "total": {"type": "integer", "minimum": 0},
+    "submissionId": {"type": "string", "pattern": "^[0-9]{6}$"},
+    "runId": {"type": "string", "pattern": "^[0-9a-f]{32}-[0-9]{6}$"},
+    "criterionId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "status": {"enum": ["PASS", "FAIL", "ERROR", "TIMEOUT", "UNSUPPORTED", "SKIPPED", "passed", "failed", "incomplete", "inputError", "completed", "interrupted"]},
+    "score": {"type": ["number", "null"], "minimum": 0},
+    "points": {"type": "number", "minimum": 0},
+    "cacheHit": {"type": ["boolean", "null"]},
+    "counts": {"$ref": "#/$defs/counts"}
+  },
+  "$defs": {
+    "counts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["passed", "failed", "incomplete", "inputError"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0},
+        "incomplete": {"type": "integer", "minimum": 0},
+        "inputError": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

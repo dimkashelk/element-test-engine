@@ -15,6 +15,8 @@ Script executor, а не переводится в Python.
 - `test` / `run`: элементы, поля, табличные части, элементы перечисления, свойства,
   модули, аннотации, параметры и результат метода. Ресурсы и измерения проверяются
   как поля с указанием `collection: Ресурсы` или `collection: Измерения`.
+- `batch`: партия работ из JSON manifest с 1–4 отдельными процессами,
+  независимыми пакетами, потоком событий и локальным кэшем структурных проверок.
 - Runtime PoC: запуск оригинального чистого метода `СформироватьФИО` из `Движок.tar`
   в Docker, сравнение ожидаемого и фактического результата **в SBSL**.
 - Эксперимент №2: оригинальный `ЗаказФормаОбъекта.РассчитатьИтоги` с циклом по
@@ -85,6 +87,45 @@ bin/element-test test --project Движок.tar --assignment assignments/poc-ha
 bin/element-test test --project Движок.tar --assignment assignments/poc-platform --output result/poc-platform
 bin/element-test test --project Движок.tar --assignment assignments/poc-movements --output result/poc-movements
 ```
+
+### Массовый запуск
+
+Manifest преподавателя хранится отдельно от работ. Пути `assignment` и `project`
+разрешаются относительно файла manifest; каждая работа имеет уникальный
+`studentId`. Пример:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "assignment": "assignments/demo",
+  "assignmentId": "demo",
+  "submissions": [
+    {"studentId": "student-001", "project": "incoming/001.tar"},
+    {"studentId": "student-002", "project": "incoming/002.xdump"}
+  ]
+}
+```
+
+```bash
+bin/element-test batch --manifest batch.json --output result/batch --workers 2
+bin/element-test batch --manifest batch.json --output result/batch-sql --workers 2 --integration
+```
+
+Выходной каталог должен быть пустым. `batch-result.json` содержит счётчики и
+относительные ссылки на `submissions/000001/{result.json,grading.json,report.html}`;
+`events.jsonl` можно читать во время работы. `inputError` для повреждённого
+входа не создаёт `grading.json` и не останавливает остальные работы. Коды
+возврата: 0 при всех `passed`, 1 при `failed`/`incomplete`/`inputError`, 2 при
+ошибке manifest, 130 при прерывании. По умолчанию используется один worker;
+интеграционный PostgreSQL запускается только с `--integration`.
+
+Локальный кэш по умолчанию находится в `.element-test-cache` рядом с output;
+путь можно задать через `ELEMENT_TEST_CACHE_DIR`. В кэш попадают только
+завершённые структурные результаты с `PASS`/`FAIL`. Runtime-проверки, включая
+SQL, каждый раз запускаются заново. Форматы:
+[manifest](docs/batch-manifest-v1.schema.json),
+[индекс](docs/batch-result-v1.schema.json),
+[событие JSONL](docs/batch-events-v1.schema.json).
 
 Без установки пакета можно использовать системный Python с установленным PyYAML.
 Обёртка `bin/script-runtime` исправляет запуск executor из пути с пробелами,
@@ -397,8 +438,8 @@ expected:
 передаётся SBSL, который заменяет точные строковые маркеры
 `__runtimeDateTime__` в `expected`. В отчёте показаны реальные даты.
 Значение берётся до вызова обработчика, поэтому его изменения даты или неверный
-период не меняют ожидание. Это явно заменяет первоначальное требование
-`docs/next-task.md` о фиксированной дате. Отдельный вход `ДатаВремя` всё ещё
+период не меняют ожидание. Это заменяет первоначальное требование
+фиксированной даты. Отдельный вход `ДатаВремя` всё ещё
 можно задать строкой `YYYY-MM-DDTHH:MM:SS` (валидируется календарь, часовой пояс
 и код в строке не принимаются).
 
@@ -591,7 +632,7 @@ bin/element-test test --project Движок.tar --assignment assignments/demo \
 Пакет содержит доступные баллы, недоступные баллы и feedback по каждому критерию.
 Баллы и статусы вычисляет SBSL; `ERROR` и `TIMEOUT` не считаются ошибкой работы
 студента. Схема, пример и правила версий — в [контракте оценки](docs/grading-contract.md).
-Следующий этап — [массовый запуск](docs/next-task.md).
+Массовый запуск реализован по [заданию №12](docs/tasks/012-batch-runner.md).
 
 ## Текущие ограничения
 
@@ -613,8 +654,13 @@ Union-типы поддержаны для генерируемых типов; 
 пока не адаптируются; dependency closure типов из тела охватывает конструкторы `новый`.
 Полная семантика параметров записи и общий API хранилища объектов,
 произвольное исполнение XBQL и дополнительные формы запросов,
-dependency closure внешних методов и прочих форм типов внутри тела, persistent cache, массовые workers
-и LMS пока не реализованы. План — [docs/roadmap.md](docs/roadmap.md).
+dependency closure внешних методов и прочих форм типов внутри тела и LMS
+пока не реализованы. Массовый запуск и ограниченный структурный кэш описаны
+в [задании №12](docs/tasks/012-batch-runner.md). Локальная регрессия: 78 тестов,
+11 пропусков; отдельные Docker runtime/SQL партии с двумя workers прошли и
+совпали с одиночным CLI (`result/poc-batch-runner`).
+План — [docs/roadmap.md](docs/roadmap.md); следующее
+[задание №13](docs/next-task.md) посвящено доставке результатов в LMS.
 
 Проверка этапа №7: `ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -v`
 — 43 теста, все прошли; журнал: `result/poc-movements/tests.log`.

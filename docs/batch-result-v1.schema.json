@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:element-test:batch-result:v1",
+  "title": "Batch result index v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "batchId", "assignmentId", "status", "counts", "submissions"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "batchId": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "assignmentId": {"$ref": "#/$defs/identifier"},
+    "status": {"enum": ["completed", "interrupted"]},
+    "counts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["passed", "failed", "incomplete", "inputError"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0},
+        "incomplete": {"type": "integer", "minimum": 0},
+        "inputError": {"type": "integer", "minimum": 0}
+      }
+    },
+    "submissions": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["submissionId", "studentId", "runId", "status"],
+        "properties": {
+          "submissionId": {"type": "string", "pattern": "^[0-9]{6}$"},
+          "studentId": {"$ref": "#/$defs/identifier"},
+          "runId": {"type": "string", "pattern": "^[0-9a-f]{32}-[0-9]{6}$"},
+          "status": {"enum": ["passed", "failed", "incomplete", "inputError"]},
+          "score": {"type": "number", "minimum": 0},
+          "maxScore": {"type": "number", "minimum": 0},
+          "unavailablePoints": {"type": "number", "minimum": 0},
+          "cacheHit": {"type": "boolean"},
+          "result": {"type": "string", "pattern": "^submissions/[0-9]{6}/result[.]json$"},
+          "grading": {"type": "string", "pattern": "^submissions/[0-9]{6}/grading[.]json$"},
+          "report": {"type": "string", "pattern": "^submissions/[0-9]{6}/report[.]html$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}
+  }
+}
