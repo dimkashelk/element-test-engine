@@ -2,7 +2,6 @@
 import re
 
 from .indexer import IDENT, mask_noncode
-from .model import resolve
 from .yaml_io import InputError
 
 
@@ -42,7 +41,7 @@ class PlatformMocks:
     def register(self, name):
         if not isinstance(name, str) or not re.fullmatch(IDENT, name):
             raise InputError('Мок регистра требует краткое имя')
-        matches = resolve(self.contracts.model['elements'], name, self.contracts.namespace)
+        matches = self.contracts.resolve(name)
         if len(matches) != 1 or matches[0]['elementType'] not in {'РегистрСведений', 'РегистрНакопления'}:
             raise InputError('Требуется однозначный РегистрСведений или РегистрНакопления: ' + name)
         element = matches[0]

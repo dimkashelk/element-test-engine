@@ -8,7 +8,8 @@ import shutil
 import time
 import uuid
 
-from .indexer import IDENT, METHOD, call_code, mask_noncode, split_parameters
+from .indexer import IDENT, call_code, method_calls, mask_noncode, parse_module, split_parameters
+from .resolution import import_specs, qualified, resolve_call_modules, resolve_symbols
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
 from .yaml_io import InputError
@@ -54,59 +55,106 @@ def execute_engine(command, model, assignment, temporary):
         raise InputError(f"Некорректный JSON движка: {result.stdout[:1000]}") from exc
 
 
-def extract_method(source, name, *, allow_void=False):
-    code = mask_noncode(source)
-    matches = [m for m in METHOD.finditer(code) if m[1] == name]
+def _selected_method(source, name, *, allow_void=False):
+    methods, _, errors = parse_module(source)
+    if errors:
+        raise InputError("Некорректный XBSL: " + "; ".join(errors))
+    matches = [method for method in methods if method.name == name]
     if len(matches) != 1:
         raise InputError("Метод отсутствует или неоднозначен")
-    match = matches[0]
-    # Track line-oriented blocks conservatively; never truncate at a loop's ';'.
-    depth, body_end = 1, None
-    offset = match.end()
-    for line in code[match.end():].splitlines(keepends=True):
-        stripped = line.strip()
-        if re.match(r"^(если|пока|для|выбор|попытка)\b", stripped):
-            depth += 1
-        elif re.search(r"\bметод\b", stripped):
-            raise InputError("Вложенные методы или незакрытый метод не поддерживаются")
-        elif stripped == ";":
-            depth -= 1
-            if depth == 0:
-                body_end = offset + len(line)
-                break
-        offset += len(line)
-    if body_end is None:
+    method = matches[0]
+    if method.end is None:
         raise InputError("Не удалось определить границу метода")
-    parameters = split_parameters(match[2])
-    if any(":" not in p or "=" in p for p in parameters) or (match[3] is None and not allow_void):
+    parameters = method.parameters(source)
+    if any(":" not in p or "=" in p for p in parameters) or (method.return_span is None and not allow_void):
         raise InputError("Требуются явно типизированные параметры без значений по умолчанию и результат")
-    signature_types = [p.split(":", 1)[1].strip() for p in parameters]
-    return source[match.start():body_end], signature_types
+    return method, [p.split(":", 1)[1].strip() for p in parameters]
+
+
+def extract_method(source, name, *, allow_void=False):
+    method, types = _selected_method(source, name, allow_void=allow_void)
+    return source[method.start:method.end], types
+
 
 
 def method_closure(source, name):
-    """Reachable same-module bare/этот calls, including string interpolation."""
-    available = {match[1] for match in METHOD.finditer(mask_noncode(source))}
+    """Reachable same-module methods, including calls inside interpolation."""
+    parsed, _, errors = parse_module(source)
+    if errors:
+        raise InputError("Некорректный XBSL: " + "; ".join(errors))
+    available = {method.name for method in parsed}
     visited, methods = set(), []
-
     def visit(current):
         if current in visited:
             return
         visited.add(current)
         method, parameters = extract_method(source, current, allow_void=True)
         methods.append((method, parameters))
-        signature = METHOD.search(mask_noncode(method))
-        body = call_code(method[signature.end():])
-        calls = re.finditer(rf"(?<![\w.:])(?:этот\s*\.\s*)?({IDENT})\s*\(", body)
-        for call in calls:
-            prefix = body[:call.start()].rstrip()
-            if prefix.endswith((".", ":")) or re.search(r"\bновый$", prefix):
-                continue
-            if call[1] in available:
-                visit(call[1])
-
+        for owner, called in method_calls(method, parse_module(method)[0][0]):
+            if owner is None and called in available:
+                visit(called)
     visit(name)
     return methods
+
+
+def project_method_closure(root, model, module, name):
+    """Reachable methods across visible imported modules; preserve each source slice."""
+    modules = model["modules"]
+    project = model.get("properties", {})
+    cache = {}
+    def source_of(item):
+        path = item["sourceFile"]
+        if path not in cache:
+            cache[path] = (root / path).read_text(encoding="utf-8-sig")
+        return cache[path]
+    seen, result, aliases = set(), [], {}
+    def visit(item, current):
+        key = (item["sourceFile"], current)
+        if key in seen: return
+        seen.add(key)
+        source = source_of(item)
+        node, types = _selected_method(source, current, allow_void=True)
+        method = source[node.start:node.end]
+        result.append((item, method, types))
+        names = {m.name for m in parse_module(source)[0]}
+        imports = item.get("imports", [])
+        for owner, called in method_calls(source, node):
+            candidates = []
+            if owner is None:
+                if called in names:
+                    candidates = [item]
+                else:
+                    for path, alias in import_specs(imports):
+                        if alias: continue
+                        imported = ([m for m in modules if m["namespace"] == path and m.get("visibility") != "ВПодсистеме"]
+                                    if any(m["namespace"] == path for m in modules) else
+                                    resolve_symbols(modules, path, item["namespace"], imports, project))
+                        candidates.extend(m for m in imported if called in {n.name for n in parse_module(source_of(m))[0] if "Локально" not in n.annotations})
+            else:
+                owners = resolve_call_modules(modules, owner, item["namespace"], imports, project)
+                candidates = [m for m in owners
+                              if called in {n.name for n in parse_module(source_of(m))[0]
+                                            if m["sourceFile"] == item["sourceFile"] or "Локально" not in n.annotations}]
+                if owners and not candidates and any(
+                        called == n.name for m in owners for n in parse_module(source_of(m))[0]):
+                    raise InputError(f"Недоступный метод: {owner}.{called}")
+            unique = {m["sourceFile"]: m for m in candidates}
+            if len(unique) > 1:
+                raise InputError(f"Неоднозначный вызов: {owner + '.' if owner else ''}{called}")
+            if unique:
+                other = next(iter(unique.values()))
+                if other["sourceFile"] != item["sourceFile"]:
+                    if other.get("moduleType") == "object":
+                        raise InputError("Внешний объектный метод требует собственный context")
+                    alias = owner or other["name"]
+                    if "::" in alias:
+                        raise InputError("Квалифицированный вызов внешнего модуля пока не поддерживается runtime")
+                    previous = aliases.setdefault(other["sourceFile"], alias)
+                    if previous != alias:
+                        raise InputError("Один модуль импортирован под несколькими именами")
+                visit(other, called)
+    visit(module, name)
+    return result, aliases
 
 
 def constructor_types(method):
@@ -115,11 +163,11 @@ def constructor_types(method):
     Only the token between `новый` and `(` is eligible for adaptation.
     This is deliberately not general expression or external-call resolution.
     """
-    declaration = METHOD.search(mask_noncode(method))
+    declaration = parse_module(method)[0][0]
     code = call_code(method)
     found = []
-    for match in re.finditer(r'\bновый\s+', code[declaration.end():]):
-        start = declaration.end() + match.end()
+    for match in re.finditer(r'\bновый\s+', code[declaration.header_end:]):
+        start = declaration.header_end + match.end()
         end = code.find('(', start)
         if end < 0:
             raise InputError('Не удалось определить тип конструктора новый')
@@ -153,7 +201,7 @@ def prepare_script(root, model, check, sandbox):
     args = check.get("args", [])
     if len(args) != len(types):
         raise InputError("Количество аргументов не совпадает с сигнатурой")
-    contracts = ProjectTypes(model, module["namespace"])
+    contracts = ProjectTypes(model, module["namespace"], module.get("imports", []))
     mocks = check.get("mocks", {})
     if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
         raise InputError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
@@ -161,43 +209,54 @@ def prepare_script(root, model, check, sandbox):
     platform = PlatformMocks(contracts, mocks, check)
     if not isinstance(check.get('captureException', False), bool):
         raise InputError('captureException должен быть Булево')
-    signature = METHOD.search(mask_noncode(method))
-    return_type = signature[3].strip() if signature[3] else None
+    signature = parse_module(method)[0][0]
+    return_type = signature.return_type(method)
     if not is_object and return_type == "ничто":
         raise InputError("Для метода без результата требуется объектный context")
-    methods = method_closure(original, target.get("method"))
+    reachable, aliases = project_method_closure(root, model, module, target.get("method"))
+    methods = [(m, types) for owner, m, types in reachable if owner["sourceFile"] == module["sourceFile"]]
     if not is_object and any(re.search(r"\bэтот\b", call_code(m)) for m, _ in methods):
         raise InputError("Для объектного метода требуется context с начальными полями")
     signature_types = []
-    for dependency, parameter_types in methods:
-        declaration = METHOD.search(mask_noncode(dependency))
+    for owner, dependency, parameter_types in reachable:
+        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
+        declaration = parse_module(dependency)[0][0]
         signature_types.extend(parameter_types)
-        if declaration[3] and declaration[3].strip() != "ничто":
-            signature_types.append(declaration[3].strip())
-    for type_name in signature_types:
-        contracts.require(type_name)
+        if declaration.return_type(dependency) and declaration.return_type(dependency) != "ничто":
+            signature_types.append(declaration.return_type(dependency))
+        for type_name in parameter_types + ([declaration.return_type(dependency)] if declaration.return_type(dependency) and declaration.return_type(dependency) != "ничто" else []):
+            contracts.require(type_name)
     body_types = []
-    for dependency, _ in methods:
+    for owner, dependency, _ in reachable:
+        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
         for _, _, type_name in constructor_types(dependency):
             if type_name in RUNTIME_CONSTRUCTORS:
                 continue
             contracts.require(type_name)
             body_types.append(type_name)
     adapted = []
-    for dependency, _ in methods:
-        declaration = METHOD.search(mask_noncode(dependency))
+    external = {}
+    for owner, dependency, _ in reachable:
+        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
+        declaration = parse_module(dependency)[0][0]
         # Adapt declarations and resolved constructor type tokens only.
-        replacements = [(declaration.start(2), declaration.end(2), ",".join(
+        replacements = [(*declaration.parameters_span, ",".join(
             p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
-            for p in split_parameters(declaration[2])))]
-        if declaration[3]:
-            replacements.append((declaration.start(3), declaration.end(3), contracts.sbsl_type(declaration[3])))
+            for p in declaration.parameters(dependency)))]
+        if declaration.return_span:
+            replacements.append((*declaration.return_span, contracts.sbsl_type(declaration.return_type(dependency))))
         replacements.extend((start, end, contracts.sbsl_type(type_name))
                             for start, end, type_name in constructor_types(dependency)
                             if contracts.sbsl_type(type_name) != dependency[start:end])
         for start, end, replacement in sorted(replacements, reverse=True):
             dependency = dependency[:start] + replacement + dependency[end:]
-        adapted.append(platform.adapt(dependency))
+        compiled = platform.adapt(dependency)
+        if owner["sourceFile"] == module["sourceFile"]:
+            adapted.append(compiled)
+        else:
+            alias = aliases[owner["sourceFile"]]
+            external.setdefault(alias, []).append(compiled)
+    contracts.namespace, contracts.imports = module["namespace"], module.get("imports", [])
     calls = platform.finish()
     method = "\n".join(adapted)
     call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
@@ -257,6 +316,12 @@ def prepare_script(root, model, check, sandbox):
                       + '    ;\n')
         actual = '{"result": ' + actual + ', "exception": ИсключениеРезультат}'
     imports = contracts.write(sandbox)
+    for alias, bodies in external.items():
+        if (sandbox / (alias + ".sbsl")).exists():
+            raise InputError("Конфликт имени импортированного модуля: " + alias)
+        (sandbox / (alias + ".sbsl")).write_text("\n".join("@Глобально\n" + body for body in bodies), encoding="utf-8")
+    if external:
+        imports = "\n".join(f"#требуется {alias}.sbsl" for alias in sorted(external)) + "\n" + imports
     if 'runtimeDateTime' in check and not is_object:
         raise InputError('runtimeDateTime требует объектный context')
     metadata = runtime_metadata

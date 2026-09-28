@@ -75,6 +75,12 @@ def analyze(root):
         elements.append({"name": name, "elementType": kind, "id": data.get("Ид"),
                          "namespace": namespace, "visibility": data.get("ОбластьВидимости", "ВПодсистеме"),
                          "sourceFile": relative, "properties": data})
+    for module in modules:
+        owner = module["name"].split(".")[0]
+        matching = [e for e in elements if e["namespace"] == module["namespace"] and e["name"] == owner]
+        module["visibility"] = matching[0]["visibility"] if len(matching) == 1 else "ВПроекте"
+        for error in module.get("parseErrors", []):
+            diagnostics.append({"code": "invalid_xbsl", "sourceFile": module["sourceFile"], "message": error})
     identities = set()
     dependencies = []
     for element in elements:
@@ -105,6 +111,10 @@ def analyze(root):
                                                     "message": f"{element['name']}.{member['Имя']}: {reference} недоступен вне своей подсистемы"})
                     except ValueError as exc:
                         diagnostics.append({"code": "invalid_type", "sourceFile": element["sourceFile"], "message": str(exc)})
+    from .call_graph import build_call_graph
+    call_graph, call_diagnostics = build_call_graph(root, {"modules": modules, "properties": project})
+    diagnostics.extend(call_diagnostics)
     return {"schemaVersion": 1, "name": project.get("Имя", root.name), "compatibilityVersion": version,
             "sourceHash": digest.hexdigest(), "properties": project, "subsystems": subsystems,
-            "elements": elements, "modules": modules, "dependencies": dependencies, "diagnostics": diagnostics}
+            "elements": elements, "modules": modules, "dependencies": dependencies,
+            "callGraph": call_graph, "diagnostics": diagnostics}

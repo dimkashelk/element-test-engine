@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 from .indexer import IDENT, split_parameters
-from .model import resolve
+from .resolution import import_specs, resolve_symbols
 from .yaml_io import InputError
 
 SCALARS = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент"}
@@ -20,18 +20,29 @@ def union_members(type_name):
 
 
 class ProjectTypes:
-    def __init__(self, model, namespace=""):
-        self.model, self.namespace = model, namespace
+    def __init__(self, model, namespace="", imports=()):
+        self.model, self.namespace, self.imports = model, namespace, imports
         self.definitions, self.fields, self.owners = {}, {}, {}
         self.active = set()
         self.enums, self.methods, self.method_dependencies = {}, {}, {}
         self.enum_types = {}
         self.reference_mocks = {}
 
+    def resolve(self, name, namespace=None):
+        namespace = self.namespace if namespace is None else namespace
+        imports = self.imports if namespace == self.namespace else ()
+        return resolve_symbols(self.model["elements"], name, namespace, imports,
+                               self.model.get("properties"))
+
     def canonical_type(self, type_name):
         """Resolve explicit project namespaces before shortening SBSL names."""
         if not isinstance(type_name, str):
             raise InputError("Имя типа должно быть строкой")
+        for path, alias in import_specs(self.imports):
+            if alias and resolve_symbols(self.model["elements"], path, self.namespace,
+                                         self.imports, self.model.get("properties")):
+                type_name = re.sub(rf"(?<![\w:]){re.escape(alias)}(?=\.|[<>,|?]|$)",
+                                   path, type_name)
         pattern = rf"(?:{IDENT}::)+{IDENT}(?:\.{IDENT})?"
 
         def shorten(match):
@@ -42,7 +53,7 @@ class ProjectTypes:
             prefix = "::".join(project_names) + "::" if all(isinstance(n, str) and n for n in project_names) else None
             if prefix and owner.startswith(prefix):
                 owner = owner[len(prefix):]
-            matches = resolve(self.model["elements"], owner, self.namespace)
+            matches = self.resolve(owner, self.namespace)
             if len(matches) != 1:
                 raise InputError(f"Квалифицированный тип отсутствует или неоднозначен: {qualified}")
             element = matches[0]
@@ -83,12 +94,13 @@ class ProjectTypes:
             for argument in arguments:
                 self.require(argument.strip(), namespace)
             return
-        qualified = '::' in type_name
+        qualified = '::' in type_name or any(alias and (type_name == alias or type_name.startswith(alias + '.'))
+                                                 for _, alias in import_specs(self.imports))
         type_name = self.canonical_type(type_name)
         if re.fullmatch(rf'{IDENT}(?:\.{IDENT})?', type_name) and type_name not in SCALARS:
             owner = type_name.split('.')[0]
             lookup_namespace = self.owners[owner][0] if qualified else namespace
-            matches = resolve(self.model['elements'], owner, lookup_namespace)
+            matches = self.resolve(owner, lookup_namespace)
             if len(matches) == 1:
                 self.claim_owner(owner, matches[0])
             elif owner in self.owners:
@@ -97,7 +109,7 @@ class ProjectTypes:
         if type_name in self.definitions:
             return
         if re.fullmatch(IDENT, type_name):
-            matches = resolve(self.model["elements"], type_name, namespace)
+            matches = self.resolve(type_name, namespace)
             if len(matches) != 1 or matches[0]["elementType"] != "Перечисление":
                 raise InputError(f"Перечисление {type_name} отсутствует, неоднозначно или не поддерживается")
             element = matches[0]
@@ -125,7 +137,7 @@ class ProjectTypes:
         if not re.fullmatch(rf"{IDENT}\.{IDENT}", type_name):
             raise InputError(f"Генерация типа пока не поддерживается: {type_name}")
         owner, variant = type_name.split(".")
-        matches = resolve(self.model["elements"], owner, namespace)
+        matches = self.resolve(owner, namespace)
         if len(matches) != 1 or matches[0]["elementType"] not in {"Документ", "Справочник"}:
             raise InputError(f"Объект типа {type_name} отсутствует, неоднозначен или не поддерживается")
         element = matches[0]

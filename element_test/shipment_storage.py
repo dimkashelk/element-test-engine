@@ -6,7 +6,7 @@ below is translated. Reference identity is (document type, teacher fixture ID).
 import re
 
 from .generated_types import ProjectTypes
-from .indexer import mask_noncode, METHOD
+from .indexer import mask_noncode, parse_module
 from .model import resolve
 from .platform_mocks import PlatformMocks
 from .runtime import method_closure, constructor_types
@@ -333,7 +333,7 @@ def prepare(root, model, check, directory, *, inject_failure=False):
     attached = set()
     for handler in ('ПередЗаписью', 'ПослеЗаписи'):
         for method, types in method_closure(source, handler):
-            name = METHOD.search(mask_noncode(method))[1]
+            name = parse_module(method)[0][0].name
             if name in attached:
                 continue
             attached.add(name)

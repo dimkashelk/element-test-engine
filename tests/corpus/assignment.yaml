@@ -1,0 +1,10 @@
+name: Регрессия выбора и сравнения
+checks:
+  - {id: exists, type: element, name: A::Док, points: 1}
+  - {id: absent_expected, type: element, name: A::Нет, exists: false, points: 1}
+  - {id: absent_unexpected, type: element, name: B::Нет, points: 1}
+  - {id: method_exists, type: method, module: Main, name: Проверить, points: 1}
+  - {id: runtime_pass, type: runtime, target: {module: Main, namespace: A, method: Проверить}, args: [], expected: 5, points: 1}
+  - {id: runtime_negative, type: runtime, target: {module: Main, namespace: A, method: Проверить}, args: [], expected: 6, points: 1}
+  - {id: runtime_error, type: runtime, target: {module: Main, namespace: A, method: Проверить}, args: [], expected: 5, points: 1}
+  - {id: runtime_unsupported, type: runtime, target: {module: Main, namespace: A, method: Проверить}, args: [], expected: 5, points: 1}
