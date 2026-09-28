@@ -147,42 +147,62 @@ class PlatformMocks:
             if len(found) != 1:
                 raise InvalidTestError('Для литерала Запрос требуется ровно один mocks.queries с совпадающим text')
             i = found[0]
-            expressions = list(re.finditer(r'%\{([^{}]+)\}', text))
-            if len(expressions) != 1:
-                raise InputError('Мок запроса поддерживает ровно один параметр %{...}')
+            visible = mask_noncode(text)
+            expressions = list(re.finditer(r'%\{([^{}]+)\}', visible))
+            if (not expressions or len(expressions) != len(list(re.finditer(r'%\{', visible)))
+                    or any(not text[e.start(1):e.end(1)].strip() for e in expressions)):
+                raise UnsupportedSyntaxError('Параметры запроса требуют непустые выражения %{...} без вложенных фигурных скобок')
             if i not in self.used_queries:
-                self.query(i)
+                self.query(i, len(expressions))
                 self.used_queries.add(i)
             replacements.append((match.start(), end, 'ТестПлатформа.СоздатьЗапрос' + str(i)
-                                 + '(' + expressions[0][1] + ')'))
+                                 + '(' + ', '.join(text[e.start(1):e.end(1)] for e in expressions) + ')'))
         for start, end, value in reversed(replacements):
             method = method[:start] + value + method[end:]
         return method
 
-    def query(self, index):
+    def query(self, index, parameter_count):
         q = self.queries[index]
-        if set(q) != {'text', 'fields', 'rows', 'parameterType'} or not isinstance(q['fields'], dict) or not q['fields']:
-            raise InvalidTestError('Мок запроса требует text, fields, rows, parameterType')
+        common = {'text', 'fields', 'rows'}
+        if (set(q) not in (common | {'parameterType'}, common | {'parameterTypes'})
+                or not isinstance(q['fields'], dict) or not q['fields']):
+            raise InvalidTestError('Мок запроса требует text, fields, rows и ровно одно из parameterType/parameterTypes')
+        if 'parameterType' in q:
+            parameter_types = [q['parameterType']]
+        else:
+            parameter_types = q['parameterTypes']
+            if not isinstance(parameter_types, list) or not parameter_types:
+                raise InvalidTestError('parameterTypes должен быть непустым списком типов')
+        if len(parameter_types) != parameter_count:
+            raise InvalidTestError('Число типов параметров запроса должно совпадать с числом выражений %{...}')
+        if any(not isinstance(t, str) or not t.strip() for t in parameter_types):
+            raise InvalidTestError('Типы параметров запроса должны быть непустыми строками')
         row_type = 'ТестПлатформа.СтрокаЗапроса' + str(index)
         fields = [{'Имя': n, 'Тип': t} for n, t in q['fields'].items()]
         for f in fields:
             if not isinstance(f['Имя'], str) or not re.fullmatch(IDENT, f['Имя']):
                 raise InvalidTestError('Некорректное поле результата запроса')
             self.contracts.require(f['Тип'])
-        self.contracts.require(q['parameterType'])
+        for type_name in parameter_types:
+            self.contracts.require(type_name)
         self.contracts.fields[row_type] = fields
         self.contracts.definitions[row_type] = '@Глобально\nструктура СтрокаЗапроса' + str(index) + '\n' + '\n'.join(
             '    пер ' + f['Имя'] + ': ' + self.contracts.sbsl_type(f['Тип']) for f in fields) + '\n;\n'
         rows = self.contracts.literal(q['rows'], 'Массив<' + row_type + '>')
+        parameter_names = (['Параметр'] if 'parameterType' in q else
+                           ['Параметр' + str(i + 1) for i in range(parameter_count)])
+        signature = ', '.join(name + ': ' + self.contracts.sbsl_type(type_name)
+                              for name, type_name in zip(parameter_names, parameter_types))
+        arguments = ', '.join('"' + name + '": ' + name for name in parameter_names)
         self.query_definitions.append('@Глобально\nструктура Запрос' + str(index)
             + '\n    @Глобально\n    метод Выполнить(): Массив<СтрокаЗапроса' + str(index) + '>\n'
             + '        ТестПлатформа.ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Выполнить", "args": новый Соответствие<Строка, Объект?>()})\n'
             + '        возврат ' + rows + '\n    ;\n;\n'
-            + '@Глобально\nметод СоздатьЗапрос' + str(index) + '(Параметр: ' + self.contracts.sbsl_type(q['parameterType'])
+            + '@Глобально\nметод СоздатьЗапрос' + str(index) + '(' + signature
             + '): Запрос' + str(index) + '\n'
-            + '    ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Создать", "args": {"Параметр": Параметр}})\n'
+            + '    ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Создать", "args": {' + arguments + '}})\n'
             + '    возврат новый Запрос' + str(index) + '()\n;\n')
-        self.contracts.method_dependencies[row_type] = [q['parameterType']]
+        self.contracts.method_dependencies[row_type] = parameter_types
 
     def finish(self):
         if len(self.used_queries) != len(self.queries):

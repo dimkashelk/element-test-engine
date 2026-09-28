@@ -112,6 +112,7 @@ class PlatformMocksTest(unittest.TestCase):
             self.assertIn('пер Наименование: Строка', (path / 'Номенклатура.sbsl').read_text())
             prepare_script(root, model, checks[1], path)
             generated = (path / 'Отгрузка.sbsl').read_text()
+            self.assertIn('метод СоздатьЗапрос0(Параметр:', (path / 'ТестПлатформа.sbsl').read_text())
             self.assertIn('Товары.Преобразовать(Данные -> Данные.Номенклатура)', generated)
             self.assertIn('Результат.ВСоответствие(Ключ -> Ключ.Номенклатура, Значение -> Значение.Количество)', generated)
             self.assertIn('выбросить новый ИсключениеНедопустимоеСостояние', generated)
