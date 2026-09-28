@@ -8,7 +8,7 @@ import shutil
 import time
 import uuid
 
-from .indexer import IDENT, call_code, method_calls, mask_noncode, parse_module, split_parameters
+from .indexer import IDENT, call_code, lex, method_calls, mask_noncode, parse_module, split_parameters
 from .resolution import import_specs, qualified, resolve_call_modules, resolve_symbols
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
@@ -179,6 +179,60 @@ def constructor_types(method):
     return found
 
 
+def body_type_references(method):
+    """Type spans in reachable local declarations and casts, ignoring text/comments."""
+    declaration = parse_module(method)[0][0]
+    tokens = [token for token in lex(call_code(method)) if token.start >= declaration.header_end]
+    references = []
+    for index, token in enumerate(tokens):
+        if token.value in {"пер", "знч"}:
+            if index + 2 >= len(tokens) or not re.fullmatch(IDENT, tokens[index + 1].value) or tokens[index + 2].value != ":":
+                continue
+            first = index + 3
+        elif token.value == "как":
+            first = index + 1
+        else:
+            continue
+        if first >= len(tokens):
+            raise InputError("Тип в теле метода не указан")
+        depth, last = 0, first
+        while last < len(tokens):
+            value = tokens[last].value
+            if value == "\n":
+                if depth == 0:
+                    break
+                last += 1
+                continue
+            if value == "<":
+                depth += 1
+            elif value == ">":
+                depth -= 1
+                if depth < 0:
+                    break
+            elif value == "," and depth == 0:
+                break
+            elif not (re.fullmatch(IDENT, value) or value in {"::", ".", ",", "|", "?"}):
+                break
+            last += 1
+        if last == first or depth != 0:
+            raise InputError("Некорректный тип в теле метода")
+        ending = last - 1
+        while ending >= first and tokens[ending].value == "\n":
+            ending -= 1
+        if ending < first:
+            raise InputError("Тип в теле метода не указан")
+        start, end = tokens[first].start, tokens[ending].end
+        references.append((start, end, re.sub(r"\s+", "", method[start:end])))
+    return references
+
+
+def _project_body_type(contracts, type_name):
+    """Leave platform types to Script; resolve every project-shaped reference."""
+    atoms = re.findall(rf"{IDENT}(?:::{IDENT})*(?:\.{IDENT})?", type_name)
+    return any("::" in atom or "." in atom or contracts.resolve(atom)
+               for atom in atoms if atom not in {"Массив", "Соответствие"})
+
+
 def prepare_script(root, model, check, sandbox):
     """Copy the original method and generate only its required data contracts."""
     target = check.get("target", {})
@@ -234,6 +288,10 @@ def prepare_script(root, model, check, sandbox):
                 continue
             contracts.require(type_name)
             body_types.append(type_name)
+        for _, _, type_name in body_type_references(dependency):
+            if _project_body_type(contracts, type_name):
+                contracts.require(type_name)
+                body_types.append(type_name)
     adapted = []
     external = {}
     for owner, dependency, _ in reachable:
@@ -248,6 +306,10 @@ def prepare_script(root, model, check, sandbox):
         replacements.extend((start, end, contracts.sbsl_type(type_name))
                             for start, end, type_name in constructor_types(dependency)
                             if contracts.sbsl_type(type_name) != dependency[start:end])
+        replacements.extend((start, end, contracts.sbsl_type(dependency[start:end]))
+                            for start, end, type_name in body_type_references(dependency)
+                            if _project_body_type(contracts, type_name)
+                            and contracts.sbsl_type(dependency[start:end]) != dependency[start:end])
         for start, end, replacement in sorted(replacements, reverse=True):
             dependency = dependency[:start] + replacement + dependency[end:]
         compiled = platform.adapt(dependency)

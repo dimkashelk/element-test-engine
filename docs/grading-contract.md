@@ -54,7 +54,7 @@ SBSL вычисляет `score`, `maxScore`, `unavailablePoints` и статус
 ## Воспроизведение
 
 ```bash
-bin/element-test test --project Движок.tar --assignment assignments/demo \
+bin/element-test test --project Dvizhok.xdump --assignment assignments/demo \
   --output result/demo --student-id student-001 --assignment-id demo --run-id local-001
 ```
 

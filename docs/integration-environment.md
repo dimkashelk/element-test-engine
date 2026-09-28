@@ -147,7 +147,7 @@ read-only, непривилегированным пользователем и 
 docker pull postgres:17@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f
 # Java-образ из config/runtimes.json также должен быть локально.
 export ELEMENT_TEST_INTEGRATION_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_hex(24))')"
-bin/element-test test --project Движок.tar \
+bin/element-test test --project Dvizhok.xdump \
   --assignment assignments/poc-integration-environment \
   --integration --output result/poc-integration-environment
 unset ELEMENT_TEST_INTEGRATION_PASSWORD

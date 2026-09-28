@@ -120,7 +120,7 @@ class PreflightTest(unittest.TestCase):
 @unittest.skipUnless(os.environ.get('ELEMENT_TEST_INTEGRATION_TESTS') == '1', 'Real SQL integration is opt-in')
 class SqlSmokeTest(unittest.TestCase):
     def test_real_sql_isolation_failure_cleanup_and_sbsl_grading(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         positive = load_assignment(REPO / 'assignments/poc-integration-environment')
         assignment = copy.deepcopy(positive)

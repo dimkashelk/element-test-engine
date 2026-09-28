@@ -85,7 +85,7 @@ class HandlerDependenciesTest(unittest.TestCase):
             method_closure(SOURCE + 'метод Нормализовать(): Строка\n;\n', 'ПередЗаписью')
 
     def test_real_archive_preparation_preserves_all_method_bodies(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         if not archive.is_file():
             self.skipTest('Требуется исходный архив')
         before = archive.read_bytes()

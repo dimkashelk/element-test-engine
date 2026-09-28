@@ -70,6 +70,32 @@ class EngineTest(unittest.TestCase):
         self.assertEqual(result["score"], 1)
         self.assertEqual((result["maxScore"], result["unavailablePoints"]), (2, 1))
 
+    def test_structural_absence_namespace_collection_and_mismatch_reason(self):
+        model = {"name": "Структура", "sourceHash": "fixture", "diagnostics": [],
+                 "modules": [
+                     {"name": "Общий", "namespace": "A", "indexComplete": True,
+                      "methods": [{"name": "Есть", "annotations": [], "parameters": [], "returnType": "Число"}]},
+                     {"name": "Общий", "namespace": "B", "indexComplete": False,
+                      "methods": []}],
+                 "elements": [{"name": "Док", "namespace": "A", "elementType": "Документ",
+                               "properties": {"Реквизиты": [{"Имя": "Код", "Тип": "Строка", "МаксимальнаяДлина": 5}],
+                                              "Ресурсы": [{"Имя": "Код", "Тип": "Число"}]}}]}
+        checks = [
+            {"id": "method_absent", "type": "method", "module": "Общий", "namespace": "A", "name": "Нет", "exists": False},
+            {"id": "method_present", "type": "method", "module": "Общий", "namespace": "A", "name": "Есть", "exists": False},
+            {"id": "incomplete", "type": "method", "module": "Общий", "namespace": "B", "name": "Нет", "exists": False},
+            {"id": "module_absent", "type": "module", "module": "НеСуществует", "exists": False},
+            {"id": "ambiguous_field", "type": "field", "element": "Док", "field": "Код"},
+            {"id": "exact_collection", "type": "field", "element": "Док", "field": "Код", "collection": "Ресурсы", "expectedType": "Число"},
+            {"id": "bad_collection", "type": "field", "element": "Док", "field": "Код", "collection": "Опечатка", "exists": False},
+            {"id": "property", "type": "field", "element": "Док", "field": "Код", "collection": "Реквизиты", "properties": {"МаксимальнаяДлина": 6}}]
+        result = self.execute(checks, model)
+        self.assertEqual([c["status"] for c in result["checks"]],
+                         ["PASS", "FAIL", "UNSUPPORTED", "PASS", "ERROR", "PASS", "ERROR", "FAIL"])
+        self.assertEqual(result["checks"][-1]["message"], "Свойство не совпадает: МаксимальнаяДлина")
+        self.assertEqual((result["checks"][-1]["expected"], result["checks"][-1]["actual"]), (6, 5))
+        self.assertEqual(result["unavailablePoints"], 3)
+
     def test_runtime_date_snapshot_resolves_expected_only(self):
         date = '2026-09-27T12:34:56.789'
         base = {'type': 'runtime', 'runtimeDateTime': 'Дата',
@@ -84,9 +110,9 @@ class EngineTest(unittest.TestCase):
         self.assertEqual([c['status'] for c in result['checks']], ['PASS', 'FAIL', 'ERROR', 'PASS'])
         self.assertEqual(result['checks'][0]['expected']['calls'][0]['Период'], date)
 
-    @unittest.skipUnless((REPO / "Движок.tar").is_file(), "Требуется реальная работа Движок.tar")
+    @unittest.skipUnless((REPO / "Dvizhok.xdump").is_file(), "Требуется реальная работа Dvizhok.xdump")
     def test_real_project_semantics_and_negative_checks(self):
-        with open_project(REPO / "Движок.tar") as root:
+        with open_project(REPO / "Dvizhok.xdump") as root:
             model = analyze(root)
         checks = load_assignment(REPO / "assignments/demo")["checks"]
         passed = self.execute(copy.deepcopy(checks), model)

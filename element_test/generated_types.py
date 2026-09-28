@@ -72,14 +72,14 @@ class ProjectTypes:
         namespace = self.namespace if namespace is None else namespace
         members = union_members(type_name)
         if members:
-            from .types import parse_type
-            try:
-                parse_type(type_name)
-            except ValueError as exc:
-                raise InputError(str(exc)) from exc
-            for member in members:
-                if member != '?':
-                    self.require(member, namespace)
+            concrete = members[:-1] if members[-1] == '?' else members
+            if len(concrete) < 2 or any(not member or member == '?' or member.endswith('?') for member in concrete):
+                raise InputError(f"Некорректный union-type: {type_name}")
+            canonical = [self.canonical_type(member) for member in concrete]
+            if len(set(canonical)) != len(canonical):
+                raise InputError(f"Повторяющийся член union-type: {type_name}")
+            for member in concrete:
+                self.require(member, namespace)
             return
         if type_name.endswith("?"):
             self.require(type_name[:-1], namespace)

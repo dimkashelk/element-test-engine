@@ -35,6 +35,11 @@ class GeneratedTypesTest(unittest.TestCase):
                 types.literal(value, union)
         types.require('Массив<Число|Строка|?>')
         self.assertIn('Неопределено', types.literal([1, 'text', None], 'Массив<Число|Строка|?>'))
+        types.require('Заказ.Товары|Номенклатура.Ссылка')
+        self.assertIn('Заказ.Товары', types.definitions)
+        for invalid in ('Заказ.Ссылка|?', 'Строка|Строка', 'Строка||Число'):
+            with self.subTest(invalid=invalid), self.assertRaises(InputError):
+                ProjectTypes(model()).require(invalid)
         self.assertEqual(types.literal('2024-02-29T13:14:15', 'ДатаВремя'),
                          'новый ДатаВремя(2024, 2, 29, 13, 14, 15)')
         for date in ('2023-02-29T13:14:15', '2024-02-29T13:14:15Z', '${probe()}', None):

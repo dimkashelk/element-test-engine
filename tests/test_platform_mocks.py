@@ -56,7 +56,7 @@ class PlatformMocksTest(unittest.TestCase):
             self.assertEqual(calls[4]['args'], {'Замещать': True})
 
     def test_real_movement_body_and_union_filter_contract(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         if not archive.is_file():
             self.skipTest('Требуется исходный архив')
         check = load_assignment(REPO / 'assignments/poc-movements')['checks'][1]
@@ -95,9 +95,9 @@ class PlatformMocksTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             decode_output('unexpected\n' + json.dumps(value))
 
-    @unittest.skipUnless((REPO / 'Движок.tar').is_file(), 'Требуется исходный архив')
+    @unittest.skipUnless((REPO / 'Dvizhok.xdump').is_file(), 'Требуется исходный архив')
     def test_real_handler_contracts_preserve_logic_and_reject_wrong_fixtures(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         checks = load_assignment(REPO / 'assignments/poc-platform')['checks']
         with open_project(archive) as root, tempfile.TemporaryDirectory() as directory:

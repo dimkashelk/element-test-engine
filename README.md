@@ -17,7 +17,7 @@ Script executor, а не переводится в Python.
   как поля с указанием `collection: Ресурсы` или `collection: Измерения`.
 - `batch`: партия работ из JSON manifest с 1–4 отдельными процессами,
   независимыми пакетами, потоком событий и локальным кэшем структурных проверок.
-- Runtime PoC: запуск оригинального чистого метода `СформироватьФИО` из `Движок.tar`
+- Runtime PoC: запуск оригинального чистого метода `СформироватьФИО` из `Dvizhok.xdump`
   в Docker, сравнение ожидаемого и фактического результата **в SBSL**.
 - Эксперимент №2: оригинальный `ЗаказФормаОбъекта.РассчитатьИтоги` с циклом по
   `Массив<Заказ.Товары>`; типы строк и необходимых ссылок генерируются из YAML.
@@ -72,20 +72,16 @@ python3 -m venv .venv
 .venv/bin/pip install -e .
 export ELEMENT_TEST_PYTHON="$PWD/.venv/bin/python"
 
-bin/element-test inspect Движок.tar --output result/inspection.json
-bin/element-test validate Движок.tar
-bin/element-test test --project Движок.tar --assignment assignments/demo --output result/demo
-
 bin/element-test inspect Dvizhok.xdump --output result/xdump-inspection.json
 bin/element-test validate Dvizhok.xdump
 bin/element-test test --project Dvizhok.xdump --assignment assignments/demo --output result/xdump-demo
 
 docker pull eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0
-bin/element-test test --project Движок.tar --assignment assignments/poc-fio --output result/poc-fio
-bin/element-test test --project Движок.tar --assignment assignments/poc-order --output result/poc-order
-bin/element-test test --project Движок.tar --assignment assignments/poc-handlers --output result/poc-handlers
-bin/element-test test --project Движок.tar --assignment assignments/poc-platform --output result/poc-platform
-bin/element-test test --project Движок.tar --assignment assignments/poc-movements --output result/poc-movements
+bin/element-test test --project Dvizhok.xdump --assignment assignments/poc-fio --output result/poc-fio
+bin/element-test test --project Dvizhok.xdump --assignment assignments/poc-order --output result/poc-order
+bin/element-test test --project Dvizhok.xdump --assignment assignments/poc-handlers --output result/poc-handlers
+bin/element-test test --project Dvizhok.xdump --assignment assignments/poc-platform --output result/poc-platform
+bin/element-test test --project Dvizhok.xdump --assignment assignments/poc-movements --output result/poc-movements
 ```
 
 ### Массовый запуск
@@ -544,7 +540,7 @@ INSERT/SELECT/UPDATE/DELETE через `СоединениеSql`; сравнен
 ```bash
 docker pull postgres:17@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f
 export ELEMENT_TEST_INTEGRATION_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_hex(24))')"
-bin/element-test test --project Движок.tar \
+bin/element-test test --project Dvizhok.xdump \
   --assignment assignments/poc-integration-environment \
   --integration --output result/poc-integration-environment
 unset ELEMENT_TEST_INTEGRATION_PASSWORD
@@ -597,7 +593,7 @@ JSON/HTML и журналы — `result/poc-integration-environment`: полож
 
 ```bash
 export ELEMENT_TEST_INTEGRATION_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_hex(24))')"
-bin/element-test test --project Dvizhok.tar \
+bin/element-test test --project Dvizhok.xdump \
   --assignment assignments/poc-shipment-storage --integration \
   --output result/poc-shipment-storage/cli
 unset ELEMENT_TEST_INTEGRATION_PASSWORD
@@ -625,7 +621,7 @@ Admin-пароль и случайный пароль ограниченной �
 необязательными `--student-id`, `--assignment-id`, `--run-id`:
 
 ```bash
-bin/element-test test --project Движок.tar --assignment assignments/demo \
+bin/element-test test --project Dvizhok.xdump --assignment assignments/demo \
   --output result/demo --student-id student-001 --assignment-id demo --run-id local-001
 ```
 

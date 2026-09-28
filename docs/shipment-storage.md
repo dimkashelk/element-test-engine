@@ -18,7 +18,7 @@
 
 ```bash
 export ELEMENT_TEST_INTEGRATION_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_hex(24))')"
-bin/element-test test --project Dvizhok.tar \
+bin/element-test test --project Dvizhok.xdump \
   --assignment assignments/poc-shipment-storage --integration \
   --output result/poc-shipment-storage/cli
 unset ELEMENT_TEST_INTEGRATION_PASSWORD

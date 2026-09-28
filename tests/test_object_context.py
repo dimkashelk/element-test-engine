@@ -115,11 +115,11 @@ class ObjectContextTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertEqual(decode_output(result.stdout)['actual'], check['expected'])
 
-    @unittest.skipUnless((REPO / 'Движок.tar').is_file() and (REPO / 'script_u_10.0.2_1/lib').is_dir(),
+    @unittest.skipUnless((REPO / 'Dvizhok.xdump').is_file() and (REPO / 'script_u_10.0.2_1/lib').is_dir(),
                          'Требуются исходный архив и Script executor')
     def test_full_archive_order_contract_in_executor(self):
-        before = (REPO / 'Движок.tar').read_bytes()
-        with open_project(REPO / 'Движок.tar') as root, tempfile.TemporaryDirectory() as directory:
+        before = (REPO / 'Dvizhok.xdump').read_bytes()
+        with open_project(REPO / 'Dvizhok.xdump') as root, tempfile.TemporaryDirectory() as directory:
             types = ProjectTypes(analyze(root), 'Продажи')
             types.require('Заказ.Объект')
             types.require('Заказ.Данные')
@@ -136,4 +136,4 @@ class ObjectContextTest(unittest.TestCase):
             actual = json.loads(result.stdout)
             self.assertEqual((actual['status'], actual['sum']), ('Новый', 5))
             self.assertIsNone(actual['data']['СтатусЗаказа'])
-        self.assertEqual((REPO / 'Движок.tar').read_bytes(), before)
+        self.assertEqual((REPO / 'Dvizhok.xdump').read_bytes(), before)

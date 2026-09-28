@@ -18,7 +18,7 @@ REPO = Path(__file__).resolve().parent.parent
 class DockerTest(unittest.TestCase):
     def test_real_receipt_and_negative_grading(self):
         from element_test.bridge import report, write_json
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         assignment = load_assignment(REPO / 'assignments/poc-receipt')
         positive = copy.deepcopy(assignment)
@@ -72,7 +72,7 @@ class DockerTest(unittest.TestCase):
 
     def test_real_movements_and_negative_grading(self):
         from element_test.bridge import report, write_json
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         assignment = load_assignment(REPO / 'assignments/poc-movements')
         for field, value in [('Регистратор', {'Идентификатор': 'wrong'}),
@@ -115,7 +115,7 @@ class DockerTest(unittest.TestCase):
         self.assertEqual(archive.read_bytes(), before)
 
     def test_real_register_query_handlers_and_negative_grading(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
             temp = Path(directory)
@@ -143,7 +143,7 @@ class DockerTest(unittest.TestCase):
         self.assertEqual(archive.read_bytes(), before)
 
     def test_real_handlers_fakes_and_sbsl_grading(self):
-        archive = REPO / 'Движок.tar'
+        archive = REPO / 'Dvizhok.xdump'
         before = archive.read_bytes()
         with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
             temp = Path(directory)
@@ -193,7 +193,7 @@ class DockerTest(unittest.TestCase):
             self.assertEqual((result["score"], result["maxScore"]), (2, 3))
 
     def run_case(self, modify):
-        archive = REPO / "Движок.tar"
+        archive = REPO / "Dvizhok.xdump"
         before = archive.read_bytes()
         with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
             model = analyze(root)
@@ -217,7 +217,7 @@ class DockerTest(unittest.TestCase):
         self.assertEqual(result["status"], "UNSUPPORTED")
 
     def test_order_rows_and_sbsl_grading(self):
-        archive = REPO / "Движок.tar"
+        archive = REPO / "Dvizhok.xdump"
         before = archive.read_bytes()
         with tempfile.TemporaryDirectory() as directory, open_project(archive) as root:
             temp = Path(directory)

@@ -77,19 +77,24 @@ class ExtractXdumpTest(unittest.TestCase):
                 write_tar(dump, projects)
             self.assertEqual(archive_path.read_bytes(), original)
 
-    @unittest.skipUnless((REPO / "Dvizhok.xdump").exists() and (REPO / "Движок.tar").exists(),
-                         "Требуются локальные xdump и эталонный tar")
-    def test_supplied_dump_matches_reference_tar_byte_for_byte(self):
+    @unittest.skipUnless((REPO / "Dvizhok.xdump").exists(), "Требуется локальный xdump")
+    def test_supplied_dump_sources_match_inner_archive_byte_for_byte(self):
+        dump = REPO / "Dvizhok.xdump"
+        before = dump.read_bytes()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
-            extract_project(REPO / "Dvizhok.xdump", output)
+            extract_project(dump, output)
             actual = {p.relative_to(output).as_posix(): p.read_bytes()
                       for p in output.rglob("*") if p.is_file()}
-            with tarfile.open(REPO / "Движок.tar") as archive:
-                expected = {unicodedata.normalize("NFC", member.name):
-                            archive.extractfile(member).read()
-                            for member in archive if member.isfile()}
+            with zipfile.ZipFile(dump) as outer, zipfile.ZipFile(io.BytesIO(outer.read("application.zip"))) as inner:
+                expected = {}
+                for name in inner.namelist():
+                    parts = name.split("/")
+                    if (len(parts) >= 4 and parts[0] == "src" and parts[2] == "Движок"
+                            and not name.endswith("/") and ".asm" not in parts[3:]):
+                        expected[unicodedata.normalize("NFC", "/".join(parts[2:]))] = inner.read(name)
             self.assertEqual(actual, expected)
+        self.assertEqual(dump.read_bytes(), before)
 
 
 if __name__ == "__main__":

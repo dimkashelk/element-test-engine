@@ -19,9 +19,7 @@ from element_test.runtime import REPO, execute_engine
 from element_test.shipment_storage import QUERY, adapt_query, prepare
 from element_test.yaml_io import InputError
 
-ARCHIVE = REPO / 'Движок.tar'
-if not ARCHIVE.exists():
-    ARCHIVE = REPO / 'Dvizhok.tar'
+ARCHIVE = REPO / 'Dvizhok.xdump'
 
 
 class StorageContractTest(unittest.TestCase):
