@@ -6,7 +6,10 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from element_test.batch import load_manifest, run_batch
+from element_test.batch import _assess, load_manifest, run_batch
+from element_test.bridge import run_test
+from element_test.loader import open_project
+from element_test.model import analyze
 from element_test.runtime import REPO
 from element_test.yaml_io import InputError
 
@@ -60,6 +63,25 @@ class BatchTest(unittest.TestCase):
         with self.assertRaises(InputError):
             load_manifest(duplicate_path, output)
         self.assertFalse(output.exists())
+
+    @unittest.skipUnless((REPO / "script_u_10.0.2_1/lib").is_dir(), "Требуется локальный Script executor")
+    def test_cache_miss_reuses_open_project_and_model(self):
+        entry = {"ordinal": 1, "studentId": "student-0", "project": self.projects[0]}
+        standalone, _ = run_test(self.projects[0], self.assignment, self.root / "single",
+                                 student_id="student-0", assignment_id="task", run_id="run-1")
+        from element_test import batch
+        with (patch.object(batch, "open_project", wraps=open_project) as open_once,
+              patch.object(batch, "analyze", wraps=analyze) as analyze_once,
+              patch("element_test.bridge.analyze", side_effect=AssertionError("repeated analysis")),
+              patch("element_test.bridge.open_project", side_effect=AssertionError("repeated extraction"))):
+            result, package, hit = _assess(entry, self.assignment, "task", "run-1",
+                                           self.root / "batch", self.cache, False)
+        self.assertEqual(open_once.call_count, 1)
+        self.assertEqual(analyze_once.call_count, 1)
+        self.assertFalse(hit)
+        self.assertEqual(result, standalone)
+        self.assertEqual(package["sourceHash"], standalone["sourceHash"])
+        self.assertEqual(package["studentId"], "student-0")
 
     @unittest.skipUnless((REPO / "script_u_10.0.2_1/lib").is_dir(), "Требуется локальный Script executor")
     def test_workers_cache_and_unique_packages(self):

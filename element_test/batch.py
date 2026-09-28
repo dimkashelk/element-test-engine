@@ -108,14 +108,9 @@ def _hash_tree(digest, root):
         digest.update(path.read_bytes() + b"\0")
 
 
-def _cache_key(project, assignment, integration):
-    # Analyze the safe extracted project, so archive metadata and filenames never
-    # determine identity. Invalid archives remain per-submission input errors.
-    try:
-        with open_project(project) as root:
-            source_hash = analyze(root)["sourceHash"]
-    except OSError as exc:
-        raise InputError("Не удалось прочитать входной проект") from exc
+def _cache_key(source_hash, assignment, integration):
+    # The hash comes from the analyzed, safely opened project. Archive metadata
+    # and filenames never determine identity.
     digest = sha256(b"element-test-batch-cache-v1\0" + source_hash.encode())
     _hash_tree(digest, assignment)
     for directory in (REPO / "element_test", REPO / "src"):
@@ -129,7 +124,7 @@ def _cache_key(project, assignment, integration):
                               "dockerImage": os.environ.get("ELEMENT_TEST_DOCKER_IMAGE"),
                               "scriptHome": os.environ.get("ELEMENT_SCRIPT_HOME")},
                              sort_keys=True).encode())
-    return digest.hexdigest(), source_hash
+    return digest.hexdigest()
 
 
 def _cacheable(result, assignment):
@@ -199,35 +194,42 @@ def _write_atomic(path, data):
 def _assess(entry, assignment, assignment_id, run_id, output, cache_dir, integration):
     packet = output / f"submissions/{entry['ordinal']:06d}"
     config = load_assignment(assignment)
-    cache_key, source_hash = _cache_key(entry["project"], assignment, integration)
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    lock_path = cache_dir / (cache_key + ".lock")
-    with lock_path.open("a+b") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        cache_path = cache_dir / (cache_key + ".json")
-        if cache_path.exists():
-            try:
-                stored = json.loads(cache_path.read_text(encoding="utf-8"))
-                result, package = stored["result"], stored["grading"]
-                if _valid_cache(stored, cache_key, source_hash, config, integration):
-                    package = {**package, "studentId": entry["studentId"],
-                               "assignmentId": assignment_id, "runId": run_id}
-                    packet.mkdir(parents=True, exist_ok=True)
-                    write_json(packet / "result.json", result)
-                    write_json(packet / "grading.json", package)
-                    (packet / "report.html").write_text(report(result, package), encoding="utf-8")
-                    return result, package, True
-            except (OSError, ValueError, TypeError, KeyError):
-                pass
-        result, package = run_test(entry["project"], assignment, packet,
-                                   integration=integration, student_id=entry["studentId"],
-                                   assignment_id=assignment_id, run_id=run_id)
-        if _cacheable(result, config):
-            _write_atomic(cache_path, {"schemaVersion": VERSION, "key": cache_key,
-                                       "result": result,
-                                       "grading": {**package, "studentId": None,
-                                                   "assignmentId": None, "runId": None}})
-        return result, package, False
+    with open_project(entry["project"]) as root:
+        try:
+            model = analyze(root)
+        except OSError as exc:
+            raise InputError("Не удалось прочитать входной проект") from exc
+        source_hash = model["sourceHash"]
+        cache_key = _cache_key(source_hash, assignment, integration)
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        lock_path = cache_dir / (cache_key + ".lock")
+        with lock_path.open("a+b") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            cache_path = cache_dir / (cache_key + ".json")
+            if cache_path.exists():
+                try:
+                    stored = json.loads(cache_path.read_text(encoding="utf-8"))
+                    result, package = stored["result"], stored["grading"]
+                    if _valid_cache(stored, cache_key, source_hash, config, integration):
+                        package = {**package, "studentId": entry["studentId"],
+                                   "assignmentId": assignment_id, "runId": run_id}
+                        packet.mkdir(parents=True, exist_ok=True)
+                        write_json(packet / "result.json", result)
+                        write_json(packet / "grading.json", package)
+                        (packet / "report.html").write_text(report(result, package), encoding="utf-8")
+                        return result, package, True
+                except (OSError, ValueError, TypeError, KeyError):
+                    pass
+            result, package = run_test(entry["project"], assignment, packet,
+                                       integration=integration, student_id=entry["studentId"],
+                                       assignment_id=assignment_id, run_id=run_id,
+                                       _prepared=(root, model))
+            if _cacheable(result, config):
+                _write_atomic(cache_path, {"schemaVersion": VERSION, "key": cache_key,
+                                           "result": result,
+                                           "grading": {**package, "studentId": None,
+                                                       "assignmentId": None, "runId": None}})
+            return result, package, False
 
 
 def _worker(entry, assignment, assignment_id, run_id, output, cache_dir, integration, response):

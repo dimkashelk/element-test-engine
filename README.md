@@ -123,6 +123,11 @@ SQL, каждый раз запускаются заново. Форматы:
 [индекс](docs/batch-result-v1.schema.json),
 [событие JSONL](docs/batch-events-v1.schema.json).
 
+При промахе кэша worker передаёт уже открытый проект и результат анализа в
+`run_test`, поэтому архив открывается и анализируется один раз. Замеры и
+проверка совпадения с одиночным запуском — в
+[отчёте по пункту 8](docs/tasks/016-batch-analysis-reuse.md).
+
 Без установки пакета можно использовать системный Python с установленным PyYAML.
 Обёртка `bin/script-runtime` исправляет запуск executor из пути с пробелами,
 не изменяя предоставленный дистрибутив.
@@ -660,8 +665,8 @@ dependency closure внешних методов и прочих форм тип
 в [задании №12](docs/tasks/012-batch-runner.md). Локальная регрессия: 78 тестов,
 11 пропусков; отдельные Docker runtime/SQL партии с двумя workers прошли и
 совпали с одиночным CLI (`result/poc-batch-runner`).
-План — [docs/roadmap.md](docs/roadmap.md); следующее
-[задание №13](docs/next-task.md) посвящено улучшению алгоритма проверки.
+План — [docs/roadmap.md](docs/roadmap.md). В [задании №13](docs/next-task.md)
+выполнены пункты 1–6 и 8; дальнейшие runtime-контракты пункта 7 остаются открытыми.
 LMS и микросервис приёма архивов отложены.
 
 Проверка этапа №7: `ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -v`

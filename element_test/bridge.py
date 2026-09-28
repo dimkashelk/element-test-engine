@@ -1,5 +1,6 @@
 """CLI transport: format conversion, Script invocation and report rendering."""
 import argparse
+from contextlib import nullcontext
 import html
 import json
 from pathlib import Path
@@ -42,8 +43,8 @@ def report(data, package=None):
 
 
 def run_test(source, assignment_source, output, *, integration=False, student_id=None,
-             assignment_id=None, run_id=None):
-    """Assess one submission; return the SBSL result and its transport package."""
+             assignment_id=None, run_id=None, _prepared=None):
+    """Assess one submission; batch may supply its open root and analyzed model."""
     for name, value in (("studentId", student_id), ("assignmentId", assignment_id),
                         ("runId", run_id)):
         identifier(value, name)
@@ -54,10 +55,10 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
         raise InputError("Отчёт не может заменить входной архив")
     with TemporaryDirectory(prefix="element-test-") as work:
         temporary = Path(work)
-        with open_project(source) as root:
+        with (open_project(source) if _prepared is None else nullcontext(_prepared[0])) as root:
             if output.is_relative_to(root.resolve()):
                 raise InputError("Отчёт находится внутри исходного проекта")
-            model = analyze(root)
+            model = analyze(root) if _prepared is None else _prepared[1]
             for element in model["elements"]:
                 containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
                 for container in containers:
