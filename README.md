@@ -58,10 +58,21 @@ python3 extract_xdump.py Dvizhok.xdump --output result/imported
 
 ### Проверка проекта
 
-Все команды принимают `.xdump` напрямую. Загрузчик извлекает исходники из
+Все команды принимают `.xdump` напрямую, в том числе с приложением и библиотеками.
+Загрузчик извлекает исходники из
 `application.zip`, создаёт промежуточный tar во временном каталоге и передаёт его
 обычной проверке. Временные файлы удаляются после запуска, исходный дамп и tar
-рядом с ним не изменяются. Для проверки в дампе должен быть ровно один проект.
+рядом с ним не изменяются. Единственное приложение выбирается автоматически;
+для явного выбора используйте `--project-name Имя` или
+`--project-name Поставщик::Имя`. Объявленные библиотеки сверяются по поставщику,
+имени, версии и виду проекта. Их исходники учитываются в `sourceHash`, а точная
+идентичность видна в модели и пакете оценки. Критерий может выбрать подключённую
+библиотеку через `library: {provider, name, version}`; структурные и runtime
+проверки используют её собственную модель и исходники. В текущем наборе все
+проекты имеют режим совместимости 9.0. Ошибка YAML в исходном `autocheck` на
+строке 112 исправлена, составной архив проходит `inspect`.
+Результаты проверки описаны в [отчёте по xdump](docs/xdump-assessment-2026-09-29.md)
+и [отчёте по runtime и библиотекам](docs/tasks/019-library-checks-and-runtime-verification.md).
 
 Нужны Bash, Python 3.10+, PyYAML 6 и Java 11+ (проверено с Java 17).
 Для runtime-тестов нужен Docker. Дистрибутив Script executor 10.0.2-1 уже лежит
@@ -73,6 +84,7 @@ python3 -m venv .venv
 export ELEMENT_TEST_PYTHON="$PWD/.venv/bin/python"
 
 bin/element-test inspect Dvizhok.xdump --output result/xdump-inspection.json
+bin/element-test inspect autocheck-2026-09-24-16-14.xdump --project-name e1c::БазаЗнаний --output result/library-inspection.json
 bin/element-test validate Dvizhok.xdump
 bin/element-test test --project Dvizhok.xdump --assignment assignments/demo --output result/xdump-demo
 
@@ -97,7 +109,7 @@ Manifest преподавателя хранится отдельно от ра�
   "assignmentId": "demo",
   "submissions": [
     {"studentId": "student-001", "project": "incoming/001.tar"},
-    {"studentId": "student-002", "project": "incoming/002.xdump"}
+    {"studentId": "student-002", "project": "incoming/002.xdump", "projectName": "Поставщик::Приложение"}
   ]
 }
 ```
