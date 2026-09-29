@@ -7,6 +7,7 @@ import zipfile
 import stat
 
 from .yaml_io import InputError
+from .yaml_io import load_yaml
 from .xdump import convert_to_tar
 
 MAX_FILES = 10000
@@ -37,11 +38,29 @@ def files(root):
                 raise InputError(f"Недопустимый тип файла: {path.name}")
 
 
-def discover(root):
+def discover(root, project_name=None):
     roots = [p.parent for p in files(root) if p.name == "Проект.yaml"]
-    if len(roots) != 1:
-        raise InputError(f"Ожидался один Проект.yaml; найдено: {len(roots)}")
-    return roots[0]
+    if not roots:
+        raise InputError("Ожидался один Проект.yaml; найдено: 0")
+    if len(roots) == 1 and project_name is None:
+        return roots[0]
+    projects = []
+    for path in roots:
+        meta = load_yaml(path / "Проект.yaml", metadata=True)
+        name, provider = meta.get("Имя"), meta.get("Поставщик")
+        if not isinstance(name, str) or not name:
+            raise InputError(f"{path.name}/Проект.yaml: отсутствует Имя")
+        projects.append((path, meta, name, f"{provider}::{name}" if provider else name))
+    if project_name is not None:
+        matches = [p for p, _, name, qualified in projects
+                   if project_name in (name, qualified)]
+        if len(matches) != 1:
+            raise InputError(f"Проект {project_name!r} не найден или неоднозначен")
+        return matches[0]
+    applications = [p for p, meta, _, _ in projects if meta.get("ВидПроекта") != "Библиотека"]
+    if len(applications) != 1:
+        raise InputError(f"Требуется выбрать приложение; Проект.yaml найдено: {len(roots)}")
+    return applications[0]
 
 
 def destination(root, name):
@@ -112,12 +131,12 @@ def extract(source, root):
 
 
 @contextmanager
-def open_project(source):
+def open_project(source, project_name=None):
     source = Path(source).absolute()
     if source.is_symlink():
         raise InputError("Символическая ссылка на проект запрещена")
     if source.is_dir():
-        yield discover(source)
+        yield discover(source, project_name)
     elif source.is_file():
         if source.stat().st_size > MAX_BYTES:
             raise InputError("Входной архив превышает лимит 128 MiB")
@@ -135,6 +154,6 @@ def open_project(source):
             else:
                 extracted = root
                 extract(source, extracted)
-            yield discover(extracted)
+            yield discover(extracted, project_name)
     else:
         raise InputError(f"Проект не найден: {source}")

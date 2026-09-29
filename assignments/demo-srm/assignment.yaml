@@ -1,0 +1,50 @@
+name: ДемоСРМ — задачи по сделке
+checks:
+  - id: task_document
+    type: element
+    name: Мероприятия::Задачи
+    elementType: Документ
+    points: 1
+  - id: task_owner
+    type: field
+    element: Мероприятия::Задачи
+    field: Владелец
+    expectedType: Сделки.Ссылка?
+    points: 1
+  - id: task_status
+    type: field
+    element: Мероприятия::Задачи
+    field: Статус
+    expectedType: СтатусМероприятия
+    points: 1
+  - id: status_planned
+    type: enumValue
+    element: Мероприятия::СтатусМероприятия
+    name: Запланировано
+    points: 1
+  - id: create_from_deal_signature
+    type: method
+    module: Задачи.Объект
+    namespace: Мероприятия
+    name: ПриСозданииНаОсновании
+    annotations: [Обработчик]
+    parameterCount: 1
+    parameters:
+      - {name: Основание, type: Сделки.Ссылка}
+    points: 1
+  - id: create_from_deal
+    type: runtime
+    target: {module: Задачи.Объект, namespace: Мероприятия, method: ПриСозданииНаОсновании}
+    context: {Владелец: null}
+    args: [{Идентификатор: deal-1}]
+    observe: [Владелец]
+    expected: {Владелец: {Идентификатор: deal-1}}
+    points: 2
+  - id: replace_owner_with_new_deal
+    type: runtime
+    target: {module: Задачи.Объект, namespace: Мероприятия, method: ПриСозданииНаОсновании}
+    context: {Владелец: {Идентификатор: old-deal}}
+    args: [{Идентификатор: deal-2}]
+    observe: [Владелец]
+    expected: {Владелец: {Идентификатор: deal-2}}
+    points: 2

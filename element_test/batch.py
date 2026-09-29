@@ -56,9 +56,12 @@ def load_manifest(path, output):
         raise InputError("Manifest: submissions должен быть непустым массивом")
     seen_ids, seen_paths, entries = set(), set(), []
     for position, item in enumerate(submissions, 1):
-        if not isinstance(item, dict) or set(item) != {"studentId", "project"}:
+        if not isinstance(item, dict) or not {"studentId", "project"} <= set(item) or set(item) - {"studentId", "project", "projectName"}:
             raise InputError("Manifest: каждая работа требует studentId и project")
         student_id, raw = item["studentId"], item["project"]
+        project_name = item.get("projectName")
+        if project_name is not None and (not isinstance(project_name, str) or not project_name.strip()):
+            raise InputError("Manifest: некорректный projectName")
         if not isinstance(student_id, str) or not identifier(student_id, "studentId"):
             raise InputError("Manifest: некорректный studentId")
         if student_id in seen_ids:
@@ -85,7 +88,8 @@ def load_manifest(path, output):
                 raise InputError("Manifest: пересекающиеся проекты")
         seen_ids.add(student_id)
         seen_paths.add(project)
-        entries.append({"ordinal": position, "studentId": student_id, "project": project})
+        entries.append({"ordinal": position, "studentId": student_id, "project": project,
+                        "projectName": project_name})
     if output.exists() and (not output.is_dir() or any(output.iterdir())):
         raise InputError("Выходной каталог должен быть пустым каталогом")
     return assignment, data["assignmentId"], entries
@@ -150,7 +154,7 @@ def _valid_cache(stored, key, source_hash, config, integration):
     package_fields = {"schemaVersion", "studentId", "assignmentId", "runId",
                       "assignmentName", "project", "sourceHash", "compatibilityVersion",
                       "runMode", "status", "score", "maxScore", "unavailablePoints", "feedback"}
-    if set(package) != package_fields:
+    if not package_fields <= set(package) or set(package) - package_fields - {"projectIdentity", "libraries"}:
         return False
     if (any(package[field] is not None for field in ("studentId", "assignmentId", "runId"))
             or not all(isinstance(package[field], str) for field in ("assignmentName", "project"))
@@ -159,6 +163,8 @@ def _valid_cache(stored, key, source_hash, config, integration):
         return False
     if (package.get("schemaVersion") != VERSION
             or package.get("sourceHash") != result["sourceHash"]
+            or package.get("libraries", []) != result.get("libraries", [])
+            or package.get("projectIdentity", {}) != result.get("projectIdentity", {})
             or package.get("status") != result["status"]
             or package.get("runMode") != ("integration" if integration else "isolated")
             or not isinstance(package.get("feedback"), list)
@@ -194,7 +200,7 @@ def _write_atomic(path, data):
 def _assess(entry, assignment, assignment_id, run_id, output, cache_dir, integration):
     packet = output / f"submissions/{entry['ordinal']:06d}"
     config = load_assignment(assignment)
-    with open_project(entry["project"]) as root:
+    with open_project(entry["project"], entry.get("projectName")) as root:
         try:
             model = analyze(root)
         except OSError as exc:
@@ -223,6 +229,7 @@ def _assess(entry, assignment, assignment_id, run_id, output, cache_dir, integra
             result, package = run_test(entry["project"], assignment, packet,
                                        integration=integration, student_id=entry["studentId"],
                                        assignment_id=assignment_id, run_id=run_id,
+                                       project_name=entry.get("projectName"),
                                        _prepared=(root, model))
             if _cacheable(result, config):
                 _write_atomic(cache_path, {"schemaVersion": VERSION, "key": cache_key,

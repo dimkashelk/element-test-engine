@@ -56,6 +56,9 @@ def grading_package(result, assignment, model, *, student_id=None, assignment_id
         "runId": identifier(run_id, "runId"),
         "assignmentName": safe(assignment["name"]),
         "project": safe(result["project"]),
+        "projectIdentity": safe(model.get("projectIdentity", {"Имя": result["project"]})),
+        "libraries": [{key: library[key] for key in ("provider", "name", "version", "kind", "sourceHash")}
+                      for library in model.get("libraries", [])],
         "sourceHash": result["sourceHash"],
         "compatibilityVersion": model["compatibilityVersion"],
         "runMode": "integration" if integration else "isolated",

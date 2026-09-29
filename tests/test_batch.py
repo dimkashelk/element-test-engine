@@ -64,6 +64,14 @@ class BatchTest(unittest.TestCase):
             load_manifest(duplicate_path, output)
         self.assertFalse(output.exists())
 
+    def test_manifest_accepts_explicit_project_name(self):
+        path = self.manifest([self.projects[0]])
+        data = json.loads(path.read_text())
+        data["submissions"][0]["projectName"] = "Пример"
+        path.write_text(json.dumps(data), encoding="utf-8")
+        _, _, entries = load_manifest(path, self.root / "out")
+        self.assertEqual(entries[0]["projectName"], "Пример")
+
     @unittest.skipUnless((REPO / "script_u_10.0.2_1/lib").is_dir(), "Требуется локальный Script executor")
     def test_cache_miss_reuses_open_project_and_model(self):
         entry = {"ordinal": 1, "studentId": "student-0", "project": self.projects[0]}

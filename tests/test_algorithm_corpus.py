@@ -10,6 +10,8 @@ from element_test.assignment import load_assignment
 from element_test.bridge import write_json
 from element_test.model import analyze
 from element_test.generated_types import ProjectTypes
+from element_test.indexer import index_module, parse_module
+from element_test.loader import open_project
 from element_test.resolution import resolve_symbols
 from element_test.runtime import REPO, decode_output, execute_engine, extract_method, prepare_script
 from element_test.yaml_io import InputError
@@ -18,6 +20,53 @@ CORPUS = Path(__file__).parent / "corpus"
 
 
 class AlgorithmCorpusTest(unittest.TestCase):
+    def test_multiline_return_type_and_incomplete_index(self):
+        source = ("@ВПроекте\n"
+                  "метод Найти(Значения: Массив<Строка>):\n"
+                  "    Соответствие<Строка, Массив<Число>>\n"
+                  "    возврат <:>{:}\n"
+                  ";\n")
+        methods, _, errors = parse_module(source)
+        self.assertEqual(errors, [])
+        self.assertEqual(len(methods), 1)
+        self.assertEqual(methods[0].return_type(source), "Соответствие<Строка, Массив<Число>>")
+        self.assertEqual(source[methods[0].header_end:methods[0].end].lstrip().splitlines()[0],
+                         "возврат <:>{:}")
+        self.assertEqual(methods[0].annotations, ["ВПроекте"])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "Модуль.xbsl").write_text(source + "метод Сломан():\n;\n", encoding="utf-8")
+            module = index_module(root / "Модуль.xbsl", root)
+            self.assertFalse(module["indexComplete"])
+            self.assertEqual([item["name"] for item in module["methods"]], ["Найти"])
+            model = {"name": "Регрессия", "sourceHash": "fixture", "elements": [],
+                     "modules": [module], "diagnostics": []}
+            assignment = {"checks": [{"id": "found", "type": "method", "module": "Модуль",
+                                      "name": "Найти", "points": 1, "properties": {}},
+                                     {"id": "uncertain_absence", "type": "method", "module": "Модуль",
+                                      "name": "Неизвестный", "points": 1, "properties": {}}]}
+            write_json(root / "model.json", model)
+            write_json(root / "assignment.json", assignment)
+            result = execute_engine("test", root / "model.json", root / "assignment.json", root)
+            self.assertEqual([item["status"] for item in result["checks"]], ["PASS", "UNSUPPORTED"])
+
+    @unittest.skipUnless((Path(__file__).resolve().parent.parent /
+                          "autocheck-2026-09-24-16-14.xdump").is_file(), "Требуется исходный xdump")
+    def test_real_library_multiline_signature(self):
+        dump = Path(__file__).resolve().parent.parent / "autocheck-2026-09-24-16-14.xdump"
+        with open_project(dump, "e1c::БазаЗнаний") as root:
+            path = root / "Пространства/Пространства.xbsl"
+            source = path.read_text(encoding="utf-8-sig")
+            module = index_module(path, root)
+            self.assertTrue(module["indexComplete"], module["parseErrors"])
+            method = next(item for item in parse_module(source)[0] if item.line == 70)
+            self.assertEqual(method.name, "ПространстваСоСтраницами")
+            self.assertEqual(method.return_type(source),
+                             "Соответствие<Пространства.Ссылка, Массив<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка>>")
+            self.assertEqual(source[method.header_end:method.end].lstrip().splitlines()[0],
+                             "знч ПрофилиЗаполнены = не Профили.Пусто()")
+
     def test_known_statuses_and_unchanged_sources(self):
         root = CORPUS / "names"
         before = {p: sha256(p.read_bytes()).hexdigest() for p in root.rglob("*") if p.is_file()}

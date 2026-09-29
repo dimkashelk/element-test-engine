@@ -62,9 +62,13 @@ def extract_project(source: Path, output: Path) -> list[Path]:
                 if any(root == other or root in other.parents
                        for i, root in enumerate(roots) for other in roots[i + 1:]):
                     raise ValueError("Вложенные корни проектов не поддерживаются")
-                names = [root.name for root in roots]
+                counts = {root.name.casefold(): sum(other.name.casefold() == root.name.casefold()
+                                                    for other in roots) for root in roots}
+                names = [root.name if counts[root.name.casefold()] == 1
+                         else f"{root.parent.name}__{root.name}" for root in roots]
                 if len({name.casefold() for name in names}) != len(names):
-                    raise ValueError("В архиве несколько проектов с одинаковым именем")
+                    raise ValueError("В архиве неоднозначные пути проектов после учёта поставщика")
+                directory_names = dict(zip(roots, names))
 
                 planned = []
                 destinations = set()
@@ -79,7 +83,7 @@ def extract_project(source: Path, output: Path) -> list[Path]:
                         # Compiler assembly is absent from source project exports (.tar).
                         if ".asm" in relative.parts:
                             break
-                        destination = PurePosixPath(root.name) / relative
+                        destination = PurePosixPath(directory_names[root]) / relative
                         key = str(destination).casefold()
                         if key in destinations:
                             raise ValueError(f"Конфликт имён файлов: {destination}")

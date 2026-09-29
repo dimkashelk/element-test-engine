@@ -8,6 +8,7 @@ IDENT = r"[^\W\d]\w*"
 _WORD = re.compile(IDENT, re.UNICODE)
 _OPENERS = {"если", "пока", "для", "выбор", "попытка"}
 _MODIFIERS = {"статический", "экспорт", "асинхронный"}
+_BODY_STARTERS = {"знч", "пер", "возврат", "если", "пока", "для", "выбор", "попытка", "выбросить", "исп"}
 
 
 def mask_noncode(source, *, strings=True):
@@ -209,11 +210,29 @@ def parse_module(source):
                 if depth: raise ValueError
                 close = tokens[j-1]
                 k = next_line(j)
-                rest = [t for t in tokens[j:k] if t.value != "\n"]
+                rest = tokens[j:k]
                 ret = None
                 if rest:
-                    if rest[0].value != ":" or len(rest) == 1: raise ValueError
-                    ret = (rest[1].start, rest[-1].end)
+                    if rest[0].value != ":": raise ValueError
+                    type_start = j + 1
+                    while type_start < len(tokens) and tokens[type_start].value == "\n":
+                        type_start += 1
+                    if (type_start == len(tokens) or not _WORD.fullmatch(tokens[type_start].value)
+                            or tokens[type_start].value in _BODY_STARTERS):
+                        raise ValueError
+                    depth = 0
+                    type_end = type_start
+                    while type_end < len(tokens):
+                        value = tokens[type_end].value
+                        if value == "\n" and depth == 0 and tokens[type_end - 1].value not in {"<", ",", "|", ".", "::"}:
+                            break
+                        if value == "<": depth += 1
+                        elif value == ">": depth -= 1
+                        if depth < 0 or value == ";": raise ValueError
+                        type_end += 1
+                    if depth or type_end == type_start: raise ValueError
+                    ret = (tokens[type_start].start, tokens[type_end - 1].end)
+                    k = type_end
                 tree = Block("метод", token.start)
                 active = Method(name.value, token.start, tokens[k].end if k < len(tokens) else len(source), None,
                                 (opening.end, close.start), ret, pending, token.line, tree)

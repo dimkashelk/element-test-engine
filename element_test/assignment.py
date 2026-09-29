@@ -30,6 +30,11 @@ def load_assignment(source):
         seen.add(check["id"])
         if "group" in check and (not isinstance(check["group"], str) or not check["group"].strip()):
             raise InputError(f"{check['id']}: group должен быть непустой строкой")
+        if "library" in check:
+            library = check["library"]
+            if (not isinstance(library, dict) or set(library) != {"provider", "name", "version"}
+                    or any(not isinstance(value, str) or not value.strip() for value in library.values())):
+                raise InputError(f"{check['id']}: library требует provider, name и version")
         try:
             points = Decimal(str(check.get("points", check.get("weight", 1))))
             if not points.is_finite() or points < 0:

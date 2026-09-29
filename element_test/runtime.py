@@ -10,6 +10,7 @@ import uuid
 
 from .indexer import IDENT, call_code, lex, method_calls, mask_noncode, parse_module, split_parameters
 from .resolution import import_specs, qualified, resolve_call_modules, resolve_symbols
+from .model import select_check_project
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
 from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
@@ -235,6 +236,7 @@ def _project_body_type(contracts, type_name):
 
 def prepare_script(root, model, check, sandbox):
     """Copy the original method and generate only its required data contracts."""
+    root, model = select_check_project(root, model, check)
     target = check.get("target", {})
     modules = [m for m in model["modules"] if m["name"] == target.get("module")
                and ("namespace" not in target or m["namespace"] == target["namespace"])]

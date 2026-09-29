@@ -21,6 +21,21 @@ def write_json(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def canonicalize_model_types(model):
+    """Normalize member types in the app and every selected library model."""
+    for project in [model, *(library["model"] for library in model.get("libraries", []))]:
+        for element in project["elements"]:
+            containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
+            for container in containers:
+                for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы"):
+                    for member in container.get(group, []):
+                        if "Тип" in member:
+                            try:
+                                member["Тип"] = parse_type(member["Тип"])[0]
+                            except ValueError:
+                                pass
+
+
 def report(data, package=None):
     escape = lambda v: html.escape(str(v))
     entries = package["feedback"] if package else data["checks"]
@@ -33,6 +48,15 @@ def report(data, package=None):
                     f'студент: {escape(package["studentId"] or "—")}; '
                     f'запуск: {escape(package["runId"] or "—")}; '
                     f'режим: {escape(package["runMode"])}</p>')
+        project_identity = package.get("projectIdentity", {})
+        if project_identity.get("Поставщик"):
+            identity += (f'<p>Приложение: {escape(project_identity["Поставщик"])}::'
+                         f'{escape(project_identity.get("Имя") or package["project"])}'
+                         f' {escape(project_identity.get("Версия") or "")}</p>')
+        if package.get("libraries"):
+            identity += '<p>Библиотеки: ' + ', '.join(
+                escape(f'{library["provider"]}::{library["name"]} {library["version"]}')
+                for library in package["libraries"]) + '</p>'
     return ('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Element Test Engine</title>'
             '<style>body{font:16px system-ui;max-width:1100px;margin:40px auto}table{border-collapse:collapse;width:100%}'
             'td,th{padding:12px;border:1px solid #ddd;text-align:left}pre{white-space:pre-wrap}h1{color:#21486b}</style>'
@@ -43,7 +67,7 @@ def report(data, package=None):
 
 
 def run_test(source, assignment_source, output, *, integration=False, student_id=None,
-             assignment_id=None, run_id=None, _prepared=None):
+             assignment_id=None, run_id=None, project_name=None, _prepared=None):
     """Assess one submission; batch may supply its open root and analyzed model."""
     for name, value in (("studentId", student_id), ("assignmentId", assignment_id),
                         ("runId", run_id)):
@@ -55,32 +79,30 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
         raise InputError("Отчёт не может заменить входной архив")
     with TemporaryDirectory(prefix="element-test-") as work:
         temporary = Path(work)
-        with (open_project(source) if _prepared is None else nullcontext(_prepared[0])) as root:
+        with (open_project(source, project_name) if _prepared is None else nullcontext(_prepared[0])) as root:
             if output.is_relative_to(root.resolve()):
                 raise InputError("Отчёт находится внутри исходного проекта")
             model = analyze(root) if _prepared is None else _prepared[1]
-            for element in model["elements"]:
-                containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
-                for container in containers:
-                    for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы"):
-                        for member in container.get(group, []):
-                            if "Тип" in member:
-                                try:
-                                    member["Тип"] = parse_type(member["Тип"])[0]
-                                except ValueError:
-                                    pass
+            canonicalize_model_types(model)
             model_path, assignment_path = temporary / "model.json", temporary / "assignment.json"
             write_json(model_path, model)
             assignment = load_assignment(assignment_source)
             for check in assignment["checks"]:
                 if check["type"] == "runtime" and not check.get("skip"):
                     if 'integration' in check:
-                        check["execution"] = run_integration(check, model, temporary,
-                                                               enabled=integration, root=root)
+                        if 'library' in check:
+                            check["execution"] = {"status": "UNSUPPORTED", "reasonCode": "unsupported_contract",
+                                                  "message": "Интеграционный runtime для библиотечного метода не поддерживается"}
+                        else:
+                            check["execution"] = run_integration(check, model, temporary,
+                                                                   enabled=integration, root=root)
                     else:
                         check["execution"] = run_pure(root, model, check, temporary)
             write_json(assignment_path, assignment)
             result = execute_engine("test", model_path, assignment_path, temporary)
+    result["projectIdentity"] = model["projectIdentity"]
+    result["libraries"] = [{key: library[key] for key in ("provider", "name", "version", "kind", "sourceHash")}
+                           for library in model["libraries"]]
     package = grading_package(result, assignment, model, student_id=student_id,
                               assignment_id=assignment_id, run_id=run_id,
                               integration=integration)
@@ -97,9 +119,11 @@ def main():
     for name in ("inspect", "validate"):
         sub = commands.add_parser(name)
         sub.add_argument("project")
+        sub.add_argument("--project-name", help="Имя проекта или Поставщик::Имя в составном архиве")
         sub.add_argument("--output", type=Path)
     test = commands.add_parser("test", aliases=["run"])
     test.add_argument("--project", required=True)
+    test.add_argument("--project-name", help="Имя проекта или Поставщик::Имя в составном архиве")
     test.add_argument("--assignment", required=True)
     test.add_argument("--output", type=Path, required=True)
     test.add_argument("--integration", action="store_true", help="Разрешить SQL smoke и ограниченный адаптер отгрузки в отдельном PostgreSQL")
@@ -119,7 +143,8 @@ def main():
         if args.command in ("test", "run"):
             result, _ = run_test(args.project, args.assignment, args.output,
                                  integration=args.integration, student_id=args.student_id,
-                                 assignment_id=args.assignment_id, run_id=args.run_id)
+                                 assignment_id=args.assignment_id, run_id=args.run_id,
+                                 project_name=args.project_name)
             print(json.dumps(result, ensure_ascii=False, indent=2))
             return 0 if result["status"] == "passed" else (2 if result["status"] == "incomplete" else 1)
         source = Path(args.project).resolve()
@@ -130,21 +155,12 @@ def main():
             raise InputError("Отчёт не может заменить входной архив")
         with TemporaryDirectory(prefix="element-test-") as work:
             temporary = Path(work)
-            with open_project(source) as root:
+            with open_project(source, args.project_name) as root:
                 if output and output.is_relative_to(root.resolve()):
                     raise InputError("Отчёт находится внутри исходного проекта")
                 model = analyze(root)
                 # Canonicalize type unions in the transport model, not student files.
-                for element in model["elements"]:
-                    containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
-                    for container in containers:
-                        for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы"):
-                            for member in container.get(group, []):
-                                if "Тип" in member:
-                                    try:
-                                        member["Тип"] = parse_type(member["Тип"])[0]
-                                    except ValueError:
-                                        pass  # Validation diagnostics already describe it.
+                canonicalize_model_types(model)
                 model_path, assignment_path = temporary / "model.json", temporary / "assignment.json"
                 write_json(model_path, model)
                 command = args.command

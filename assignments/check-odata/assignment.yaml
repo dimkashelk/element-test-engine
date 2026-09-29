@@ -1,0 +1,69 @@
+name: check — формирование ссылки OData и оценка ответа
+checks:
+  - id: criteria_form
+    type: element
+    name: Проверка::ИнтерактивноеДобавлениеКритериев
+    elementType: КомпонентИнтерфейса
+    points: 1
+  - id: odata_url_signature
+    type: method
+    module: ИнтерактивноеДобавлениеКритериев
+    namespace: Проверка
+    name: СформироватьСсылкуOdata
+    returnType: Строка
+    parameterCount: 1
+    parameters:
+      - {name: СсылкаБазы, type: Строка}
+    points: 1
+  - id: odata_response_signature
+    type: method
+    module: ИнтерактивноеДобавлениеКритериев
+    namespace: Проверка
+    name: ОтветПодтверждаетДоступностьOdata
+    returnType: Булево
+    parameterCount: 1
+    parameters:
+      - {name: КодСтатуса, type: Число}
+    points: 1
+  - id: odata_url_base
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: СформироватьСсылкуOdata}
+    args: [" https://example.test/base/ "]
+    expected: https://example.test/base/odata/standard.odata/
+    points: 2
+  - id: odata_url_existing_suffix
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: СформироватьСсылкуOdata}
+    args: [https://example.test/base/odata/standard.odata///]
+    expected: https://example.test/base/odata/standard.odata/
+    points: 2
+  - id: odata_response_success
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: ОтветПодтверждаетДоступностьOdata}
+    args: [200]
+    expected: true
+    points: 1
+  - id: odata_response_unauthorized
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: ОтветПодтверждаетДоступностьOdata}
+    args: [401]
+    expected: false
+    points: 1
+  - id: odata_response_forbidden
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: ОтветПодтверждаетДоступностьOdata}
+    args: [403]
+    expected: false
+    points: 1
+  - id: odata_response_not_found
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: ОтветПодтверждаетДоступностьOdata}
+    args: [404]
+    expected: false
+    points: 1
+  - id: odata_response_network_error
+    type: runtime
+    target: {module: ИнтерактивноеДобавлениеКритериев, namespace: Проверка, method: ОтветПодтверждаетДоступностьOdata}
+    args: [0]
+    expected: false
+    points: 1

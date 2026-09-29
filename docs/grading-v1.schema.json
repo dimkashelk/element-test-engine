@@ -12,6 +12,22 @@
     "runId": {"$ref": "#/$defs/identifier"},
     "assignmentName": {"type": "string"},
     "project": {"type": "string"},
+    "projectIdentity": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "Поставщик": {"type": ["string", "null"]},
+        "Имя": {"type": ["string", "null"]},
+        "Версия": {"type": ["string", "null"]},
+        "ВидПроекта": {"type": ["string", "null"]}
+      }
+    },
+    "libraries": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["provider", "name", "version", "kind", "sourceHash"],
+      "properties": {
+        "provider": {"type": "string"}, "name": {"type": "string"},
+        "version": {"type": "string"}, "kind": {"const": "Библиотека"},
+        "sourceHash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }}},
     "sourceHash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "compatibilityVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
     "runMode": {"enum": ["isolated", "integration"]},
