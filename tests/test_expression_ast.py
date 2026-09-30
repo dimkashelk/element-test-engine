@@ -5,6 +5,42 @@ from element_test.indexer import method_call_expressions, parse_module, parse_mo
 
 
 class ExpressionAstTest(unittest.TestCase):
+    def test_practical_corpus_syntax_and_broken_counterparts(self):
+        cases = {
+            'moment literal': (
+                '    возврат Момент{2024-03-15T09:45:22Z}\n',
+                '    возврат Момент{2024-03-15T09:45:22Z\n', 2, 'literal'),
+            'multiline local method': (
+                '    знч F = метод(\n        A: Число,\n        B: Строка?\n'
+                '    ) ->\n        возврат A\n    ;\n    F(1, "x")\n',
+                '    знч F = метод(\n        A: Число,\n        B: Строка?\n'
+                '    )\n        возврат A\n    ;\n', 2, 'lambda'),
+            'nullable cast after call': (
+                '    возврат F() как Пользователи.Ссылка?\n',
+                '    возврат F() как Пользователи.Ссылка? +\n', 2, 'cast'),
+            'nested function type': (
+                '    возврат F() как ((Объект?)->ничто)\n',
+                '    возврат F() как ((Объект?)->)\n', 2, 'lambda'),
+            'comparison after newline': (
+                '    если A\n        > B\n        возврат Истина\n    ;\n',
+                '    если A\n        >\n        возврат Истина\n    ;\n', 3, 'binary'),
+            'multiline callback': (
+                '    X.Подключить(\n'
+                '        метод (A: Число, B: Строка?) ->\n'
+                '            если A > 0\n                Use(B)\n            ;\n'
+                '        ;\n    )\n',
+                '    X.Подключить(\n'
+                '        метод (A: Число, B: Строка?)\n'
+                '            Use(B)\n        ;\n    )\n', 3, 'lambda'),
+        }
+        for name, (valid, invalid, line, kind) in cases.items():
+            with self.subTest(name=name):
+                methods, _, errors = parse_module('метод Run()\n' + valid + ';\n')
+                self.assertEqual(errors, [])
+                self.assertIn(kind, [node.kind for node in methods[0].expression_tree.walk()])
+                _, _, errors = parse_module('метод Run()\n' + invalid + ';\n')
+                self.assertTrue(any(error.startswith(f'Строка {line}:') for error in errors), errors)
+
     def test_statements_operators_literals_and_nested_blocks(self):
         source = ('метод Run(Значение: Число): Число\n'
                   '    знч Таблица = {"a": [1, 2]}\n'

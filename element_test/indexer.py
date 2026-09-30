@@ -305,11 +305,14 @@ def parse_module(source):
             if token.value == "метод" and i + 1 < len(tokens) and tokens[i + 1].value == "(":
                 lambda_blocks.append(len(stack))
             if token.value in {"(", "[", "{"}:
-                expression_depth.append(token.value)
+                expression_depth.append(token)
             elif token.value in {")", "]", "}"} and expression_depth:
                 expression_depth.pop()
         i += 1
     if active is not None:
+        if expression_depth:
+            opening = expression_depth[-1]
+            errors.append(f"Строка {opening.line}: незакрытая скобка {opening.value}")
         errors.append(f"Строка {active.line}: метод не закрыт")
     for method in methods:
         if method.end is not None:

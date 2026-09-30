@@ -222,7 +222,8 @@ class _Parser:
                     left = generic
                     continue
             if value == "?" and (self.pos + 1 == len(self.tokens) or
-                                  self.tokens[self.pos + 1].value in {".", "(", "["}):
+                                  self.tokens[self.pos + 1].value in {
+                                      ".", "(", "[", ")", "]", "}", ",", "->", ">", "|"}):
                 self.take()
                 left = Node("optional", left.start, token.end, children=[left])
                 continue
@@ -434,12 +435,14 @@ class _Parser:
                 end = self.tokens[self.pos - 1].end
                 return Node("query", left.start, end, children=
                             _interpolations(self.source, token.end, end - 1, "%"))
-            if left.kind == "name" and left.value in {"Байты", "Время", "Дата", "ДатаВремя", "Ууид", "ЧасовойПояс", "Ресурс"}:
+            if left.kind == "name" and left.value in {"Байты", "Время", "Дата", "ДатаВремя", "Момент", "Ууид", "ЧасовойПояс", "Ресурс"}:
                 depth = 1
                 while self.peek() and depth:
                     part = self.take()
                     if part.value == "{": depth += 1
                     elif part.value == "}": depth -= 1
+                if depth:
+                    return Node("error", left.start, self.tokens[-1].end, "missing }")
                 end = self.tokens[self.pos - 1].end
                 return Node("literal", left.start, end, left.value)
             if self.peek(":"):
@@ -488,7 +491,7 @@ def _segments(tokens):
             following = next((item for item in tokens[index + 1:] if item.value != "\n"), None)
             previous = current[-1] if current else None
             if (following and following.value in {".", "?.", "::", "?", ":", "и", "или", "==", "!=", "<>",
-                                                  "+", "-", "*", "/", "??"}
+                                                  "<", ">", "<=", ">=", "+", "-", "*", "/", "??"}
                     or previous and previous.value in {"=", "+", "-", "*", "/", "&&", "||", "??",
                                                      ",", ":", ".", "?.", "::", "->", "как"}):
                 continue

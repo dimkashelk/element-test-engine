@@ -103,7 +103,8 @@ class AlgorithmCorpusTest(unittest.TestCase):
         self.assertIn("возврат 0", method)
         broken = analyze(CORPUS / "broken")
         self.assertFalse(broken["modules"][0]["indexComplete"])
-        self.assertIn("invalid_xbsl", [d["code"] for d in broken["diagnostics"]])
+        self.assertTrue(any(d["code"] == "invalid_xbsl" and d["message"].startswith("Строка 1:")
+                            for d in broken["diagnostics"]))
         with self.assertRaisesRegex(InputError, "не закрыт"):
             extract_method((CORPUS / "broken/Main.xbsl").read_text(), "Незакрытый")
         with tempfile.TemporaryDirectory() as directory:
