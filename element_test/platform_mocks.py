@@ -148,15 +148,23 @@ class PlatformMocks:
                 raise InvalidTestError('Для литерала Запрос требуется ровно один mocks.queries с совпадающим text')
             i = found[0]
             visible = mask_noncode(text)
-            expressions = list(re.finditer(r'%\{([^{}]+)\}', visible))
-            if (not expressions or len(expressions) != len(list(re.finditer(r'%\{', visible)))
-                    or any(not text[e.start(1):e.end(1)].strip() for e in expressions)):
-                raise UnsupportedSyntaxError('Параметры запроса требуют непустые выражения %{...} без вложенных фигурных скобок')
+            expressions = []
+            markers = list(re.finditer(rf'%(?:\{{|{IDENT})', visible))
+            if len(markers) != visible.count('%'):
+                raise UnsupportedSyntaxError('Неподдержанная форма параметра запроса')
+            for marker in markers:
+                if marker[0] == '%{':
+                    expression = re.match(r'%\{([^{}]+)\}', visible[marker.start():])
+                    if expression is None or not text[marker.start() + 2:marker.start() + expression.end() - 1].strip():
+                        raise UnsupportedSyntaxError('Параметры запроса требуют непустые выражения %{...} без вложенных фигурных скобок')
+                    expressions.append(text[marker.start() + 2:marker.start() + expression.end() - 1])
+                else:
+                    expressions.append(marker[0][1:])
             if i not in self.used_queries:
                 self.query(i, len(expressions))
                 self.used_queries.add(i)
             replacements.append((match.start(), end, 'ТестПлатформа.СоздатьЗапрос' + str(i)
-                                 + '(' + ', '.join(text[e.start(1):e.end(1)] for e in expressions) + ')'))
+                                 + '(' + ', '.join(expressions) + ')'))
         for start, end, value in reversed(replacements):
             method = method[:start] + value + method[end:]
         return method
@@ -171,8 +179,8 @@ class PlatformMocks:
             parameter_types = [q['parameterType']]
         else:
             parameter_types = q['parameterTypes']
-            if not isinstance(parameter_types, list) or not parameter_types:
-                raise InvalidTestError('parameterTypes должен быть непустым списком типов')
+            if not isinstance(parameter_types, list):
+                raise InvalidTestError('parameterTypes должен быть списком типов')
         if len(parameter_types) != parameter_count:
             raise InvalidTestError('Число типов параметров запроса должно совпадать с числом выражений %{...}')
         if any(not isinstance(t, str) or not t.strip() for t in parameter_types):
@@ -193,14 +201,15 @@ class PlatformMocks:
                            ['Параметр' + str(i + 1) for i in range(parameter_count)])
         signature = ', '.join(name + ': ' + self.contracts.sbsl_type(type_name)
                               for name, type_name in zip(parameter_names, parameter_types))
-        arguments = ', '.join('"' + name + '": ' + name for name in parameter_names)
+        arguments = ('{' + ', '.join('"' + name + '": ' + name for name in parameter_names) + '}'
+                     if parameter_names else 'новый Соответствие<Строка, Объект?>()')
         self.query_definitions.append('@Глобально\nструктура Запрос' + str(index)
             + '\n    @Глобально\n    метод Выполнить(): Массив<СтрокаЗапроса' + str(index) + '>\n'
             + '        ТестПлатформа.ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Выполнить", "args": новый Соответствие<Строка, Объект?>()})\n'
             + '        возврат ' + rows + '\n    ;\n;\n'
             + '@Глобально\nметод СоздатьЗапрос' + str(index) + '(' + signature
             + '): Запрос' + str(index) + '\n'
-            + '    ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Создать", "args": {' + arguments + '}})\n'
+            + '    ЗаписатьВызов({"owner": "query' + str(index) + '", "method": "Создать", "args": ' + arguments + '})\n'
             + '    возврат новый Запрос' + str(index) + '()\n;\n')
         self.contracts.method_dependencies[row_type] = parameter_types
 

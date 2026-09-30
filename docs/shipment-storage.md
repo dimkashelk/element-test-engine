@@ -157,6 +157,9 @@ runId. ERROR/UNSUPPORTED не останавливают следующие пр
 Полная регрессия — **70/70**, без пропусков (268.994 секунды); отдельный
 интеграционный набор — 4/4; публичная CLI — 8/8 PASS, код 0.
 Без opt-in — 8 UNSUPPORTED, код 2. История проверки — [roadmap.md](roadmap.md).
+Дополнительный [сквозной сценарий](tasks/021-shipment-sequence.md) подтверждает,
+что расход одной отгрузки влияет на следующую запись и что свежая загрузка
+ссылки не разделяет изменяемый снимок с предыдущей.
 Штатный SQL Null и параметры сверены с официальными
 [ЗапросSql](https://1cmycloud.com/console/help/lang/docs/stdlib/Std/Database/Sql/SqlQuery_ru/)
 и [Null](https://1cmycloud.com/console/help/lang/docs/stdlib/Std/Database/Null_ru/),

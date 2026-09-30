@@ -1,0 +1,94 @@
+name: ДемоСРМ — начальная стадия сделки
+checks:
+  - id: first_stage
+    type: runtime
+    points: 2
+    target: {module: СтадииСделок, namespace: Пресейл, method: ПолучитьНачальнуюСтадию}
+    args: []
+    mocks:
+      queries:
+        - text: |
+            ВЫБРАТЬ ПЕРВЫЕ 1
+                Ссылка КАК Стадия
+            ИЗ
+                СтадииСделок
+            УПОРЯДОЧИТЬ ПО
+                Порядок
+          fields: {Стадия: СтадииСделок.Ссылка}
+          rows: [{Стадия: {Идентификатор: stage-1}}]
+          parameterTypes: []
+    captureCalls: true
+    expected:
+      context: {Идентификатор: stage-1}
+      calls:
+        - {owner: query0, method: Создать, args: {}}
+        - {owner: query0, method: Выполнить, args: {}}
+  - id: no_stage
+    type: runtime
+    points: 2
+    target: {module: СтадииСделок, namespace: Пресейл, method: ПолучитьНачальнуюСтадию}
+    args: []
+    mocks:
+      queries:
+        - text: |
+            ВЫБРАТЬ ПЕРВЫЕ 1
+                Ссылка КАК Стадия
+            ИЗ
+                СтадииСделок
+            УПОРЯДОЧИТЬ ПО
+                Порядок
+          fields: {Стадия: СтадииСделок.Ссылка}
+          rows: []
+          parameterTypes: []
+    captureCalls: true
+    expected:
+      context: null
+      calls:
+        - {owner: query0, method: Создать, args: {}}
+        - {owner: query0, method: Выполнить, args: {}}
+  - id: active_stage_kind
+    type: runtime
+    points: 2
+    target: {module: СтадииСделок, namespace: Пресейл, method: ПолучитьВидСтадии}
+    args: [{Идентификатор: stage-1}]
+    mocks:
+      queries:
+        - text: |
+            ВЫБРАТЬ
+                Вид
+            ИЗ
+                СтадииСделок
+            ГДЕ
+                Ссылка == %Стадия
+          fields: {Вид: ВидСтадииСделки}
+          rows: [{Вид: Активна}]
+          parameterTypes: [СтадииСделок.Ссылка]
+    captureCalls: true
+    expected:
+      context: Активна
+      calls:
+        - {owner: query0, method: Создать, args: {Параметр1: {Идентификатор: stage-1}}}
+        - {owner: query0, method: Выполнить, args: {}}
+  - id: closed_stage_kind
+    type: runtime
+    points: 2
+    target: {module: СтадииСделок, namespace: Пресейл, method: ПолучитьВидСтадии}
+    args: [{Идентификатор: stage-2}]
+    mocks:
+      queries:
+        - text: |
+            ВЫБРАТЬ
+                Вид
+            ИЗ
+                СтадииСделок
+            ГДЕ
+                Ссылка == %Стадия
+          fields: {Вид: ВидСтадииСделки}
+          rows: [{Вид: ЗакрытаВыиграна}]
+          parameterTypes: [СтадииСделок.Ссылка]
+    captureCalls: true
+    expected:
+      context: ЗакрытаВыиграна
+      calls:
+        - {owner: query0, method: Создать, args: {Параметр1: {Идентификатор: stage-2}}}
+        - {owner: query0, method: Выполнить, args: {}}
