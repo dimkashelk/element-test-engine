@@ -8,14 +8,17 @@ import shutil
 import time
 import uuid
 
-from .indexer import (IDENT, call_code, lex, method_calls, method_call_sites,
-                      method_local_bindings, mask_noncode, parse_module, split_parameters)
+from .indexer import (IDENT, call_code, lex, method_binding_visible,
+                      method_calls, method_call_expressions,
+                      method_local_bindings, method_local_callable_bindings,
+                      mask_noncode, parse_module, split_parameters)
 from .resolution import (combined_library_symbols, import_specs, method_visible,
                          qualified, resolve_call_modules, resolve_symbols, visible_from)
 from .model import select_check_project
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
 from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
+from .call_types import infer_receiver_type, known_receiver_type, receiver_object_modules
 
 REPO = Path(__file__).resolve().parent.parent
 # Runtime constructors that need no YAML contract. Keep this allowlist explicit.
@@ -140,13 +143,34 @@ def project_method_closure(root, model, module, name):
         names = {m.name for m in methods_of(item)}
         imports = item.get("imports", [])
         bindings = method_local_bindings(source, node)
+        callable_bindings = method_local_callable_bindings(source, node)
         visible_modules = [candidate for candidate in modules
                            if visible_from(candidate, item["namespace"], item.get("_libraryPrefix"))]
         def callable_names(candidate):
             return {method.name for method in methods_of(candidate)
                     if method_visible(method, item, candidate)}
-        for owner, called, owner_start, owner_end in method_call_sites(source, node):
-            if owner and owner in bindings and bindings[owner] <= owner_start:
+        project_names = {method.name for candidate in visible_modules for method in methods_of(candidate)}
+        for call in method_call_expressions(source, node):
+            owner = None if call.receiver == "этот" else call.receiver
+            called, owner_start, owner_end = call.name, call.receiver_start, call.receiver_end
+            if call.kind == "computed":
+                inferred = infer_receiver_type(source, node, call, item, model,
+                                               parsed, cache, bindings)
+                destinations = [candidate for candidate in receiver_object_modules(inferred, item, model)
+                                if called in callable_names(candidate)] if inferred and called else []
+                if len(destinations) == 1:
+                    if destinations[0]['sourceFile'] != item['sourceFile']:
+                        raise InputError("Внешний объектный метод требует собственный context")
+                    visit(item, called)
+                    continue
+                if len(destinations) > 1:
+                    raise InputError(f"Неоднозначный вызов: {called}")
+                if not known_receiver_type(inferred, item, model) and (called is None or called in project_names):
+                    raise UnsupportedSyntaxError(
+                        f"Динамический вызов нельзя разрешить статически: {item['sourceFile']}:"
+                        f"{source.count(chr(10), 0, call.start) + 1}")
+                continue
+            if owner and method_binding_visible(bindings, owner.split(".", 1)[0], owner_start):
                 continue
             candidates = []
             if owner is None:
@@ -172,6 +196,11 @@ def project_method_closure(root, model, module, name):
                                       resolve_call_modules(modules, owner, item["namespace"], imports, project)):
                     raise InputError(f"Недоступный модуль: {owner}")
             unique = {m["sourceFile"]: m for m in candidates}
+            if (not unique and owner is None and method_binding_visible(bindings, called, call.start)
+                    and called not in callable_bindings):
+                raise UnsupportedSyntaxError(
+                    f"Динамический вызов нельзя разрешить статически: {item['sourceFile']}:"
+                    f"{source.count(chr(10), 0, call.start) + 1}")
             if len(unique) > 1:
                 raise InputError(f"Неоднозначный вызов: {owner + '.' if owner else ''}{called}")
             if unique:

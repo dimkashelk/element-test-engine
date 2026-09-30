@@ -128,7 +128,8 @@ def _analyze_single(root):
                     except ValueError as exc:
                         diagnostics.append({"code": "invalid_type", "sourceFile": element["sourceFile"], "message": str(exc)})
     from .call_graph import build_call_graph
-    call_graph, call_diagnostics = build_call_graph(root, {"modules": modules, "properties": project})
+    call_graph, call_diagnostics = build_call_graph(root, {"modules": modules, "elements": elements,
+                                                     "properties": project})
     diagnostics.extend(call_diagnostics)
     return {"schemaVersion": 1, "name": project.get("Имя", root.name), "compatibilityVersion": version,
             "sourceHash": digest.hexdigest(), "properties": project, "subsystems": subsystems,
