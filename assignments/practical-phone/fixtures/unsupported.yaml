@@ -1,0 +1,8 @@
+name: Примеры_new — граница runtime для записи покупателя
+checks:
+  - id: create_buyer_requires_uuid_runtime
+    type: runtime
+    target: {module: Покупатели, namespace: РаботаСИсключениями, method: СоздатьИлиОбновить}
+    args: ["00000000-0000-4000-8000-000000000001", "Иванов Иван", "+79991234567"]
+    expected: {Идентификатор: "00000000-0000-4000-8000-000000000001"}
+    points: 1

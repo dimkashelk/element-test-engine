@@ -1,0 +1,47 @@
+name: Примеры_new — проверка номера телефона покупателя
+checks:
+  - id: buyers_catalog
+    type: element
+    name: РаботаСИсключениями::Покупатели
+    elementType: Справочник
+    points: 1
+  - id: buyers_phone_field
+    type: field
+    element: РаботаСИсключениями::Покупатели
+    field: Телефон
+    expectedType: Строка
+    points: 1
+  - id: phone_validation_signature
+    type: method
+    module: Покупатели
+    namespace: РаботаСИсключениями
+    name: НомерТелефонаКорректен
+    returnType: Булево
+    parameterCount: 1
+    parameters:
+      - {name: Телефон, type: Строка}
+    points: 1
+  - id: phone_valid
+    type: runtime
+    target: {module: Покупатели, namespace: РаботаСИсключениями, method: НомерТелефонаКорректен}
+    args: ["+79991234567"]
+    expected: true
+    points: 2
+  - id: phone_wrong_prefix
+    type: runtime
+    target: {module: Покупатели, namespace: РаботаСИсключениями, method: НомерТелефонаКорректен}
+    args: ["89991234567"]
+    expected: false
+    points: 1
+  - id: phone_short
+    type: runtime
+    target: {module: Покупатели, namespace: РаботаСИсключениями, method: НомерТелефонаКорректен}
+    args: ["+7999123456"]
+    expected: false
+    points: 1
+  - id: phone_trailing_text
+    type: runtime
+    target: {module: Покупатели, namespace: РаботаСИсключениями, method: НомерТелефонаКорректен}
+    args: ["+79991234567 доб. 12"]
+    expected: false
+    points: 1
