@@ -1,5 +1,6 @@
 """Conservative cross-module call graph over parsed method declarations."""
-from .indexer import (method_binding_visible, method_call_expressions, method_local_bindings,
+from .indexer import (method_binding_visible, method_callable_binding_visible,
+                      method_call_expressions, method_local_bindings,
                       method_local_callable_bindings, parse_module)
 from .resolution import (import_specs, method_visible, qualified, resolve_call_modules,
                          resolve_symbols, visible_from)
@@ -84,7 +85,7 @@ def build_call_graph(root, model):
                                                           module["namespace"], imports, project)
                     candidates = [m for m in candidates if called in callable_names(m)]
                 if not candidates and owner is None and method_binding_visible(bindings, called, call.start):
-                    if called not in callable_bindings:
+                    if not method_callable_binding_visible(callable_bindings, called, call.start):
                         diagnostics.append({"code": "dynamic_call", "severity": "warning",
                                             "sourceFile": source_file,
                                             "message": f"Динамический вызов в {qualified(module)}.{method.name}, строка "

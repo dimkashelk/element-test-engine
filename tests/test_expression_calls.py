@@ -5,7 +5,8 @@ import tempfile
 import unittest
 
 from element_test.call_graph import build_call_graph
-from element_test.indexer import (method_call_expressions, method_local_callable_bindings,
+from element_test.indexer import (method_call_expressions, method_callable_binding_visible,
+                                  method_local_callable_bindings,
                                   parse_module)
 from element_test.runtime import REPO, decode_output, prepare_script, project_method_closure
 from element_test.yaml_io import UnsupportedSyntaxError
@@ -101,7 +102,9 @@ class ExpressionCallsTest(unittest.TestCase):
                   '    возврат A() + B(1)\n;\n'
                   'метод Helper(): Число\n    возврат 2\n;\n')
         method = parse_module(source)[0][0]
-        self.assertEqual(method_local_callable_bindings(source, method), {'A', 'B'})
+        bindings = method_local_callable_bindings(source, method)
+        self.assertTrue(method_callable_binding_visible(bindings, 'A', source.index('A()')))
+        self.assertTrue(method_callable_binding_visible(bindings, 'B', source.index('B(1)')))
         self.assertIn(('reference', 'Helper'),
                       [(c.kind, c.name) for c in method_call_expressions(source, method)])
         with tempfile.TemporaryDirectory() as directory:
@@ -135,8 +138,54 @@ class ExpressionCallsTest(unittest.TestCase):
                             '    пер F: (Число)->Число\n'
                             '    X = &Helper\n'
                             '    возврат F(1)\n;\n')
-        self.assertEqual(method_local_callable_bindings(
-            declaration_only, parse_module(declaration_only)[0][0]), set())
+        bindings = method_local_callable_bindings(
+            declaration_only, parse_module(declaration_only)[0][0])
+        self.assertFalse(method_callable_binding_visible(
+            bindings, 'F', declaration_only.index('F(1)')))
+
+    def test_multiline_local_method_and_later_assignment(self):
+        source = ('метод Main(): Число\n'
+                  '    знч F = метод(\n'
+                  '        X: Число,\n'
+                  '        Y: Число\n'
+                  '    ) ->\n'
+                  '        возврат X + Y\n'
+                  '    ;\n'
+                  '    знч Before = F(1, 2)\n'
+                  '    Values.ДляКаждого(Arg -> F(Arg, 2))\n'
+                  '    F = Unknown\n'
+                  '    возврат F(3, 4)\n;\n')
+        method = parse_module(source)[0][0]
+        bindings = method_local_callable_bindings(source, method)
+        self.assertTrue(method_callable_binding_visible(bindings, 'F', source.index('F(1, 2)')))
+        self.assertFalse(method_callable_binding_visible(bindings, 'F', source.index('F(3, 4)')))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'Main.xbsl').write_text(source)
+            model = {'modules': [{'name': 'Main', 'namespace': '', 'sourceFile': 'Main.xbsl',
+                                  'moduleType': 'module', 'imports': []}],
+                     'elements': [], 'properties': {}}
+            _, diagnostics = build_call_graph(root, model)
+            self.assertEqual([d['code'] for d in diagnostics], ['dynamic_call'])
+            with self.assertRaisesRegex(UnsupportedSyntaxError, 'Динамический вызов'):
+                project_method_closure(root, model, model['modules'][0], 'Main')
+
+    def test_local_method_scope_and_shadowing(self):
+        source = ('метод Main(): Число\n'
+                  '    знч F = метод() ->\n'
+                  '        возврат 1\n'
+                  '    ;\n'
+                  '    если Истина\n'
+                  '        пер F: ()->Число\n'
+                  '        F()\n'
+                  '    ;\n'
+                  '    возврат F()\n;\n')
+        method = parse_module(source)[0][0]
+        bindings = method_local_callable_bindings(source, method)
+        first, second = [call.start for call in method_call_expressions(source, method)
+                         if call.name == 'F']
+        self.assertFalse(method_callable_binding_visible(bindings, 'F', first))
+        self.assertTrue(method_callable_binding_visible(bindings, 'F', second))
 
     def test_method_name_has_priority_over_function_value(self):
         source = ('метод Main(): Число\n'

@@ -9,6 +9,7 @@ import time
 import uuid
 
 from .indexer import (IDENT, call_code, lex, method_binding_visible,
+                      method_callable_binding_visible,
                       method_calls, method_call_expressions,
                       method_local_bindings, method_local_callable_bindings,
                       mask_noncode, parse_module, split_parameters)
@@ -197,7 +198,7 @@ def project_method_closure(root, model, module, name):
                     raise InputError(f"Недоступный модуль: {owner}")
             unique = {m["sourceFile"]: m for m in candidates}
             if (not unique and owner is None and method_binding_visible(bindings, called, call.start)
-                    and called not in callable_bindings):
+                    and not method_callable_binding_visible(callable_bindings, called, call.start)):
                 raise UnsupportedSyntaxError(
                     f"Динамический вызов нельзя разрешить статически: {item['sourceFile']}:"
                     f"{source.count(chr(10), 0, call.start) + 1}")

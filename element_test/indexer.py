@@ -554,48 +554,63 @@ def method_binding_visible(bindings, name, offset):
 
 
 def method_local_callable_bindings(source, method):
-    """Local values definitely initialized from a lambda or method reference.
+    """Known callable intervals for each lexical local binding.
 
-    A later assignment makes the value unknown. This deliberately does not
-    infer callbacks passed through parameters or object properties.
+    Each entry is [binding start, scope end, known start, known end]. Unknown
+    bindings have no known start. An assignment invalidates the known interval
+    after its right hand side; callbacks from parameters stay unknown.
     """
-    body = source[method.header_end:method.end]
-    tokens = lex(call_code(body))
-    safe = set()
-    for i, token in enumerate(tokens):
-        if token.value not in {"пер", "знч"} or i + 1 >= len(tokens):
-            continue
-        name = tokens[i + 1].value
-        if not _WORD.fullmatch(name):
-            continue
-        # Inspect the declaration through its first top-level assignment.
-        depth = 0
-        j = i + 2
-        while j < len(tokens) and tokens[j].value not in {"\n", ";", "пер", "знч", "возврат"}:
-            value = tokens[j].value
-            if value in {"(", "<"}: depth += 1
-            elif value == ")" or (value == ">" and (j == 0 or tokens[j - 1].value != "-")):
-                depth -= 1
-            elif value == "=" and depth == 0:
-                if j + 1 < len(tokens) and tokens[j + 1].value == "&":
-                    safe.add(name)
-                elif j + 1 < len(tokens) and tokens[j + 1].value == "(":
-                    nesting, k = 1, j + 2
-                    while k < len(tokens) and nesting:
-                        if tokens[k].value == "(": nesting += 1
-                        elif tokens[k].value == ")": nesting -= 1
-                        k += 1
-                    if k + 1 < len(tokens) and tokens[k].value == "-" and tokens[k + 1].value == ">":
-                        safe.add(name)
-                elif (j + 3 < len(tokens) and _WORD.fullmatch(tokens[j + 1].value)
-                      and tokens[j + 2].value == "-" and tokens[j + 3].value == ">"):
-                    safe.add(name)
-                break
-            j += 1
-    for i, token in enumerate(tokens[:-1]):
-        if token.value in safe and tokens[i + 1].value == "=" and (i == 0 or tokens[i - 1].value not in {"пер", "знч"}):
-            safe.discard(token.value)
-    return safe
+    bindings = {name: [[start, end, None, None] for start, end in intervals]
+                for name, intervals in method_local_bindings(source, method).items()}
+
+    def active(name, offset):
+        matches = [entry for entry in bindings.get(name, ())
+                   if entry[0] <= offset < entry[1]]
+        return max(matches, key=lambda entry: entry[0]) if matches else None
+
+    def statements(node):
+        if node.kind == "statement":
+            yield node
+        elif node.kind in {"body", "block"}:
+            for child in node.children:
+                yield from statements(child)
+
+    def assignments(node):
+        if node.kind == "assignment" and node.children and node.children[0].kind == "name":
+            yield node
+        for child in node.children:
+            yield from assignments(child)
+
+    tree = method.expression_tree or parse_method_body(source, method)
+    for statement in statements(tree):
+        if statement.value in {"пер", "знч"} and statement.children:
+            expression = statement.children[0]
+            prefix = [token for token in lex(call_code(source[statement.start:expression.start]))
+                      if token.value != "\n"]
+            if len(prefix) >= 3 and prefix[0].value in {"пер", "знч"} and prefix[-1].value == "=":
+                name = prefix[1].value
+                candidates = [entry for entry in bindings.get(name, ())
+                              if statement.start <= entry[0] <= statement.end + 3
+                              and entry[1] > expression.end]
+                if candidates and expression.kind in {"lambda", "reference"}:
+                    entry = min(candidates, key=lambda item: item[0])
+                    entry[2], entry[3] = expression.end, entry[1]
+        for assignment in assignments(statement):
+            name = assignment.children[0].value
+            entry = active(name, assignment.start)
+            if entry is not None and entry[2] is not None:
+                entry[3] = min(entry[3], assignment.end)
+    return bindings
+
+
+def method_callable_binding_visible(bindings, name, offset):
+    """Whether the innermost visible binding has a known callable value."""
+    matches = [entry for entry in bindings.get(name, ())
+               if entry[0] <= offset < entry[1]]
+    if not matches:
+        return False
+    _, _, known_start, known_end = max(matches, key=lambda entry: entry[0])
+    return known_start is not None and known_start <= offset < known_end
 
 
 def method_calls(source, method):
