@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 from .indexer import IDENT, split_parameters
-from .resolution import import_specs, resolve_symbols
+from .resolution import import_specs, resolve_symbols, visible_from
 from .yaml_io import InputError, InvalidTestError
 
 SCALARS = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент"}
@@ -31,8 +31,17 @@ class ProjectTypes:
     def resolve(self, name, namespace=None):
         namespace = self.namespace if namespace is None else namespace
         imports = self.imports if namespace == self.namespace else ()
-        return resolve_symbols(self.model["elements"], name, namespace, imports,
-                               self.model.get("properties"))
+        prefix = next((prefix for prefix in self.model.get("_libraryPrefixes", [])
+                       if namespace == prefix or namespace.startswith(prefix + "::")), None)
+        elements = [item for item in self.model["elements"] if visible_from(item, namespace, prefix)]
+        matches = resolve_symbols(elements, name, namespace, imports,
+                                  self.model.get("properties"))
+        if not matches and "::" in name:
+            for prefix in self.model.get("_libraryPrefixes", []):
+                if namespace == prefix or namespace.startswith(prefix + "::"):
+                    return resolve_symbols(elements, prefix + "::" + name,
+                                           namespace, imports, self.model.get("properties"))
+        return matches
 
     def canonical_type(self, type_name):
         """Resolve explicit project namespaces before shortening SBSL names."""

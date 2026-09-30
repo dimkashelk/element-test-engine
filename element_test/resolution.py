@@ -29,6 +29,31 @@ def qualified(item):
     return "::".join(filter(None, (item.get("namespace", ""), item["name"])))
 
 
+def visible_from(item, namespace, library_prefix=None):
+    """Project metadata visibility for a caller's namespace and project."""
+    same_project = item.get("_libraryPrefix") == library_prefix
+    if same_project and item.get("namespace", "") == namespace:
+        return True
+    scope = item.get("visibility", "ВПроекте")
+    if same_project:
+        return scope in {"ВПроекте", "Глобально"}
+    return scope == "Глобально"
+
+
+def method_visible(method, source, destination):
+    if source["sourceFile"] == destination["sourceFile"]:
+        return True
+    annotations = set(method.annotations)
+    if "Локально" in annotations:
+        return False
+    same_project = source.get("_libraryPrefix") == destination.get("_libraryPrefix")
+    if not same_project:
+        return "Глобально" in annotations
+    if source.get("namespace", "") != destination.get("namespace", ""):
+        return "ВПодсистеме" not in annotations
+    return True
+
+
 def resolve_symbols(items, name, namespace="", imports=(), project=None):
     """Return candidates in the strongest scope; never pick one arbitrarily."""
     name = _strip_project(name, project)
@@ -66,3 +91,36 @@ def resolve_call_modules(modules, owner, namespace, imports=(), project=None):
         if alias == owner:
             return resolve_symbols(modules, path, namespace, imports, project)
     return resolve_symbols(modules, owner, namespace, imports, project)
+
+
+def combined_library_symbols(root, model, source_model):
+    """Add declared library symbols under their provider and project identity."""
+    libraries = source_model.get("libraries", [])
+    if not libraries:
+        return model
+    combined = {**model, "modules": list(model["modules"]),
+                "elements": list(model["elements"])}
+    prefixes = [f'{library["provider"]}::{library["name"]}' for library in libraries]
+    combined["_libraryPrefixes"] = prefixes
+    for library, prefix in zip(libraries, prefixes):
+        directory = library["sourceDirectory"]
+        library_root = root.parent / directory
+        if not library_root.is_dir() or library_root.is_symlink() or library_root.resolve().parent != root.parent.resolve():
+            raise InputError("Каталог объявленной библиотеки недоступен")
+        if library_root.resolve() == root.resolve():
+            continue
+        library_model = library["model"]
+        for element in library_model["elements"]:
+            combined["elements"].append({**element, "namespace": "::".join(filter(None,
+                                          (prefix, element["namespace"]))), "_libraryPrefix": prefix})
+        for module in library_model["modules"]:
+            imports = []
+            for path, alias in import_specs(module.get("imports", [])):
+                if not any(path == known or path.startswith(known + "::") for known in prefixes):
+                    path = prefix + "::" + path
+                imports.append(path + (" как " + alias if alias else ""))
+            combined["modules"].append({**module,
+                "namespace": "::".join(filter(None, (prefix, module["namespace"]))),
+                "sourceFile": "../" + directory + "/" + module["sourceFile"],
+                "imports": imports, "_libraryPrefix": prefix})
+    return combined

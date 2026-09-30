@@ -8,8 +8,10 @@ import shutil
 import time
 import uuid
 
-from .indexer import IDENT, call_code, lex, method_calls, mask_noncode, parse_module, split_parameters
-from .resolution import import_specs, qualified, resolve_call_modules, resolve_symbols
+from .indexer import (IDENT, call_code, lex, method_calls, method_call_sites,
+                      method_local_bindings, mask_noncode, parse_module, split_parameters)
+from .resolution import (combined_library_symbols, import_specs, method_visible,
+                         qualified, resolve_call_modules, resolve_symbols, visible_from)
 from .model import select_check_project
 from .generated_types import ProjectTypes
 from .platform_mocks import PlatformMocks
@@ -103,12 +105,30 @@ def project_method_closure(root, model, module, name):
     modules = model["modules"]
     project = model.get("properties", {})
     cache = {}
+    parsed = {}
     def source_of(item):
         path = item["sourceFile"]
         if path not in cache:
             cache[path] = (root / path).read_text(encoding="utf-8-sig")
         return cache[path]
-    seen, result, aliases = set(), [], {}
+    def methods_of(item):
+        path = item["sourceFile"]
+        if path not in parsed:
+            parsed[path] = parse_module(source_of(item))[0]
+        return parsed[path]
+    seen, result, aliases, rewrites, dependencies = set(), [], {}, {}, {}
+    reserved = {m["name"] for m in modules} | {e["name"] for e in model.get("elements", [])}
+    def alias_for(item):
+        path = item["sourceFile"]
+        if path not in aliases:
+            number = len(aliases) + 1
+            alias = f"ТестВнешнийМодуль{number}"
+            while alias in reserved:
+                number += 1
+                alias = f"ТестВнешнийМодуль{number}"
+            aliases[path] = alias
+            reserved.add(alias)
+        return aliases[path]
     def visit(item, current):
         key = (item["sourceFile"], current)
         if key in seen: return
@@ -117,9 +137,17 @@ def project_method_closure(root, model, module, name):
         node, types = _selected_method(source, current, allow_void=True)
         method = source[node.start:node.end]
         result.append((item, method, types))
-        names = {m.name for m in parse_module(source)[0]}
+        names = {m.name for m in methods_of(item)}
         imports = item.get("imports", [])
-        for owner, called in method_calls(source, node):
+        bindings = method_local_bindings(source, node)
+        visible_modules = [candidate for candidate in modules
+                           if visible_from(candidate, item["namespace"], item.get("_libraryPrefix"))]
+        def callable_names(candidate):
+            return {method.name for method in methods_of(candidate)
+                    if method_visible(method, item, candidate)}
+        for owner, called, owner_start, owner_end in method_call_sites(source, node):
+            if owner and owner in bindings and bindings[owner] <= owner_start:
+                continue
             candidates = []
             if owner is None:
                 if called in names:
@@ -127,18 +155,22 @@ def project_method_closure(root, model, module, name):
                 else:
                     for path, alias in import_specs(imports):
                         if alias: continue
-                        imported = ([m for m in modules if m["namespace"] == path and m.get("visibility") != "ВПодсистеме"]
-                                    if any(m["namespace"] == path for m in modules) else
-                                    resolve_symbols(modules, path, item["namespace"], imports, project))
-                        candidates.extend(m for m in imported if called in {n.name for n in parse_module(source_of(m))[0] if "Локально" not in n.annotations})
+                        imported = ([m for m in visible_modules if m["namespace"] == path]
+                                    if any(m["namespace"] == path for m in visible_modules) else
+                                    resolve_symbols(visible_modules, path, item["namespace"], imports, project))
+                        candidates.extend(m for m in imported if called in callable_names(m))
             else:
-                owners = resolve_call_modules(modules, owner, item["namespace"], imports, project)
-                candidates = [m for m in owners
-                              if called in {n.name for n in parse_module(source_of(m))[0]
-                                            if m["sourceFile"] == item["sourceFile"] or "Локально" not in n.annotations}]
+                owners = resolve_call_modules(visible_modules, owner, item["namespace"], imports, project)
+                if not owners and item.get("_libraryPrefix") and "::" in owner:
+                    owners = resolve_call_modules(visible_modules, item["_libraryPrefix"] + "::" + owner,
+                                                  item["namespace"], imports, project)
+                candidates = [m for m in owners if called in callable_names(m)]
                 if owners and not candidates and any(
-                        called == n.name for m in owners for n in parse_module(source_of(m))[0]):
+                        called == n.name for m in owners for n in methods_of(m)):
                     raise InputError(f"Недоступный метод: {owner}.{called}")
+                if not owners and any(called in {n.name for n in methods_of(m)} for m in
+                                      resolve_call_modules(modules, owner, item["namespace"], imports, project)):
+                    raise InputError(f"Недоступный модуль: {owner}")
             unique = {m["sourceFile"]: m for m in candidates}
             if len(unique) > 1:
                 raise InputError(f"Неоднозначный вызов: {owner + '.' if owner else ''}{called}")
@@ -147,15 +179,26 @@ def project_method_closure(root, model, module, name):
                 if other["sourceFile"] != item["sourceFile"]:
                     if other.get("moduleType") == "object":
                         raise InputError("Внешний объектный метод требует собственный context")
-                    alias = owner or other["name"]
-                    if "::" in alias:
-                        raise InputError("Квалифицированный вызов внешнего модуля пока не поддерживается runtime")
-                    previous = aliases.setdefault(other["sourceFile"], alias)
-                    if previous != alias:
-                        raise InputError("Один модуль импортирован под несколькими именами")
+                    alias = alias_for(other)
+                    dependencies.setdefault(item["sourceFile"], set()).add(other["sourceFile"])
+                    if owner is not None:
+                        rewrites.setdefault(key, []).append((owner_start - node.start,
+                                                               owner_end - node.start, alias))
                 visit(other, called)
     visit(module, name)
-    return result, aliases
+    active, complete = set(), set()
+    def check_cycles(path):
+        if path in active:
+            raise InputError("Циклическая зависимость SBSL-модулей: " + path)
+        if path in complete:
+            return
+        active.add(path)
+        for dependency in dependencies.get(path, ()):
+            check_cycles(dependency)
+        active.remove(path)
+        complete.add(path)
+    check_cycles(module["sourceFile"])
+    return result, aliases, rewrites, dependencies
 
 
 def constructor_types(method):
@@ -236,6 +279,7 @@ def _project_body_type(contracts, type_name):
 
 def prepare_script(root, model, check, sandbox):
     """Copy the original method and generate only its required data contracts."""
+    source_model = model
     root, model = select_check_project(root, model, check)
     target = check.get("target", {})
     modules = [m for m in model["modules"] if m["name"] == target.get("module")
@@ -257,7 +301,8 @@ def prepare_script(root, model, check, sandbox):
     args = check.get("args", [])
     if len(args) != len(types):
         raise InvalidTestError("Количество аргументов не совпадает с сигнатурой")
-    contracts = ProjectTypes(model, module["namespace"], module.get("imports", []))
+    runtime_model = combined_library_symbols(root, model, source_model)
+    contracts = ProjectTypes(runtime_model, module["namespace"], module.get("imports", []))
     mocks = check.get("mocks", {})
     if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
         raise InvalidTestError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
@@ -269,11 +314,13 @@ def prepare_script(root, model, check, sandbox):
     return_type = signature.return_type(method)
     if not is_object and return_type == "ничто":
         raise InputError("Для метода без результата требуется объектный context")
-    reachable, aliases = project_method_closure(root, model, module, target.get("method"))
+    reachable, aliases, call_rewrites, module_dependencies = project_method_closure(
+        root, runtime_model, module, target.get("method"))
     methods = [(m, types) for owner, m, types in reachable if owner["sourceFile"] == module["sourceFile"]]
     if not is_object and any(re.search(r"\bэтот\b", call_code(m)) for m, _ in methods):
         raise InvalidTestError("Для объектного метода требуется context с начальными полями")
     signature_types = []
+    module_type_dependencies = {}
     for owner, dependency, parameter_types in reachable:
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
         declaration = parse_module(dependency)[0][0]
@@ -282,6 +329,7 @@ def prepare_script(root, model, check, sandbox):
             signature_types.append(declaration.return_type(dependency))
         for type_name in parameter_types + ([declaration.return_type(dependency)] if declaration.return_type(dependency) and declaration.return_type(dependency) != "ничто" else []):
             contracts.require(type_name)
+            module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
     body_types = []
     for owner, dependency, _ in reachable:
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
@@ -290,10 +338,12 @@ def prepare_script(root, model, check, sandbox):
                 continue
             contracts.require(type_name)
             body_types.append(type_name)
+            module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
         for _, _, type_name in body_type_references(dependency):
             if _project_body_type(contracts, type_name):
                 contracts.require(type_name)
                 body_types.append(type_name)
+                module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
     adapted = []
     external = {}
     for owner, dependency, _ in reachable:
@@ -312,6 +362,7 @@ def prepare_script(root, model, check, sandbox):
                             for start, end, type_name in body_type_references(dependency)
                             if _project_body_type(contracts, type_name)
                             and contracts.sbsl_type(dependency[start:end]) != dependency[start:end])
+        replacements.extend(call_rewrites.get((owner["sourceFile"], declaration.name), []))
         for start, end, replacement in sorted(replacements, reverse=True):
             dependency = dependency[:start] + replacement + dependency[end:]
         compiled = platform.adapt(dependency)
@@ -380,10 +431,21 @@ def prepare_script(root, model, check, sandbox):
                       + '    ;\n')
         actual = '{"result": ' + actual + ', "exception": ИсключениеРезультат}'
     imports = contracts.write(sandbox)
+    generated_owners = {name.split(".")[0] for name in contracts.definitions}
     for alias, bodies in external.items():
         if (sandbox / (alias + ".sbsl")).exists():
             raise InputError("Конфликт имени импортированного модуля: " + alias)
-        (sandbox / (alias + ".sbsl")).write_text("\n".join("@Глобально\n" + body for body in bodies), encoding="utf-8")
+        path = next(path for path, name in aliases.items() if name == alias)
+        needed = [f"#требуется {aliases[other]}.sbsl"
+                  for other in sorted(module_dependencies.get(path, ()))]
+        type_owners = set()
+        for canonical in module_type_dependencies.get(path, ()):
+            type_owners.update(re.findall(rf"({IDENT})\.", canonical))
+            type_owners.update(enum for enum in contracts.enums
+                               if re.search(rf"(?<!\w){re.escape(enum)}(?!\w)", canonical))
+        needed.extend(f"#требуется {owner}.sbsl" for owner in sorted(type_owners & generated_owners))
+        (sandbox / (alias + ".sbsl")).write_text(
+            "\n".join(needed + ["@Глобально\n" + body for body in bodies]), encoding="utf-8")
     if external:
         imports = "\n".join(f"#требуется {alias}.sbsl" for alias in sorted(external)) + "\n" + imports
     if 'runtimeDateTime' in check and not is_object:

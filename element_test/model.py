@@ -212,6 +212,14 @@ def analyze(root):
             for key in ("provider", "name", "version", "kind", "sourceHash"):
                 digest.update(str(library[key]).encode() + b"\0")
         model["sourceHash"] = digest.hexdigest()
+        from .resolution import combined_library_symbols
+        from .call_graph import build_call_graph
+        symbols = combined_library_symbols(root, model, model)
+        graph, diagnostics = build_call_graph(root, symbols)
+        model["callGraph"] = graph
+        for diagnostic in diagnostics:
+            if not diagnostic["sourceFile"].startswith("../") and diagnostic not in model["diagnostics"]:
+                model["diagnostics"].append(diagnostic)
     return model
 
 

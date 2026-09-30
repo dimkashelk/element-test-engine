@@ -285,8 +285,8 @@ def index_module(path, root):
             "parseErrors": errors}
 
 
-def method_calls(source, method):
-    """Return syntactic call sites, retaining interpolation expressions."""
+def method_call_sites(source, method):
+    """Return call owners, names and owner spans in the original source."""
     body = source[method.header_end:method.end]
     tokens = [t for t in lex(call_code(body)) if t.value != "\n"]
     result = []
@@ -300,7 +300,26 @@ def method_calls(source, method):
             while j >= 2 and tokens[j-1].value == "::":
                 owner = tokens[j-2].value + "::" + owner
                 j -= 2
-            result.append((None if owner == "этот" else owner, token.value))
+            result.append((None if owner == "этот" else owner, token.value,
+                           method.header_end + tokens[j].start,
+                           method.header_end + tokens[i-2].end))
         elif before not in {"::", "новый", ".", ":"}:
-            result.append((None, token.value))
+            result.append((None, token.value, None, None))
     return result
+
+
+def method_local_bindings(source, method):
+    """Names of parameters and local declarations with their first visible offset."""
+    bindings = {part.partition(":")[0].strip(): method.header_end
+                for part in method.parameters(source) if part.partition(":")[0].strip()}
+    body = source[method.header_end:method.end]
+    tokens = [token for token in lex(call_code(body)) if token.value != "\n"]
+    for index, token in enumerate(tokens[:-1]):
+        if token.value in {"пер", "знч"} and _WORD.fullmatch(tokens[index + 1].value):
+            bindings.setdefault(tokens[index + 1].value, method.header_end + tokens[index + 1].start)
+    return bindings
+
+
+def method_calls(source, method):
+    """Return syntactic call sites, retaining interpolation expressions."""
+    return [(owner, name) for owner, name, _, _ in method_call_sites(source, method)]
