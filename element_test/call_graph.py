@@ -8,6 +8,14 @@ from .yaml_io import InputError
 from .call_types import infer_receiver_type, known_receiver_type, receiver_object_modules
 
 
+def platform_local_call(module, called, elements):
+    """Inherited metadata-manager methods precede imported free methods."""
+    if called != "Удалить" or module["name"].endswith(".Объект"):
+        return False
+    return any(item["name"] == module["name"] and item["namespace"] == module["namespace"]
+               and item["elementType"] == "РегистрСведений" for item in elements)
+
+
 def build_call_graph(root, model):
     modules = model["modules"]
     project = model.get("properties", {})
@@ -70,6 +78,8 @@ def build_call_graph(root, model):
                 if owner is None:
                     if called in local_names:
                         candidates = [module]
+                    elif platform_local_call(module, called, model.get("elements", [])):
+                        continue
                     else:
                         for path, alias in specs:
                             if alias: continue

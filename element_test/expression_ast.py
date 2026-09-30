@@ -381,7 +381,7 @@ class _Parser:
         if ending is None:
             return None
         after = self.tokens[ending + 1].value if ending + 1 < len(self.tokens) else None
-        if after not in {None, "(", "[", "{", ".", "?.", "::", ",", ")", "]", "}", "?", "|"}:
+        if after not in {None, "(", "[", "{", ".", "?.", "::", ",", ")", "]", "}", "?", "|", "и", "или"}:
             return None
         first = self.tokens[self.pos]
         last = self.tokens[ending]

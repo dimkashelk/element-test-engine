@@ -5,6 +5,7 @@ import re
 from .loader import files
 from .indexer import index_module
 from .types import parse_type, BUILTINS
+from .resolution import same_subsystem
 from .yaml_io import InputError, InvalidTestError, load_yaml
 
 ELEMENT_TYPES = {"Справочник", "Документ", "Перечисление", "НаборКонстант", "РегистрНакопления",
@@ -122,7 +123,8 @@ def _analyze_single(root):
                             if len(matches) != 1:
                                 diagnostics.append({"code": "unresolved_type", "sourceFile": element["sourceFile"],
                                                     "message": f"{element['name']}.{member['Имя']}: тип {reference} не найден или неоднозначен"})
-                            elif matches[0]["namespace"] != element["namespace"] and matches[0]["visibility"] == "ВПодсистеме":
+                            elif (not same_subsystem(matches[0]["namespace"], element["namespace"])
+                                  and matches[0]["visibility"] == "ВПодсистеме"):
                                 diagnostics.append({"code": "inaccessible_type", "sourceFile": element["sourceFile"],
                                                     "message": f"{element['name']}.{member['Имя']}: {reference} недоступен вне своей подсистемы"})
                     except ValueError as exc:

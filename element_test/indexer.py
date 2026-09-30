@@ -209,6 +209,7 @@ def parse_module(source):
         return index
     while i < len(tokens):
         token = tokens[i]
+        declaration_start = token.start
         if token.value == "\n":
             i += 1
             continue
@@ -219,8 +220,14 @@ def parse_module(source):
             i = j
             continue
         if beginning and active is None and token.value in _MODIFIERS:
-            i = next_line(i)
-            continue
+            j = i
+            while j < len(tokens) and tokens[j].line == token.line and tokens[j].value in _MODIFIERS:
+                j += 1
+            if j < len(tokens) and tokens[j].line == token.line and tokens[j].value == "метод":
+                i, token = j, tokens[j]
+            else:
+                i = next_line(i)
+                continue
         if beginning and active is None and token.value == "импорт":
             j = next_line(i)
             imports.append(source[token.end:tokens[j].start if j < len(tokens) else len(source)].strip().rstrip(";"))
@@ -268,8 +275,8 @@ def parse_module(source):
                     if depth or type_end == type_start: raise ValueError
                     ret = (tokens[type_start].start, tokens[type_end - 1].end)
                     k = type_end
-                tree = Block("метод", token.start)
-                active = Method(name.value, token.start, tokens[k].end if k < len(tokens) else len(source), None,
+                tree = Block("метод", declaration_start)
+                active = Method(name.value, declaration_start, tokens[k].end if k < len(tokens) else len(source), None,
                                 (opening.end, close.start), ret, pending, token.line, tree)
                 methods.append(active)
                 stack = [tree]

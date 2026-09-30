@@ -29,10 +29,22 @@ def qualified(item):
     return "::".join(filter(None, (item.get("namespace", ""), item["name"])))
 
 
+def same_subsystem(left, right, library_prefix=None):
+    """Packages share the visibility scope of their containing subsystem."""
+    if library_prefix:
+        prefix = library_prefix + "::"
+        if not left.startswith(prefix) or not right.startswith(prefix):
+            return False
+        left, right = left[len(prefix):], right[len(prefix):]
+    if left == right:
+        return True
+    return bool(left and right and left.split("::", 1)[0] == right.split("::", 1)[0])
+
+
 def visible_from(item, namespace, library_prefix=None):
     """Project metadata visibility for a caller's namespace and project."""
     same_project = item.get("_libraryPrefix") == library_prefix
-    if same_project and item.get("namespace", "") == namespace:
+    if same_project and same_subsystem(item.get("namespace", ""), namespace, library_prefix):
         return True
     scope = item.get("visibility", "ВПроекте")
     if same_project:
@@ -49,7 +61,8 @@ def method_visible(method, source, destination):
     same_project = source.get("_libraryPrefix") == destination.get("_libraryPrefix")
     if not same_project:
         return "Глобально" in annotations
-    if source.get("namespace", "") != destination.get("namespace", ""):
+    if not same_subsystem(source.get("namespace", ""), destination.get("namespace", ""),
+                          source.get("_libraryPrefix")):
         return "ВПодсистеме" not in annotations
     return True
 
@@ -59,6 +72,9 @@ def resolve_symbols(items, name, namespace="", imports=(), project=None):
     name = _strip_project(name, project)
     specs = import_specs(imports)
     explicit = "::" in name
+    def in_scope(item):
+        return (item.get("visibility") != "ВПодсистеме" or
+                same_subsystem(item.get("namespace", ""), namespace, item.get("_libraryPrefix")))
     for path, alias in specs:
         path = _strip_project(path, project)
         if alias and (name == alias or name.startswith(alias + "::")):
@@ -67,7 +83,7 @@ def resolve_symbols(items, name, namespace="", imports=(), project=None):
             break
     if explicit:
         return [item for item in items if qualified(item) == name and
-                (item.get("namespace", "") == namespace or item.get("visibility") != "ВПодсистеме")]
+                in_scope(item)]
     local = [item for item in items if item["name"] == name and item.get("namespace", "") == namespace]
     if local:
         return local
@@ -75,13 +91,13 @@ def resolve_symbols(items, name, namespace="", imports=(), project=None):
     for path, alias in specs:
         path = _strip_project(path, project)
         for item in items:
-            if item["name"] != name or item.get("visibility") == "ВПодсистеме":
+            if item["name"] != name or not in_scope(item):
                 continue
             if path == qualified(item) or path == item.get("namespace"):
                 imported.append(item)
     if imported:
         return list({item.get("sourceFile", qualified(item)): item for item in imported}.values())
-    return [item for item in items if item["name"] == name and item.get("visibility") != "ВПодсистеме"]
+    return [item for item in items if item["name"] == name and in_scope(item)]
 
 
 def resolve_call_modules(modules, owner, namespace, imports=(), project=None):

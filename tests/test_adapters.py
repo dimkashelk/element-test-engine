@@ -119,6 +119,7 @@ class AdaptersTest(unittest.TestCase):
     def test_union_grammar(self):
         self.assertEqual(parse_type("Б.Ссылка|А.Ссылка|?")[0], "А.Ссылка|Б.Ссылка|?")
         self.assertEqual(parse_type("Массив<Б.Ссылка|А.Ссылка>")[1], {"А", "Б"})
+        self.assertEqual(parse_type("Время|Ууид")[1], set())
         for invalid in ("А|?", "А|Б?", "А?|Б", "Массив<А", "А||Б", "А|А", "Неопределено"):
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):
                 parse_type(invalid)
@@ -130,6 +131,46 @@ class AdaptersTest(unittest.TestCase):
                                             "  - Имя: Клиент\n    Тип: Строка\n")
         codes = {d["code"] for d in analyze(project)["diagnostics"]}
         self.assertEqual(codes, {"duplicate_member", "unresolved_type"})
+
+    def test_platform_types_and_package_visibility_in_9_0(self):
+        project = self.project()
+        (project / "Проект.yaml").write_text("Имя: Пример\nРежимСовместимости: 9.0\n")
+        (project / "Заказ.yaml").write_text(
+            "ВидЭлемента: Документ\nИмя: Заказ\nРеквизиты:\n"
+            "  - {Имя: Начало, Тип: Время}\n"
+            "  - {Имя: Идентификатор, Тип: Ууид}\n"
+            "  - {Имя: Пользователь, Тип: 'Стд::Пользователи::Пользователи.Ссылка?'}\n")
+        subsystem = project / "Проверка"
+        package = subsystem / "Пакет"
+        package.mkdir(parents=True)
+        (subsystem / "Подсистема.yaml").write_text("{}\n")
+        (package / "Вариант.yaml").write_text(
+            "ВидЭлемента: Перечисление\nИмя: Вариант\nОбластьВидимости: ВПодсистеме\n"
+            "Элементы: [{Имя: Один}]\n")
+        (subsystem / "Данные.yaml").write_text(
+            "ВидЭлемента: Справочник\nИмя: Данные\n"
+            "Реквизиты: [{Имя: ТипДанных, Тип: Вариант}]\n")
+        other = project / "Другая"
+        other.mkdir()
+        (other / "ЧужиеДанные.yaml").write_text(
+            "ВидЭлемента: Справочник\nИмя: ЧужиеДанные\n"
+            "Реквизиты: [{Имя: ТипДанных, Тип: Вариант}]\n")
+        (project / "Неизвестный.yaml").write_text(
+            "ВидЭлемента: Справочник\nИмя: Неизвестный\n"
+            "Реквизиты: [{Имя: Тип, Тип: 'Стд::Несуществующий::Тип'}]\n")
+        model = analyze(project)
+        errors = [d for d in model["diagnostics"] if d.get("severity") != "warning"]
+        self.assertEqual({(d["code"], d["sourceFile"]) for d in errors}, {
+            ("unresolved_type", "Неизвестный.yaml"),
+            ("inaccessible_type", "Другая/ЧужиеДанные.yaml")})
+
+    def test_unsupported_kind_is_preserved_as_warning(self):
+        project = self.project()
+        (project / "Общий.yaml").write_text("ВидЭлемента: ОбщийМодуль\nИмя: Общий\n")
+        model = analyze(project)
+        self.assertTrue(any(e["name"] == "Общий" for e in model["elements"]))
+        self.assertEqual([d["severity"] for d in model["diagnostics"]
+                          if d["code"] == "unsupported_element"], ["warning"])
 
     def test_index_ignores_fake_methods(self):
         path = self.root / "Лица.Объект.xbsl"

@@ -32,6 +32,13 @@ class ExpressionAstTest(unittest.TestCase):
                 '    X.Подключить(\n'
                 '        метод (A: Число, B: Строка?)\n'
                 '            Use(B)\n        ;\n    )\n', 3, 'lambda'),
+            'generic type test before a logical operator': (
+                '    если X это Соответствие<Строка, неизвестно> и F(\n'
+                '            X как Соответствие<Строка, неизвестно>, Истина)\n'
+                '        возврат Истина\n    ;\n',
+                '    если X это Соответствие<Строка, неизвестно и F(\n'
+                '            X как Соответствие<Строка, неизвестно>, Истина)\n'
+                '        возврат Истина\n    ;\n', 2, 'generic'),
         }
         for name, (valid, invalid, line, kind) in cases.items():
             with self.subTest(name=name):

@@ -5,7 +5,8 @@ import tempfile
 import unittest
 
 from element_test.generated_types import ProjectTypes
-from element_test.runtime import extract_method, REPO
+from element_test.model import analyze
+from element_test.runtime import decode_output, extract_method, prepare_script, REPO
 from element_test.yaml_io import InputError
 
 
@@ -22,6 +23,73 @@ def model():
 
 
 class GeneratedTypesTest(unittest.TestCase):
+    def test_time_input_and_generated_object_field(self):
+        data = model()
+        data['elements'][0]['properties']['Реквизиты'].append({'Имя': 'Начало', 'Тип': 'Время'})
+        types = ProjectTypes(data, 'Продажи')
+        types.require('Заказ.Объект')
+        self.assertIn('пер Начало: Время', types.definitions['Заказ.Объект'])
+        for value in ('00:00', '09:30:40', '23:59:59.999'):
+            with self.subTest(value=value):
+                self.assertEqual(types.literal(value, 'Время'), f'новый Время("{value}")')
+                self.assertIn(f'Начало = новый Время("{value}")',
+                              types.literal({'Начало': value}, 'Заказ.Объект'))
+        self.assertEqual(types.literal(None, 'Время?'), 'Неопределено')
+        for value in ('24:00', '12:60', '12:30:60', '12:30:00.1234', '12:30.123',
+                      '9:30', '12:30Z', '12:30${probe()}', 1230, None):
+            with self.subTest(value=value), self.assertRaises(InputError):
+                types.literal(value, 'Время')
+
+    @unittest.skipUnless((REPO / "script_u_10.0.2_1/lib").is_dir(), "Требуется Script executor")
+    def test_time_generated_object_compiles_in_9_0(self):
+        data = model()
+        data['elements'][0]['properties']['Реквизиты'].append({'Имя': 'Начало', 'Тип': 'Время'})
+        types = ProjectTypes(data, 'Продажи')
+        types.require('Заказ.Объект')
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            imports = types.write(path)
+            script = path / 'TimeProbe.sbsl'
+            script.write_text(imports + '\nметод Скрипт()\n'
+                '    знч Заказ = ' + types.literal({'Начало': '09:30:40.123'}, 'Заказ.Объект') + '\n'
+                '    Консоль.Записать(Заказ.Начало.Час)\n'
+                '    Консоль.Записать(Заказ.Начало.Минута)\n'
+                '    Консоль.Записать(Заказ.Начало.Секунда)\n'
+                '    Консоль.Записать(Заказ.Начало.Миллисекунда)\n;\n')
+            result = subprocess.run([str(REPO / 'bin/script-runtime'), '-c', '9.0', str(script)],
+                                    capture_output=True, text=True, timeout=30, cwd=path)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(result.stdout.splitlines(), ['9', '30', '40', '123'])
+
+    @unittest.skipUnless((REPO / "script_u_10.0.2_1/lib").is_dir(), "Требуется Script executor")
+    def test_runtime_time_argument_compiles_in_9_0(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            root = path / 'source'
+            root.mkdir()
+            (root / 'Проект.yaml').write_text('Имя: Часы\nРежимСовместимости: 9.0\n')
+            (root / 'Clock.xbsl').write_text(
+                'метод Час(Начало: Время): Число\n    возврат Начало.Час\n;\n')
+            check = {'target': {'module': 'Clock', 'method': 'Час'}, 'args': ['09:30:40.123']}
+            sandbox = path / 'generated'
+            sandbox.mkdir()
+            script = prepare_script(root, analyze(root), check, sandbox)
+            self.assertIn('новый Время("09:30:40.123")', script.read_text())
+            result = subprocess.run([str(REPO / 'bin/script-runtime'), '-c', '9.0', str(script)],
+                                    capture_output=True, text=True, timeout=30, cwd=sandbox)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(decode_output(result.stdout)['actual'], 9)
+
+    def test_private_type_in_package_is_visible_within_subsystem(self):
+        data = {"elements": [{"name": "Вариант", "namespace": "Проверка::Пакет",
+                              "elementType": "Перечисление", "visibility": "ВПодсистеме",
+                              "properties": {"Элементы": [{"Имя": "Один"}]}}]}
+        local = ProjectTypes(data, "Проверка")
+        local.require("Вариант")
+        self.assertIn("Вариант", local.definitions)
+        with self.assertRaises(InputError):
+            ProjectTypes(data, "Другая").require("Вариант")
+
     def test_union_variants_dates_and_strict_inputs(self):
         types = ProjectTypes(model())
         union = 'Заказ.Ссылка|Номенклатура.Ссылка|?'

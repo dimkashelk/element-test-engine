@@ -13,6 +13,41 @@ from element_test.yaml_io import UnsupportedSyntaxError
 
 
 class ExpressionCallsTest(unittest.TestCase):
+    def test_static_method_is_indexed_and_wins_over_imported_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'Main.xbsl').write_text(
+                'импорт Other\nметод Button()\n    Recalculate()\n;\n'
+                'статический метод Recalculate()\n;\n')
+            (root / 'Other.xbsl').write_text('метод Recalculate()\n;\n')
+            model = {'modules': [
+                {'name': name, 'namespace': '', 'sourceFile': name + '.xbsl',
+                 'moduleType': 'module', 'imports': ['Other'] if name == 'Main' else []}
+                for name in ('Main', 'Other')], 'elements': [], 'properties': {}}
+            methods, _, errors = parse_module((root / 'Main.xbsl').read_text())
+            self.assertEqual(errors, [])
+            self.assertEqual([method.name for method in methods], ['Button', 'Recalculate'])
+            self.assertTrue((root / 'Main.xbsl').read_text()[methods[1].start:].startswith(
+                'статический метод Recalculate()'))
+            edges, diagnostics = build_call_graph(root, model)
+            self.assertEqual([(edge['toModule'], edge['toMethod']) for edge in edges],
+                             [('Main', 'Recalculate')])
+            self.assertEqual(diagnostics, [])
+
+    def test_register_manager_delete_is_not_an_imported_free_method(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'Register.xbsl').write_text(
+                'импорт Other\nметод Clear(Ключ: Register.КлючЗаписи)\n    Удалить(Ключ)\n;\n')
+            (root / 'Other.xbsl').write_text('метод Удалить(Ключ: Строка)\n;\n')
+            model = {'modules': [
+                {'name': name, 'namespace': '', 'sourceFile': name + '.xbsl',
+                 'moduleType': 'module', 'imports': ['Other'] if name == 'Register' else []}
+                for name in ('Register', 'Other')],
+                'elements': [{'name': 'Register', 'namespace': '', 'elementType': 'РегистрСведений'}],
+                'properties': {}}
+            self.assertEqual(build_call_graph(root, model), ([], []))
+
     def test_typed_reference_chain_reaches_its_object_method(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

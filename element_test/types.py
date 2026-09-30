@@ -1,8 +1,10 @@
 """Metadata type grammar; union ordering is semantically irrelevant."""
 import re
 
-PRIMITIVES = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент", "СекретПриложения"}
-BUILTINS = {"ДвоичныйОбъект", "Пользователи"}
+PRIMITIVES = {"Строка", "Число", "Булево", "Дата", "Время", "ДатаВремя", "Момент",
+              "Ууид", "СекретПриложения"}
+# Platform-owned metadata types are not present in an exported application or library.
+BUILTINS = {"ДвоичныйОбъект", "Пользователи", "Стд::Пользователи::Пользователи"}
 
 
 def parse_type(text):

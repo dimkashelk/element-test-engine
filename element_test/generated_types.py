@@ -6,7 +6,7 @@ from .indexer import IDENT, split_parameters
 from .resolution import import_specs, resolve_symbols, visible_from
 from .yaml_io import InputError, InvalidTestError
 
-SCALARS = {"Строка", "Число", "Булево", "Дата", "ДатаВремя", "Момент"}
+SCALARS = {"Строка", "Число", "Булево", "Дата", "Время", "ДатаВремя", "Момент"}
 
 
 def union_members(type_name):
@@ -250,6 +250,12 @@ class ProjectTypes:
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
         if type_name in {"Строка", "Число", "Булево"}:
             return sbsl_literal(value, type_name)
+        if type_name == 'Время':
+            match = (re.fullmatch(r'([0-9]{2}):([0-9]{2})(?::([0-9]{2})(?:\.([0-9]{3}))?)?', value)
+                     if isinstance(value, str) else None)
+            if not match or int(match[1]) > 23 or int(match[2]) > 59 or (match[3] and int(match[3]) > 59):
+                raise InvalidTestError('Время требует строку HH:MM[:SS[.SSS]] в диапазоне 00:00:00–23:59:59.999')
+            return 'новый Время("' + value + '")'
         if type_name == 'ДатаВремя':
             if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}', value):
                 raise InvalidTestError('ДатаВремя требует строку YYYY-MM-DDTHH:MM:SS без часового пояса')
