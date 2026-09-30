@@ -27,6 +27,10 @@ class ProjectTypes:
         self.enums, self.methods, self.method_dependencies = {}, {}, {}
         self.enum_types = {}
         self.reference_mocks = {}
+        self.local_structures = {}
+        self.local_source = None
+        self.current_source = None
+        self.required_structures = {}
 
     def resolve(self, name, namespace=None):
         namespace = self.namespace if namespace is None else namespace
@@ -95,13 +99,24 @@ class ProjectTypes:
             return
         if type_name in SCALARS:
             return
-        generic = re.fullmatch(r"(Массив|Соответствие)<(.+)>", type_name)
+        generic = re.fullmatch(r"(Массив|Обходимое|Соответствие)<(.+)>", type_name)
         if generic:
             arguments = split_parameters(generic[2])
-            if len(arguments) != (1 if generic[1] == "Массив" else 2):
+            if len(arguments) != (2 if generic[1] == "Соответствие" else 1):
                 raise InputError(f"Некорректный тип: {type_name}")
             for argument in arguments:
                 self.require(argument.strip(), namespace)
+            return
+        if type_name in self.local_structures:
+            if self.current_source != self.local_source:
+                raise InputError(f'Структура {type_name} требует контракт другого модуля')
+            declaration, fields, error = self.local_structures[type_name]
+            if error:
+                raise InputError(error)
+            if self.resolve(type_name, namespace):
+                raise InputError(f'Конфликт имени структуры и объекта: {type_name}')
+            self.fields[type_name] = fields
+            self.required_structures[type_name] = declaration
             return
         qualified = '::' in type_name or any(alias and (type_name == alias or type_name.startswith(alias + '.'))
                                                  for _, alias in import_specs(self.imports))
@@ -272,12 +287,13 @@ class ProjectTypes:
             if name not in self.enums[type_name]:
                 raise InvalidTestError(f"Неизвестный элемент {type_name}: {value}")
             return f"{type_name}.{name}"
-        if type_name.startswith("Массив<") and type_name.endswith(">"):
+        collection = re.fullmatch(r'(Массив|Обходимое)<(.+)>', type_name)
+        if collection:
             if not isinstance(value, list):
                 raise InvalidTestError(f"Ожидался массив для {type_name}")
-            inner = type_name[7:-1].strip()
+            inner = collection[2].strip()
             # Explicit constructor keeps the element type even for an empty array.
-            return f"новый {self.sbsl_type(type_name)}([" + ", ".join(self.literal(v, inner) for v in value) + "])"
+            return f"новый Массив<{self.sbsl_type(inner)}>([" + ", ".join(self.literal(v, inner) for v in value) + "])"
         if type_name in self.fields:
             if not isinstance(value, dict):
                 raise InvalidTestError(f"Ожидался объект для {type_name}")

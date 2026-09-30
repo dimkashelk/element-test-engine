@@ -1,0 +1,12 @@
+name: Примеры_new — граница ЧитаемыйМассив
+checks:
+- id: readonly_array_contract
+  type: runtime
+  target:
+    module: РаботаСКоллекциями
+    namespace: МетодыРаботыСКоллекциями
+    method: ПолучитьПредставленияТоваровВНаличии
+  args:
+  - []
+  expected: []
+  points: 1

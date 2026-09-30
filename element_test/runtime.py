@@ -17,6 +17,7 @@ from .resolution import (combined_library_symbols, import_specs, method_visible,
                          qualified, resolve_call_modules, resolve_symbols, visible_from)
 from .model import select_check_project
 from .generated_types import ProjectTypes
+from .local_structures import scalar_structures
 from .platform_mocks import PlatformMocks
 from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 from .call_types import infer_receiver_type, known_receiver_type, receiver_object_modules
@@ -303,8 +304,8 @@ def body_type_references(method):
 def _project_body_type(contracts, type_name):
     """Leave platform types to Script; resolve every project-shaped reference."""
     atoms = re.findall(rf"{IDENT}(?:::{IDENT})*(?:\.{IDENT})?", type_name)
-    return any("::" in atom or "." in atom or contracts.resolve(atom)
-               for atom in atoms if atom not in {"Массив", "Соответствие"})
+    return any("::" in atom or "." in atom or contracts.resolve(atom) or atom in contracts.local_structures
+               for atom in atoms if atom not in {"Массив", "Обходимое", "Соответствие"})
 
 
 def prepare_script(root, model, check, sandbox):
@@ -333,6 +334,11 @@ def prepare_script(root, model, check, sandbox):
         raise InvalidTestError("Количество аргументов не совпадает с сигнатурой")
     runtime_model = combined_library_symbols(root, model, source_model)
     contracts = ProjectTypes(runtime_model, module["namespace"], module.get("imports", []))
+    contracts.local_structures = scalar_structures(original)
+    if is_object:
+        # Inline declarations inside generated object modules need their own scope contract.
+        contracts.local_structures = {}
+    contracts.local_source = contracts.current_source = module["sourceFile"]
     mocks = check.get("mocks", {})
     if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
         raise InvalidTestError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
@@ -352,6 +358,7 @@ def prepare_script(root, model, check, sandbox):
     signature_types = []
     module_type_dependencies = {}
     for owner, dependency, parameter_types in reachable:
+        contracts.current_source = owner["sourceFile"]
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
         declaration = parse_module(dependency)[0][0]
         signature_types.extend(parameter_types)
@@ -362,6 +369,7 @@ def prepare_script(root, model, check, sandbox):
             module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
     body_types = []
     for owner, dependency, _ in reachable:
+        contracts.current_source = owner["sourceFile"]
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
         for _, _, type_name in constructor_types(dependency):
             if type_name in RUNTIME_CONSTRUCTORS:
@@ -377,6 +385,7 @@ def prepare_script(root, model, check, sandbox):
     adapted = []
     external = {}
     for owner, dependency, _ in reachable:
+        contracts.current_source = owner["sourceFile"]
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
         declaration = parse_module(dependency)[0][0]
         # Adapt declarations and resolved constructor type tokens only.
@@ -402,8 +411,9 @@ def prepare_script(root, model, check, sandbox):
             alias = aliases[owner["sourceFile"]]
             external.setdefault(alias, []).append(compiled)
     contracts.namespace, contracts.imports = module["namespace"], module.get("imports", [])
+    contracts.current_source = module["sourceFile"]
     calls = platform.finish()
-    method = "\n".join(adapted)
+    method = "\n".join(list(contracts.required_structures.values()) + adapted)
     call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
     setup = ""
     runtime_metadata = ''
