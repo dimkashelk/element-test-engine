@@ -240,7 +240,15 @@ def session_module(path, *, postgres=False):
 """.replace('Объкт', 'Объект').replace('__PATH__', sbsl_literal(path, 'Строка')).replace(
         '__BACKUP__', sbsl_literal(path + '.backup', 'Строка'))
     if not postgres:
-        text += "метод ПубликацияГраницы()\n;\n@Глобально\nметод ПроверитьСессию()\n;\n"
+        text += """метод ПубликацияГраницы()
+;
+@Глобально
+метод ПроверитьСессию()
+    если новый Файл(Путь + ".failed").Существует()
+        выбросить новый ТестБизнесИсключения.СбойХранилища("Сбой файла состояния сессии")
+    ;
+;
+"""
     if postgres:
         text += """@Глобально
 метод ПроверитьСессию()
@@ -293,6 +301,37 @@ def session_module(path, *, postgres=False):
         СериализацияJson.ЗаписатьОбъект(Отказ, Истина)
         Соединение.СоздатьЗапросБезВыборки("ROLLBACK").Выполнить()
         выбросить Ошибка
+    ;
+;
+"""
+    # A source catch must not turn file infrastructure failures into a graded
+    # result. Record the failure outside the staging snapshot, so rollback
+    # cannot clear it; the driver always checks this marker before publishing.
+    # The out-of-band output also invalidates the executor response if the
+    # filesystem cannot persist the marker and a source catch swallows that.
+    text = text.replace('метод ЧитатьВсе():', 'метод ЧитатьВсеВнутренний():', 1)
+    text = text.replace('метод СохранитьВсе(Записи:', 'метод СохранитьВсеВнутренний(Записи:', 1)
+    text += """метод СбойФайла()
+    исп Поток = новый Файл(Путь + ".failed").ОткрытьПотокЗаписи()
+    СериализацияJson.ЗаписатьОбъект(Поток, Истина)
+;
+@Глобально
+метод ЧитатьВсе(): Соответствие<Строка, Соответствие<Строка, Строка>>
+    попытка
+        возврат ЧитатьВсеВнутренний()
+    поймать Ошибка: Исключение
+        Консоль.Записать("ELEMENT_STORAGE_FAILURE")
+        СбойФайла()
+        выбросить новый ТестБизнесИсключения.СбойХранилища("Не удалось прочитать файл состояния")
+    ;
+;
+метод СохранитьВсе(Записи: Соответствие<Строка, Соответствие<Строка, Строка>>)
+    попытка
+        СохранитьВсеВнутренний(Записи)
+    поймать Ошибка: Исключение
+        Консоль.Записать("ELEMENT_STORAGE_FAILURE")
+        СбойФайла()
+        выбросить новый ТестБизнесИсключения.СбойХранилища("Не удалось записать файл состояния")
     ;
 ;
 """

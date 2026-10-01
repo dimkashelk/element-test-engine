@@ -29,6 +29,7 @@ class PlatformMocks:
             raise InvalidTestError('mocks.queries должен быть списком')
         self.used_queries = set()
         self.query_definitions = []
+        self.storage_mode = False
 
     def literal(self, value):
         return self.contracts.literal(value, 'Строка')
@@ -144,6 +145,9 @@ class PlatformMocks:
                       lambda m: m[0] if m[0].startswith('"') else ' ', text).strip()
 
     def adapt(self, method):
+        if self.storage_mode:
+            from .storage_queries import adapt_storage_queries
+            return adapt_storage_queries(method, self.contracts)
         code = mask_noncode(method)
         replacements = []
         for match in re.finditer(r'\bЗапрос\s*\{', code):

@@ -1,0 +1,105 @@
+name: '№31: неизменённый поиск по артикулу'
+checks:
+- id: found
+  type: runtime
+  points: 1
+  target:
+    module: Номенклатура
+    namespace: РаботаСИсключениями
+    method: НайтиПоАртикулу
+  args:
+  - SKU
+  storage:
+    idType: Ууид
+    initial:
+    - type: РаботаСИсключениями::Номенклатура
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+    backend: postgres
+  expected:
+    result:
+      Идентификатор: 12345678-1234-4234-8234-123456789abc
+    storage:
+    - type: РаботаСИсключениями::Номенклатура
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- id: missing
+  type: runtime
+  points: 1
+  target:
+    module: Номенклатура
+    namespace: РаботаСИсключениями
+    method: НайтиПоАртикулу
+  args:
+  - missing
+  storage:
+    idType: Ууид
+    initial:
+    - type: РаботаСИсключениями::Номенклатура
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+    backend: postgres
+  expected:
+    result: null
+    storage:
+    - type: РаботаСИсключениями::Номенклатура
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- id: other_article
+  type: runtime
+  points: 1
+  target:
+    module: Номенклатура
+    namespace: РаботаСИсключениями
+    method: НайтиПоАртикулу
+  args:
+  - other
+  storage:
+    idType: Ууид
+    initial:
+    - type: РаботаСИсключениями::Номенклатура
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+    backend: postgres
+  expected:
+    result: null
+    storage:
+    - type: РаботаСИсключениями::Номенклатура
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Учебный
+        Код: '01'
+        Артикул: SKU
+  integration:
+    backend: postgres
+    operation: metadata-storage

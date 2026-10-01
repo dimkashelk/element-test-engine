@@ -349,7 +349,7 @@ def prepare_script(root, model, check, sandbox):
 def sbsl_literal(value, type_name):
     if type_name == "Строка" and isinstance(value, str):
         # Escape interpolation so teacher inputs cannot inject SBSL expressions.
-        return json.dumps(value, ensure_ascii=False).replace("${", "\\${")
+        return re.sub(r'([$%])(?=\{|[^\W\d])', r'\\\1', json.dumps(value, ensure_ascii=False))
     if type_name == "Булево" and isinstance(value, bool):
         return "Истина" if value else "Ложь"
     if type_name == "Число" and isinstance(value, (int, float)) and not isinstance(value, bool):

@@ -1,0 +1,119 @@
+импорт Data::Product как Entity
+импорт Service::Parameters как Helper
+метод Find(Label: Строка): Entity.Ссылка?
+    возврат Запрос{ВЫБРАТЬ ПЕРВЫЕ 1 P.Ссылка ИЗ Entity КАК P ГДЕ P.Label == %Label}.Выполнить().ЕдинственныйИлиНеопределено()?.Ссылка
+;
+метод Fields(Label: Строка, Amount: Число): Объект
+    возврат Запрос{ВЫБРАТЬ P.Label КАК Name, P.Amount КАК Total, P.Note КАК Optional, P.Parent КАК Link ИЗ Entity КАК P ГДЕ P.Label = %{Helper.A(Label)} И P.Amount = %Amount}.Выполнить()
+;
+метод Asc(): Объект
+    возврат Запрос{ВЫБРАТЬ ПЕРВЫЕ 2 P.Label КАК Name, P.Amount КАК Total ИЗ Entity КАК P УПОРЯДОЧИТЬ ПО Total ВОЗР, Name УБЫВ}.Выполнить()
+;
+метод Desc(): Объект
+    возврат Запрос{ВЫБРАТЬ ПЕРВЫЕ 1 P.Label КАК Name ИЗ Entity КАК P УПОРЯДОЧИТЬ ПО P.Amount УБЫВ}.Выполнить()
+;
+метод ByRef(Ref: Entity.Ссылка): Число
+    возврат Запрос{ВЫБРАТЬ Amount ИЗ Entity ГДЕ Ссылка = %Ref}.Выполнить().ЕдинственныйИлиНеопределено()?.Amount ?? -1
+;
+метод Single(): Объект?
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity}.Выполнить().ЕдинственныйИлиНеопределено()
+;
+метод Write(ID: Ууид, Label: Строка, Amount: Число): Entity.Ссылка
+    знч O = новый Entity.Объект(Ид = ID, Label = Label, Amount = Amount, Active = Истина)
+    O.Записать()
+    возврат O.Ссылка
+;
+метод Commit(ID: Ууид): Entity.Ссылка?
+    исп Транзакции.Начать()
+    Write(ID, "commit", 7)
+    возврат Find("commit")
+;
+метод Rollback(ID: Ууид): Строка
+    попытка
+        исп Транзакции.Начать()
+        Write(ID, "rollback", 9)
+        если Find("rollback") == Неопределено
+            возврат "stale"
+        ;
+        выбросить новый ИсключениеНедопустимоеСостояние("rollback")
+    поймать E: ИсключениеНедопустимоеСостояние
+        возврат Find("rollback") == Неопределено ? "gone" : "leaked"
+    ;
+;
+метод Reuse(ID: Ууид): Объект
+    пер Label = "new"
+    знч Q = Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %Label И Label = %Label}
+    Label = "other"
+    знч Before = Q.Выполнить()
+    Write(ID, "new", 8)
+    знч After = Q.Выполнить()
+    возврат {"before": Before, "after": After, "again": Q.Выполнить(), "empty": Before.Пусто()}
+;
+метод Unavailable(): Объект
+    возврат Запрос{ВЫБРАТЬ P.Label ИЗ Entity КАК P СОЕДИНЕНИЕ Entity КАК B ПО P.Label = B.Label}.Выполнить()
+;
+метод Side(Label: Строка): Объект
+    знч P = Helper.A(Label)
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %P И Label = %P}.Выполнить()
+;
+метод Expressions(Label: Строка): Объект
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %{Helper.A(Label)} И Label = %{Helper.A(Label)}}.Выполнить()
+;
+метод Detached(): Объект
+    знч Q = Запрос{ВЫБРАТЬ Ссылка ИЗ Entity}
+    знч Old = Q.Выполнить()
+    Old[0].Ссылка.Идентификатор = новый Ууид("abcdef12-1234-4234-8234-123456789abc")
+    возврат Q.Выполнить()
+;
+метод Effect(Label: Строка): Строка
+    знч N = ByRef(Entity.ПолучитьСсылку(новый Ууид("abcdef12-1234-4234-8234-123456789abc")))
+    Write(новый Ууид("abcdef12-1234-4234-8234-123456789abc"), "effect", N + 1)
+    возврат Label
+;
+метод Effects(Label: Строка): Объект
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %{Effect(Label)} И Label = %{Effect(Label)}}.Выполнить()
+;
+метод CapturedEffect(Label: Строка): Объект
+    знч P = Effect(Label)
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %P И Label = %P}.Выполнить()
+;
+метод Swallow(): Строка
+    попытка
+        Asc()
+    поймать E: Исключение
+        возврат "swallowed"
+    ;
+    возврат "ok"
+;
+метод Loop(): Массив<Строка>
+    знч R = новый Массив<Строка>()
+    для С из Запрос{ВЫБРАТЬ Label ИЗ Entity УПОРЯДОЧИТЬ ПО Amount}.Выполнить()
+        R.Добавить(С.Label)
+    ;
+    возврат R
+;
+метод Resource(ID: Ууид): Объект
+    знч Q = Запрос{ВЫБРАТЬ Label ИЗ Entity}
+    пер Saved: Объект? = Неопределено
+    попытка
+        исп Rows = Q.Выполнить()
+        Saved = Rows
+    поймать E: Исключение
+        выбросить E
+    ;
+    Write(ID, "later", 1)
+    возврат Saved
+;
+метод CapturedRef(Ref: Entity.Ссылка): Объект
+    знч Q = Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Ссылка = %Ref}
+    Ref.Идентификатор = новый Ууид("abcdef12-1234-4234-8234-123456789abc")
+    возврат Q.Выполнить()
+;
+метод Nested(Label: Строка): Объект
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Entity ГДЕ Label = %{{"k": Label}["k"] как Строка}}.Выполнить()
+;
+метод BatchIsolated(ID: Ууид): Булево
+    знч Empty = ByRef(Entity.ПолучитьСсылку(ID)) == -1
+    Write(ID, "work", 1)
+    возврат Empty
+;

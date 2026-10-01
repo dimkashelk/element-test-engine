@@ -1,0 +1,86 @@
+name: '№31: FAIL, UNSUPPORTED, PASS'
+checks:
+- target:
+    module: Main
+    namespace: Entry
+    method: Find
+  args:
+  - A
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: wrong_expected
+  type: runtime
+  points: 1
+  expected:
+    result:
+      Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Unavailable
+  args: []
+  storage:
+    idType: Ууид
+  timeout: 15s
+  id: unsupported_join
+  type: runtime
+  points: 1
+  expected: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Find
+  args:
+  - A
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: after_unsupported
+  type: runtime
+  points: 1
+  expected:
+    result:
+      Идентификатор: 12345678-1234-4234-8234-123456789abc
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null

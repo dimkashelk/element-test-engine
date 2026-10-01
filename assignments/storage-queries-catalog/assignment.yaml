@@ -1,0 +1,438 @@
+name: '№31: запросы catalog memory'
+checks:
+- target:
+    module: Main
+    namespace: Entry
+    method: Find
+  args:
+  - A
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: found
+  type: runtime
+  points: 1
+  expected:
+    result:
+      Идентификатор: 12345678-1234-4234-8234-123456789abc
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Find
+  args:
+  - missing
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: missing
+  type: runtime
+  points: 1
+  expected:
+    result: null
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Fields
+  args:
+  - A
+  - 3
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: fields
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: A
+      Total: 3
+      Optional: null
+      Link: null
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Fields
+  args:
+  - A
+  - 4
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: filtered
+  type: runtime
+  points: 1
+  expected:
+    result: []
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Asc
+  args: []
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: ascending
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: B
+      Total: 1
+    - Name: A
+      Total: 3
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Desc
+  args: []
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: descending
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: A
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: ByRef
+  args:
+  - Идентификатор: 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+  timeout: 15s
+  id: reference
+  type: runtime
+  points: 1
+  expected:
+    result: 3
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: A
+        Amount: 3
+        Active: false
+        Note: null
+        Parent: null
+    - type: Data::Product
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Label: B
+        Amount: 1
+        Active: false
+        Note: null
+        Parent: null
+- target:
+    module: Main
+    namespace: Entry
+    method: Rollback
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial: []
+  timeout: 15s
+  id: rollback
+  type: runtime
+  points: 1
+  expected:
+    result: gone
+    storage: []
+- target:
+    module: Main
+    namespace: Entry
+    method: Reuse
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial: []
+  timeout: 15s
+  id: reuse
+  type: runtime
+  points: 1
+  expected:
+    result:
+      before: []
+      after:
+      - Label: new
+      again:
+      - Label: new
+      empty: true
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: new
+        Amount: 8
+        Active: true
+        Note: null
+        Parent: null

@@ -125,6 +125,10 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             from hashlib import sha256
             source = symbol.pop('source')
             symbol['sourceHash'] = sha256(source.encode()).hexdigest()
+        for query in item.get('plan', {}).get('queries', []):
+            query['sourceHash'] = sha256(query.pop('text').encode()).hexdigest()
+            for parameter in query['ast']['parameters']:
+                parameter['expressionHash'] = sha256(parameter.pop('expression').encode()).hexdigest()
     write_json(output / 'execution-plans.json', plans)
     from .grading import safe
     write_json(output / 'runtime-evidence.json', safe([

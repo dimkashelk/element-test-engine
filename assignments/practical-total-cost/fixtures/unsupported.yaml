@@ -1,8 +1,11 @@
-name: Примеры_new — неподдержанный общий XBQL поиска
+name: Примеры_new — неподдержанный запрос В ИЕРАРХИИ
+# №31: поиск по артикулу поддержан; новый fixture проверяет другую границу XBQL.
 checks:
-  - id: arbitrary_query_requires_contract
+  - id: hierarchy_query_unsupported
     type: runtime
-    target: {module: Номенклатура, namespace: РаботаСИсключениями, method: НайтиПоАртикулу}
-    args: ["teacher-article"]
-    expected: null
+    target: {module: Задачи, namespace: ИерархическийСправочник, method: ЗадачиПроектаЗавершены}
+    args:
+      - {Идентификатор: 12345678-1234-4234-8234-123456789abc}
+    storage: {idType: Ууид}
+    expected: true
     points: 1

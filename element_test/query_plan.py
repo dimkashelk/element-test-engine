@@ -4,6 +4,7 @@ import re
 from .indexer import IDENT, mask_noncode
 from .resolution import qualified
 from .yaml_io import InputError
+from .yaml_io import UnsupportedSyntaxError
 
 
 @dataclass(frozen=True)
@@ -78,3 +79,211 @@ def balance_sql(query, dimensions):
     amount = 'SUM(CASE WHEN value->>\'ВидЗаписи\'=\'Приход\' THEN (value->>' + quote(query.resource) + ')::numeric ELSE -(value->>' + quote(query.resource) + ')::numeric END)'
     return ('SELECT ' + key + ' AS item,' + other + ' AS warehouse,' + amount + ' AS quantity '
             'FROM smoke.records WHERE type=&register GROUP BY ' + key + ',' + other + ' HAVING ' + amount + ' <> 0 ORDER BY item,warehouse')
+
+
+@dataclass(frozen=True)
+class QueryField:
+    owner: str
+    name: str
+    type: str
+    system: bool = False
+
+
+@dataclass(frozen=True)
+class QueryParameter:
+    expression: str
+    start: int
+    end: int
+    type: str
+    slot: int
+
+
+@dataclass(frozen=True)
+class StorageQuery:
+    owner: str
+    alias: str
+    projections: tuple
+    predicates: tuple
+    parameters: tuple
+    ordering: tuple
+    limit: int | None
+    mode: str = 'storage-staged-executor-v1'
+
+    def to_dict(self):
+        return asdict(self)
+
+
+def query_literals(source):
+    """Verified source ranges; braces in strings/comments cannot close a literal."""
+    code = mask_noncode(source)
+    consumed = 0
+    for match in re.finditer(r'\bЗапрос\s*\{', code):
+        if match.start() < consumed:
+            continue
+        start, end, depth = match.end(), match.end(), 1
+        while end < len(code) and depth:
+            depth += (code[end] == '{') - (code[end] == '}')
+            end += 1
+        if depth:
+            raise UnsupportedSyntaxError('Незакрытый литерал Запрос')
+        yield match.start(), end, start, source[start:end-1]
+        consumed = end
+
+
+def parse_storage_query(text, contracts):
+    """Token parser for a single ordinary metadata source. No data evaluation."""
+    visible = mask_noncode(text, strings=False)
+    hidden = mask_noncode(text)
+    token_pattern = re.compile(rf'{IDENT}|\d+|::|==|[.,=]|%')
+    tokens = []
+    i = 0
+    while i < len(visible):
+        if visible[i].isspace():
+            i += 1
+            continue
+        if visible[i] == '%':
+            a = i + 1
+            if a < len(text) and text[a] == '{':
+                b, depth = a + 1, 1
+                while b < len(text) and depth:
+                    depth += (hidden[b] == '{') - (hidden[b] == '}')
+                    b += 1
+                if depth or not text[a+1:b-1].strip():
+                    raise UnsupportedSyntaxError('Непустое выражение параметра запроса не закрыто')
+                tokens.append(('parameter', text[a+1:b-1], a+1, b-1))
+                i = b
+                continue
+            match = re.match(IDENT, text[a:])
+            if not match:
+                raise UnsupportedSyntaxError('Неподдержанная форма параметра запроса')
+            b = a + len(match[0])
+            tokens.append(('parameter', match[0], a, b))
+            i = b
+            continue
+        match = token_pattern.match(visible, i)
+        if not match:
+            raise UnsupportedSyntaxError(f'Запрос вне storage AST: позиция {i}')
+        tokens.append(('token', match[0], i, match.end()))
+        i = match.end()
+    pos = 0
+
+    def accept(word):
+        nonlocal pos
+        if pos < len(tokens) and tokens[pos][0] == 'token' and tokens[pos][1].upper() == word:
+            pos += 1
+            return True
+        return False
+
+    def expect(word):
+        if not accept(word):
+            raise UnsupportedSyntaxError('Запрос вне storage AST: ожидается ' + word)
+
+    def identifier():
+        nonlocal pos
+        if pos >= len(tokens) or tokens[pos][0] != 'token' or not re.fullmatch(IDENT, tokens[pos][1]):
+            raise UnsupportedSyntaxError('Запрос требует идентификатор')
+        value = tokens[pos][1]
+        pos += 1
+        return value
+
+    def field_path():
+        first = identifier()
+        return (first, identifier()) if accept('.') else (None, first)
+
+    expect('ВЫБРАТЬ')
+    limit = None
+    if accept('ПЕРВЫЕ'):
+        if pos >= len(tokens) or not tokens[pos][1].isdigit() or int(tokens[pos][1]) <= 0:
+            raise UnsupportedSyntaxError('ПЕРВЫЕ требует положительный целый литерал')
+        limit = int(tokens[pos][1])
+        pos += 1
+    projections = []
+    while True:
+        path = field_path()
+        label = identifier() if accept('КАК') else path[1]
+        projections.append((path, label))
+        if not accept(','):
+            break
+    expect('ИЗ')
+    owner = identifier()
+    while accept('::'):
+        owner += '::' + identifier()
+    alias = identifier() if accept('КАК') else owner.split('::')[-1]
+    matches = contracts.resolve(owner)
+    if len(matches) != 1 or matches[0]['elementType'] not in {'Справочник', 'Документ'}:
+        raise UnsupportedSyntaxError('Источник запроса отсутствует, неоднозначен или вне Справочник/Документ: ' + owner)
+    element = matches[0]
+    identity = qualified(element)
+    fields = {}
+    previous = contracts.namespace, contracts.imports
+    contracts.namespace, contracts.imports = element['namespace'], ()
+    try:
+        for f in element['properties'].get('Реквизиты', []):
+            typ = f.get('Тип', 'Строка' if f['Имя'] == 'Наименование' and element['elementType'] == 'Справочник' else '')
+            fields[f['Имя']] = QueryField(identity, f['Имя'], contracts.canonical_type(typ))
+        if 'Ссылка' in fields:
+            raise UnsupportedSyntaxError('Обычный член Ссылка конфликтует с системной ссылкой')
+        fields['Ссылка'] = QueryField(identity, 'Ссылка', contracts.canonical_type(identity + '.Ссылка'), True)
+    finally:
+        contracts.namespace, contracts.imports = previous
+
+    def bind(path):
+        qualifier, name = path
+        if qualifier is not None and qualifier != alias:
+            raise UnsupportedSyntaxError('Неизвестный владелец поля запроса: ' + qualifier)
+        if name not in fields:
+            raise UnsupportedSyntaxError('Неизвестное поле запроса: ' + identity + '.' + name)
+        field = fields[name]
+        if field.type.rstrip('?') not in {'Строка', 'Число', 'Булево', 'Ууид'} and not field.type.rstrip('?').endswith('.Ссылка'):
+            raise UnsupportedSyntaxError('Тип поля запроса вне контракта: ' + field.type)
+        contracts.require(field.type)
+        return field
+
+    bound_projections = tuple((bind(path), label) for path,label in projections)
+    if len({label for _,label in projections}) != len(projections):
+        raise UnsupportedSyntaxError('Повторяющийся псевдоним проекции запроса')
+    predicates, parameters, slots, slot_types = [], [], {}, {}
+    if accept('ГДЕ'):
+        while True:
+            field = bind(field_path())
+            if not accept('=='):
+                expect('=')
+            if pos >= len(tokens) or tokens[pos][0] != 'parameter':
+                raise UnsupportedSyntaxError('Равенство требует параметр %Имя или %{выражение}')
+            _, expression, start, end = tokens[pos]
+            pos += 1
+            # Nullable equality is intentionally unavailable: SQL NULL and
+            # XBSL Неопределено are different contracts, not interchangeable.
+            if field.type.endswith('?'):
+                raise UnsupportedSyntaxError('Сравнение nullable-поля запроса не подтверждено')
+            # Simple variable interpolation reuses one captured value. Each
+            # expression occurrence is a separate evaluation, in source order.
+            key = expression if re.fullmatch(IDENT, expression) else (start,end)
+            if key in slots and slot_types[slots[key]] != field.type:
+                raise UnsupportedSyntaxError('Несовместимые типы одного параметра запроса')
+            slot = slots.setdefault(key, len(slots))
+            slot_types[slot] = field.type
+            parameter = QueryParameter(expression, start, end, field.type, slot)
+            parameters.append(parameter)
+            predicates.append((field, slot))
+            if not accept('И'):
+                break
+    ordering = []
+    if accept('УПОРЯДОЧИТЬ'):
+        expect('ПО')
+        while True:
+            path = field_path()
+            # XBQL permits a projection alias in ORDER BY.
+            projected = [f for f,label in bound_projections if path == (None,label)]
+            field = projected[0] if projected else bind(path)
+            if field.type not in {'Число', 'Строка'}:
+                raise UnsupportedSyntaxError('Сортировка подтверждена только для Число/Строка без nullable')
+            descending = accept('УБЫВ')
+            if not descending:
+                accept('ВОЗР')
+            ordering.append((field, descending))
+            if not accept(','):
+                break
+    if pos != len(tokens):
+        raise UnsupportedSyntaxError('Достижимый запрос вне storage AST: ' + tokens[pos][1])
+    return StorageQuery(identity, alias, bound_projections, tuple(predicates), tuple(parameters), tuple(ordering), limit)

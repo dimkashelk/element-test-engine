@@ -1,0 +1,474 @@
+name: '№31: запросы document PostgreSQL'
+checks:
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Искать
+  args:
+  - A
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: found
+  type: runtime
+  points: 1
+  expected:
+    result:
+      Идентификатор: 12345678-1234-4234-8234-123456789abc
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Искать
+  args:
+  - missing
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: missing
+  type: runtime
+  points: 1
+  expected:
+    result: null
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Поля
+  args:
+  - A
+  - 3
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: fields
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: A
+      Total: 3
+      Optional: null
+      Link: null
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Поля
+  args:
+  - A
+  - 4
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: filtered
+  type: runtime
+  points: 1
+  expected:
+    result: []
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Возрастание
+  args: []
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: ascending
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: B
+      Total: 1
+    - Name: A
+      Total: 3
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Убывание
+  args: []
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: descending
+  type: runtime
+  points: 1
+  expected:
+    result:
+    - Name: A
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: ПоСсылке
+  args:
+  - Идентификатор: 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial:
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+    backend: postgres
+  timeout: 15s
+  id: reference
+  type: runtime
+  points: 1
+  expected:
+    result: 3
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: A
+        Сумма: 3
+        Открыт: false
+        Заметка: null
+        Основание: null
+    - type: Учет::Акт
+      id: abcdef12-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Тема: B
+        Сумма: 1
+        Открыт: false
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Откат
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial: []
+    backend: postgres
+  timeout: 15s
+  id: rollback
+  type: runtime
+  points: 1
+  expected:
+    result: gone
+    storage: []
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- target:
+    module: Пуск
+    namespace: Вход
+    method: Повтор
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial: []
+    backend: postgres
+  timeout: 15s
+  id: reuse
+  type: runtime
+  points: 1
+  expected:
+    result:
+      before: []
+      after:
+      - Тема: new
+      again:
+      - Тема: new
+      empty: true
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Тема: new
+        Сумма: 8
+        Открыт: true
+        Заметка: null
+        Основание: null
+  integration:
+    backend: postgres
+    operation: metadata-storage

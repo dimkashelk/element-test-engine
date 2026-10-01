@@ -1,0 +1,15 @@
+структура Capture
+    знч A: Число
+    знч B: Число
+;
+метод Effect(Calls: Массив<Число>, Value: Число): Число
+    Calls.Добавить(Value)
+    возврат Value
+;
+метод Скрипт()
+    знч Calls = новый Массив<Число>()
+    пер Value = 7
+    знч Q = новый Capture(A = Effect(Calls, Value), B = Effect(Calls, Value + 1))
+    Value = 9
+    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"calls": Calls, "captured": Q, "later": Value}))
+;

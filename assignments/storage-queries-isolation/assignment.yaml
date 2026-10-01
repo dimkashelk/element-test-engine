@@ -1,0 +1,28 @@
+name: '№31: две работы с одинаковым UUID'
+checks:
+- target:
+    module: Main
+    namespace: Entry
+    method: BatchIsolated
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    idType: Ууид
+    initial: []
+  timeout: 15s
+  id: isolation
+  type: runtime
+  points: 2
+  expected:
+    result: true
+    storage:
+    - type: Data::Product
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: work
+        Amount: 1
+        Active: true
+        Note: null
+        Parent: null

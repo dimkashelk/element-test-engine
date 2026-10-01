@@ -1218,3 +1218,25 @@ transaction: true дополнительно охватывает вызов dri
 assignments/transactions-real, transactions-accounts и transactions-renamed.
 Технические storageTrace/storageDiagnostics отделены от оценки; SQL-сбой
 не превращается в бизнес-исключение при captureException.
+
+
+## Запросы по сохранённым объектам — №31
+
+Для чтения собственного состояния задайте `storage` с backend memory/postgres
+и декларативным `initial`. `mocks.queries` в таком сценарии не используется;
+смешение storage/mocks даёт invalid_test. В `expected` раздельно задавайте
+`result` и `storage`, включая независимые UUID и полные значения сохранённых
+полей. Порядок строк оценивайте только при явной сортировке; без сортировки
+ожидание ПЕРВЫЕ должно иметь единственное совпадение.
+
+Поддержаны один обычный источник, несколько проекций КАК, равенство/И,
+параметры `%Имя`/`%{выражение}`, ВОЗР/УБЫВ и положительный литерал ПЕРВЫЕ.
+Параметры фиксируются при создании, каждое Выполнить читает новое staging;
+результат — materialized-массив Script. Nullable-проекции поддержаны,
+nullable-предикаты и общий XBQL недоступны. [Семантика и ограничения](storage-backed-queries.md).
+
+Готовые задания: `assignments/storage-queries-catalog`, `storage-queries-document`,
+`storage-queries-real` и соответствующие `-sql`. Контрольное задание
+`storage-queries-control` ожидаемо выдаёт FAIL, UNSUPPORTED, PASS. Три прежних
+практических fixture поиска по артикулу заменены запросом В ИЕРАРХИИ;
+основные максимумы этих практических заданий сохранены.

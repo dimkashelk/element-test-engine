@@ -121,6 +121,7 @@ class ExecutionPlan:
     source_transforms: dict = field(default_factory=dict)
     resources: list = field(default_factory=list)
     exception_types: set = field(default_factory=set)
+    queries: list = field(default_factory=list)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.model.get("compatibilityVersion", "9.0"),
@@ -135,6 +136,7 @@ class ExecutionPlan:
                                      for (path,name),spans in self.source_transforms.items() if spans],
                 "resources": [asdict(r) for r in self.resources],
                 "exceptionContracts": sorted(self.exception_types),
+                "queries": self.queries,
                 "observations": self.observations, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -351,6 +353,8 @@ def plan_execution(root, source_model, check):
                                   source_file=symbol.identity.source_file,
                                   start=symbol.start + call.start, end=symbol.start + call.end))
     bind_types(plan)
+    from .storage_queries import bind_queries
+    bind_queries(plan)
     bind_system_ids(plan)
     return plan
 
@@ -383,6 +387,7 @@ def bind_types(plan):
         plan.storage = MetadataStorage(c, plan.check['storage'])
     c.configure_references(mocks.get('objects', {}))
     plan.platform = PlatformMocks(c, mocks, plan.check)
+    plan.platform.storage_mode = plan.storage is not None
     for symbol in plan.symbols:
         c.current_source = symbol.owner['sourceFile']
         c.namespace, c.imports = symbol.owner['namespace'], symbol.owner.get('imports', [])
