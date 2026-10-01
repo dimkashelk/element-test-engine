@@ -305,7 +305,7 @@ def _project_body_type(contracts, type_name):
     """Leave platform types to Script; resolve every project-shaped reference."""
     atoms = re.findall(rf"{IDENT}(?:::{IDENT})*(?:\.{IDENT})?", type_name)
     return any("::" in atom or "." in atom or contracts.resolve(atom) or atom in contracts.local_structures
-               for atom in atoms if atom not in {"Массив", "Обходимое", "Соответствие"})
+               for atom in atoms if atom not in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие"})
 
 
 def prepare_script(root, model, check, sandbox):

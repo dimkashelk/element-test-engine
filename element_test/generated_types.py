@@ -99,7 +99,7 @@ class ProjectTypes:
             return
         if type_name in SCALARS:
             return
-        generic = re.fullmatch(r"(Массив|Обходимое|Соответствие)<(.+)>", type_name)
+        generic = re.fullmatch(r"(Массив|ЧитаемыйМассив|Обходимое|Соответствие)<(.+)>", type_name)
         if generic:
             arguments = split_parameters(generic[2])
             if len(arguments) != (2 if generic[1] == "Соответствие" else 1):
@@ -287,7 +287,7 @@ class ProjectTypes:
             if name not in self.enums[type_name]:
                 raise InvalidTestError(f"Неизвестный элемент {type_name}: {value}")
             return f"{type_name}.{name}"
-        collection = re.fullmatch(r'(Массив|Обходимое)<(.+)>', type_name)
+        collection = re.fullmatch(r'(Массив|ЧитаемыйМассив|Обходимое)<(.+)>', type_name)
         if collection:
             if not isinstance(value, list):
                 raise InvalidTestError(f"Ожидался массив для {type_name}")

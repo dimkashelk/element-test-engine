@@ -867,6 +867,7 @@ mocks:
 | Ссылка | `{Идентификатор: "product-1"}` |
 | Nullable | `null` либо значение основного типа |
 | Массив | Список значений соответствующего типа |
+| `ЧитаемыйМассив<T>` | YAML-список; runtime передаёт типизированный `Массив<T>`, сохраняя читаемую сигнатуру |
 | `Обходимое<T>` | YAML-список; runtime создаёт `Массив<T>`, включая типизированный пустой список |
 | Простая структура того же модуля | Отображение полей объявленной XBSL-структуры; поддержаны обычные `пер` типов `Строка`, `Число`, `Булево` |
 | Строка ТЧ | Отображение имён реквизитов в значения |
@@ -879,6 +880,10 @@ mocks:
 границы модулей пока дают `UNSUPPORTED`. Проверенный пример —
 [сумма стоимости товаров](../assignments/practical-total-cost/assignment.yaml);
 контракт и результаты описаны в [отчёте №27](tasks/027-practical-total-cost.md).
+`ЧитаемыйМассив<T>` с поддержанным элементом также сериализуется как результат
+в обычный JSON-массив. Проверенный пример —
+[представления товаров в наличии](../assignments/practical-stock-presentations/assignment.yaml);
+точный формат строк и границы — в [отчёте №28](tasks/028-practical-stock-presentations.md).
 
 Фрагмент входного варианта union:
 
@@ -1134,8 +1139,8 @@ bin/element-test test \
 
 ## 23. Проверенные образцы и источники контракта
 
-Большинство примеров относятся к объектам Dvizhok.xdump; `practical-phone`
-и `practical-total-cost` используют четвёртый xdump. Для другого проекта нужно заменить имена и ожидания
+Большинство примеров относятся к объектам Dvizhok.xdump; `practical-phone`,
+`practical-total-cost` и `practical-stock-presentations` используют четвёртый xdump. Для другого проекта нужно заменить имена и ожидания
 по его метаданным и требованиям, а не только имя папки.
 
 - [demo](../assignments/demo/assignment.yaml) — структура и сигнатуры.
@@ -1150,7 +1155,12 @@ bin/element-test test \
   [отчёте P2](tasks/026-practical-phone-p2.md).
 - [practical-total-cost](../assignments/practical-total-cost/assignment.yaml) — сумма поля `Стоимость`,
   включая нулевое количество; `Обходимое` и структура того же модуля, подтверждённые
-  `PASS`/`FAIL` и граница `ЧитаемыйМассив` в [отчёте №27](tasks/027-practical-total-cost.md).
+  `PASS`/`FAIL` в [отчёте №27](tasks/027-practical-total-cost.md); прежняя граница
+  `ЧитаемыйМассив` устранена в №28, текущая граница — входной `Ууид`.
+- [practical-stock-presentations](../assignments/practical-stock-presentations/assignment.yaml) —
+  наличие, убывание стоимости и точный строковый контракт; поддержанный
+  `ЧитаемыйМассив<Строка>`, три независимые ошибки и границы в
+  [отчёте №28](tasks/028-practical-stock-presentations.md).
 
 Источники реализации: `element_test/assignment.py`, `runtime.py`, `generated_types.py`,
 `platform_mocks.py`, `types.py`, `yaml_io.py` и `src/ДвижокТестирования.sbsl`.
