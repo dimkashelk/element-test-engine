@@ -52,7 +52,7 @@ class LocalStructureTest(unittest.TestCase):
     def test_unsupported_structure_semantics_are_not_silently_dropped(self):
         for declaration in (
             'структура Товар\n    пер Стоимость: Число = 100\n;',
-            'структура Товар\n    пер Стоимость: Ууид\n;',
+            'структура Товар\n    пер Стоимость: СекретПриложения\n;',
             '@ВПроекте\nструктура Товар\n    пер Стоимость: Число\n;',
             'структура Товар\n    пер Стоимость: Число\n    метод М(): Число\n        возврат 1\n    ;\n;',
             'структура Товар\n    пер Стоимость: Число\n',
@@ -98,8 +98,8 @@ class PracticalTotalCostTest(unittest.TestCase):
             boundary = load_assignment(ASSIGNMENT / 'fixtures/unsupported.yaml')['checks'][0]
             with patch('element_test.runtime.shutil.which', return_value='docker'):
                 execution = run_pure(root, model, boundary, temp)
-            self.assertEqual((execution['status'], execution['reasonCode']), ('UNSUPPORTED', 'unsupported_contract'))
-            self.assertIn('Ууид', execution['message'])
+            self.assertEqual((execution['status'], execution['reasonCode']), ('UNSUPPORTED', 'unsupported_syntax'))
+            self.assertIn('Запрос', execution['message'])
 
     @unittest.skipUnless(os.environ.get('ELEMENT_TEST_DOCKER_TESTS') == '1', 'Docker integration is opt-in')
     def test_reference_and_mutated_cost_rule(self):

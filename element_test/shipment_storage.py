@@ -18,19 +18,23 @@ QUERY = '''ВЫБРАТЬ
 ИЗ РегистрТовары.Остатки КАК РегистрТовары
 ГДЕ РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})'''
 
-SCHEMA = '''
-CREATE TABLE smoke.documents(kind text NOT NULL CHECK(kind IN ('Отгрузка','ПоступлениеТоваров')),
- id text NOT NULL, date timestamp NOT NULL, number text NOT NULL, warehouse text,
- PRIMARY KEY(kind,id));
-CREATE TABLE smoke.lines(kind text NOT NULL, id text NOT NULL, position integer NOT NULL,
- item text, quantity numeric NOT NULL, price numeric NOT NULL, amount numeric NOT NULL,
- PRIMARY KEY(kind,id,position), FOREIGN KEY(kind,id) REFERENCES smoke.documents(kind,id));
-CREATE TABLE smoke.movements(kind text NOT NULL CHECK(kind IN ('Отгрузка','ПоступлениеТоваров')),
- id text NOT NULL, position integer NOT NULL, period timestamp NOT NULL,
- direction text NOT NULL CHECK(direction IN ('Приход','Расход')), item text, warehouse text,
- quantity numeric NOT NULL, PRIMARY KEY(kind,id,position));
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA smoke TO smoke;
-'''
+from .storage import PostgresSession
+SCHEMA = PostgresSession().schema() + """
+CREATE VIEW smoke.documents AS SELECT regexp_replace(type,'^.*::','') AS kind,id,
+(value->>'Дата')::timestamp AS date,value->>'Номер' AS number,
+value->'Склад'->>'Идентификатор' AS warehouse FROM smoke.objects;
+CREATE VIEW smoke.lines AS SELECT regexp_replace(o.type,'^.*::','') AS kind,id,
+(t.position-1)::integer AS position,t.row->'Номенклатура'->>'Идентификатор' AS item,
+(t.row->>'Количество')::numeric AS quantity,(t.row->>'Цена')::numeric AS price,
+(t.row->>'Сумма')::numeric AS amount FROM smoke.objects o,
+jsonb_array_elements(o.value->'Товары') WITH ORDINALITY t(row,position);
+CREATE VIEW smoke.movements AS SELECT registrar_type AS kind,id,position,
+(value->>'Период')::timestamp AS period,value->>'ВидЗаписи' AS direction,
+value->'Номенклатура'->>'Идентификатор' AS item,
+value->'Склад'->>'Идентификатор' AS warehouse,(value->>'Количество')::numeric AS quantity
+FROM smoke.records;
+GRANT SELECT ON smoke.documents,smoke.lines,smoke.movements TO smoke;
+"""
 
 # All SQL in the generated adapter is fixed. Inputs always use JDBC parameters.
 def sql_call(sql, parameters, *, select=False, indent='    ', variable='ЗапросSql'):
@@ -109,39 +113,15 @@ def register(contracts):
     start = definition.index('    @Глобально\n    метод Записать(')
     definition = definition.replace('    пер Фильтр:', '    пер Соединение: СоединениеSql?\n    пер Фильтр:')
     start = definition.index('    @Глобально\n    метод Записать(')
-    definition = definition[:start] + '''    @Глобально
-    метод Записать(Замещать: Булево = Истина)
-        если не Фильтр.Установлен
-            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")
-        ;
-        если Замещать
-''' + sql_call('DELETE FROM smoke.movements WHERE kind=&kind AND id=&id',
-            {'kind': 'Фильтр.ТипДокумента', 'id': 'Фильтр.Ид'}, indent='            ') + '''            ЗапросSql.Выполнить()
-        ;
-''' + sql_call('SELECT COALESCE(MAX(position)+1,0) AS position FROM smoke.movements WHERE kind=&kind AND id=&id',
-            {'kind': 'Фильтр.ТипДокумента', 'id': 'Фильтр.Ид'}, select=True, variable='ИндексЗапрос', indent='        ') + '''        исп Индексы = ИндексЗапрос.Выполнить()
-        Индексы.Следующий()
-        пер Индекс = Индексы.Получить("position") как Число
-        для Запись из Записи
-''' + sql_call('INSERT INTO smoke.movements VALUES (&kind,&id,&position,&period,&direction,&item,&warehouse,&quantity)', {
-        'kind': 'Фильтр.ТипДокумента', 'id': 'Фильтр.Ид', 'position': 'Индекс', 'period': 'Запись.Период',
-        'direction': 'Запись.ВидЗаписи.ВСтроку()', 'item': 'ТестХранилище.ИдТовара(Запись.Номенклатура)',
-        'warehouse': 'ТестХранилище.ИдСклада(Запись.Склад)', 'quantity': 'Запись.Количество'}, indent='            ') + '''            ЗапросSql.Выполнить()
-            Индекс += 1
-        ;
-        если не Замещать
-            Записи.Очистить()
-        ;
-    ;
-;
-'''
+    from .sql_metadata import record_set_write
+    definition = definition[:start] + record_set_write(contracts, name)
     contracts.definitions[name + '.НаборЗаписей'] = definition
     contracts.method_dependencies[name + '.НаборЗаписей'] = ['ТестХранилище.Соединение']
     contracts.method_dependencies[filter_type] = ['Отгрузка.Ссылка', 'ПоступлениеТоваров.Ссылка']
     return mocks
 
 
-def adapt_query(method):
+def adapt_query(method, contracts=None, queries=None):
     code = mask_noncode(method)
     replacements = []
     for match in re.finditer(r'\bЗапрос\s*\{', code):
@@ -149,54 +129,46 @@ def adapt_query(method):
         while end < len(code) and depth:
             depth += (code[end] == '{') - (code[end] == '}')
             end += 1
-        if depth or PlatformMocks.query_key(method[match.end():end-1]) != PlatformMocks.query_key(QUERY):
-            raise InputError('UNSUPPORTED: shipment-storage поддерживает только исходный литерал остатков')
-        replacements.append((match.start(), end, 'ТестОстатки.СоздатьЗапрос(Товары.Преобразовать(Данные -> Данные.Номенклатура), Соединение как СоединениеSql)'))
+        if depth:
+            raise InputError('UNSUPPORTED: незакрытый литерал запроса')
+        from .query_plan import parse_balance_query
+        query = parse_balance_query(method[match.end():end-1], contracts)
+        if queries is not None:
+            if queries and query.to_dict() != queries[0].to_dict():
+                raise InputError('UNSUPPORTED: SQL-профиль поддерживает одну схему запроса')
+            queries.append(query)
+        replacements.append((match.start(), end, 'ТестОстатки.СоздатьЗапрос(' + query.parameter + ', Соединение как СоединениеSql)'))
     for start, end, replacement in reversed(replacements):
         method = method[:start] + replacement + method[end:]
     return method
 
 
-def query_module():
-    return '''#требуется ТестХранилище.sbsl
-#требуется Номенклатура.sbsl
-@Глобально
-структура СтрокаЗапроса
-    пер Номенклатура: Номенклатура.Ссылка?
-    пер Количество: Число
-;
-@Глобально
-структура Запрос
-    пер Соединение: СоединениеSql?
-    пер Товары: Массив<Номенклатура.Ссылка?>
-    @Глобально
-    метод Выполнить(): Массив<СтрокаЗапроса>
-        знч Строки = новый Массив<СтрокаЗапроса>()
-        знч Встреченные = новый Массив<Строка?>()
-        знч Идентификаторы = Товары.Преобразовать(Товар -> ТестХранилище.ИдТовара(Товар))
-''' + sql_call('SELECT item, warehouse, SUM(CASE WHEN direction=\'Приход\' THEN quantity ELSE -quantity END) AS quantity FROM smoke.movements GROUP BY item,warehouse HAVING SUM(CASE WHEN direction=\'Приход\' THEN quantity ELSE -quantity END) <> 0 ORDER BY item,warehouse', {}, select=True, indent='        ') + '''        исп Выборка = ЗапросSql.Выполнить()
-        пока Выборка.Следующий()
-            знч Ид = ТестХранилище.SqlСтрока(Выборка.Получить("item"))
-            если Идентификаторы.Содержит(Ид)
-                если Встреченные.Содержит(Ид)
-                    выбросить новый ИсключениеНеподдерживаемаяОперация("Несколько складов одного товара: неоднозначная проекция")
-                ;
-                Встреченные.Добавить(Ид)
-                пер Товар: Номенклатура.Ссылка? = Неопределено
-                если Ид != Неопределено
-                    Товар = новый Номенклатура.Ссылка(Идентификатор = Ид как Строка)
-                ;
-                Строки.Добавить(новый СтрокаЗапроса(Номенклатура = Товар, Количество = Выборка.Получить("quantity") как Число))
-            ;
-        ;
-        возврат Строки
-    ;
-;
-@Глобально
-метод СоздатьЗапрос(Товары: Массив<Номенклатура.Ссылка?>, Соединение: СоединениеSql): Запрос
-    возврат новый Запрос(Товары = Товары, Соединение = Соединение)
-;
-'''
+def query_module(contracts, query):
+    from .query_plan import balance_sql
+    element = contracts.resolve(query.register)[0]
+    dimensions = element['properties']['Измерения']
+    field_type = next(f['Тип'] for f in dimensions if f['Имя'] == query.dimension)
+    reference_type = field_type.rstrip('?')
+    owner = reference_type.partition('.')[0]
+    row = query.dimension_alias
+    amount = query.resource_alias
+    sql = balance_sql(query, [f['Имя'] for f in dimensions])
+    return ('#требуется ТестХранилище.sbsl\n#требуется ' + owner + '.sbsl\n'
+            '@Глобально\nструктура СтрокаЗапроса\n    пер ' + row + ': ' + field_type + '\n    пер ' + amount + ': Число\n;\n'
+            '@Глобально\nструктура Запрос\n    пер Соединение: СоединениеSql?\n    пер Товары: Массив<' + field_type + '>\n'
+            '    @Глобально\n    метод Выполнить(): Массив<СтрокаЗапроса>\n'
+            '        знч Строки = новый Массив<СтрокаЗапроса>()\n        знч Встреченные = новый Массив<Строка?>()\n'
+            '        знч Идентификаторы = Товары.Преобразовать(Товар -> Товар == Неопределено ? Неопределено : (Товар как ' + reference_type + ').Идентификатор)\n'
+            + sql_call(sql, {'register': contracts.literal(query.register, 'Строка')}, select=True, indent='        ')
+            + '        исп Выборка = ЗапросSql.Выполнить()\n        пока Выборка.Следующий()\n'
+            '            знч Ид = ТестХранилище.SqlСтрока(Выборка.Получить("item"))\n            если Идентификаторы.Содержит(Ид)\n'
+            '                если Встреченные.Содержит(Ид)\n                    выбросить новый ИсключениеНеподдерживаемаяОперация("Неоднозначная проекция нескольких измерений")\n                ;\n'
+            '                Встреченные.Добавить(Ид)\n                пер Товар: ' + field_type + ' = Неопределено\n'
+            '                если Ид != Неопределено\n                    Товар = новый ' + reference_type + '(Идентификатор = Ид как Строка)\n                ;\n'
+            '                Строки.Добавить(новый СтрокаЗапроса(' + row + ' = Товар, ' + amount + ' = Выборка.Получить("quantity") как Число))\n'
+            '            ;\n        ;\n        возврат Строки\n    ;\n;\n'
+            '@Глобально\nметод СоздатьЗапрос(Товары: Массив<' + field_type + '>, Соединение: СоединениеSql): Запрос\n'
+            '    возврат новый Запрос(Товары = Товары, Соединение = Соединение)\n;\n')
 
 
 def storage_module():
@@ -243,66 +215,14 @@ def storage_module():
 '''
 
 
-def load_method():
-    query = 'SELECT number,warehouse,EXTRACT(YEAR FROM date) AS y,EXTRACT(MONTH FROM date) AS m,EXTRACT(DAY FROM date) AS d,EXTRACT(HOUR FROM date) AS h,EXTRACT(MINUTE FROM date) AS n,EXTRACT(SECOND FROM date) AS s FROM smoke.documents WHERE kind=\'Отгрузка\' AND id=&id'
-    return '''метод ЗагрузитьОбъект(Заблокировать: Булево = Ложь): Отгрузка.Объект?
-    если Заблокировать
-        выбросить новый ИсключениеНедопустимоеСостояние("UNSUPPORTED: блокировка ссылки")
-    ;
-''' + sql_call(query, {'id': 'Идентификатор'}, select=True) + '''    исп Выборка = ЗапросSql.Выполнить()
-    если не Выборка.Следующий()
-        возврат Неопределено
-    ;
-    пер Склад: Склады.Ссылка? = Неопределено
-    знч ИдСклада = ТестХранилище.SqlСтрока(Выборка.Получить("warehouse"))
-    если ИдСклада != Неопределено
-        Склад = новый Склады.Ссылка(Идентификатор = ИдСклада как Строка)
-    ;
-    знч Дата = новый ДатаВремя(''' + ','.join('Выборка.Получить("' + col + '") как Число' for col in 'ymdhns') + ''')
-    знч Объект = новый Отгрузка.Объект(Ссылка = новый Отгрузка.Ссылка(Идентификатор = Идентификатор, Соединение = Соединение), Дата = Дата, Номер = Выборка.Получить("number") как Строка, Склад = Склад)
-''' + sql_call('SELECT * FROM smoke.lines WHERE kind=\'Отгрузка\' AND id=&id ORDER BY position', {'id': 'Идентификатор'}, select=True, variable='ЗапросСтрок') + '''    исп Строки = ЗапросСтрок.Выполнить()
-    пока Строки.Следующий()
-        пер Товар: Номенклатура.Ссылка? = Неопределено
-        знч ИдТовара = ТестХранилище.SqlСтрока(Строки.Получить("item"))
-        если ИдТовара != Неопределено
-            Товар = новый Номенклатура.Ссылка(Идентификатор = ИдТовара как Строка)
-        ;
-        Объект.Товары.Добавить(новый Отгрузка.Товары(Номенклатура = Товар, Количество = Строки.Получить("quantity") как Число, Цена = Строки.Получить("price") как Число, Сумма = Строки.Получить("amount") как Число))
-    ;
-    возврат Объект
-;
-'''
+def load_method(contracts):
+    from .sql_metadata import document_load
+    return document_load(contracts, 'Отгрузка')
 
 
-def save_method(*, inject_failure=False):
-    return '''метод Записать()
-    ТестХранилище.Команда(Соединение как СоединениеSql, "BEGIN")
-    попытка
-        знч Старый = Ссылка.ЗагрузитьОбъект()
-        пер До: Отгрузка.Данные
-        если Старый == Неопределено
-            До = новый Отгрузка.Данные(Дата = Дата, Номер = Номер, Склад = Склад, Товары = Товары)
-        иначе
-            знч Снимок = Старый как Отгрузка.Объект
-            До = новый Отгрузка.Данные(Дата = Снимок.Дата, Номер = Снимок.Номер, Склад = Снимок.Склад, Товары = Снимок.Товары)
-        ;
-        знч Параметры = новый Отгрузка.ПараметрыЗаписи()
-        ПередЗаписью(До, Параметры)
-''' + sql_call('INSERT INTO smoke.documents VALUES (\'Отгрузка\',&id,&date,&number,&warehouse) ON CONFLICT(kind,id) DO UPDATE SET date=EXCLUDED.date,number=EXCLUDED.number,warehouse=EXCLUDED.warehouse', {'id': 'Ссылка.Идентификатор', 'date': 'Дата', 'number': 'Номер', 'warehouse': 'ТестХранилище.ИдСклада(Склад)'}, indent='        ') + '''        ЗапросSql.Выполнить()
-''' + sql_call('DELETE FROM smoke.lines WHERE kind=\'Отгрузка\' AND id=&id', {'id': 'Ссылка.Идентификатор'}, indent='        ', variable='Удаление') + '''        Удаление.Выполнить()
-        пер Индекс = 0
-        для Строка из Товары
-''' + sql_call('INSERT INTO smoke.lines VALUES (\'Отгрузка\',&id,&position,&item,&quantity,&price,&amount)', {'id': 'Ссылка.Идентификатор', 'position': 'Индекс', 'item': 'ТестХранилище.ИдТовара(Строка.Номенклатура)', 'quantity': 'Строка.Количество', 'price': 'Строка.Цена', 'amount': 'Строка.Сумма'}, indent='            ', variable='Вставка') + '''            Вставка.Выполнить()
-            Индекс += 1
-        ;
-        ПослеЗаписи(До, Параметры)
-''' + ('        ТестХранилище.Команда(Соединение как СоединениеSql, "INSERT INTO smoke.missing VALUES (1)")\n' if inject_failure else '') + '''        ТестХранилище.Команда(Соединение как СоединениеSql, "COMMIT")
-    поймать Ошибка: Исключение
-        ТестХранилище.Команда(Соединение как СоединениеSql, "ROLLBACK")
-        выбросить Ошибка
-    ;
-;
-'''
+def save_method(contracts, *, inject_failure=False):
+    from .sql_metadata import document_save
+    return document_save(contracts, 'Отгрузка', inject_failure=inject_failure)
 
 
 def prepare(root, model, check, directory, *, inject_failure=False):
@@ -326,13 +246,22 @@ def prepare(root, model, check, directory, *, inject_failure=False):
     register(contracts)
     reference_helpers(contracts)
     contracts.definitions['Отгрузка.Ссылка'] = contracts.definitions['Отгрузка.Ссылка'].replace('    пер Идентификатор:', '    пер Соединение: СоединениеSql?\n    пер Идентификатор:')
-    contracts.attach_method('Отгрузка.Ссылка', load_method(), ['ТестХранилище.Соединение', 'Склады.Ссылка', 'Номенклатура.Ссылка'])
+    contracts.attach_method('Отгрузка.Ссылка', load_method(contracts), ['ТестХранилище.Соединение', 'Склады.Ссылка', 'Номенклатура.Ссылка'])
     context = 'ТестКонтекст.Объект'
     contracts.fields[context] = contracts.fields['Отгрузка.Объект']
     contracts.definitions[context] = contracts.definitions['Отгрузка.Объект'].replace('    пер Ссылка:', '    пер Соединение: СоединениеSql?\n    пер Ссылка:')
+    from .execution_plan import plan_execution
+    plans = []
+    queries = []
     attached = set()
     for handler in ('ПередЗаписью', 'ПослеЗаписи'):
-        for method, types in method_closure(source, handler):
+        plan = plan_execution(root, model, {'target': {'module': modules[0]['name'], 'namespace': modules[0]['namespace'], 'method': handler},
+                              'context': {}, 'args': [{}, {}], 'mocks': {'registers': ['РегистрТовары']}})
+        plans.append(plan.to_dict())
+        if any(symbol.owner['sourceFile'] != modules[0]['sourceFile'] for symbol in plan.symbols):
+            raise InputError('SQL-профиль совместимости требует общий metadata-storage для внешних зависимостей')
+        for symbol in plan.symbols:
+            method, types = symbol.source, symbol.parameter_types
             name = parse_module(method)[0][0].name
             if name in attached:
                 continue
@@ -342,8 +271,30 @@ def prepare(root, model, check, directory, *, inject_failure=False):
                     raise InputError('UNSUPPORTED: конструктор вне контракта shipment-storage')
             for typ in types:
                 contracts.require(typ)
-            contracts.attach_method(context, adapt_query(method).replace('новый РегистрТовары.НаборЗаписей()', 'новый РегистрТовары.НаборЗаписей(Соединение = Соединение)').rstrip() + '\n', types)
-    contracts.attach_method(context, save_method(inject_failure=inject_failure), ['РегистрТовары.НаборЗаписей', 'ТестОстатки.Запрос', 'ТестХранилище.Соединение'])
+            compiled = adapt_query(method, contracts, queries)
+            insertions = []
+            for start, end, type_name in constructor_types(compiled):
+                if type_name == 'РегистрТовары.НаборЗаписей':
+                    opening = compiled.find('(', end)
+                    closing = compiled.find(')', opening)
+                    if opening < 0 or closing < 0 or compiled[opening + 1:closing].strip():
+                        raise InputError('UNSUPPORTED: параметры конструктора набора вне SQL-контракта')
+                    insertions.append(opening + 1)
+            for offset in reversed(insertions):
+                compiled = compiled[:offset] + 'Соединение = Соединение' + compiled[offset:]
+            contracts.attach_method(context, compiled.rstrip() + '\n', types)
+    import json
+    combined = {**plans[0], 'entries': [p['entry'] for p in plans],
+                'symbols': list({(s['identity']['source_file'],s['identity']['declaration']): s
+                                 for p in plans for s in p['symbols']}.values()),
+                'bindings': [b for p in plans for b in p['bindings']],
+                'backend': 'postgres-generic-objects-records', 'queryMode': 'balance-ast-sql', 'queries': [q.to_dict() for q in queries]}
+    for binding in combined['bindings']:
+        if binding['category'] == 'metadata':
+            binding['adapter'] = 'postgres-generic-objects-records'
+            binding['explanation'] = 'Подтверждённая SQL-семантика вида метаданных; подставных вызовов нет'
+    (directory / 'execution-plan.json').write_text(json.dumps(combined, ensure_ascii=False, indent=2) + '\n')
+    contracts.attach_method(context, save_method(contracts, inject_failure=inject_failure), ['РегистрТовары.НаборЗаписей', 'ТестОстатки.Запрос', 'ТестХранилище.Соединение'])
     setup = ['    исп Соединение = ТестХранилище.Открыть(Путь)', '    знч Результаты = новый Массив<Объект?>()']
     for index, step in enumerate(steps):
         if not isinstance(step, dict):
@@ -403,15 +354,22 @@ def prepare(root, model, check, directory, *, inject_failure=False):
                   'item': contracts.literal(movement['item'], 'Строка?'),
                   'warehouse': contracts.literal(movement['warehouse'], 'Строка?'),
                   'quantity': contracts.literal(movement['quantity'], 'Число')}
-        fixture += [sql_call('INSERT INTO smoke.movements VALUES (&kind,&id,&position,&period,&direction,&item,&warehouse,&quantity)', params, variable='Fixture' + str(index)),
+        params['type'] = contracts.literal('::'.join(filter(None, (contracts.resolve('РегистрТовары')[0]['namespace'], 'РегистрТовары'))), 'Строка')
+        params['value'] = 'СериализацияJson.ЗаписатьОбъект(' + contracts.literal({
+            'Период': movement['period'], 'ВидЗаписи': movement['direction'],
+            'Номенклатура': {'Идентификатор': movement['item']} if movement['item'] is not None else None,
+            'Склад': {'Идентификатор': movement['warehouse']} if movement['warehouse'] is not None else None,
+            'Количество': movement['quantity']}, 'РегистрТовары.Запись') + ')'
+        params = {key: params[key] for key in ('type', 'kind', 'id', 'position', 'value')}
+        fixture += [sql_call('INSERT INTO smoke.records VALUES (&type,&kind,&id,&position,CAST(&value AS jsonb))', params, variable='Fixture' + str(index)),
                     '    Fixture' + str(index) + '.Выполнить()']
     contracts.definitions['ТестХранилище'] = storage_module()
     contracts.method_dependencies['ТестХранилище'] = ['Номенклатура.Ссылка', 'Склады.Ссылка']
-    contracts.definitions['ТестОстатки'] = query_module()
+    contracts.definitions['ТестОстатки'] = query_module(contracts, queries[0])
     contracts.method_dependencies['ТестОстатки'] = ['ТестХранилище.Соединение', 'Номенклатура.Ссылка']
     imports = contracts.write(directory)
     (directory / 'ТестХранилище.sbsl').write_text(storage_module())
-    (directory / 'ТестОстатки.sbsl').write_text(query_module())
+    (directory / 'ТестОстатки.sbsl').write_text(query_module(contracts, queries[0]))
     script = imports + '''
 метод СнимокВJson(Объект: Отгрузка.Объект?): Объект?
     если Объект == Неопределено

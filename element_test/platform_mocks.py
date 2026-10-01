@@ -8,6 +8,7 @@ from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 class PlatformMocks:
     def __init__(self, contracts, mocks, check):
         self.contracts = contracts
+        self.query_contract_explicit = 'queries' in mocks
         if any(e['name'] in {'ТестПлатформа', 'ТестКонтекст'} for e in contracts.model['elements']):
             raise InputError('Проект использует зарезервированное имя тестового модуля')
         self.queries = mocks.get('queries', [])
@@ -39,13 +40,22 @@ class PlatformMocks:
                 + ', "method": ' + self.literal(method) + ', "args": ' + args + '})')
 
     def register(self, name):
-        if not isinstance(name, str) or not re.fullmatch(IDENT, name):
-            raise InputError('Мок регистра требует краткое имя')
+        if not isinstance(name, str) or not re.fullmatch(rf'{IDENT}(?:::{IDENT})*', name):
+            raise InputError('Мок регистра требует имя или квалифицированное имя')
         matches = self.contracts.resolve(name)
         if len(matches) != 1 or matches[0]['elementType'] not in {'РегистрСведений', 'РегистрНакопления'}:
             raise InputError('Требуется однозначный РегистрСведений или РегистрНакопления: ' + name)
         element = matches[0]
+        name = self.contracts.canonical_type(name)
         self.contracts.claim_owner(name, element)
+        previous = self.contracts.namespace, self.contracts.imports
+        self.contracts.namespace, self.contracts.imports = element['namespace'], ()
+        try:
+            self._register(name, element)
+        finally:
+            self.contracts.namespace, self.contracts.imports = previous
+
+    def _register(self, name, element):
         properties = element['properties']
         accumulation = element['elementType'] == 'РегистрНакопления'
         dimensions = properties.get('Измерения', [])
@@ -76,6 +86,8 @@ class PlatformMocks:
         names = [f['Имя'] for f in fields]
         if len(set(names)) != len(names) or any(not re.fullmatch(IDENT, n) for n in names):
             raise InputError('Некорректные поля регистра ' + name)
+        fields = [{**f, 'Тип': self.contracts.canonical_type(f['Тип'])} for f in fields]
+        dimensions = [{**f, 'Тип': self.contracts.canonical_type(f['Тип'])} for f in dimensions]
         for field in fields:
             self.contracts.require(field['Тип'], element['namespace'])
         for field in dimensions:
@@ -145,6 +157,8 @@ class PlatformMocks:
             found = [i for i, q in enumerate(self.queries) if isinstance(q, dict)
                      and isinstance(q.get('text'), str) and self.query_key(q['text']) == self.query_key(text)]
             if len(found) != 1:
+                if not self.query_contract_explicit:
+                    raise UnsupportedSyntaxError('Общий литерал Запрос вне поддержанного контракта; требуется явный mocks.queries')
                 raise InvalidTestError('Для литерала Запрос требуется ровно один mocks.queries с совпадающим text')
             i = found[0]
             visible = mask_noncode(text)

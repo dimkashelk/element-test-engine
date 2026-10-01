@@ -1,0 +1,90 @@
+name: 'Исходный СоздатьИлиОбновить: создание, обновление и валидация'
+checks:
+- id: create_and_update
+  type: runtime
+  points: 4
+  target:
+    module: Покупатели
+    namespace: РаботаСИсключениями
+    method: СоздатьИлиОбновить
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - Первый
+  - '+71234567890'
+  captureException: true
+  storage:
+    idType: Ууид
+  timeout: 15s
+  sequence:
+  - method: СоздатьИлиОбновить
+    args:
+    - 12345678-1234-4234-8234-123456789abc
+    - Первый
+    - '+71234567890'
+  - method: СоздатьИлиОбновить
+    args:
+    - 12345678-1234-4234-8234-123456789abc
+    - Второй
+    - '+79991234567'
+  expected:
+    result:
+      actions:
+      - result:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        exception: null
+      - result:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        exception: null
+    storage:
+    - type: РаботаСИсключениями::Покупатели
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Наименование: Второй
+        Код: ''
+        Телефон: '+79991234567'
+- id: empty_name
+  type: runtime
+  points: 2
+  target:
+    module: Покупатели
+    namespace: РаботаСИсключениями
+    method: СоздатьИлиОбновить
+  args:
+  - abcdef12-1234-4234-8234-123456789abc
+  - ''
+  - '+71234567890'
+  captureException: true
+  storage:
+    idType: Ууид
+  timeout: 15s
+  expected:
+    result:
+      result: null
+      exception:
+        type: ИсключениеВалидации
+        message: Пустое ФИО покупателя
+    storage: []
+- id: invalid_phone
+  type: runtime
+  points: 2
+  target:
+    module: Покупатели
+    namespace: РаботаСИсключениями
+    method: СоздатьИлиОбновить
+  args:
+  - abcdef12-1234-4234-8234-123456789abc
+  - Некорректный
+  - '123'
+  captureException: true
+  storage:
+    idType: Ууид
+  timeout: 15s
+  expected:
+    result:
+      result: null
+      exception:
+        type: ИсключениеВалидации
+        message: 'Некорректный номер телефона "123". Ожидаемый формат: "+7хххххххххх"'
+    storage: []

@@ -1,8 +1,8 @@
-name: Примеры_new — граница runtime для записи покупателя
+name: Примеры_new — неподдержанный общий XBQL поиска
 checks:
-  - id: create_buyer_requires_uuid_runtime
+  - id: arbitrary_query_requires_contract
     type: runtime
-    target: {module: Покупатели, namespace: РаботаСИсключениями, method: СоздатьИлиОбновить}
-    args: ["00000000-0000-4000-8000-000000000001", "Иванов Иван", "+79991234567"]
-    expected: {Идентификатор: "00000000-0000-4000-8000-000000000001"}
+    target: {module: Номенклатура, namespace: РаботаСИсключениями, method: НайтиПоАртикулу}
+    args: ["teacher-article"]
+    expected: null
     points: 1

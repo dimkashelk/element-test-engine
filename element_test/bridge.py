@@ -87,6 +87,7 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             model_path, assignment_path = temporary / "model.json", temporary / "assignment.json"
             write_json(model_path, model)
             assignment = load_assignment(assignment_source)
+            plans = []
             for check in assignment["checks"]:
                 if check["type"] == "runtime" and not check.get("skip"):
                     if 'integration' in check:
@@ -94,10 +95,19 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
                             check["execution"] = {"status": "UNSUPPORTED", "reasonCode": "unsupported_contract",
                                                   "message": "Интеграционный runtime для библиотечного метода не поддерживается"}
                         else:
+                            prepared = []
                             check["execution"] = run_integration(check, model, temporary,
-                                                                   enabled=integration, root=root)
+                                                                   enabled=integration, root=root, plan_sink=prepared)
+                            if prepared:
+                                plans.append({'criterionId': check['id'], 'plan': prepared[0]})
                     else:
-                        check["execution"] = run_pure(root, model, check, temporary)
+                        prepared = []
+                        check["execution"] = run_pure(root, model, check, temporary, plan_sink=prepared)
+                        if prepared:
+                            plans.append({'criterionId': check['id'], 'plan': prepared[0]})
+                        else:
+                            plans.append({'criterionId': check['id'], 'unavailable': {
+                                k: check['execution'].get(k) for k in ('status', 'reasonCode', 'message')}})
             write_json(assignment_path, assignment)
             result = execute_engine("test", model_path, assignment_path, temporary)
     result["projectIdentity"] = model["projectIdentity"]
@@ -109,6 +119,16 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
     output.mkdir(parents=True, exist_ok=True)
     write_json(output / "result.json", result)
     write_json(output / "grading.json", package)
+    # Technical preparation evidence stays separate from the v1 grading transport.
+    for item in plans:
+        for symbol in item.get('plan', {}).get('symbols', []):
+            from hashlib import sha256
+            source = symbol.pop('source')
+            symbol['sourceHash'] = sha256(source.encode()).hexdigest()
+    write_json(output / 'execution-plans.json', plans)
+    from .grading import safe
+    write_json(output / 'runtime-evidence.json', safe([
+        {'criterionId': check['id'], **check['execution']} for check in assignment['checks'] if 'execution' in check]))
     (output / "report.html").write_text(report(result, package), encoding="utf-8")
     return result, package
 

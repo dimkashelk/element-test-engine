@@ -25,7 +25,7 @@ def scalar_structures(source):
         if name in result:
             raise InputError(f'Неоднозначная структура модуля: {name}')
         fields, j, names = [], i + 2, set()
-        error = f'Структура {name}: поддерживаются только поля пер с типом Строка, Число или Булево'
+        error = f'Структура {name}: поддерживаются только поля пер с типом поддержанными типами без умолчаний'
         previous = i - 2
         while previous >= 0 and tokens[previous].value == '\n':
             previous -= 1
@@ -44,13 +44,17 @@ def scalar_structures(source):
                 if tokens[j].value == ';' and (j + 1 == len(tokens) or tokens[j + 1].value == '\n'):
                     result[name] = (source[token.start:tokens[j].end], fields, None)
                     break
-                row = tokens[j:j + 5]
-                if (len(row) != 5 or row[0].value != 'пер' or not re.fullmatch(IDENT, row[1].value)
+                row_end = j
+                while row_end < len(tokens) and tokens[row_end].value != '\n':
+                    row_end += 1
+                row = tokens[j:row_end]
+                if (len(row) < 4 or row[0].value != 'пер' or not re.fullmatch(IDENT, row[1].value)
                         or row[1].value in names or row[2].value != ':'
-                        or row[3].value not in {'Строка', 'Число', 'Булево'} or row[4].value != '\n'):
+                        or any(t.value in {'=', '@', ';'} for t in row[3:])):
                     break
+                type_name = ''.join(t.value for t in row[3:])
                 names.add(row[1].value)
-                fields.append({'Имя': row[1].value, 'Тип': row[3].value})
-                j += 5
+                fields.append({'Имя': row[1].value, 'Тип': type_name})
+                j = row_end + 1
         result.setdefault(name, (None, [], error))
     return result

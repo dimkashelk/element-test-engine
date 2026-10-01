@@ -257,7 +257,7 @@ class ExpressionCallsTest(unittest.TestCase):
             original = (root / 'A/Main.xbsl').read_bytes()
             script = prepare_script(root, model, {'target': {'module': 'Main', 'method': 'Run'},
                                                   'args': []}, output)
-            self.assertIn('&ТестВнешнийМодуль1.Value', script.read_text())
+            self.assertRegex(script.read_text(), r'&ТестВнешнийМодуль[0-9a-f]+\.Value')
             self.assertEqual(original, (root / 'A/Main.xbsl').read_bytes())
             if (REPO / 'script_u_10.0.2_1/lib').is_dir():
                 process = subprocess.run([str(REPO / 'bin/script-runtime'), '-c', '9.0', str(script)],

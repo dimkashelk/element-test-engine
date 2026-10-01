@@ -1,0 +1,298 @@
+name: Транзакции и исключения — accounts SQL
+checks:
+- id: commit
+  type: runtime
+  points: 2
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Data::Account
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 2.5
+        Entries:
+        - Amount: 2.5
+    - type: Data::Facts
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Amount: 2.5
+    - type: Data::Journal
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 5.0
+        Entries:
+        - Amount: 5.0
+- id: late_rollback
+  type: runtime
+  points: 2
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 2
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result: null
+      exception:
+        type: ИсключениеВалидации
+        message: late dependency
+    storage: []
+- id: caught_inside
+  type: runtime
+  points: 2
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 3
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Data::Account
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 2.5
+        Entries:
+        - Amount: 2.5
+    - type: Data::Facts
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Amount: 2.5
+    - type: Data::Journal
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 5.0
+        Entries:
+        - Amount: 5.0
+- id: early_return
+  type: runtime
+  points: 2
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 1
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Data::Account
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 2.5
+        Entries:
+        - Amount: 2.5
+- id: independent_wrong_amount
+  type: runtime
+  points: 1
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Data::Account
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 19
+        Entries:
+        - Amount: 2.5
+    - type: Data::Facts
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Amount: 2.5
+    - type: Data::Journal
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 5.0
+        Entries:
+        - Amount: 5.0
+- id: unsupported_source_nesting
+  type: runtime
+  points: 1
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Nested
+  args: []
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected: null
+- id: after_unavailable
+  type: runtime
+  points: 1
+  target:
+    module: Workflow
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: postgres
+    idType: Ууид
+    transaction: false
+    registers:
+    - Data::Facts
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Data::Account
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 2.5
+        Entries:
+        - Amount: 2.5
+    - type: Data::Facts
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Amount: 2.5
+    - type: Data::Journal
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Label: valid
+        Amount: 5.0
+        Entries:
+        - Amount: 5.0

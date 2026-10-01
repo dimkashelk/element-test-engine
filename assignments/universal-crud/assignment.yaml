@@ -1,0 +1,76 @@
+name: Универсальное хранение crud
+checks:
+- id: write
+  type: runtime
+  points: 1
+  target:
+    module: Ledger
+    namespace: Biz
+    method: Write
+  args:
+  - one
+  - Teacher value
+  - 4.25
+  storage:
+    backend: memory
+    transaction: true
+  captureException: true
+  expected:
+    result:
+      result:
+        Идентификатор: one
+      exception: null
+    storage:
+    - type: Biz::Ledger
+      id: one
+      value:
+        Ссылка:
+          Идентификатор: one
+        Name: Teacher value
+        Total: 4.25
+        Rows:
+        - Amount: 4.25
+- id: wrong_field
+  type: runtime
+  points: 1
+  target:
+    module: Ledger
+    namespace: Biz
+    method: Write
+  args:
+  - one
+  - Wrong
+  - 4.25
+  storage:
+    backend: memory
+    transaction: true
+  captureException: true
+  expected:
+    result:
+      result:
+        Идентификатор: one
+      exception: null
+    storage:
+    - type: Biz::Ledger
+      id: one
+      value:
+        Ссылка:
+          Идентификатор: one
+        Name: Teacher value
+        Total: 4.25
+        Rows:
+        - Amount: 4.25
+- id: unsupported_named_transaction
+  type: runtime
+  points: 1
+  target:
+    module: Ledger
+    namespace: Biz
+    method: UnsupportedResource
+  args:
+  - one
+  storage:
+    backend: memory
+    transaction: true
+  captureException: true
+  expected: null

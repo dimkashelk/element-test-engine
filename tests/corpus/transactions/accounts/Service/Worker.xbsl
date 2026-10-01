@@ -1,0 +1,27 @@
+@Глобально
+метод Validate(Text: Строка)
+    если Text.Пусто()
+        выбросить новый ИсключениеВалидации("empty label")
+    ;
+;
+@Глобально
+метод First(ID: Ууид, Text: Строка, N: Число): Data::Account.Ссылка
+    знч O = новый Data::Account.Объект(Ид = ID, Label = Text, Amount = N)
+    O.Entries.Добавить(новый Data::Account.Entries(Amount = N))
+    O.Записать()
+    возврат O.Ссылка
+;
+@Глобально
+метод Second(ID: Ууид, Text: Строка, N: Число)
+    знч R = новый Data::Facts.НаборЗаписей()
+    R.Фильтр.Установить("bucket")
+    R.ДобавитьЗапись(Key = "bucket", Amount = N)
+    R.Записать()
+    знч O = новый Data::Journal.Объект(Ид = ID, Label = Text, Amount = N * 2)
+    O.Entries.Добавить(новый Data::Journal.Entries(Amount = N * 2))
+    O.Записать()
+;
+@Глобально
+метод Crash()
+    выбросить новый ИсключениеВалидации("late dependency")
+;

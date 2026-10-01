@@ -42,9 +42,9 @@ def preflight(check, model, *, enabled=False):
         raise BackendUnavailable('integration требует только backend и operation', 'invalid_test')
     if contract['backend'] != 'postgres':
         raise BackendUnavailable('Неподдержанный integration backend', 'unsupported_contract')
-    if contract['operation'] not in {'sql-smoke', 'shipment-storage'}:
+    if contract['operation'] not in {'sql-smoke', 'shipment-storage', 'metadata-storage'}:
         raise BackendUnavailable('Неподдержанная операция: реализован только доверенный sql-smoke; XBQL и объектный API отсутствуют', 'unsupported_contract')
-    if any(key in check for key in ('target', 'mocks', 'context', 'args', 'runtimeDateTime')):
+    if contract['operation'] != 'metadata-storage' and any(key in check for key in ('target', 'mocks', 'context', 'args', 'runtimeDateTime')):
         raise BackendUnavailable('sql-smoke не принимает студенческий target, mocks, context или args', 'invalid_test')
     try:
         config = json.loads(Path(os.environ.get('ELEMENT_TEST_INTEGRATION_CONFIG',
@@ -123,7 +123,12 @@ def executor_output(executor, directory):
                 if stdout_path.stat().st_size + stderr_path.stat().st_size > 1024 * 1024:
                     raise BackendUnavailable('Интеграция: превышен лимит вывода 1 MiB')
                 time.sleep(0.05)
-            if process.returncode or stdout_path.stat().st_size + stderr_path.stat().st_size > 1024 * 1024:
+            if process.returncode:
+                diagnostics = stdout_path.read_text(errors='replace') + stderr_path.read_text(errors='replace')
+                if any(marker in diagnostics for marker in ('Script compilation error:', 'Ошибки компиляции скрипта:')):
+                    raise BackendUnavailable('Script executor: неподдержанная компиляция исходного обращения', 'unsupported_syntax')
+                raise BackendUnavailable('Интеграция: ошибка executor')
+            if stdout_path.stat().st_size + stderr_path.stat().st_size > 1024 * 1024:
                 raise BackendUnavailable('Интеграция: ошибка executor или превышен лимит вывода')
             out.seek(0)
             return out.read(1024 * 1024).decode('utf-8', errors='replace')
@@ -134,7 +139,7 @@ def executor_output(executor, directory):
             process.wait(timeout=10)
 
 
-def run_integration(check, model, temporary, *, enabled=False, inject_failure=False, root=None):
+def run_integration(check, model, temporary, *, enabled=False, inject_failure=False, root=None, plan_sink=None):
     """One fresh PostgreSQL and network per check; injection is trusted test-only API."""
     try:
         config, runtime, home, password = preflight(check, model, enabled=enabled)
@@ -143,6 +148,8 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
     operation = check['integration']['operation']
     if operation == 'shipment-storage' and root is None:
         return {'status': 'UNSUPPORTED', 'message': 'shipment-storage требует исходный проект', 'reasonCode': 'backend_unavailable'}
+    if operation == 'metadata-storage' and (root is None or check.get('storage', {}).get('backend') != 'postgres'):
+        return {'status': 'UNSUPPORTED', 'message': 'metadata-storage требует проект и storage.backend=postgres', 'reasonCode': 'invalid_test'}
     role_password = secrets.token_hex(32)
     run_id = uuid.uuid4().hex
     network, database, executor = ['element-integration-' + run_id + suffix
@@ -161,6 +168,24 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
                     prepare(root, model, check, directory, inject_failure=inject_failure)
                 except InputError as exc:
                     return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': 'unsupported_contract'}
+            if operation == 'metadata-storage':
+                from .runtime import prepare_script
+                from .storage import PostgresSession
+                from .yaml_io import InputError
+                try:
+                    path = prepare_script(root, model, check, directory)
+                    path.rename(directory / 'SqlSmoke.sbsl')
+                    session = PostgresSession()
+                    SCHEMA = session.schema()
+                    audit = session.audit
+                    if inject_failure:
+                        adapter = directory / 'ТестСессия.sbsl'
+                        adapter.write_text(adapter.read_text().replace('Соединение.СоздатьЗапросБезВыборки("COMMIT").Выполнить()',
+                            'если не Подготовка\n            Соединение.СоздатьЗапросБезВыборки("INSERT INTO smoke.missing VALUES (1)").Выполнить()\n        ;\n        Соединение.СоздатьЗапросБезВыборки("COMMIT").Выполнить()'))
+                except InputError as exc:
+                    return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': 'unsupported_contract'}
+            if plan_sink is not None and (directory / 'execution-plan.json').is_file():
+                plan_sink.append(json.loads((directory / 'execution-plan.json').read_text()))
             resources.append(('network', network))
             docker('network', 'create', '--internal', network)
             resources.append(('container', database))
@@ -194,7 +219,7 @@ GRANT USAGE ON SCHEMA smoke TO smoke;
 GRANT SELECT, INSERT, UPDATE, DELETE ON smoke.stock TO smoke;
 ALTER ROLE smoke SET statement_timeout = '3s';
 """
-            if operation == 'shipment-storage':
+            if operation in {'shipment-storage', 'metadata-storage'}:
                 bootstrap += SCHEMA
             docker('exec', '-i', database, 'psql', '-U', 'postgres', '-d', 'integration',
                    '-v', 'ON_ERROR_STOP=1', input=bootstrap)
@@ -217,25 +242,37 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                 result = {'status': 'ERROR', 'message': 'Интеграция: Script executor завершился с ошибкой', 'reasonCode': 'execution_error'}
             else:
                 decoded = decode_output(stdout)
-                if decoded.get('status') == 'EXECUTED' and isinstance(decoded.get('actual'), dict):
+                if (decoded.get('status') == 'EXECUTED' or operation == 'metadata-storage' and 'actual' in decoded) and isinstance(decoded.get('actual'), dict):
                     result = {'status': 'EXECUTED', 'actual': decoded['actual']}
+                    if 'trace' in decoded:
+                        result['trace'] = decoded['trace']
+                    if 'storageTrace' in decoded:
+                        result['storageTrace'] = decoded['storageTrace']
+                    if 'storageDiagnostics' in decoded:
+                        result['storageDiagnostics'] = decoded['storageDiagnostics']
 
-                elif operation == 'shipment-storage' and decoded.get('status') == 'UNSUPPORTED':
-                    result = {'status': 'UNSUPPORTED', 'message': 'shipment-storage: неоднозначная проекция остатков по нескольким складам', 'reasonCode': 'unsupported_contract'}
+                elif operation in {'shipment-storage', 'metadata-storage'} and decoded.get('status') == 'UNSUPPORTED':
+                    result = {'status': 'UNSUPPORTED', 'message': 'Операция вне подтверждённого контракта хранения', 'reasonCode': 'unsupported_contract'}
                 else:
                     result = {'status': 'ERROR', 'message': 'Интеграция: ошибка выполнения запроса', 'reasonCode': 'execution_error'}
-                if operation == 'shipment-storage':
+                if operation in {'shipment-storage', 'metadata-storage'}:
                     committed = audit(database, docker)
                     if result['status'] == 'EXECUTED':
-                        result['actual']['database'] = committed
+                        result['actual']['storage' if operation == 'metadata-storage' else 'database'] = committed
                     else:
                         result['storageEvidence'] = committed
         except BackendUnavailable as exc:
-            result = {'status': 'UNSUPPORTED' if phase == 'provision' else 'ERROR', 'message': str(exc),
-                      'reasonCode': exc.reason_code if phase == 'provision' else 'execution_error'}
+            unavailable = phase == 'provision' or exc.reason_code == 'unsupported_syntax'
+            result = {'status': 'UNSUPPORTED' if unavailable else 'ERROR', 'message': str(exc),
+                      'reasonCode': exc.reason_code if unavailable else 'execution_error'}
         except (OSError, ValueError, KeyError, TypeError):
             result = {'status': 'ERROR', 'message': 'Интеграция: некорректный результат или ошибка инфраструктуры', 'reasonCode': 'execution_error'}
         finally:
+            if phase == 'execute' and operation in {'shipment-storage', 'metadata-storage'} and result.get('status') != 'EXECUTED' and 'storageEvidence' not in result:
+                try:
+                    result['storageEvidence'] = audit(database, docker)
+                except (BackendUnavailable, ValueError, InputError):
+                    result['message'] = 'Интеграция: независимый аудит после отказа недоступен'
             cleanup = True
             for kind, name in reversed(resources):
                 try:

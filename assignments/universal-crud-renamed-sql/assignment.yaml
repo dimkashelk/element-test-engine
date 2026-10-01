@@ -1,0 +1,90 @@
+name: Универсальное хранение crud-renamed-sql
+checks:
+- id: write
+  type: runtime
+  points: 1
+  target:
+    module: Акт
+    namespace: Учет
+    method: Сохранить
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - Teacher value
+  - 4.25
+  storage:
+    backend: postgres
+    transaction: true
+    idType: Ууид
+  captureException: true
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: Teacher value
+        Баланс: 4.25
+        Позиции:
+        - Цена: 4.25
+        Оплачен: false
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- id: wrong_field
+  type: runtime
+  points: 1
+  target:
+    module: Акт
+    namespace: Учет
+    method: Сохранить
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - Wrong
+  - 4.25
+  storage:
+    backend: postgres
+    transaction: true
+    idType: Ууид
+  captureException: true
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Акт
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: Teacher value
+        Баланс: 4.25
+        Позиции:
+        - Цена: 4.25
+        Оплачен: false
+  integration:
+    backend: postgres
+    operation: metadata-storage
+- id: unsupported_named_transaction
+  type: runtime
+  points: 1
+  target:
+    module: Акт
+    namespace: Учет
+    method: UnsupportedResource
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  storage:
+    backend: postgres
+    transaction: true
+    idType: Ууид
+  captureException: true
+  expected: null
+  integration:
+    backend: postgres
+    operation: metadata-storage

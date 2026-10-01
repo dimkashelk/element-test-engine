@@ -8,6 +8,7 @@ import unittest
 from element_test.assignment import load_assignment
 from element_test.loader import open_project
 from element_test.model import analyze
+from element_test.generated_types import ProjectTypes
 from element_test.runtime import REPO, body_type_references, constructor_types, method_closure, prepare_script
 from element_test.yaml_io import InputError
 
@@ -39,9 +40,14 @@ class BodyTypesTest(unittest.TestCase):
                     # including when the qualified type is inside a generic.
                     model['elements'].append({**copy.deepcopy(model['elements'][0]), 'namespace': 'A'})
                 script = prepare_script(root, model, check, root).read_text()
-                self.assertIn('#требуется Док.sbsl', script)
-                self.assertIn('новый ' + spelling.replace('Автор::Проект::', '').replace('B::', '') + '()', script)
-                self.assertIn('структура Строки', (root / 'Док.sbsl').read_text())
+                types = ProjectTypes(model, 'A')
+                types.rename_collisions = True
+                types.require(spelling)
+                canonical = types.sbsl_type(spelling)
+                owner = next(k.split('.')[0] for k in types.definitions)
+                self.assertIn('#требуется ' + owner + '.sbsl', script)
+                self.assertIn('новый ' + canonical + '()', script)
+                self.assertIn('структура Строки', (root / (owner + '.sbsl')).read_text())
                 self.assertFalse((root / 'Лишний.sbsl').exists())
                 self.assertNotIn('метод НеДостижим', script)
 
@@ -74,9 +80,10 @@ class BodyTypesTest(unittest.TestCase):
             self.assertEqual([item[2] for item in body_type_references(source[source.index('метод Помощник'):source.index('метод НеДостижим')])],
                              ['B::Док.Строки', 'Соответствие<Строка,Массив<B::Док.Ссылка|Лишний.Ссылка>>', 'B::Док.Ссылка'])
             script = prepare_script(root, model, check, root).read_text()
-            self.assertIn('Соответствие<Строка, Массив<Док.Ссылка|Лишний.Ссылка>>', script)
-            self.assertIn('как Док.Ссылка', script)
-            self.assertIn('структура Строки', (root / 'Док.sbsl').read_text())
+            owner = next(root.glob('ТестТип*.sbsl')).stem
+            self.assertIn('Соответствие<Строка, Массив<' + owner + '.Ссылка|Лишний.Ссылка>>', script)
+            self.assertIn('как ' + owner + '.Ссылка', script)
+            self.assertIn('структура Строки', (root / (owner + '.sbsl')).read_text())
             self.assertTrue((root / 'Лишний.sbsl').exists())
 
     def test_body_type_collision_and_unsupported_cycle(self):
@@ -84,8 +91,8 @@ class BodyTypesTest(unittest.TestCase):
             root = Path(directory)
             model, check = self.fixture(root, '    пер Один: B::Док.Ссылка\n    пер Два: C::Док.Ссылка\n    возврат 1')
             model['elements'].append({**copy.deepcopy(model['elements'][0]), 'namespace': 'C'})
-            with self.assertRaisesRegex(InputError, 'Конфликт кратких'):
-                prepare_script(root, model, check, root)
+            prepare_script(root, model, check, root)
+            self.assertEqual(len(list(root.glob('ТестТип*.sbsl'))), 2)
             model, check = self.fixture(root, '    пер Значение: B::Док.Объект\n    возврат 1')
             model['elements'][0]['properties']['Реквизиты'] = [{'Имя': 'Родитель', 'Тип': 'Док.Объект'}]
             with self.assertRaisesRegex(InputError, 'Циклическая зависимость'):
@@ -128,13 +135,13 @@ class BodyTypesTest(unittest.TestCase):
                 prepare_script(root, model, check, root)
             model, check = self.fixture(root, '    знч A = новый B::Док.Строки()\n    знч B = новый C::Док.Строки()\n    возврат 1')
             model['elements'].append({**copy.deepcopy(model['elements'][0]), 'namespace': 'C'})
-            with self.assertRaisesRegex(InputError, 'Конфликт кратких'):
-                prepare_script(root, model, check, root)
+            prepare_script(root, model, check, root)
+            self.assertEqual(len(list(root.glob('ТестТип*.sbsl'))), 2)
             # A cached definition must not hide a different local owner.
             model['modules'][0]['namespace'] = 'C'
             (root / 'Модуль.xbsl').write_text('метод Главный(): Число\n    знч A = новый B::Док.Строки()\n    знч B = новый Док.Строки()\n    возврат 1\n;\n')
-            with self.assertRaisesRegex(InputError, 'Конфликт кратких'):
-                prepare_script(root, model, check, root)
+            prepare_script(root, model, check, root)
+            self.assertEqual(len(list(root.glob('ТестТип*.sbsl'))), 2)
 
     def test_receipt_original_body_and_archive_preserved(self):
         archive = REPO / 'Dvizhok.xdump'

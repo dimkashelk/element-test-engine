@@ -30,7 +30,7 @@ class ReadonlyArrayTest(unittest.TestCase):
         for value in ({}, 'text', [1], [None]):
             with self.subTest(value=value), self.assertRaises(InvalidTestError):
                 types.literal(value, 'ЧитаемыйМассив<Строка>')
-        for name in ('ЧитаемыйМассив<Строка,Число>', 'ЧитаемыйМассив<Ууид>'):
+        for name in ('ЧитаемыйМассив<Строка,Число>', 'ЧитаемыйМассив<СекретПриложения>'):
             with self.subTest(name=name), self.assertRaises(InputError):
                 types.require(name)
 
@@ -87,8 +87,8 @@ class PracticalStockPresentationsTest(unittest.TestCase):
             boundary = load_assignment(ASSIGNMENT / 'fixtures/unsupported.yaml')['checks'][0]
             with patch('element_test.runtime.shutil.which', return_value='docker'):
                 execution = run_pure(root, model, boundary, temp)
-            self.assertEqual((execution['status'], execution['reasonCode']), ('UNSUPPORTED', 'unsupported_contract'))
-            self.assertIn('Ууид', execution['message'])
+            self.assertEqual((execution['status'], execution['reasonCode']), ('UNSUPPORTED', 'unsupported_syntax'))
+            self.assertIn('Запрос', execution['message'])
 
     @unittest.skipUnless(DOCKER, 'Docker integration is opt-in')
     def test_reference_and_independent_filter_sort_representation_mutations(self):

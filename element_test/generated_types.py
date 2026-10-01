@@ -6,7 +6,7 @@ from .indexer import IDENT, split_parameters
 from .resolution import import_specs, resolve_symbols, visible_from
 from .yaml_io import InputError, InvalidTestError
 
-SCALARS = {"Строка", "Число", "Булево", "Дата", "Время", "ДатаВремя", "Момент"}
+SCALARS = {"Строка", "Число", "Булево", "Дата", "Время", "ДатаВремя", "Момент", "Ууид"}
 
 
 def union_members(type_name):
@@ -31,8 +31,17 @@ class ProjectTypes:
         self.local_source = None
         self.current_source = None
         self.required_structures = {}
+        self.local_by_source = {}
+        self.local_names = {}
+        self.canonical_elements = {}
+        self.rename_collisions = False
+        self.inline_locals = True
+        self.reference_id_type = "Строка"
+        self.platform_type_aliases = {}
 
     def resolve(self, name, namespace=None):
+        if name in self.canonical_elements:
+            return [self.canonical_elements[name]]
         namespace = self.namespace if namespace is None else namespace
         imports = self.imports if namespace == self.namespace else ()
         prefix = next((prefix for prefix in self.model.get("_libraryPrefixes", [])
@@ -56,22 +65,43 @@ class ProjectTypes:
                                          self.imports, self.model.get("properties")):
                 type_name = re.sub(rf"(?<![\w:]){re.escape(alias)}(?=\.|[<>,|?]|$)",
                                    path, type_name)
-        pattern = rf"(?:{IDENT}::)+{IDENT}(?:\.{IDENT})?"
+        pattern = rf"{IDENT}(?:::{IDENT})*(?:\.{IDENT})?"
 
         def shorten(match):
-            qualified = match[0]
-            owner, dot, variant = qualified.partition(".")
-            properties = self.model.get("properties", {})
-            project_names = [properties.get(k) for k in ("Поставщик", "Имя")]
-            prefix = "::".join(project_names) + "::" if all(isinstance(n, str) and n for n in project_names) else None
-            if prefix and owner.startswith(prefix):
-                owner = owner[len(prefix):]
-            matches = self.resolve(owner, self.namespace)
+            token = match[0]
+            if token in self.platform_type_aliases:
+                return self.platform_type_aliases[token]
+            owner, dot, variant = token.partition(".")
+            if owner in self.canonical_elements:
+                return token
+            local = self.local_by_source.get(self.current_source, {})
+            if owner in local:
+                key = (self.current_source, owner)
+                if key not in self.local_names:
+                    from hashlib import sha256
+                    # Keep the historical spelling for the sole entry-local declaration.
+                    if self.current_source == self.local_source and self.inline_locals:
+                        self.local_names[key] = owner
+                    else:
+                        self.local_names[key] = "ТестТип" + sha256((str(key)).encode()).hexdigest()[:16] + ".Значение"
+                return self.local_names[key] + (dot + variant if dot else "")
+            if owner in SCALARS or owner in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие", "ничто"}:
+                return token
+            matches = self.resolve(owner)
             if len(matches) != 1:
-                raise InputError(f"Квалифицированный тип отсутствует или неоднозначен: {qualified}")
+                if "::" in owner:
+                    raise InputError(f"Квалифицированный тип отсутствует или неоднозначен: {token}")
+                return token
             element = matches[0]
-            self.claim_owner(element["name"], element)
-            return element["name"] + (dot + variant if dot else "")
+            duplicates = [e for e in self.model['elements'] if e['name'] == element['name']]
+            technical = element['name']
+            if self.rename_collisions and len(duplicates) > 1:
+                from hashlib import sha256
+                identity = (element.get('_libraryPrefix', ''), element['namespace'], element['name'])
+                technical = 'ТестТип' + sha256(str(identity).encode()).hexdigest()[:16]
+            self.claim_owner(technical, element)
+            self.canonical_elements[technical] = element
+            return technical + (dot + variant if dot else "")
 
         return re.sub(pattern, shorten, type_name)
 
@@ -99,6 +129,8 @@ class ProjectTypes:
             return
         if type_name in SCALARS:
             return
+        if type_name in {'Исключение', 'ИсключениеНедопустимоеСостояние', 'Объект', 'Тип'}:
+            return
         generic = re.fullmatch(r"(Массив|ЧитаемыйМассив|Обходимое|Соответствие)<(.+)>", type_name)
         if generic:
             arguments = split_parameters(generic[2])
@@ -107,33 +139,42 @@ class ProjectTypes:
             for argument in arguments:
                 self.require(argument.strip(), namespace)
             return
-        if type_name in self.local_structures:
-            if self.current_source != self.local_source:
+        local = self.local_by_source.get(self.current_source, self.local_structures)
+        if type_name in local:
+            if not self.local_by_source and self.current_source != self.local_source:
                 raise InputError(f'Структура {type_name} требует контракт другого модуля')
-            declaration, fields, error = self.local_structures[type_name]
+            declaration, fields, error = local[type_name]
             if error:
                 raise InputError(error)
             if self.resolve(type_name, namespace):
                 raise InputError(f'Конфликт имени структуры и объекта: {type_name}')
-            self.fields[type_name] = fields
-            self.required_structures[type_name] = declaration
+            canonical = self.canonical_type(type_name)
+            if canonical in self.fields:
+                return
+            if canonical in self.active:
+                raise InputError(f'Циклическая зависимость структуры: {type_name}')
+            self.active.add(canonical)
+            adapted = declaration
+            for field in fields:
+                self.require(field['Тип'], namespace)
+                adapted = adapted.replace(': ' + field['Тип'], ': ' + self.sbsl_type(field['Тип']))
+            self.fields[canonical] = fields
+            if '.' in canonical:
+                adapted = re.sub(r'(?<=структура )' + re.escape(type_name) + r'\b', 'Значение', adapted, count=1)
+                self.definitions[canonical] = '@Глобально\n' + adapted + '\n'
+            else:
+                self.required_structures[canonical] = adapted
+            self.active.remove(canonical)
             return
-        qualified = '::' in type_name or any(alias and (type_name == alias or type_name.startswith(alias + '.'))
-                                                 for _, alias in import_specs(self.imports))
+        if type_name in self.local_structures and self.current_source != self.local_source and type_name not in local:
+            raise InputError(f'Структура {type_name} требует контракт другого модуля')
         type_name = self.canonical_type(type_name)
-        if re.fullmatch(rf'{IDENT}(?:\.{IDENT})?', type_name) and type_name not in SCALARS:
-            owner = type_name.split('.')[0]
-            lookup_namespace = self.owners[owner][0] if qualified else namespace
-            matches = self.resolve(owner, lookup_namespace)
-            if len(matches) == 1:
-                self.claim_owner(owner, matches[0])
-            elif owner in self.owners:
-                raise InputError(f'Объект типа {type_name} отсутствует или неоднозначен')
-            namespace = lookup_namespace
+        if type_name in self.canonical_elements:
+            namespace = self.canonical_elements[type_name]['namespace']
         if type_name in self.definitions:
             return
         if re.fullmatch(IDENT, type_name):
-            matches = self.resolve(type_name, namespace)
+            matches = [self.canonical_elements[type_name]] if type_name in self.canonical_elements else self.resolve(type_name, namespace)
             if len(matches) != 1 or matches[0]["elementType"] != "Перечисление":
                 raise InputError(f"Перечисление {type_name} отсутствует, неоднозначно или не поддерживается")
             element = matches[0]
@@ -161,7 +202,7 @@ class ProjectTypes:
         if not re.fullmatch(rf"{IDENT}\.{IDENT}", type_name):
             raise InputError(f"Генерация типа пока не поддерживается: {type_name}")
         owner, variant = type_name.split(".")
-        matches = self.resolve(owner, namespace)
+        matches = [self.canonical_elements[owner]] if owner in self.canonical_elements else self.resolve(owner, namespace)
         if len(matches) != 1 or matches[0]["elementType"] not in {"Документ", "Справочник"}:
             raise InputError(f"Объект типа {type_name} отсутствует, неоднозначен или не поддерживается")
         element = matches[0]
@@ -172,7 +213,7 @@ class ProjectTypes:
             return
         self.active.add(type_name)
         if variant == "Ссылка":
-            fields = [{"Имя": "Идентификатор", "Тип": "Строка"}]
+            fields = [{"Имя": "Идентификатор", "Тип": self.reference_id_type}]
         elif variant == "ПараметрыЗаписи":
             # Empty test contract: no platform flags or write semantics are invented.
             fields = []
@@ -189,14 +230,22 @@ class ProjectTypes:
             tables = [t for t in element["properties"].get("ТабличныеЧасти", []) if t["Имя"] == variant]
             if len(tables) != 1:
                 raise InputError(f"Табличная часть {type_name} отсутствует или неоднозначна")
-            fields = tables[0].get("Реквизиты", [])
+            fields = [dict(f) for f in tables[0].get("Реквизиты", [])]
         lines, names = ["@Глобально", f"структура {variant}"], set()
         for field in fields:
             name, field_type = field["Имя"], field.get("Тип")
             if not re.fullmatch(IDENT, name) or name in names or not field_type:
                 raise InputError(f"Некорректное поле сгенерированного типа {type_name}: {name}")
             names.add(name)
-            self.require(field_type, element["namespace"])
+            previous = self.namespace, self.imports
+            self.namespace, self.imports = element['namespace'], ()
+            try:
+                self.require(field_type, element['namespace'])
+                field_type = self.canonical_type(field_type)
+            finally:
+                self.namespace, self.imports = previous
+            field = {**field, 'Тип': field_type}
+            fields[fields.index(next(f for f in fields if f['Имя'] == name))] = field
             default = ""
             if "ЗначениеПоУмолчанию" in field:
                 default = " = " + self.literal(field["ЗначениеПоУмолчанию"], field_type)
@@ -206,13 +255,14 @@ class ProjectTypes:
         self.definitions[type_name] = "\n".join(lines + [";", ""])
 
     def claim_owner(self, owner, element):
-        identity = (element["namespace"], owner)
+        identity = (element["namespace"], element["name"])
         if owner in self.owners and self.owners[owner] != identity:
             raise InputError(f"Конфликт кратких имён сгенерированных типов: {owner}")
         self.owners[owner] = identity
 
     def attach_method(self, type_name, method, signature_types):
         self.require(type_name)
+        type_name = self.canonical_type(type_name)
         self.methods[type_name] = self.methods.get(type_name, "") + "@Глобально\n" + method
         self.method_dependencies.setdefault(type_name, []).extend(signature_types)
 
@@ -265,6 +315,12 @@ class ProjectTypes:
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
         if type_name in {"Строка", "Число", "Булево"}:
             return sbsl_literal(value, type_name)
+        if type_name == 'Ууид':
+            import uuid
+            if not isinstance(value, str) or not re.fullmatch(
+                    r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', value):
+                raise InvalidTestError('Ууид требует строку UUID в формате 8-4-4-4-12')
+            return 'новый Ууид(' + sbsl_literal(str(uuid.UUID(value)), 'Строка') + ')'
         if type_name == 'Время':
             match = (re.fullmatch(r'([0-9]{2}):([0-9]{2})(?::([0-9]{2})(?:\.([0-9]{3}))?)?', value)
                      if isinstance(value, str) else None)
@@ -323,21 +379,8 @@ class ProjectTypes:
                     for type_name in types:
                         dependencies.update(re.findall(rf"({IDENT})\.", self.sbsl_type(type_name)))
             graph[owner] = dependencies - {owner}
-        visited, active = set(), set()
-
-        def visit(owner):
-            if owner in active:
-                raise InputError(f"Циклическая зависимость SBSL-модулей: {owner}")
-            if owner in visited:
-                return
-            active.add(owner)
-            for dependency in graph[owner]:
-                visit(dependency)
-            active.remove(owner)
-            visited.add(owner)
-
-        for owner in grouped:
-            visit(owner)
+        from .runtime import check_dependency_cycles
+        check_dependency_cycles(graph)
         for owner, definitions in grouped.items():
             imports = [f"#требуется {dep}.sbsl" for dep in sorted(graph[owner])]
             (directory / f"{owner}.sbsl").write_text("\n".join(imports + definitions), encoding="utf-8")

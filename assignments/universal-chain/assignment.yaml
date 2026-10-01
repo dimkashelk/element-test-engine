@@ -1,0 +1,45 @@
+name: Универсальная цепочка зависимостей
+checks:
+- id: original
+  type: runtime
+  points: 1
+  target:
+    module: Main
+    namespace: A
+    method: Run
+  args:
+  - 4
+  trace: true
+  expected: 23
+- id: wrong_expectation
+  type: runtime
+  points: 1
+  target:
+    module: Main
+    namespace: A
+    method: Run
+  args:
+  - 4
+  trace: true
+  expected: 24
+- id: unresolved
+  type: runtime
+  points: 1
+  target:
+    module: Main
+    namespace: A
+    method: Unknown
+  args: []
+  trace: true
+  expected: 0
+- id: after_failure
+  type: runtime
+  points: 1
+  target:
+    module: Main
+    namespace: A
+    method: Run
+  args:
+  - 1
+  trace: true
+  expected: 14

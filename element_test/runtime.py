@@ -24,21 +24,27 @@ from .call_types import infer_receiver_type, known_receiver_type, receiver_objec
 
 REPO = Path(__file__).resolve().parent.parent
 # Runtime constructors that need no YAML contract. Keep this allowlist explicit.
-RUNTIME_CONSTRUCTORS = {'ИсключениеНедопустимоеСостояние'}
+RUNTIME_CONSTRUCTORS = {'ИсключениеНедопустимоеСостояние', 'ИсключениеВалидации',
+                        'ИсключениеНетАктивнойТранзакции', 'Стд::ИсключениеВалидации',
+                        'Стд::ИсключениеНетАктивнойТранзакции', 'Ууид'}
 
 
 def decode_output(text):
     """executor prints the entry method return value after its console output."""
-    calls = []
-    while text.startswith('ELEMENT_CALL '):
-        text = text[len('ELEMENT_CALL '):]
+    calls, trace = [], []
+    text = text.lstrip()
+    while text.startswith(('ELEMENT_CALL ', 'ELEMENT_TRACE ')):
+        is_trace = text.startswith('ELEMENT_TRACE ')
+        text = text[len('ELEMENT_TRACE ' if is_trace else 'ELEMENT_CALL '):]
         call, end = json.JSONDecoder().raw_decode(text)
-        calls.append(call)
+        (trace if is_trace else calls).append(call)
         text = text[end:].lstrip()
     value, end = json.JSONDecoder().raw_decode(text.lstrip())
     remainder = text.lstrip()[end:].strip()
     if remainder not in {"", "0", "1"}:
         raise InputError("Runtime вывел посторонние данные после JSON")
+    if trace:
+        value['trace'] = trace
     if value.pop('_captureCalls', False):
         observe = value.pop('_observeCallArguments', None)
         if observe is not None:
@@ -63,8 +69,8 @@ def execute_engine(command, model, assignment, temporary):
         raise InputError(f"Некорректный JSON движка: {result.stdout[:1000]}") from exc
 
 
-def _selected_method(source, name, *, allow_void=False):
-    methods, _, errors = parse_module(source)
+def _selected_method(source, name, *, allow_void=False, parsed=None):
+    methods, _, errors = parse_module(source) if parsed is None else parsed
     if errors:
         raise UnsupportedSyntaxError("Некорректный XBSL: " + "; ".join(errors))
     matches = [method for method in methods if method.name == name]
@@ -91,17 +97,17 @@ def method_closure(source, name):
     if errors:
         raise UnsupportedSyntaxError("Некорректный XBSL: " + "; ".join(errors))
     available = {method.name for method in parsed}
-    visited, methods = set(), []
-    def visit(current):
+    visited, methods, pending = set(), [], [name]
+    while pending:
+        current = pending.pop()
         if current in visited:
-            return
+            continue
         visited.add(current)
-        method, parameters = extract_method(source, current, allow_void=True)
+        node, parameters = _selected_method(source, current, allow_void=True, parsed=(parsed, None, errors))
+        method = source[node.start:node.end]
         methods.append((method, parameters))
-        for owner, called in method_calls(method, parse_module(method)[0][0]):
-            if owner is None and called in available:
-                visit(called)
-    visit(name)
+        pending.extend(reversed([called for owner, called in method_calls(method, parse_module(method)[0][0])
+                                 if owner is None and called in available]))
     return methods
 
 
@@ -111,6 +117,7 @@ def project_method_closure(root, model, module, name):
     project = model.get("properties", {})
     cache = {}
     parsed = {}
+    parse_results = {}
     def source_of(item):
         path = item["sourceFile"]
         if path not in cache:
@@ -119,29 +126,34 @@ def project_method_closure(root, model, module, name):
     def methods_of(item):
         path = item["sourceFile"]
         if path not in parsed:
-            parsed[path] = parse_module(source_of(item))[0]
+            parse_results[path] = parse_module(source_of(item))
+            parsed[path] = parse_results[path][0]
         return parsed[path]
     seen, result, aliases, rewrites, dependencies = set(), [], {}, {}, {}
     reserved = {m["name"] for m in modules} | {e["name"] for e in model.get("elements", [])}
     def alias_for(item):
         path = item["sourceFile"]
         if path not in aliases:
-            number = len(aliases) + 1
-            alias = f"ТестВнешнийМодуль{number}"
+            from hashlib import sha256
+            alias = 'ТестВнешнийМодуль' + sha256(path.encode()).hexdigest()[:16]
             while alias in reserved:
-                number += 1
-                alias = f"ТестВнешнийМодуль{number}"
+                alias += '_'
             aliases[path] = alias
             reserved.add(alias)
         return aliases[path]
-    def visit(item, current):
+    pending = [(module, name)]
+    while pending:
+        item, current = pending.pop()
         key = (item["sourceFile"], current)
-        if key in seen: return
+        if key in seen:
+            continue
         seen.add(key)
         source = source_of(item)
-        node, types = _selected_method(source, current, allow_void=True)
+        methods_of(item)
+        node, types = _selected_method(source, current, allow_void=True, parsed=parse_results[item['sourceFile']])
         method = source[node.start:node.end]
         result.append((item, method, types))
+        next_methods = []
         names = {m.name for m in methods_of(item)}
         imports = item.get("imports", [])
         bindings = method_local_bindings(source, node)
@@ -161,9 +173,7 @@ def project_method_closure(root, model, module, name):
                 destinations = [candidate for candidate in receiver_object_modules(inferred, item, model)
                                 if called in callable_names(candidate)] if inferred and called else []
                 if len(destinations) == 1:
-                    if destinations[0]['sourceFile'] != item['sourceFile']:
-                        raise InputError("Внешний объектный метод требует собственный context")
-                    visit(item, called)
+                    next_methods.append((destinations[0], called))
                     continue
                 if len(destinations) > 1:
                     raise InputError(f"Неоднозначный вызов: {called}")
@@ -173,6 +183,13 @@ def project_method_closure(root, model, module, name):
                         f"{source.count(chr(10), 0, call.start) + 1}")
                 continue
             if owner and method_binding_visible(bindings, owner.split(".", 1)[0], owner_start):
+                inferred = infer_receiver_type(source, node, call, item, model, parsed, cache, bindings)
+                destinations = [candidate for candidate in receiver_object_modules(inferred, item, model)
+                                if called in callable_names(candidate)] if inferred else []
+                if len(destinations) > 1:
+                    raise InputError(f"Неоднозначный объектный вызов: {called}")
+                if destinations:
+                    next_methods.append((destinations[0], called))
                 continue
             candidates = []
             if owner is None:
@@ -209,27 +226,38 @@ def project_method_closure(root, model, module, name):
                 other = next(iter(unique.values()))
                 if other["sourceFile"] != item["sourceFile"]:
                     if other.get("moduleType") == "object":
-                        raise InputError("Внешний объектный метод требует собственный context")
+                        raise UnsupportedSyntaxError("Статический вызов объектного метода требует получатель")
                     alias = alias_for(other)
                     dependencies.setdefault(item["sourceFile"], set()).add(other["sourceFile"])
                     if owner is not None:
                         rewrites.setdefault(key, []).append((owner_start - node.start,
                                                                owner_end - node.start, alias))
-                visit(other, called)
-    visit(module, name)
-    active, complete = set(), set()
-    def check_cycles(path):
-        if path in active:
-            raise InputError("Циклическая зависимость SBSL-модулей: " + path)
-        if path in complete:
-            return
-        active.add(path)
-        for dependency in dependencies.get(path, ()):
-            check_cycles(dependency)
-        active.remove(path)
-        complete.add(path)
-    check_cycles(module["sourceFile"])
+                next_methods.append((other, called))
+        pending.extend(reversed(next_methods))
+    check_dependency_cycles(dependencies, [module['sourceFile']])
     return result, aliases, rewrites, dependencies
+
+
+def check_dependency_cycles(graph, roots=None):
+    """Iterative DFS: dependency depth is bounded by resources, never Python's stack."""
+    active, complete = set(), set()
+    for root in graph if roots is None else roots:
+        if root in complete:
+            continue
+        active.add(root)
+        stack = [(root, iter(graph.get(root, ())))]
+        while stack:
+            owner, children = stack[-1]
+            dependency = next(children, None)
+            if dependency is None:
+                stack.pop()
+                active.remove(owner)
+                complete.add(owner)
+            elif dependency in active:
+                raise InputError('Циклическая зависимость SBSL-модулей: ' + dependency)
+            elif dependency not in complete:
+                active.add(dependency)
+                stack.append((dependency, iter(graph.get(dependency, ()))))
 
 
 def constructor_types(method):
@@ -309,195 +337,12 @@ def _project_body_type(contracts, type_name):
 
 
 def prepare_script(root, model, check, sandbox):
-    """Copy the original method and generate only its required data contracts."""
-    source_model = model
-    root, model = select_check_project(root, model, check)
-    target = check.get("target", {})
-    modules = [m for m in model["modules"] if m["name"] == target.get("module")
-               and ("namespace" not in target or m["namespace"] == target["namespace"])]
-    if len(modules) != 1:
-        raise InvalidTestError("Целевой модуль отсутствует или неоднозначен")
-    module = modules[0]
-    original = (root / module["sourceFile"]).read_text(encoding="utf-8-sig")
-    context = check.get("context")
-    object_module = module.get("moduleType") == "object"
-    is_object = "context" in check
-    if is_object and not object_module:
-        raise InvalidTestError("context допустим только для модуля Объект")
-    if is_object and not isinstance(context, dict):
-        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
-    method, types = extract_method(original, target.get("method"), allow_void=is_object)
-    if not is_object and re.search(r"\bэтот\b", mask_noncode(method)):
-        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
-    args = check.get("args", [])
-    if len(args) != len(types):
-        raise InvalidTestError("Количество аргументов не совпадает с сигнатурой")
-    runtime_model = combined_library_symbols(root, model, source_model)
-    contracts = ProjectTypes(runtime_model, module["namespace"], module.get("imports", []))
-    contracts.local_structures = scalar_structures(original)
-    if is_object:
-        # Inline declarations inside generated object modules need their own scope contract.
-        contracts.local_structures = {}
-    contracts.local_source = contracts.current_source = module["sourceFile"]
-    mocks = check.get("mocks", {})
-    if not isinstance(mocks, dict) or set(mocks) - {"objects", "registers", "queries"}:
-        raise InvalidTestError("Поддерживаются mocks.objects, mocks.registers, mocks.queries")
-    contracts.configure_references(mocks.get("objects", {}))
-    platform = PlatformMocks(contracts, mocks, check)
-    if not isinstance(check.get('captureException', False), bool):
-        raise InvalidTestError('captureException должен быть Булево')
-    signature = parse_module(method)[0][0]
-    return_type = signature.return_type(method)
-    if not is_object and return_type == "ничто":
-        raise InputError("Для метода без результата требуется объектный context")
-    reachable, aliases, call_rewrites, module_dependencies = project_method_closure(
-        root, runtime_model, module, target.get("method"))
-    methods = [(m, types) for owner, m, types in reachable if owner["sourceFile"] == module["sourceFile"]]
-    if not is_object and any(re.search(r"\bэтот\b", call_code(m)) for m, _ in methods):
-        raise InvalidTestError("Для объектного метода требуется context с начальными полями")
-    signature_types = []
-    module_type_dependencies = {}
-    for owner, dependency, parameter_types in reachable:
-        contracts.current_source = owner["sourceFile"]
-        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
-        declaration = parse_module(dependency)[0][0]
-        signature_types.extend(parameter_types)
-        if declaration.return_type(dependency) and declaration.return_type(dependency) != "ничто":
-            signature_types.append(declaration.return_type(dependency))
-        for type_name in parameter_types + ([declaration.return_type(dependency)] if declaration.return_type(dependency) and declaration.return_type(dependency) != "ничто" else []):
-            contracts.require(type_name)
-            module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
-    body_types = []
-    for owner, dependency, _ in reachable:
-        contracts.current_source = owner["sourceFile"]
-        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
-        for _, _, type_name in constructor_types(dependency):
-            if type_name in RUNTIME_CONSTRUCTORS:
-                continue
-            contracts.require(type_name)
-            body_types.append(type_name)
-            module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
-        for _, _, type_name in body_type_references(dependency):
-            if _project_body_type(contracts, type_name):
-                contracts.require(type_name)
-                body_types.append(type_name)
-                module_type_dependencies.setdefault(owner["sourceFile"], []).append(contracts.sbsl_type(type_name))
-    adapted = []
-    external = {}
-    for owner, dependency, _ in reachable:
-        contracts.current_source = owner["sourceFile"]
-        contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
-        declaration = parse_module(dependency)[0][0]
-        # Adapt declarations and resolved constructor type tokens only.
-        replacements = [(*declaration.parameters_span, ",".join(
-            p.partition(":")[0] + ":" + contracts.sbsl_type(p.partition(":")[2])
-            for p in declaration.parameters(dependency)))]
-        if declaration.return_span:
-            replacements.append((*declaration.return_span, contracts.sbsl_type(declaration.return_type(dependency))))
-        replacements.extend((start, end, contracts.sbsl_type(type_name))
-                            for start, end, type_name in constructor_types(dependency)
-                            if contracts.sbsl_type(type_name) != dependency[start:end])
-        replacements.extend((start, end, contracts.sbsl_type(dependency[start:end]))
-                            for start, end, type_name in body_type_references(dependency)
-                            if _project_body_type(contracts, type_name)
-                            and contracts.sbsl_type(dependency[start:end]) != dependency[start:end])
-        replacements.extend(call_rewrites.get((owner["sourceFile"], declaration.name), []))
-        for start, end, replacement in sorted(replacements, reverse=True):
-            dependency = dependency[:start] + replacement + dependency[end:]
-        compiled = platform.adapt(dependency)
-        if owner["sourceFile"] == module["sourceFile"]:
-            adapted.append(compiled)
-        else:
-            alias = aliases[owner["sourceFile"]]
-            external.setdefault(alias, []).append(compiled)
-    contracts.namespace, contracts.imports = module["namespace"], module.get("imports", [])
-    contracts.current_source = module["sourceFile"]
-    calls = platform.finish()
-    method = "\n".join(list(contracts.required_structures.values()) + adapted)
-    call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
-    setup = ""
-    runtime_metadata = ''
-    expression = target["method"] + '(' + call + ')'
-    observed = "Контекст"
-    if "observe" in check:
-        fields = check["observe"]
-        if not is_object or not isinstance(fields, list) or not fields or any(not isinstance(f, str) for f in fields):
-            raise InvalidTestError("observe требует объектный context и непустой список полей")
-        contracts.require(module["name"])
-        known = {f["Имя"] for f in contracts.fields[module["name"]]}
-        if len(set(fields)) != len(fields) or set(fields) - known:
-            raise InvalidTestError("observe содержит неизвестные или повторяющиеся поля")
-        observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
-    if is_object:
-        object_type = module["name"]
-        if mocks.get('registers'):
-            # A handler needs the register, whose dimensions need the owner's
-            # reference. Put executable context in a separate module to keep
-            # SBSL imports acyclic without changing the handler body.
-            contracts.require(object_type)
-            context_type = 'ТестКонтекст.Объект'
-            contracts.fields[context_type] = contracts.fields[object_type]
-            contracts.definitions[context_type] = contracts.definitions[object_type]
-            object_type = context_type
-        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types + body_types)
-        contracts.method_dependencies[object_type].extend(
-            [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
-            + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
-        setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
-        if 'runtimeDateTime' in check:
-            field = check['runtimeDateTime']
-            date_fields = {f['Имя'] for f in contracts.fields[object_type] if f['Тип'] == 'ДатаВремя'}
-            if not isinstance(field, str) or field not in date_fields or field in context:
-                raise InvalidTestError('runtimeDateTime требует поле ДатаВремя, отсутствующее в context')
-            setup += ('    Контекст.' + field + ' = ДатаВремя.Сейчас(ЧасовойПояс{UTC})\n'
-                      '    знч ВремяТеста = Контекст.' + field + '\n')
-            runtime_metadata = ', "runtimeDateTime": ВремяТеста'
-        expression = 'Контекст.' + expression
-        method = ""
-    if return_type and return_type != "ничто":
-        invocation = '    знч Результат = ' + expression + '\n'
-        actual = '{"return": Результат, "context": ' + observed + '}' if is_object else 'Результат'
-    else:
-        invocation = '    ' + expression + '\n'
-        actual = observed
-    if platform.capture:
-        actual = '{"context": ' + actual + ', "calls": ' + calls + '}'
-    if check.get('captureException', False):
-        if not is_object or (return_type and return_type != 'ничто'):
-            raise InvalidTestError('captureException поддерживает только объектный метод без результата')
-        invocation = ('    пер ИсключениеРезультат: Объект? = Неопределено\n    попытка\n'
-                      + '    ' + invocation + '    поймать Ошибка: Исключение\n'
-                      + '        ИсключениеРезультат = {"type": Ошибка.ПолучитьТип().ВСтроку(), "message": Ошибка.Описание}\n'
-                      + '    ;\n')
-        actual = '{"result": ' + actual + ', "exception": ИсключениеРезультат}'
-    imports = contracts.write(sandbox)
-    generated_owners = {name.split(".")[0] for name in contracts.definitions}
-    for alias, bodies in external.items():
-        if (sandbox / (alias + ".sbsl")).exists():
-            raise InputError("Конфликт имени импортированного модуля: " + alias)
-        path = next(path for path, name in aliases.items() if name == alias)
-        needed = [f"#требуется {aliases[other]}.sbsl"
-                  for other in sorted(module_dependencies.get(path, ()))]
-        type_owners = set()
-        for canonical in module_type_dependencies.get(path, ()):
-            type_owners.update(re.findall(rf"({IDENT})\.", canonical))
-            type_owners.update(enum for enum in contracts.enums
-                               if re.search(rf"(?<!\w){re.escape(enum)}(?!\w)", canonical))
-        needed.extend(f"#требуется {owner}.sbsl" for owner in sorted(type_owners & generated_owners))
-        (sandbox / (alias + ".sbsl")).write_text(
-            "\n".join(needed + ["@Глобально\n" + body for body in bodies]), encoding="utf-8")
-    if external:
-        imports = "\n".join(f"#требуется {alias}.sbsl" for alias in sorted(external)) + "\n" + imports
-    if 'runtimeDateTime' in check and not is_object:
-        raise InvalidTestError('runtimeDateTime требует объектный context')
-    metadata = runtime_metadata
-    if platform.capture:
-        metadata += ', "_captureCalls": Истина, "_captureException": ' + ('Истина' if check.get('captureException') else 'Ложь')
-        if platform.observe is not None:
-            metadata += ', "_observeCallArguments": ' + contracts.literal(platform.observe, 'Массив<Строка>')
-    script = sandbox / "test.sbsl"
-    script.write_text(imports + "\n" + method + '\n\nметод Скрипт()\n' + setup + invocation
-                      + '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": ' + actual + metadata + '}))\n;\n', encoding="utf-8")
+    """Compatibility facade: every CLI and batch runtime uses the same planner."""
+    from .execution_plan import plan_execution
+    from .renderer import render_plan
+    plan = plan_execution(root, model, check)
+    script = render_plan(plan, sandbox)
+    (sandbox / "execution-plan.json").write_text(plan.to_json(), encoding="utf-8")
     return script
 
 
@@ -514,12 +359,12 @@ def sbsl_literal(value, type_name):
     raise InvalidTestError(f"Вход не соответствует типу {type_name}")
 
 
-def run_pure(root, model, check, temporary):
+def run_pure(root, model, check, temporary, *, plan_sink=None):
     """Run one standalone method in Docker; return evidence, never award points."""
     def status(name, message, reason):
         return {"status": name, "message": message, "reasonCode": reason}
 
-    if 'integration' in check:
+    if 'integration' in check or isinstance(check.get('storage'), dict) and check['storage'].get('backend') == 'postgres':
         return status("UNSUPPORTED", "Интеграционный контракт требует отдельного run_integration и --integration", "unsupported_contract")
     if not shutil.which("docker"):
         return status("UNSUPPORTED", "Для runtime-тестов требуется Docker", "backend_unavailable")
@@ -540,6 +385,8 @@ def run_pure(root, model, check, temporary):
         generated = sandbox / "generated"
         generated.mkdir()
         script = prepare_script(root, model, check, generated)
+        if plan_sink is not None:
+            plan_sink.append(json.loads((generated / 'execution-plan.json').read_text()))
         home = Path(os.environ.get("ELEMENT_SCRIPT_HOME", REPO / runtime["directory"])).resolve()
         image = os.environ.get("ELEMENT_TEST_DOCKER_IMAGE", runtime["image"])
         command = ["docker", "create", "--name", container, "--pull", "never",
@@ -582,12 +429,22 @@ def run_pure(root, model, check, temporary):
         if process.returncode in {125, 126, 127}:
             return status("UNSUPPORTED", (stderr or "Docker runtime недоступен")[:4000], "backend_unavailable")
         if process.returncode:
+            if any(marker in stderr + stdout for marker in ('Ошибки компиляции скрипта:', 'Script compilation error:')):
+                return status('UNSUPPORTED', (stderr or stdout)[:4000], 'unsupported_syntax')
             return status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000], "execution_error")
         try:
             decoded = decode_output(stdout)
         except (InputError, ValueError, KeyError, TypeError):
             return status("ERROR", "Runtime вернул некорректный результат", "execution_error")
+        if decoded.get('status') == 'UNSUPPORTED':
+            return status('UNSUPPORTED', 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
         evidence = {"status": "EXECUTED", "actual": decoded['actual']}
+        if 'trace' in decoded:
+            evidence['trace'] = decoded['trace']
+        if 'storageTrace' in decoded:
+            evidence['storageTrace'] = decoded['storageTrace']
+        if 'storageDiagnostics' in decoded:
+            evidence['storageDiagnostics'] = decoded['storageDiagnostics']
         if 'runtimeDateTime' in check:
             evidence['runtimeDateTime'] = decoded.get('runtimeDateTime')
         return evidence

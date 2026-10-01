@@ -38,8 +38,8 @@ class PracticalPhoneTest(unittest.TestCase):
             with patch("element_test.runtime.shutil.which", return_value="docker"):
                 execution = run_pure(root, model, boundary, temp)
             self.assertEqual((execution["status"], execution["reasonCode"]),
-                             ("UNSUPPORTED", "unsupported_contract"))
-            self.assertIn("Ууид", execution["message"])
+                             ("UNSUPPORTED", "unsupported_syntax"))
+            self.assertIn("Запрос", execution["message"])
 
     @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
     def test_reference_and_mutated_phone_rule(self):

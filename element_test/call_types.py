@@ -6,7 +6,7 @@ unknown; a matching method name elsewhere in the project proves nothing.
 """
 import re
 
-from .indexer import IDENT, call_code, lex, method_binding_visible, split_parameters
+from .indexer import IDENT, call_code, lex, method_binding_visible, split_parameters, parse_module
 from .resolution import method_visible, resolve_call_modules, resolve_symbols, visible_from
 
 
@@ -72,7 +72,24 @@ def _local_type(source, method, name, offset, bindings, module, model):
                 else:
                     found.append(None)
             else:
-                found.append(None)
+                value = tokens[index + 3].value
+                candidates = [n for n in parse_module(source)[0] if n.name == value]
+                owner = _element(model, module['name'], module)
+                if value in {'ПолучитьСсылку', 'СоздатьОбъект'} and owner and owner['elementType'] in {'Документ', 'Справочник'}:
+                    found.append(owner['name'] + ('.Ссылка' if value == 'ПолучитьСсылку' else '.Объект'))
+                elif len(candidates) == 1 and tokens[index + 4].value == '(':
+                    found.append(candidates[0].return_type(source))
+                elif index + 6 < len(tokens) and tokens[index + 4].value == '.' and tokens[index + 5].value in {'ПолучитьСсылку', 'СоздатьОбъект'}:
+                    manager = _element(model, value, module)
+                    found.append(('::'.join(filter(None, (manager['namespace'], manager['name'])))
+                                  + ('.Ссылка' if tokens[index + 5].value == 'ПолучитьСсылку' else '.Объект'))
+                                 if manager and not method_binding_visible(bindings, value, method.header_end + tokens[index + 3].start)
+                                 else None)
+                elif index + 6 < len(tokens) and tokens[index + 4].value == '.' and tokens[index + 5].value == 'ЗагрузитьОбъект':
+                    receiver = _local_type(source, method, value, method.header_end + tokens[index + 3].start, bindings, module, model)
+                    found.append(receiver[:-len('Ссылка')] + 'Объект?' if receiver and receiver.endswith('.Ссылка') else None)
+                else:
+                    found.append(None)
         else:
             found.append(None)
     # Reused names and shadowing need a full scoped data-flow proof. A
@@ -92,6 +109,11 @@ def _element(model, owner, module):
 def _field_type(model, type_name, field, module):
     owner, dot, variant = type_name.partition('.')
     element = _element(model, owner, module)
+    if element and variant == 'НаборЗаписей':
+        if field == 'Фильтр':
+            return owner + '.ФильтрНабора'
+        if field == 'Записи':
+            return 'Массив<' + owner + '.Запись>'
     if element is None or (dot and variant not in {'Объект', 'Данные', 'Ссылка'}):
         return None
     properties = element.get('properties', {})
@@ -145,6 +167,12 @@ def infer_receiver_type(source, method, call, module, model, declarations, sourc
                 return None
             called = prefix[-1].value
             if len(prefix) >= 2 and prefix[-2].value == '.':
+                if called in {'ПолучитьСсылку', 'СоздатьОбъект'}:
+                    manager_name = _spelling(prefix[:-2])
+                    manager = _element(model, manager_name, module)
+                    if manager and not method_binding_visible(bindings, manager_name, offset):
+                        return ('::'.join(filter(None, (manager['namespace'], manager['name'])))
+                                + ('.Ссылка' if called == 'ПолучитьСсылку' else '.Объект'))
                 receiver = infer(prefix[:-2])
                 if receiver:
                     receiver = receiver.rstrip('?')
@@ -172,6 +200,9 @@ def infer_receiver_type(source, method, call, module, model, declarations, sourc
                 return None
             # Same-module and explicitly addressed static methods.
             if len(prefix) == 1:
+                element = _element(model, module['name'], module)
+                if called in {'ПолучитьСсылку', 'СоздатьОбъект'} and element and element['elementType'] in {'Справочник', 'Документ'}:
+                    return element['name'] + ('.Ссылка' if called == 'ПолучитьСсылку' else '.Объект')
                 local = [node for node in declarations.get(module['sourceFile'], ()) if node.name == called]
                 if len(local) == 1:
                     return local[0].return_type(source)

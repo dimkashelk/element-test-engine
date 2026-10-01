@@ -1,0 +1,277 @@
+name: Транзакции и исключения — renamed
+checks:
+- id: commit
+  type: runtime
+  points: 2
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Контрагенты
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 2.5
+        Позиции:
+        - Итого: 2.5
+    - type: Учет::История
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Итого: 2.5
+    - type: Учет::Заявка
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 5.0
+        Позиции:
+        - Итого: 5.0
+- id: late_rollback
+  type: runtime
+  points: 2
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 2
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result: null
+      exception:
+        type: ИсключениеВалидации
+        message: late dependency
+    storage: []
+- id: caught_inside
+  type: runtime
+  points: 2
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 3
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Контрагенты
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 2.5
+        Позиции:
+        - Итого: 2.5
+    - type: Учет::История
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Итого: 2.5
+    - type: Учет::Заявка
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 5.0
+        Позиции:
+        - Итого: 5.0
+- id: early_return
+  type: runtime
+  points: 2
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 1
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Контрагенты
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 2.5
+        Позиции:
+        - Итого: 2.5
+- id: independent_wrong_amount
+  type: runtime
+  points: 1
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Контрагенты
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 19
+        Позиции:
+        - Итого: 2.5
+    - type: Учет::История
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Итого: 2.5
+    - type: Учет::Заявка
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 5.0
+        Позиции:
+        - Итого: 5.0
+- id: unsupported_source_nesting
+  type: runtime
+  points: 1
+  target:
+    module: Поток
+    namespace: Entry
+    method: Nested
+  args: []
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected: null
+- id: after_unavailable
+  type: runtime
+  points: 1
+  target:
+    module: Поток
+    namespace: Entry
+    method: Apply
+  args:
+  - 12345678-1234-4234-8234-123456789abc
+  - valid
+  - 2.5
+  - 0
+  captureException: true
+  timeout: 15s
+  storage:
+    backend: memory
+    idType: Ууид
+    transaction: false
+    registers:
+    - Учет::История
+  expected:
+    result:
+      result:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+      exception: null
+    storage:
+    - type: Учет::Контрагенты
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 2.5
+        Позиции:
+        - Итого: 2.5
+    - type: Учет::История
+      id: "{\n  \"Key\" : \"bucket\"\n}"
+      value:
+      - Key: bucket
+        Итого: 2.5
+    - type: Учет::Заявка
+      id: 12345678-1234-4234-8234-123456789abc
+      value:
+        Ссылка:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Название: valid
+        Итого: 5.0
+        Позиции:
+        - Итого: 5.0
