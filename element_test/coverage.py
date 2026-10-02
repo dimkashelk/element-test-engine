@@ -55,6 +55,8 @@ def inventory(root, model, assignments=(), evidence=()):
                     elif isinstance(handler['type'],str) and handler['type'].startswith('КомандаСПараметром<'):
                         argument=handler['type'][len('КомандаСПараметром<'):-1]
                         status='MATCH' if [p['type'] for p in method['parameters']]==[handler['type'],argument] and method['returnType'] in {None,'ничто'} else 'SIGNATURE_MISMATCH'
+                    elif handler['type']=='Кнопка':
+                        status='MATCH' if [p['type'] for p in method['parameters']]==['Кнопка','СобытиеПриНажатии'] and method['returnType'] in {None,'ничто'} else 'SIGNATURE_MISMATCH'
                     else:status='SIGNATURE_CONTRACT_REQUIRED'
                     checks.append({**handler,'status':status})
                 item['formChecks']={'fields':form['fields'],'objectType':form['objectType'],

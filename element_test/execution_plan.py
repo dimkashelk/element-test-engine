@@ -37,6 +37,7 @@ class SourceSymbol:
     start: int
     end: int
     annotations: tuple = ()
+    annotation_ranges: list = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -124,12 +125,16 @@ class ExecutionPlan:
     queries: list = field(default_factory=list)
     record_sets: list = field(default_factory=list)
     form: dict = field(default_factory=dict)
+    constants: dict = field(default_factory=dict)
+    clock: dict = field(default_factory=dict)
+    executor_locale: str = None
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.model.get("compatibilityVersion", "9.0"),
                 "entry": asdict(self.entry.identity),
                 "symbols": [{"identity": asdict(s.identity), "start": s.start, "end": s.end,
-                             "source": s.source, "parameterTypes": s.parameter_types, "annotations": list(s.annotations)} for s in self.symbols],
+                             "source": s.source, "parameterTypes": s.parameter_types, "annotations": list(s.annotations),
+                             "annotationRanges": s.annotation_ranges} for s in self.symbols],
                 "dependencies": {k: sorted(v) for k, v in self.module_dependencies.items()},
                 "bindings": [asdict(b) for b in self.bindings],
                 "transforms": [{"sourceFile": path, "method": name, "spans": spans}
@@ -141,6 +146,7 @@ class ExecutionPlan:
                 "queries": self.queries,
                 "recordSets": self.record_sets,
                 "formContext": self.form,
+                "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
                 "observations": self.observations, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -285,15 +291,22 @@ def plan_execution(root, source_model, check):
         identity = SymbolIdentity(provider, project_name, owner['namespace'], owner['name'], node.name,
                                   owner['sourceFile'], version)
         annotation_contract = {'Глобально', 'ВПроекте', 'ВПодсистеме', 'Локально', 'Обработчик',
-                               'НаСервере', 'НаКлиенте', 'ИменованныеПараметры'}
+                               'НаСервере', 'НаКлиенте', 'ДоступноСКлиента', 'ИменованныеПараметры'}
         unsupported = set(absolute.annotations) - annotation_contract
         if unsupported:
             from .yaml_io import InputError
             raise InputError('Неподдержанная аннотация достижимого метода: ' + ', '.join(sorted(unsupported)))
-        symbols.append(SourceSymbol(identity, owner, text, parameters, absolute.start, absolute.end, tuple(absolute.annotations)))
+        complete_source = (root / path).read_text(encoding='utf-8-sig')
+        prefix = complete_source[:absolute.start]
+        attached = re.search(r'(?:@[\w]+[^\n]*\n\s*)+$', prefix)
+        annotation_ranges = [{'name': m[1], 'start': attached.start() + m.start(),
+                              'end': attached.start() + m.end()}
+                             for m in re.finditer(r'@(\w+)', attached[0])] if attached else []
+        symbols.append(SourceSymbol(identity, owner, text, parameters, absolute.start, absolute.end,
+                                    tuple(absolute.annotations), annotation_ranges))
     plan = ExecutionPlan(root, runtime_model, check, module, original, symbols[0], symbols,
                          aliases, rewrites, dependencies,
-                         observations={k: check[k] for k in ("observe", "captureCalls", "captureException", "trace") if k in check})
+                         observations={k: check[k] for k in ("observe", "captureCalls", "captureException", "trace", "snapshotArgs", "snapshotConstants") if k in check})
     if sequence:
         plan.sequence = sequence
     if not isinstance(check.get('trace', False), bool):
@@ -319,6 +332,8 @@ def plan_execution(root, source_model, check):
     from .source_contracts import bind_source_contracts, bind_system_ids
     from .form_context import prepare_form, bind_form_call
     prepare_form(plan)
+    from .session_contracts import prepare_session, bind_session_call
+    prepare_session(plan)
     bind_source_contracts(plan)
     registry = CapabilityRegistry()
     reachable_names = {s.identity.declaration for s in symbols}
@@ -351,6 +366,10 @@ def plan_execution(root, source_model, check):
                        or any(s.owner['sourceFile'] == dest['sourceFile'] and s.identity.declaration == call.name
                               for dest in destinations for s in symbols))
             callback = owner is None and method_callable_binding_visible(callable_bindings, call.name, call.start)
+            session_binding = bind_session_call(plan, symbol, node, call, project=project)
+            if session_binding:
+                plan.bindings.append(session_binding)
+                continue
             if not project and owner in {'Транзакции', 'Стд::БазаДанных::Транзакции'}:
                 continue  # Bound to verified resource/API spans by bind_source_contracts.
             receiver = owner
@@ -428,7 +447,7 @@ def bind_types(plan):
         for symbol in plan.symbols:
             c.namespace, c.imports = symbol.owner['namespace'], symbol.owner.get('imports', [])
             for typ in symbol.parameter_types:
-                if typ == 'ОбычнаяКоманда' or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', typ):
+                if typ in {'ОбычнаяКоманда', 'Кнопка', 'СобытиеПриНажатии'} or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', typ):
                     if c.resolve(typ.split('<')[0]):
                         raise UnsupportedSyntaxError('Конфликт проектного и системного типа команды')
                     if '<' in typ:
@@ -467,6 +486,8 @@ def bind_types(plan):
     c.namespace, c.imports = plan.module['namespace'], plan.module.get('imports', [])
     from .form_context import generate_form_types
     generate_form_types(plan, c)
+    from .session_contracts import generate_session_types
+    generate_session_types(plan, c)
     for typ,fields in c.fields.items():
         for f in fields:
             plan.type_requirements.append({'owner': typ, 'field': f['Имя'], 'type': f['Тип']})

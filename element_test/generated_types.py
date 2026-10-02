@@ -355,6 +355,15 @@ class ProjectTypes:
             if name not in self.enums[type_name]:
                 raise InvalidTestError(f"Неизвестный элемент {type_name}: {value}")
             return f"{type_name}.{name}"
+        mapping = re.fullmatch(r'Соответствие<(.+)>', type_name)
+        if mapping:
+            key_type, value_type = [p.strip() for p in split_parameters(mapping[1])]
+            if key_type != 'Строка' or not isinstance(value, dict):
+                raise InvalidTestError('Соответствие fixture требует строковые ключи и объект')
+            if not value:
+                return 'новый ' + self.sbsl_type(type_name) + '()'
+            return 'новый ' + self.sbsl_type(type_name) + '({' + ', '.join(
+                self.literal(k, key_type) + ': ' + self.literal(v, value_type) for k, v in value.items()) + '})'
         collection = re.fullmatch(r'(Массив|ЧитаемыйМассив|Обходимое)<(.+)>', type_name)
         if collection:
             if not isinstance(value, list):

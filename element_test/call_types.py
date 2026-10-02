@@ -39,6 +39,8 @@ def _static_result(prefix, module, model, bindings, offset):
     found = [(m, n) for m in destinations for n in m.get('methods', [])
              if n['name'] == method and method_visible(SimpleNamespace(annotations=n['annotations']), module, m)]
     if len(found) != 1:
+        if owner in {'Дата', 'Время', 'ДатаВремя'} and method == 'Сейчас' and not _element(model, owner, module):
+            return owner
         return None
     destination, declaration = found[0]
     result = declaration.get('returnType')
@@ -118,8 +120,10 @@ def _local_type(source, method, name, offset, bindings, module, model):
                         if part.value in {'(', ';', '\n'}:
                             break
                         prefix.append(part)
-                    found.append(_static_result(prefix, module, model, bindings,
-                                                method.header_end + tokens[index + 3].start))
+                    at = method.header_end + tokens[index + 3].start
+                    found.append(_local_type(source, method, value, at, bindings, module, model)
+                                 if len(prefix) == 1 and value != name else
+                                 _static_result(prefix, module, model, bindings, at))
         else:
             found.append(None)
     # Reused names and shadowing need a full scoped data-flow proof. A
@@ -206,6 +210,10 @@ def infer_receiver_type(source, method, call, module, model, declarations, sourc
                 receiver = infer(prefix[:-2])
                 if receiver:
                     receiver = receiver.rstrip('?')
+                    if receiver == 'Дата' and called in {'ДобавитьДни', 'ДобавитьМесяцы', 'ДобавитьГоды'}:
+                        return 'Дата'
+                    if receiver in {'Дата', 'ДатаВремя'} and called == 'ДеньНедели':
+                        return 'ДеньНедели'
                     if (called == 'ЗагрузитьОбъект' and receiver.endswith('.Ссылка')
                             and _element(model, receiver[:-len('.Ссылка')], module)):
                         return receiver[:-len('Ссылка')] + 'Объект'
@@ -279,7 +287,7 @@ def known_receiver_type(type_name, module, model):
     if not type_name:
         return False
     type_name = type_name.rstrip('?')
-    if type_name in {'Строка', 'Число', 'Булево', 'Дата', 'ДатаВремя', 'Момент'}:
+    if type_name in {'Строка', 'Число', 'Булево', 'Дата', 'Время', 'ДатаВремя', 'Момент', 'ДеньНедели'}:
         return True
     if type_name.startswith(('Массив<', 'Соответствие<', 'Множество<', 'ЧитаемаяКоллекция<')):
         return True

@@ -186,8 +186,11 @@ def render_plan(plan, sandbox):
         contracts.method_dependencies[object_type].extend(
             [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
             + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
-        setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
         if plan.form:
+            contracts.method_dependencies[object_type].extend(module_type_dependencies.get(module['sourceFile'], []))
+            contracts.method_dependencies[object_type].extend(aliases[p] + '.Вызов' for p in module_dependencies.get(module['sourceFile'], ()))
+        setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
+        if plan.form and plan.form['objectType']:
             setup += '    Контекст.Объект.ТестСостояниеНовизны = ' + sbsl_literal(check['lifecycle']['isNew'], 'Булево') + '\n'
         if 'runtimeDateTime' in check:
             field = check['runtimeDateTime']
@@ -200,7 +203,13 @@ def render_plan(plan, sandbox):
         expression = 'Контекст.' + expression
         method = ""
     def drive(name, parameter_types, values, result_type, index=''):
-        arguments = ', '.join(argument(v, t) for v, t in zip(values, parameter_types))
+        prepared = [argument(v, t) for v, t in zip(values, parameter_types)]
+        argument_setup = ''
+        if check.get('snapshotArgs', False):
+            variables = ['ТестАргумент' + index + '_' + str(i) for i in range(len(prepared))]
+            argument_setup = ''.join('    знч ' + n + ' = ' + v + '\n' for n, v in zip(variables, prepared))
+            prepared = variables
+        arguments = ', '.join(prepared)
         expression = ('Контекст.' if is_object else '') + name + '(' + arguments + ')'
         result = 'Результат' + index
         if result_type and result_type != 'ничто':
@@ -219,6 +228,7 @@ def render_plan(plan, sandbox):
                           + '    поймать Ошибка: Исключение\n'
                           + '        если не (Ошибка это ИсключениеНедопустимоеСостояние'
                           + (' или Ошибка это ТестБизнесИсключения.ИсключениеВалидации' if 'ИсключениеВалидации' in plan.exception_types else '')
+                          + (' или Ошибка это ИсключениеНедопустимыйАргумент' if 'ИсключениеНедопустимыйАргумент' in check.get('captureExceptionTypes', []) else '')
                           + ')\n            выбросить Ошибка\n        ;\n'
                           + ('        ТестСессия.Откатить()\n' if storage and storage.config.get('transaction') else '')
                           + '        ' + exception + ' = {"type": '
@@ -227,6 +237,11 @@ def render_plan(plan, sandbox):
                           + ', "message": Ошибка.Описание}\n'
                           + '    ;\n')
             actual = '{"result": ' + actual + ', "exception": ' + exception + '}'
+        if check.get('snapshotArgs', False):
+            actual = '{"result": ' + actual + ', "args": [' + arguments + ']}'
+        if check.get('snapshotConstants', False):
+            from .session_contracts import constants_observation
+            actual = '{"result": ' + actual + ', "constants": ' + constants_observation(plan) + '}'
         if storage and storage.config.get('transaction', False):
             fact = 'Факты' + index
             invocation = ('    пер ' + fact + ': Объект? = Неопределено\n    ТестСессия.Начать()\n    попытка\n'
@@ -234,7 +249,7 @@ def render_plan(plan, sandbox):
                           + '        ' + fact + ' = ' + actual + '\n        ТестСессия.Завершить()\n'
                           + '    поймать Сбой: Исключение\n        ТестСессия.Откатить()\n        выбросить Сбой\n    ;\n')
             actual = fact
-        return invocation, actual
+        return argument_setup + invocation, actual
     invocation, actual = drive(target['method'], types, args, return_type)
     if plan.sequence:
         invocation = '    знч Действия = новый Массив<Объект?>()\n'
@@ -255,6 +270,10 @@ def render_plan(plan, sandbox):
             invocation += '    ТестСессия.Опубликовать(Путь)\n'
         actual = '{"result": ' + actual + ', "storage": ТестСессия.Аудит()}'
     imports = contracts.write(sandbox)
+    from .session_contracts import render_session
+    session_setup, session_metadata = render_session(plan, sandbox)
+    setup = session_setup + setup
+    runtime_metadata += session_metadata
     generated_owners = {name.split(".")[0] for name in contracts.definitions}
     for alias, bodies in external.items():
         if (sandbox / (alias + ".sbsl")).exists():

@@ -1,0 +1,134 @@
+name: Portable welcome options
+checks:
+- id: portable-Alpha
+  type: runtime
+  points: 1
+  target:
+    module: CalendarView
+    namespace: Alpha
+    method: Start
+  args: []
+  context: {}
+  observe:
+  - Title
+  - Компоненты.Summary.Значение
+  - Компоненты.DateField.Значение
+  constants:
+    Alpha::Options:
+      Text: A 😀
+      Enabled: true
+    Beta::Options:
+      Text: B "test"
+      Enabled: false
+  clock:
+    mode: fixed
+    date: '2028-02-29'
+    time: '23:59:59'
+    timezone: UTC
+  executorLocale: ru-RU
+  sequence:
+  - method: Start
+    args: []
+  - method: Apply
+    args:
+    - {}
+    - {}
+  snapshotConstants: true
+  expected:
+    actions:
+    - result:
+        Title: A 😀/B "test"
+        Компоненты.Summary.Значение: A 😀/B "test"
+        Компоненты.DateField.Значение: '2028-02-29'
+      constants:
+        Alpha::Options:
+          Text: A 😀
+          Enabled: true
+        Beta::Options:
+          Text: B "test"
+          Enabled: false
+    - result:
+        Title: A 😀/B "test"
+        Компоненты.Summary.Значение: local
+        Компоненты.DateField.Значение: '2028-02-29'
+      constants:
+        Alpha::Options:
+          Text: A 😀
+          Enabled: true
+        Beta::Options:
+          Text: B "test"
+          Enabled: false
+- id: portable-Beta
+  type: runtime
+  points: 1
+  target:
+    module: CalendarView
+    namespace: Beta
+    method: Start
+  args: []
+  context: {}
+  observe:
+  - Title
+  - Компоненты.Summary.Значение
+  - Компоненты.DateField.Значение
+  constants:
+    Alpha::Options:
+      Text: A 😀
+      Enabled: true
+    Beta::Options:
+      Text: B "test"
+      Enabled: false
+  clock:
+    mode: fixed
+    date: '2028-02-29'
+    time: '23:59:59'
+    timezone: UTC
+  executorLocale: ru-RU
+  sequence:
+  - method: Start
+    args: []
+  - method: Apply
+    args:
+    - {}
+    - {}
+  snapshotConstants: true
+  expected:
+    actions:
+    - result:
+        Title: B "test"/A 😀
+        Компоненты.Summary.Значение: B "test"/A 😀
+        Компоненты.DateField.Значение: '2028-02-29'
+      constants:
+        Alpha::Options:
+          Text: A 😀
+          Enabled: true
+        Beta::Options:
+          Text: B "test"
+          Enabled: false
+    - result:
+        Title: B "test"/A 😀
+        Компоненты.Summary.Значение: local
+        Компоненты.DateField.Значение: '2028-02-29'
+      constants:
+        Alpha::Options:
+          Text: A 😀
+          Enabled: true
+        Beta::Options:
+          Text: B "test"
+          Enabled: false
+- id: portable-shadow
+  type: runtime
+  points: 1
+  target:
+    module: CalendarView
+    namespace: Alpha
+    method: Shadow
+  args:
+  - param
+  - key: dict
+  expected:
+    result: param:dict
+    args:
+    - param
+    - key: dict
+  snapshotArgs: true

@@ -1,0 +1,134 @@
+name: Portable welcome preferences
+checks:
+- id: portable-Alpha
+  type: runtime
+  points: 1
+  target:
+    module: WelcomePanel
+    namespace: Alpha
+    method: Initialize
+  args: []
+  context: {}
+  observe:
+  - Caption
+  - Компоненты.Banner.Значение
+  - Компоненты.DayInput.Значение
+  constants:
+    Alpha::Preferences:
+      Address: A 😀
+      Active: true
+    Beta::Preferences:
+      Address: B "test"
+      Active: false
+  clock:
+    mode: fixed
+    date: '2028-02-29'
+    time: '23:59:59'
+    timezone: UTC
+  executorLocale: ru-RU
+  sequence:
+  - method: Initialize
+    args: []
+  - method: Switch
+    args:
+    - {}
+    - {}
+  snapshotConstants: true
+  expected:
+    actions:
+    - result:
+        Caption: A 😀/B "test"
+        Компоненты.Banner.Значение: A 😀/B "test"
+        Компоненты.DayInput.Значение: '2028-02-29'
+      constants:
+        Alpha::Preferences:
+          Address: A 😀
+          Active: true
+        Beta::Preferences:
+          Address: B "test"
+          Active: false
+    - result:
+        Caption: A 😀/B "test"
+        Компоненты.Banner.Значение: local
+        Компоненты.DayInput.Значение: '2028-02-29'
+      constants:
+        Alpha::Preferences:
+          Address: A 😀
+          Active: true
+        Beta::Preferences:
+          Address: B "test"
+          Active: false
+- id: portable-Beta
+  type: runtime
+  points: 1
+  target:
+    module: WelcomePanel
+    namespace: Beta
+    method: Initialize
+  args: []
+  context: {}
+  observe:
+  - Caption
+  - Компоненты.Banner.Значение
+  - Компоненты.DayInput.Значение
+  constants:
+    Alpha::Preferences:
+      Address: A 😀
+      Active: true
+    Beta::Preferences:
+      Address: B "test"
+      Active: false
+  clock:
+    mode: fixed
+    date: '2028-02-29'
+    time: '23:59:59'
+    timezone: UTC
+  executorLocale: ru-RU
+  sequence:
+  - method: Initialize
+    args: []
+  - method: Switch
+    args:
+    - {}
+    - {}
+  snapshotConstants: true
+  expected:
+    actions:
+    - result:
+        Caption: B "test"/A 😀
+        Компоненты.Banner.Значение: B "test"/A 😀
+        Компоненты.DayInput.Значение: '2028-02-29'
+      constants:
+        Alpha::Preferences:
+          Address: A 😀
+          Active: true
+        Beta::Preferences:
+          Address: B "test"
+          Active: false
+    - result:
+        Caption: B "test"/A 😀
+        Компоненты.Banner.Значение: local
+        Компоненты.DayInput.Значение: '2028-02-29'
+      constants:
+        Alpha::Preferences:
+          Address: A 😀
+          Active: true
+        Beta::Preferences:
+          Address: B "test"
+          Active: false
+- id: portable-shadow
+  type: runtime
+  points: 1
+  target:
+    module: WelcomePanel
+    namespace: Alpha
+    method: Shadow
+  args:
+  - param
+  - key: dict
+  expected:
+    result: param:dict
+    args:
+    - param
+    - key: dict
+  snapshotArgs: true

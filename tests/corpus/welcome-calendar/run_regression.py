@@ -1,0 +1,29 @@
+"""Sequential full regression, with ephemeral SQL credentials and a main guard."""
+from pathlib import Path
+import json
+import os
+import secrets
+import sys
+import time
+import unittest
+
+REPO=Path(__file__).resolve().parents[3]
+
+def main():
+    os.environ['ELEMENT_TEST_DOCKER_TESTS']='1'
+    os.environ['ELEMENT_TEST_INTEGRATION_TESTS']='1'
+    os.environ['ELEMENT_TEST_INTEGRATION_PASSWORD']=secrets.token_hex(24)
+    sys.path.insert(0,str(REPO));sys.path.insert(0,str(REPO/'tests'))
+    out=REPO/'result/dvizhok-welcome-calendar';out.mkdir(exist_ok=True)
+    suite=unittest.defaultTestLoader.discover(str(REPO/'tests'))
+    started=time.monotonic()
+    with (out/'full-regression.log').open('w') as log:
+        result=unittest.TextTestRunner(stream=log,verbosity=2).run(suite)
+    summary={'testsRun':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),
+             'skipped':len(result.skipped),'seconds':round(time.monotonic()-started,3),'successful':result.wasSuccessful(),
+             'failureTests':[str(t) for t,_ in result.failures],'errorTests':[str(t) for t,_ in result.errors]}
+    (out/'full-regression.json').write_text(json.dumps(summary,indent=2)+'\n')
+    print(json.dumps(summary))
+    return 0 if result.wasSuccessful() and not result.skipped else 1
+
+if __name__=='__main__':sys.exit(main())

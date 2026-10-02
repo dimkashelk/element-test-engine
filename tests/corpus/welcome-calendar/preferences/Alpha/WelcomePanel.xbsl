@@ -1,0 +1,19 @@
+импорт Beta::Preferences как Other
+метод Initialize()
+    знч Д = Preferences.Fetch()
+    знч Другие = Other.Fetch()
+    Компоненты.DayInput.Значение = Дата.Сейчас()
+    Caption = Д.Получить("value") + "/" + Другие.Получить("again")
+    этот.Format()
+;
+@Локально
+метод Format()
+    Компоненты.Banner.Значение = "${Caption}"
+;
+метод Switch(Source: Кнопка, Event: СобытиеПриНажатии)
+    знч Caption = "local"
+    Компоненты.Banner.Значение = Caption
+;
+метод Shadow(Caption: Строка, Preferences: Соответствие<Строка, Строка>): Строка
+    возврат Caption + ":" + Preferences.Получить("key")
+;

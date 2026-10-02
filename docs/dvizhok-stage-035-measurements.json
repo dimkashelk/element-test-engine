@@ -1,0 +1,59 @@
+{
+  "stage": 35,
+  "date": "2026-10-02",
+  "publicChecks": 70,
+  "newDirectRoots": 8,
+  "previousFormChecks": 77,
+  "previousBusinessChecks": 22,
+  "mutations": 13,
+  "mutationFailures": 19,
+  "portableProjects": {
+    "options": 3,
+    "preferences": 3
+  },
+  "batchPassed": 2,
+  "batchMutatedFailed": 1,
+  "schemas": {
+    "grading.json": 10,
+    "batch-result.json": 2,
+    "batch-manifest.json": 1,
+    "events": 28
+  },
+  "archivesUnchanged": 4,
+  "coverage": {
+    "files": 75,
+    "yaml": 46,
+    "xbsl": 29,
+    "methods": 44,
+    "directTargets": 38,
+    "preparedDirectTargets": 35,
+    "withoutPreparedDirectScenario": 9,
+    "assessedMethods": 35,
+    "withoutDirectScenario": 6
+  },
+  "regression": {
+    "testsRun": 246,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 2434.208,
+    "successful": true,
+    "failureTests": [],
+    "errorTests": []
+  },
+  "archiveHashes": {
+    "Dvizhok.xdump": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+    "Prakticheskie-primery-2026-09-30-15-20.xdump": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+    "Demo-SRM-dev-2026-09-28-21-38.xdump": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+    "autocheck-2026-09-24-16-14.xdump": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135"
+  },
+  "evidenceHashes": {
+    "full-regression.log": "5e06df1df7425ebedc6b58f7b8efe9876b7643a374d5792eb6009171d1ba2fad",
+    "target-tests.log": "ee9673ac639f86cec0586bb9f07c54cf7ea773676448350ebdab309d4402ab39",
+    "mutations.json": "d3025b181fa4ae2aa4d854a44525ec8b4a9c94dfc1b6fc6e5c357286383d331a",
+    "public-equivalence.json": "8f5812e951460881bf380bb395fcdb92900b05555134024bdf3bed8eb627f982",
+    "schema-verification.json": "c9cddffe4c579915be0f45dad662cb03378b65f43283ebcbc599a845395d8c6d",
+    "cleanup.json": "6a04bb4d61650695816677421953bd50012069c7924dc010b3f536912b992c35",
+    "baseline-planner.json": "0d7c9b9f5e4855a8f2b188ad26f5aa9a12bfde5fe37bc4f09544cd84f96b2a3a"
+  }
+}

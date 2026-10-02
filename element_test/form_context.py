@@ -36,8 +36,8 @@ def describe_form(element):
     props = element['properties']
     base = props.get('Наследует', {})
     match = re.fullmatch(r'ФормаОбъекта<(.+\.Объект)>', base.get('Тип', ''))
-    if not match:
-        raise UnsupportedSyntaxError('Контекст формы требует Наследует.Тип: ФормаОбъекта<T.Объект>')
+    if not match and base.get('Тип') != 'Форма':
+        raise UnsupportedSyntaxError('Контекст формы требует Наследует.Тип: Форма или ФормаОбъекта<T.Объект>')
     fields = props.get('Свойства', [])
     if not isinstance(fields, list):
         raise UnsupportedSyntaxError('Свойства формы должны быть списком')
@@ -54,13 +54,14 @@ def describe_form(element):
             if not isinstance(name, str) or not re.fullmatch(IDENT, name) or name in components:
                 raise UnsupportedSyntaxError('Некорректное или повторное имя компонента: ' + str(name))
             components[name] = {'name': name, 'type': item['Тип'], 'yamlPath': list(path),
-                                'properties': {'Значение': 'Строка'} if item['Тип'] == 'Надпись' else {},
+                                'properties': {'Значение': 'Строка'} if item['Тип'] == 'Надпись' else
+                                              {'Значение': 'Дата'} if item['Тип'] == 'ПолеВвода<Дата>' else {},
                                 'declaration': item}
         for key, value in item.items():
-            if key == 'Обработчик':
+            if key == 'Обработчик' or key == 'ПриНажатии' and item.get('Тип') == 'Кнопка':
                 handlers.append({'name': value, 'type': item.get('Тип'), 'yamlPath': list(path) + [key]})
     return {'identity': {k: element.get(k) for k in ('name','namespace','sourceFile')},
-            'objectType': match[1], 'fields': fields, 'components': components,
+            'objectType': match[1] if match else None, 'fields': fields, 'components': components,
             'handlers': handlers, 'expressions': list(expression_values(base)),
             'executorLocale': 'en-US',
             'limitations': ['No UI/layout/events or YAML expression evaluation', 'No form write/open effects',
@@ -75,8 +76,16 @@ def prepare_form(plan):
         return
     plan.form = describe_form(element)
     lifecycle = plan.check.get('lifecycle')
-    if not isinstance(lifecycle, dict) or set(lifecycle) != {'isNew'} or not isinstance(lifecycle['isNew'], bool):
+    if plan.form['objectType'] and (not isinstance(lifecycle, dict) or set(lifecycle) != {'isNew'} or not isinstance(lifecycle['isNew'], bool)):
         raise InvalidTestError('Контекст формы требует lifecycle: {isNew: Булево}')
+    if not plan.form['objectType'] and 'lifecycle' in plan.check:
+        raise InvalidTestError('Обычная Форма не принимает lifecycle')
+    for handler in plan.form['handlers']:
+        if handler['type'] == 'Кнопка':
+            methods = [n for n in parse_module(plan.original)[0] if n.name == handler['name']]
+            if len(methods) != 1 or [p.partition(':')[2].strip() for p in methods[0].parameters(plan.original)] != ['Кнопка', 'СобытиеПриНажатии'] or methods[0].return_span:
+                raise UnsupportedSyntaxError('ПриНажатии требует собственный метод (Кнопка, СобытиеПриНажатии) без результата')
+            handler['status'] = 'SIGNATURE_CHECKED_NO_UI_EVENT'
     if 'storage' in plan.check or 'mocks' in plan.check:
         raise InvalidTestError('Контекст формы не поддерживает storage/mocks')
 
@@ -100,6 +109,12 @@ def rooted_path(path, bindings, offset, fields):
     return None
 
 
+def passive_argument_names(source, node):
+    return {p.partition(':')[0].strip() for p in node.parameters(source)
+            if p.partition(':')[2].strip() in {'ОбычнаяКоманда', 'Кнопка', 'СобытиеПриНажатии'}
+            or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', p.partition(':')[2].strip())}
+
+
 def bind_form_call(plan, symbol, node, call):
     """Return a binding only for a proved system receiver, respecting locals."""
     if not plan.form or symbol.owner['sourceFile'] != plan.module['sourceFile']:
@@ -108,8 +123,7 @@ def bind_form_call(plan, symbol, node, call):
     bindings = method_local_bindings(symbol.source, node)
     path = rooted_path((call.receiver or '').split('.') if call.receiver else None,
                        bindings, call.receiver_start or call.start, fields)
-    command_names = {p.partition(':')[0].strip() for p in node.parameters(symbol.source)
-                     if p.partition(':')[2].strip().startswith(('ОбычнаяКоманда','КомандаСПараметром<'))}
+    command_names = passive_argument_names(symbol.source, node)
     if call.receiver and call.receiver.split('.')[0] in command_names:
         raise UnsupportedSyntaxError('API пассивного аргумента команды недоступен: ' + call.receiver + '.' + call.name)
     if call.receiver is None and any(s.identity.declaration == call.name and s.owner['sourceFile'] == symbol.owner['sourceFile'] for s in plan.symbols):
@@ -145,9 +159,14 @@ def add_structure(c, name, fields):
         c.require(f['Тип'])
         canonical.append({**f, 'Тип': c.canonical_type(f['Тип'])})
     c.fields[name] = canonical
+    def default(f):
+        value = c.literal(f['ЗначениеПоУмолчанию'], f['Тип'])
+        if f['Тип'] in {'Дата', 'Время'}:
+            value = f['Тип'] + '{' + f['ЗначениеПоУмолчанию'] + '}'
+        return value
     c.definitions[name] = '@Глобально\nструктура ' + name.split('.')[1] + '\n' + ''.join(
         '    пер ' + f['Имя'] + ': ' + c.sbsl_type(f['Тип']) +
-        (' = ' + c.literal(f['ЗначениеПоУмолчанию'], f['Тип']) if 'ЗначениеПоУмолчанию' in f else '') + '\n'
+        (' = ' + default(f) if 'ЗначениеПоУмолчанию' in f else '') + '\n'
         for f in canonical) + ';\n'
 
 
@@ -162,29 +181,31 @@ def generate_form_types(plan, c):
     components = alias + '.Компоненты'
     available = []
     for item in form['components'].values():
-        if item['type'] == 'Надпись':
-            d = item['declaration'].get('Значение', '')
+        if item['properties']:
+            value_type = item['properties']['Значение']
+            d = item['declaration'].get('Значение', '' if value_type == 'Строка' else '0001-01-01')
             # A YAML expression is inventoried, not evaluated by the state adapter.
             if isinstance(d, str) and d.startswith('='):
-                d = ''
-            if not isinstance(d, str):
-                raise UnsupportedSyntaxError('Значение Надписи должно иметь тип Строка')
+                d = '' if value_type == 'Строка' else '0001-01-01'
             typ = alias + '.К' + sha256(item['name'].encode()).hexdigest()[:12]
-            add_structure(c, typ, [{'Имя':'Значение','Тип':'Строка','ЗначениеПоУмолчанию':d}])
+            add_structure(c, typ, [{'Имя':'Значение','Тип':value_type,'ЗначениеПоУмолчанию':d}])
             available.append({'Имя':item['name'],'Тип':typ})
     add_structure(c, components, available)
-    c.require(form['objectType'])
-    obj = c.canonical_type(form['objectType'])
-    form['objectCanonical'] = obj
-    if any(f['Имя'] == 'ТестСостояниеНовизны' for f in c.fields[obj]):
-        raise UnsupportedSyntaxError('Конфликт технического поля жизненного цикла')
-    c.definitions[obj] = c.definitions[obj].rsplit(';',1)[0] + '    пер ТестСостояниеНовизны: Булево?\n;\n'
-    c.attach_method(obj, 'метод ЭтоНовый(): Булево\n'
-        '    если ТестСостояниеНовизны == Неопределено\n'
-        '        выбросить новый ИсключениеНеподдерживаемаяОперация("Не объявлено состояние объекта")\n    ;\n'
-        '    возврат ТестСостояниеНовизны как Булево\n;\n', [])
+    object_fields = []
+    if form['objectType']:
+        c.require(form['objectType'])
+        obj = c.canonical_type(form['objectType'])
+        form['objectCanonical'] = obj
+        if any(f['Имя'] == 'ТестСостояниеНовизны' for f in c.fields[obj]):
+            raise UnsupportedSyntaxError('Конфликт технического поля жизненного цикла')
+        c.definitions[obj] = c.definitions[obj].rsplit(';',1)[0] + '    пер ТестСостояниеНовизны: Булево?\n;\n'
+        c.attach_method(obj, 'метод ЭтоНовый(): Булево\n'
+            '    если ТестСостояниеНовизны == Неопределено\n'
+            '        выбросить новый ИсключениеНеподдерживаемаяОперация("Не объявлено состояние объекта")\n    ;\n'
+            '    возврат ТестСостояниеНовизны как Булево\n;\n', [])
+        object_fields = [{'Имя':'Объект','Тип':obj}]
     form_type = alias + '.Экземпляр'
-    add_structure(c, form_type, [{'Имя':'Объект','Тип':obj}] + form['fields'] + [{'Имя':'Компоненты','Тип':components}])
+    add_structure(c, form_type, object_fields + form['fields'] + [{'Имя':'Компоненты','Тип':components}])
     form['canonical'] = form_type
     c.literal(plan.check['context'], form_type)  # Validate before writing artifacts.
     for symbol in plan.symbols:
@@ -193,8 +214,7 @@ def generate_form_types(plan, c):
         node = parse_module(symbol.source)[0][0]
         bindings = method_local_bindings(symbol.source, node)
         roots = {f['Имя'] for f in c.fields[form_type]}
-        command_names = {p.partition(':')[0].strip() for p in node.parameters(symbol.source)
-                         if p.partition(':')[2].strip().startswith(('ОбычнаяКоманда','КомандаСПараметром<'))}
+        command_names = passive_argument_names(symbol.source, node)
         def visit(n, parent=None):
             if n.kind == 'assignment':
                 bound = rooted_path(member_path(n.children[0]), bindings, n.children[0].start, roots)

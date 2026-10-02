@@ -1,0 +1,19 @@
+импорт Alpha::Options как Other
+метод Start()
+    знч Д = Options.Read()
+    знч Другие = Other.Read()
+    Компоненты.DateField.Значение = Дата.Сейчас()
+    Title = Д.Получить("value") + "/" + Другие.Получить("again")
+    этот.Decorate()
+;
+@Локально
+метод Decorate()
+    Компоненты.Summary.Значение = "${Title}"
+;
+метод Apply(Source: Кнопка, Event: СобытиеПриНажатии)
+    знч Title = "local"
+    Компоненты.Summary.Значение = Title
+;
+метод Shadow(Title: Строка, Options: Соответствие<Строка, Строка>): Строка
+    возврат Title + ":" + Options.Получить("key")
+;

@@ -404,11 +404,12 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
                    "-c", model["compatibilityVersion"], "/generated/test.sbsl"]
         prepared_plan = json.loads((generated / 'execution-plan.json').read_text(encoding='utf-8'))
-        if prepared_plan.get('formContext'):
+        if prepared_plan.get('executorLocale'):
             # Number interpolation is locale-dependent. The bounded form contract
             # fixes its executor locale without touching source expressions.
             java_at = command.index('java')
-            command[java_at + 1:java_at + 1] = ['-Duser.language=en', '-Duser.country=US']
+            language, country = prepared_plan['executorLocale'].split('-')
+            command[java_at + 1:java_at + 1] = ['-Duser.language=' + language, '-Duser.country=' + country]
         try:
             timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
         except ValueError:
@@ -453,6 +454,8 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             evidence['storageDiagnostics'] = decoded['storageDiagnostics']
         if 'runtimeDateTime' in check:
             evidence['runtimeDateTime'] = decoded.get('runtimeDateTime')
+        if 'clock' in check:
+            evidence['clock'] = decoded.get('clock')
         return evidence
     except UnsupportedSyntaxError as exc:
         return status("UNSUPPORTED", str(exc), "unsupported_syntax")
