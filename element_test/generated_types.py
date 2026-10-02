@@ -60,6 +60,8 @@ class ProjectTypes:
         """Resolve explicit project namespaces before shortening SBSL names."""
         if not isinstance(type_name, str):
             raise InputError("Имя типа должно быть строкой")
+        if type_name.strip() in self.platform_type_aliases:
+            return self.platform_type_aliases[type_name.strip()]
         for path, alias in import_specs(self.imports):
             if alias and resolve_symbols(self.model["elements"], path, self.namespace,
                                          self.imports, self.model.get("properties")):
@@ -112,6 +114,8 @@ class ProjectTypes:
     def require(self, type_name, namespace=None):
         if not isinstance(type_name, str):
             raise InputError('Имя типа должно быть строкой')
+        if type_name in self.platform_type_aliases and self.platform_type_aliases[type_name] in self.definitions:
+            return
         namespace = self.namespace if namespace is None else namespace
         members = union_members(type_name)
         if members:

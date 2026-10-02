@@ -1,0 +1,17 @@
+метод Start()
+    если Объект.ЭтоНовый()
+        TitleText = "fresh"
+    иначе
+        TitleText = "old: ${Объект.Номер}"
+    ;
+    этот.Decorate()
+;
+@Локально
+метод Decorate()
+    Компоненты.Banner.Значение = "label: ${TitleText}"
+;
+метод Switch(Editable: Булево, C: ОбычнаяКоманда)
+    этот.Editable = Editable
+    знч TitleText = "local"
+    Компоненты.Banner.Значение = "${TitleText}"
+;

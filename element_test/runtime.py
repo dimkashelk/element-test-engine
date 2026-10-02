@@ -403,6 +403,12 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
                    "-Dlogback.configurationFile=/runtime/config/logback.xml", "-Dexecutor.location=/runtime",
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
                    "-c", model["compatibilityVersion"], "/generated/test.sbsl"]
+        prepared_plan = json.loads((generated / 'execution-plan.json').read_text(encoding='utf-8'))
+        if prepared_plan.get('formContext'):
+            # Number interpolation is locale-dependent. The bounded form contract
+            # fixes its executor locale without touching source expressions.
+            java_at = command.index('java')
+            command[java_at + 1:java_at + 1] = ['-Duser.language=en', '-Duser.country=US']
         try:
             timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
         except ValueError:

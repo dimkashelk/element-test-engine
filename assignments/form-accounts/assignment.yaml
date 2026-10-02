@@ -1,0 +1,82 @@
+name: Portable form context
+checks:
+- id: scope-Alpha
+  type: runtime
+  points: 1
+  target:
+    module: Editor
+    namespace: Alpha
+    method: Start
+  context:
+    Объект:
+      Номер: R
+      Rows:
+      - Value: 1.25
+    TitleText: seed
+  lifecycle:
+    isNew: true
+  args: []
+  observe:
+  - TitleText
+  - Editable
+  - Компоненты.Banner.Значение
+  - Объект.Rows
+  sequence:
+  - method: Start
+    args: []
+  - method: Switch
+    args:
+    - true
+    - {}
+  expected:
+    actions:
+    - TitleText: fresh
+      Editable: false
+      Компоненты.Banner.Значение: 'label: fresh'
+      Объект.Rows:
+      - Value: 1.25
+    - TitleText: fresh
+      Editable: true
+      Компоненты.Banner.Значение: local
+      Объект.Rows:
+      - Value: 1.25
+- id: scope-Beta
+  type: runtime
+  points: 1
+  target:
+    module: Editor
+    namespace: Beta
+    method: Start
+  context:
+    Объект:
+      Номер: R
+      Rows:
+      - Value: 1.25
+    TitleText: seed
+  lifecycle:
+    isNew: false
+  args: []
+  observe:
+  - TitleText
+  - Editable
+  - Компоненты.Banner.Значение
+  - Объект.Rows
+  sequence:
+  - method: Start
+    args: []
+  - method: Switch
+    args:
+    - true
+    - {}
+  expected:
+    actions:
+    - TitleText: 'old: R'
+      Editable: false
+      Компоненты.Banner.Значение: 'label: old: R'
+      Объект.Rows:
+      - Value: 1.25
+    - TitleText: 'old: R'
+      Editable: true
+      Компоненты.Banner.Значение: local
+      Объект.Rows:
+      - Value: 1.25

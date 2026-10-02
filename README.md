@@ -829,3 +829,40 @@ bin/element-test run --project tests/corpus/information-register-slices/prices \
 Для PostgreSQL используйте задание `-sql` и `--integration` с временным паролем
 окружения. Исходный ПолучитьПоследнююЦенуЗакупки исполняется без mocks;
 сравниваются цена/Неопределено и неизменность независимой истории.
+
+[Задание №34](docs/tasks/034-dvizhok-form-context-and-coverage.md) реализовано:
+контекст семи форм объектов и независимая оценка 20 реальных методов Dvizhok.
+Инвентаризация всех 75 файлов / 44 методов обновляется по архиву и журналам.
+ЗАПОЛНИТЬ для ДемоСРМ отложено; дальнейшие контракты описаны в
+[следующих шагах](docs/next-task.md).
+
+
+## Контекст форм объектов — №34
+
+Общий planner/renderer поддерживает контекст `КомпонентИнтерфейса`,
+наследующего `ФормаОбъекта<T.Объект>`: собственные YAML-свойства, типизированный
+Объект, именованные вложенные Надписи. Обязателен `lifecycle: {isNew: true/false}`;
+observe задаёт пути, например `Компоненты.Caption.Значение`. Командный аргумент —
+пассивное `{}`. `{contextPath: Объект.Товары}` передаёт объявленную таблицу
+экземпляра в параметр с совпадающим типом; её изменения доступны observe. Sequence сохраняет один экземпляр; критерии и batch изолированы.
+Исходные helper исполняются, expected не входит в IR. JVM локаль форм фиксирована
+в en-US (дробные числа в надписях с точкой); ссылки используют native UUID.
+Записать/Открыть из формы, вычисление YAML-выражений и браузерный UI недоступны.
+
+Контракт и границы: [form-context.md](docs/form-context.md).
+Публичный корпус: `assignments/dvizhok-form-context`, переносимые проекты —
+`tests/corpus/form-context/ledgers` и `accounts`.
+
+Воспроизводимая карта файлов/методов/планов/фактов:
+
+```sh
+python3 -m element_test.coverage --project Dvizhok.xdump --assignments assignments \
+  --evidence result/dvizhok-form-context/test \
+  --evidence result/dvizhok-form-context/run \
+  --evidence result/dvizhok-form-context/legacy \
+  --output result/dvizhok-form-context/coverage
+```
+
+Карта отделяет ограниченную статическую проверку, объявленный критерий,
+подготовленный план, фактический вызов и независимую оценку. Пустой модуль
+не получает runtime PASS; вызов зависимости не подтверждает все её ветки.

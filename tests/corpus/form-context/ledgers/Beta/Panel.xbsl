@@ -1,0 +1,17 @@
+метод Init()
+    если Объект.ЭтоНовый()
+        Notice = "fresh"
+    иначе
+        Notice = "old: ${Объект.Номер}"
+    ;
+    этот.Helper()
+;
+@Локально
+метод Helper()
+    Компоненты.Summary.Значение = "label: ${Notice}"
+;
+метод Apply(Changed: Булево, C: ОбычнаяКоманда)
+    этот.Changed = Changed
+    знч Notice = "local"
+    Компоненты.Summary.Значение = "${Notice}"
+;

@@ -123,6 +123,7 @@ class ExecutionPlan:
     exception_types: set = field(default_factory=set)
     queries: list = field(default_factory=list)
     record_sets: list = field(default_factory=list)
+    form: dict = field(default_factory=dict)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.model.get("compatibilityVersion", "9.0"),
@@ -139,6 +140,7 @@ class ExecutionPlan:
                 "exceptionContracts": sorted(self.exception_types),
                 "queries": self.queries,
                 "recordSets": self.record_sets,
+                "formContext": self.form,
                 "observations": self.observations, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -162,9 +164,26 @@ def plan_execution(root, source_model, check):
         raise InvalidTestError("Целевой модуль отсутствует или неоднозначен")
     module = modules[0]
     original = (root / module["sourceFile"]).read_text(encoding="utf-8-sig")
-    if "context" in check and (module.get("moduleType") != "object" or not isinstance(check["context"], dict)):
+    from .form_context import form_declaration
+    if "context" in check and ((module.get("moduleType") != "object" and not form_declaration(selected, module)) or not isinstance(check["context"], dict)):
         raise InvalidTestError("context допустим только как объект для модуля Объект")
     method, types = extract_method(original, target["method"], allow_void=True)
+    if "context" in check and form_declaration(selected, module):
+        from .indexer import method_local_bindings, method_binding_visible
+        selected_node = parse_module(method)[0][0]
+        local_bindings = method_local_bindings(method, selected_node)
+        own_methods = {n.name for n in parse_module(original)[0]}
+        for form_call in method_call_expressions(method, selected_node):
+            receiver = form_call.receiver
+            shadowed = receiver and method_binding_visible(local_bindings, receiver.split('.')[0], form_call.receiver_start or form_call.start)
+            if shadowed:
+                continue
+            write_effect = (form_call.name == 'Записать' and receiver in {'этот', 'Объект', 'этот.Объект'}
+                            or form_call.name == 'Записать' and receiver is None and 'Записать' not in own_methods)
+            open_effect = (form_call.name == 'Открыть' and any(
+                e['name'] == receiver and e['elementType'] == 'КомпонентИнтерфейса' for e in selected['elements']))
+            if write_effect or open_effect:
+                raise UnsupportedSyntaxError('Эффект формы ' + form_call.name + ' вне контракта №34')
     if "context" not in check and re.search(r"\bэтот\b", call_code(method)):
         raise InvalidTestError("Для объектного метода требуется context с начальными полями")
     if not isinstance(check.get("args", []), list) or len(check.get("args", [])) != len(types):
@@ -298,6 +317,8 @@ def plan_execution(root, source_model, check):
     from .declarations import declaration_closure
     plan.declarations = declaration_closure(root, runtime_model, reachable, aliases, rewrites, dependencies)
     from .source_contracts import bind_source_contracts, bind_system_ids
+    from .form_context import prepare_form, bind_form_call
+    prepare_form(plan)
     bind_source_contracts(plan)
     registry = CapabilityRegistry()
     reachable_names = {s.identity.declaration for s in symbols}
@@ -310,6 +331,10 @@ def plan_execution(root, source_model, check):
         for call in method_call_expressions(symbol.source, node):
             if call.name is None:
                 continue  # project closure rejects unproved dynamic destinations
+            form_binding = bind_form_call(plan, symbol, node, call)
+            if form_binding:
+                plan.bindings.append(form_binding)
+                continue
             owner = call.receiver
             from .resolution import resolve_call_modules
             from .indexer import method_local_bindings, method_callable_binding_visible
@@ -321,7 +346,7 @@ def plan_execution(root, source_model, check):
             if owner and not destinations:
                 destinations = resolve_call_modules(runtime_model['modules'], owner, symbol.owner['namespace'],
                                                     symbol.owner.get('imports', []), runtime_model.get('properties'))
-            project = ((owner is None and call.receiver_start is None and call.name in
+            project = (((owner is None and call.receiver_start is None or owner == 'этот') and call.name in
                         {s.identity.declaration for s in symbols if s.identity.source_file == symbol.identity.source_file})
                        or any(s.owner['sourceFile'] == dest['sourceFile'] and s.identity.declaration == call.name
                               for dest in destinations for s in symbols))
@@ -386,6 +411,8 @@ def bind_types(plan):
     from .platform_mocks import PlatformMocks
     from .runtime import constructor_types, body_type_references, _project_body_type, RUNTIME_CONSTRUCTORS
     c = ProjectTypes(plan.model, plan.module['namespace'], plan.module.get('imports', []))
+    if plan.form:
+        c.reference_id_type = 'Ууид'
     c.rename_collisions = True
     c.inline_locals = 'context' not in plan.check
     c.local_source = c.current_source = plan.module['sourceFile']
@@ -397,6 +424,19 @@ def bind_types(plan):
     for typ, canonical in list(c.platform_type_aliases.items()):
         c.definitions[canonical] = '@Глобально\nисключение ' + typ + '\n;\n'
         c.platform_type_aliases['Стд::' + typ] = canonical
+    if plan.form:
+        for symbol in plan.symbols:
+            c.namespace, c.imports = symbol.owner['namespace'], symbol.owner.get('imports', [])
+            for typ in symbol.parameter_types:
+                if typ == 'ОбычнаяКоманда' or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', typ):
+                    if c.resolve(typ.split('<')[0]):
+                        raise UnsupportedSyntaxError('Конфликт проектного и системного типа команды')
+                    if '<' in typ:
+                        c.require(typ[len('КомандаСПараметром<'):-1])
+                    alias = 'ТестКоманда' + sha256(typ.encode()).hexdigest()[:16] + '.Значение'
+                    c.platform_type_aliases[typ] = alias
+                    c.definitions[alias] = '@Глобально\nструктура Значение\n;\n'
+                    c.fields[alias] = []
     mocks = plan.check.get('mocks', {})
     if set(mocks) - {'objects', 'registers', 'queries'}:
         raise InvalidTestError('Поддерживаются mocks.objects, mocks.registers, mocks.queries')
@@ -424,6 +464,9 @@ def bind_types(plan):
             plan.type_requirements.append({'type': typ, 'canonical': canonical,
                 'sourceFile': symbol.owner['sourceFile'], 'symbol': symbol.identity.declaration})
     # Field dependencies are generated recursively from metadata, never from business names.
+    c.namespace, c.imports = plan.module['namespace'], plan.module.get('imports', [])
+    from .form_context import generate_form_types
+    generate_form_types(plan, c)
     for typ,fields in c.fields.items():
         for f in fields:
             plan.type_requirements.append({'owner': typ, 'field': f['Имя'], 'type': f['Тип']})

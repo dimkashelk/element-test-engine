@@ -1,0 +1,56 @@
+{
+  "schemas": 39,
+  "publicFormChecks": 77,
+  "legacyChecks": 22,
+  "mutations": 9,
+  "mutationFailures": 11,
+  "archivesUnchanged": 4,
+  "coverage": {
+    "files": 75,
+    "yaml": 46,
+    "xbsl": 29,
+    "methods": 44,
+    "directTargets": 30,
+    "preparedDirectTargets": 27,
+    "withoutPreparedDirectScenario": 17,
+    "assessedMethods": 27,
+    "withoutDirectScenario": 14
+  },
+  "stage": 34,
+  "date": "2026-10-02",
+  "archiveHashes": {
+    "Demo-SRM-dev-2026-09-28-21-38.xdump": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+    "Dvizhok.xdump": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+    "Prakticheskie-primery-2026-09-30-15-20.xdump": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+    "autocheck-2026-09-24-16-14.xdump": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135"
+  },
+  "formResult": {
+    "score": 74,
+    "maxScore": 74,
+    "unavailablePoints": 3,
+    "passed": 74,
+    "unsupported": 3,
+    "directRoots": 20
+  },
+  "legacyResult": {
+    "score": 22,
+    "maxScore": 22,
+    "passed": 22,
+    "directRoots": 7
+  },
+  "regression": {
+    "distinctTests": 233,
+    "skipped": 0,
+    "latestFormTests": 13,
+    "batchCliRepeat": 1
+  },
+  "evidenceHashes": {
+    "full-regression.log": "f70438c6238b30bbedae0be4b66ee250aaa5d5019457974ceaf430976e0d9f8c",
+    "target-tests.log": "4f24e020fdca313fe28d4f326f3a96b946b18c36323fdb214f48764c02ced374",
+    "batch-cli-repeat.log": "6bd28a56bb81723b219c082b8351773624a88792e3f6eedc426184158e1d3cd6",
+    "mutations.json": "b7ff32f842f0ad5372c3f2a33b98b1799b5a391525306abbef7e8e734816dd68",
+    "public-equivalence.json": "f1fa27335de6664cc29c7af3db931daec8ad2644d865351056e7305ecfdfd77a",
+    "schema-verification.json": "5961d225ce91160482ab90f53c2a5f911b2322005ac331f241a3f4918a3541e6",
+    "cleanup.json": "d842f4e153fafce48b7fb9ced17280c1725043064ceaf6e0bc68390e277b68e7"
+  }
+}

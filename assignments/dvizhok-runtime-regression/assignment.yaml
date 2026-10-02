@@ -1,0 +1,973 @@
+name: 'Dvizhok: прежние семь корней и независимые ожидания'
+checks:
+- id: poc-fio_fio_normal
+  type: runtime
+  target:
+    module: ФизическиеЛица.Объект
+    method: СформироватьФИО
+  args:
+  - Иванов
+  - Иван
+  - Иванович
+  expected: Иванов Иван Иванович
+  timeout: 5s
+  points: 1.0
+  properties: {}
+  scenario: 'poc-fio: fio_normal'
+  trace: true
+- id: poc-fio_fio_trim
+  type: runtime
+  target:
+    module: ФизическиеЛица.Объект
+    method: СформироватьФИО
+  args:
+  - ' Иванов '
+  - ' Иван '
+  - ' Иванович '
+  expected: Иванов Иван Иванович
+  timeout: 5s
+  points: 1.0
+  properties: {}
+  scenario: 'poc-fio: fio_trim'
+  trace: true
+- id: poc-fio_fio_empty
+  type: runtime
+  target:
+    module: ФизическиеЛица.Объект
+    method: СформироватьФИО
+  args:
+  - ' '
+  - ''
+  - ' '
+  expected: ''
+  timeout: 5s
+  points: 1.0
+  properties: {}
+  scenario: 'poc-fio: fio_empty'
+  trace: true
+- id: poc-handlers_person_before_write
+  type: runtime
+  target:
+    module: ФизическиеЛица.Объект
+    namespace: CRM
+    method: ПередЗаписью
+  context:
+    Фамилия: ' Иванов '
+    Имя: ' Иван '
+    Отчество: ' Иванович '
+    ФИО: устаревшее значение
+    Телефон: ' +7 999 123-45-67 '
+    Почта: ' ivan@example.com '
+  args:
+  - {}
+  - {}
+  observe:
+  - ФИО
+  - Телефон
+  - Почта
+  expected:
+    ФИО: Иванов Иван Иванович
+    Телефон: +7 999 123-45-67
+    Почта: ivan@example.com
+  points: 1.0
+  properties: {}
+  scenario: 'poc-handlers: person_before_write'
+  trace: true
+- id: poc-handlers_person_empty
+  type: runtime
+  target:
+    module: ФизическиеЛица.Объект
+    method: ПередЗаписью
+  context:
+    Фамилия: ' '
+    Имя: ''
+    Отчество: ' '
+    Телефон: ' '
+    Почта: ' '
+  args:
+  - {}
+  - {}
+  observe:
+  - ФИО
+  - Телефон
+  - Почта
+  expected:
+    ФИО: ''
+    Телефон: ''
+    Почта: ''
+  points: 1.0
+  properties: {}
+  scenario: 'poc-handlers: person_empty'
+  trace: true
+- id: poc-handlers_order_from_deal
+  type: runtime
+  target:
+    module: Заказ.Объект
+    namespace: Продажи
+    method: ПриСозданииНаОсновании
+  context:
+    Клиент:
+      Идентификатор: previous-client
+  args:
+  - Идентификатор: deal-1
+  mocks:
+    objects:
+      Сделка.Ссылка:
+        deal-1:
+          Клиент:
+            Идентификатор: client-1
+        deal-2:
+          Клиент:
+            Идентификатор: client-2
+  observe:
+  - Клиент
+  - Сделка
+  expected:
+    Клиент:
+      Идентификатор: client-1
+    Сделка:
+      Идентификатор: deal-1
+  points: 1.0
+  properties: {}
+  scenario: 'poc-handlers: order_from_deal'
+  trace: true
+- id: poc-handlers_order_from_other_deal
+  type: runtime
+  target:
+    module: Заказ.Объект
+    method: ПриСозданииНаОсновании
+  context: {}
+  args:
+  - Идентификатор: deal-2
+  mocks:
+    objects:
+      Сделка.Ссылка:
+        deal-1:
+          Клиент:
+            Идентификатор: client-1
+        deal-2:
+          Клиент:
+            Идентификатор: client-2
+  observe:
+  - Клиент
+  - Сделка
+  expected:
+    Клиент:
+      Идентификатор: client-2
+    Сделка:
+      Идентификатор: deal-2
+  points: 1.0
+  properties: {}
+  scenario: 'poc-handlers: order_from_other_deal'
+  trace: true
+- id: poc-handlers_order_without_client
+  type: runtime
+  target:
+    module: Заказ.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Клиент:
+      Идентификатор: previous-client
+  args:
+  - Идентификатор: deal-empty
+  mocks:
+    objects:
+      Сделка.Ссылка:
+        deal-empty:
+          Клиент: null
+  observe:
+  - Клиент
+  - Сделка
+  expected:
+    Клиент: null
+    Сделка:
+      Идентификатор: deal-empty
+  points: 1.0
+  properties: {}
+  scenario: 'poc-handlers: order_without_client'
+  trace: true
+- id: poc-platform_price_after_write
+  type: runtime
+  target:
+    module: Номенклатура.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: product-1
+    Цена: 125.5
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Цена
+  mocks:
+    registers:
+    - РегистрЦеныНоменклатуры
+  captureCalls: true
+  observeCallArguments:
+  - Номенклатура
+  - Цена
+  - Замещать
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: product-1
+      Цена: 125.5
+    calls:
+    - owner: РегистрЦеныНоменклатуры
+      method: Фильтр.Установить
+      args:
+        Номенклатура:
+          Идентификатор: product-1
+    - owner: РегистрЦеныНоменклатуры
+      method: ДобавитьЗапись
+      args:
+        Номенклатура:
+          Идентификатор: product-1
+        Цена: 125.5
+    - owner: РегистрЦеныНоменклатуры
+      method: Записать
+      args:
+        Замещать: false
+  points: 1.0
+  properties: {}
+  scenario: 'poc-platform: price_after_write'
+  trace: true
+- id: poc-platform_stock_sufficient
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПередЗаписью
+  context:
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Товары
+  mocks:
+    queries:
+    - text: "ВЫБРАТЬ\n    РегистрТовары.Номенклатура КАК Номенклатура,\n    РегистрТовары.КоличествоОстаток\
+        \ КАК Количество\nИЗ\n    РегистрТовары.Остатки КАК РегистрТовары\nГДЕ\n \
+        \   РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})"
+      fields:
+        Номенклатура: Номенклатура.Ссылка?
+        Количество: Число
+      parameterType: Массив<Номенклатура.Ссылка?>
+      rows:
+      - Номенклатура:
+          Идентификатор: product-1
+        Количество: 7
+  captureException: true
+  expected:
+    result:
+      context:
+        Товары:
+        - Номенклатура:
+            Идентификатор: product-1
+          Количество: 5
+          Цена: 0
+          Сумма: 0
+      calls:
+      - owner: query0
+        method: Создать
+        args:
+          Параметр:
+          - Идентификатор: product-1
+      - owner: query0
+        method: Выполнить
+        args: {}
+    exception: null
+  captureCalls: true
+  points: 1.0
+  properties: {}
+  scenario: 'poc-platform: stock_sufficient'
+  trace: true
+- id: poc-platform_stock_exact
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПередЗаписью
+  context:
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Товары
+  mocks:
+    queries:
+    - text: "ВЫБРАТЬ\n    РегистрТовары.Номенклатура КАК Номенклатура,\n    РегистрТовары.КоличествоОстаток\
+        \ КАК Количество\nИЗ\n    РегистрТовары.Остатки КАК РегистрТовары\nГДЕ\n \
+        \   РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})"
+      fields:
+        Номенклатура: Номенклатура.Ссылка?
+        Количество: Число
+      parameterType: Массив<Номенклатура.Ссылка?>
+      rows:
+      - Номенклатура:
+          Идентификатор: product-1
+        Количество: 5
+  captureException: true
+  expected:
+    result:
+      context:
+        Товары:
+        - Номенклатура:
+            Идентификатор: product-1
+          Количество: 5
+          Цена: 0
+          Сумма: 0
+      calls:
+      - owner: query0
+        method: Создать
+        args:
+          Параметр:
+          - Идентификатор: product-1
+      - owner: query0
+        method: Выполнить
+        args: {}
+    exception: null
+  captureCalls: true
+  points: 1.0
+  properties: {}
+  scenario: 'poc-platform: stock_exact'
+  trace: true
+- id: poc-platform_stock_insufficient
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПередЗаписью
+  context:
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Товары
+  mocks:
+    queries:
+    - text: "ВЫБРАТЬ\n    РегистрТовары.Номенклатура КАК Номенклатура,\n    РегистрТовары.КоличествоОстаток\
+        \ КАК Количество\nИЗ\n    РегистрТовары.Остатки КАК РегистрТовары\nГДЕ\n \
+        \   РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})"
+      fields:
+        Номенклатура: Номенклатура.Ссылка?
+        Количество: Число
+      parameterType: Массив<Номенклатура.Ссылка?>
+      rows:
+      - Номенклатура:
+          Идентификатор: product-1
+        Количество: 3
+  captureException: true
+  expected:
+    result:
+      context:
+        Товары:
+        - Номенклатура:
+            Идентификатор: product-1
+          Количество: 5
+          Цена: 0
+          Сумма: 0
+      calls:
+      - owner: query0
+        method: Создать
+        args:
+          Параметр:
+          - Идентификатор: product-1
+      - owner: query0
+        method: Выполнить
+        args: {}
+    exception:
+      type: Std::IllegalStateException
+      message: На складе {Идентификатор=product-1} - 3, требуется 5
+  captureCalls: true
+  points: 1.0
+  properties: {}
+  scenario: 'poc-platform: stock_insufficient'
+  trace: true
+- id: poc-platform_stock_missing
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПередЗаписью
+  context:
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Товары
+  mocks:
+    queries:
+    - text: "ВЫБРАТЬ\n    РегистрТовары.Номенклатура КАК Номенклатура,\n    РегистрТовары.КоличествоОстаток\
+        \ КАК Количество\nИЗ\n    РегистрТовары.Остатки КАК РегистрТовары\nГДЕ\n \
+        \   РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})"
+      fields:
+        Номенклатура: Номенклатура.Ссылка?
+        Количество: Число
+      parameterType: Массив<Номенклатура.Ссылка?>
+      rows: []
+  captureException: true
+  expected:
+    result:
+      context:
+        Товары:
+        - Номенклатура:
+            Идентификатор: product-1
+          Количество: 5
+          Цена: 0
+          Сумма: 0
+      calls:
+      - owner: query0
+        method: Создать
+        args:
+          Параметр:
+          - Идентификатор: product-1
+      - owner: query0
+        method: Выполнить
+        args: {}
+    exception:
+      type: Std::IllegalStateException
+      message: На складе {Идентификатор=product-1} - 0, требуется 5
+  captureCalls: true
+  points: 1.0
+  properties: {}
+  scenario: 'poc-platform: stock_missing'
+  trace: true
+- id: poc-movements_movements_empty
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары: []
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+  points: 1.0
+  properties: {}
+  scenario: 'poc-movements: movements_empty'
+  trace: true
+- id: poc-movements_movements_one
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 5
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 5
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+  points: 1.0
+  properties: {}
+  scenario: 'poc-movements: movements_one'
+  trace: true
+- id: poc-movements_movements_multiple
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 2
+    - Номенклатура:
+        Идентификатор: product-2
+      Количество: 7
+    - Номенклатура:
+        Идентификатор: product-3
+      Количество: 3
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 2
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-2
+        Количество: 7
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-3
+        Количество: 3
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+  points: 1.0
+  properties: {}
+  scenario: 'poc-movements: movements_multiple'
+  trace: true
+- id: poc-movements_movements_fractional
+  type: runtime
+  target:
+    module: Отгрузка.Объект
+    method: ПослеЗаписи
+  context:
+    Ссылка:
+      Идентификатор: shipment-1
+    Склад:
+      Идентификатор: warehouse-1
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-1
+      Количество: 0.125
+    - Номенклатура:
+        Идентификатор: product-2
+      Количество: 2.75
+  args:
+  - {}
+  - {}
+  observe:
+  - Ссылка
+  - Дата
+  - Склад
+  mocks:
+    registers:
+    - РегистрТовары
+  captureCalls: true
+  expected:
+    context:
+      Ссылка:
+        Идентификатор: shipment-1
+      Дата: __runtimeDateTime__
+      Склад:
+        Идентификатор: warehouse-1
+    calls:
+    - owner: РегистрТовары
+      method: Фильтр.Установить
+      args:
+        Регистратор:
+          Идентификатор: shipment-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-1
+        Количество: 0.125
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: ДобавитьЗапись
+      args:
+        Период: __runtimeDateTime__
+        ВидЗаписи: Расход
+        Номенклатура:
+          Идентификатор: product-2
+        Количество: 2.75
+        Склад:
+          Идентификатор: warehouse-1
+    - owner: РегистрТовары
+      method: Записать
+      args:
+        Замещать: true
+  runtimeDateTime: Дата
+  points: 1.0
+  properties: {}
+  scenario: 'poc-movements: movements_fractional'
+  trace: true
+- id: poc-receipt_receipt_empty
+  type: runtime
+  target:
+    module: ПоступлениеТоваров.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Склад:
+      Идентификатор: old-warehouse
+    Товары: []
+  args:
+  - Идентификатор: shipment-a
+  mocks:
+    objects:
+      Отгрузка.Ссылка:
+        shipment-a:
+          Склад:
+            Идентификатор: warehouse-a
+          Товары: []
+        shipment-b:
+          Склад:
+            Идентификатор: unused-warehouse
+          Товары:
+          - Номенклатура:
+              Идентификатор: unused-product
+            Количество: 99
+            Цена: 99
+            Сумма: 1
+  observe:
+  - Склад
+  - Товары
+  expected:
+    Склад:
+      Идентификатор: warehouse-a
+    Товары: []
+  points: 1.0
+  properties: {}
+  scenario: 'poc-receipt: receipt_empty'
+  trace: true
+- id: poc-receipt_receipt_one
+  type: runtime
+  target:
+    module: ПоступлениеТоваров.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Склад:
+      Идентификатор: old-warehouse
+    Товары: []
+  args:
+  - Идентификатор: shipment-a
+  mocks:
+    objects:
+      Отгрузка.Ссылка:
+        shipment-a:
+          Склад:
+            Идентификатор: warehouse-a
+          Товары:
+          - Номенклатура:
+              Идентификатор: product-a
+            Количество: 2
+            Цена: 10
+            Сумма: 23
+        shipment-b:
+          Склад:
+            Идентификатор: unused-warehouse
+          Товары:
+          - Номенклатура:
+              Идентификатор: unused-product
+            Количество: 99
+            Цена: 99
+            Сумма: 1
+  observe:
+  - Склад
+  - Товары
+  expected:
+    Склад:
+      Идентификатор: warehouse-a
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-a
+      Количество: 2
+      Цена: 10
+      Сумма: 23
+  points: 1.0
+  properties: {}
+  scenario: 'poc-receipt: receipt_one'
+  trace: true
+- id: poc-receipt_receipt_multiple
+  type: runtime
+  target:
+    module: ПоступлениеТоваров.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Склад:
+      Идентификатор: old-warehouse
+    Товары: []
+  args:
+  - Идентификатор: shipment-b
+  mocks:
+    objects:
+      Отгрузка.Ссылка:
+        shipment-b:
+          Склад:
+            Идентификатор: warehouse-b
+          Товары:
+          - Номенклатура:
+              Идентификатор: product-b
+            Количество: 3
+            Цена: 7
+            Сумма: 20
+          - Номенклатура:
+              Идентификатор: product-a
+            Количество: 1
+            Цена: 5
+            Сумма: 8
+          - Номенклатура:
+              Идентификатор: product-c
+            Количество: 4
+            Цена: 2
+            Сумма: 11
+        shipment-a:
+          Склад:
+            Идентификатор: unused-warehouse
+          Товары:
+          - Номенклатура:
+              Идентификатор: unused-product
+            Количество: 99
+            Цена: 99
+            Сумма: 1
+  observe:
+  - Склад
+  - Товары
+  expected:
+    Склад:
+      Идентификатор: warehouse-b
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-b
+      Количество: 3
+      Цена: 7
+      Сумма: 20
+    - Номенклатура:
+        Идентификатор: product-a
+      Количество: 1
+      Цена: 5
+      Сумма: 8
+    - Номенклатура:
+        Идентификатор: product-c
+      Количество: 4
+      Цена: 2
+      Сумма: 11
+  points: 1.0
+  properties: {}
+  scenario: 'poc-receipt: receipt_multiple'
+  trace: true
+- id: poc-receipt_receipt_fractional
+  type: runtime
+  target:
+    module: ПоступлениеТоваров.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Склад:
+      Идентификатор: old-warehouse
+    Товары: []
+  args:
+  - Идентификатор: shipment-b
+  mocks:
+    objects:
+      Отгрузка.Ссылка:
+        shipment-b:
+          Склад:
+            Идентификатор: warehouse-b
+          Товары:
+          - Номенклатура:
+              Идентификатор: product-a
+            Количество: 0.125
+            Цена: 2.75
+            Сумма: 0.99
+          - Номенклатура:
+              Идентификатор: product-b
+            Количество: 2.75
+            Цена: 1.25
+            Сумма: 3.21
+        shipment-a:
+          Склад:
+            Идентификатор: unused-warehouse
+          Товары:
+          - Номенклатура:
+              Идентификатор: unused-product
+            Количество: 99
+            Цена: 99
+            Сумма: 1
+  observe:
+  - Склад
+  - Товары
+  expected:
+    Склад:
+      Идентификатор: warehouse-b
+    Товары:
+    - Номенклатура:
+        Идентификатор: product-a
+      Количество: 0.125
+      Цена: 2.75
+      Сумма: 0.99
+    - Номенклатура:
+        Идентификатор: product-b
+      Количество: 2.75
+      Цена: 1.25
+      Сумма: 3.21
+  points: 1.0
+  properties: {}
+  scenario: 'poc-receipt: receipt_fractional'
+  trace: true
+- id: poc-receipt_receipt_append
+  type: runtime
+  target:
+    module: ПоступлениеТоваров.Объект
+    method: ПриСозданииНаОсновании
+  context:
+    Склад:
+      Идентификатор: old-warehouse
+    Товары:
+    - Номенклатура:
+        Идентификатор: existing-product
+      Количество: 8
+      Цена: 9
+      Сумма: 75
+  args:
+  - Идентификатор: shipment-a
+  mocks:
+    objects:
+      Отгрузка.Ссылка:
+        shipment-a:
+          Склад:
+            Идентификатор: warehouse-a
+          Товары:
+          - Номенклатура:
+              Идентификатор: product-a
+            Количество: 2
+            Цена: 10
+            Сумма: 23
+        shipment-b:
+          Склад:
+            Идентификатор: unused-warehouse
+          Товары:
+          - Номенклатура:
+              Идентификатор: unused-product
+            Количество: 99
+            Цена: 99
+            Сумма: 1
+  observe:
+  - Склад
+  - Товары
+  expected:
+    Склад:
+      Идентификатор: warehouse-a
+    Товары:
+    - Номенклатура:
+        Идентификатор: existing-product
+      Количество: 8
+      Цена: 9
+      Сумма: 75
+    - Номенклатура:
+        Идентификатор: product-a
+      Количество: 2
+      Цена: 10
+      Сумма: 23
+  points: 1.0
+  properties: {}
+  scenario: 'poc-receipt: receipt_append'
+  trace: true

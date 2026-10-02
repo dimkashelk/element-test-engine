@@ -1288,3 +1288,34 @@ JOIN и ЗАПОЛНИТЬ недоступны. Чтобы проверить �
 `--integration` и временного пароля окружения; read-only запрос не публикует
 SQL даже при injected publication failure. Баллы и unavailablePoints остаются
 в SBSL. [Полная семантика и воспроизведение](storage-backed-information-register-slices.md).
+
+
+## Контекст форм объектов — №34
+
+Общий planner/renderer поддерживает контекст `КомпонентИнтерфейса`,
+наследующего `ФормаОбъекта<T.Объект>`: собственные YAML-свойства, типизированный
+Объект, именованные вложенные Надписи. Обязателен `lifecycle: {isNew: true/false}`;
+observe задаёт пути, например `Компоненты.Caption.Значение`. Командный аргумент —
+пассивное `{}`. `{contextPath: Объект.Товары}` передаёт объявленную таблицу
+экземпляра в параметр с совпадающим типом; её изменения доступны observe. Sequence сохраняет один экземпляр; критерии и batch изолированы.
+Исходные helper исполняются, expected не входит в IR. JVM локаль форм фиксирована
+в en-US (дробные числа в надписях с точкой); ссылки используют native UUID.
+Записать/Открыть из формы, вычисление YAML-выражений и браузерный UI недоступны.
+
+Контракт и границы: [form-context.md](form-context.md).
+Публичный корпус: `assignments/dvizhok-form-context`, переносимые проекты —
+`tests/corpus/form-context/ledgers` и `accounts`.
+
+Воспроизводимая карта файлов/методов/планов/фактов:
+
+```sh
+python3 -m element_test.coverage --project Dvizhok.xdump --assignments assignments \
+  --evidence result/dvizhok-form-context/test \
+  --evidence result/dvizhok-form-context/run \
+  --evidence result/dvizhok-form-context/legacy \
+  --output result/dvizhok-form-context/coverage
+```
+
+Карта отделяет ограниченную статическую проверку, объявленный критерий,
+подготовленный план, фактический вызов и независимую оценку. Пустой модуль
+не получает runtime PASS; вызов зависимости не подтверждает все её ветки.

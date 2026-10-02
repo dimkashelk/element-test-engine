@@ -151,12 +151,18 @@ def render_plan(plan, sandbox):
     calls = platform.finish()
     module_declarations = [d['source'] for d in plan.declarations.get(module['sourceFile'], [])]
     method = "\n".join(module_declarations + list(contracts.required_structures.values()) + adapted)
-    call = ", ".join(contracts.literal(v, t) for v, t in zip(args, types))
+    from .form_context import form_argument
+    def argument(value, typ):
+        return form_argument(plan, value, typ) or contracts.literal(value, typ)
+    call = ", ".join(argument(v, t) for v, t in zip(args, types))
     setup = ""
     runtime_metadata = ''
     expression = target["method"] + '(' + call + ')'
     observed = "Контекст"
-    if "observe" in check:
+    if plan.form:
+        from .form_context import form_observation
+        observed = form_observation(plan)
+    elif "observe" in check:
         fields = check["observe"]
         if not is_object or not isinstance(fields, list) or not fields or any(not isinstance(f, str) for f in fields):
             raise InvalidTestError("observe требует объектный context и непустой список полей")
@@ -166,7 +172,7 @@ def render_plan(plan, sandbox):
             raise InvalidTestError("observe содержит неизвестные или повторяющиеся поля")
         observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
     if is_object:
-        object_type = contracts.canonical_type(module["name"])
+        object_type = plan.form['canonical'] if plan.form else contracts.canonical_type(module["name"])
         if mocks.get('registers'):
             # A handler needs the register, whose dimensions need the owner's
             # reference. Put executable context in a separate module to keep
@@ -181,6 +187,8 @@ def render_plan(plan, sandbox):
             [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
             + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
+        if plan.form:
+            setup += '    Контекст.Объект.ТестСостояниеНовизны = ' + sbsl_literal(check['lifecycle']['isNew'], 'Булево') + '\n'
         if 'runtimeDateTime' in check:
             field = check['runtimeDateTime']
             date_fields = {f['Имя'] for f in contracts.fields[object_type] if f['Тип'] == 'ДатаВремя'}
@@ -192,7 +200,7 @@ def render_plan(plan, sandbox):
         expression = 'Контекст.' + expression
         method = ""
     def drive(name, parameter_types, values, result_type, index=''):
-        arguments = ', '.join(contracts.literal(v, t) for v, t in zip(values, parameter_types))
+        arguments = ', '.join(argument(v, t) for v, t in zip(values, parameter_types))
         expression = ('Контекст.' if is_object else '') + name + '(' + arguments + ')'
         result = 'Результат' + index
         if result_type and result_type != 'ничто':

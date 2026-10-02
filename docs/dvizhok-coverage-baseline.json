@@ -1,0 +1,1120 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-02",
+  "archive": "Dvizhok.xdump",
+  "archiveSha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+  "sourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+  "counts": {
+    "files": 75,
+    "yaml": 46,
+    "xbsl": 29,
+    "elements": 40,
+    "modules": 29,
+    "methods": 44,
+    "formMethods": 29,
+    "declaredRuntimeTargets": 8,
+    "task34Targets": 20,
+    "staticDiagnostics": 0
+  },
+  "notes": [
+    "This is static inventory and declared assignment coverage, not a new runtime verification.",
+    "A root target, transitive dependency and branch coverage are separate facts.",
+    "No-methods is not runtime PASS; zero static diagnostics is not platform compilation."
+  ],
+  "files": [
+    {
+      "sourceFile": "CRM/Контрагенты.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/КонтрагентыФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/Подсистема.yaml",
+      "role": "Подсистема",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/Сделка.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик",
+        "АрхивироватьОбработчик",
+        "ОбновитьПредставлениеАрхивирования",
+        "СуммаОтмеченногоСпросаОбработчик",
+        "ПосчитатьУчастниковОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛица.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛица.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПередЗаписью",
+        "СформироватьФИО"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛицаФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/ДанныеКомпании.xbsl",
+      "role": "НаборКонстант — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПолучитьДанные"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "role": "НаборКонстант",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/ДанныеКомпанииФормаЗаписи.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/Настройки.xbsl",
+      "role": "НаборКонстант — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/Настройки.yaml",
+      "role": "НаборКонстант",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/НастройкиФормаЗаписи.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/Подсистема.yaml",
+      "role": "Подсистема",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/РабочиеДни.xbsl",
+      "role": "НаборКонстант — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПолучитьДанные"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "role": "НаборКонстант",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/РабочиеДниФормаЗаписи.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПолучитьНадписьТекущееВремя",
+        "СформироватьТекстОрганизации",
+        "ПолучитьТекстДня",
+        "КнопкаРассчитатьПриНажатии",
+        "РассчитатьДни"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Продажи/Заказ.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Продажи/Заказ.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик",
+        "АрхивироватьОбработчик",
+        "ОбновитьПредставлениеАрхивирования",
+        "ИтогиОтмеченныхОбработчик",
+        "ОтгрузитьОбработчик",
+        "РассчитатьИтоги"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Продажи/Подсистема.yaml",
+      "role": "Подсистема",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Проект.xbsl",
+      "role": "XBSL",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Проект.yaml",
+      "role": "Проект",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ЕдиницыИзмерения.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ЕдиницыИзмеренияФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Номенклатура.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Номенклатура.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеЗаписи"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/НоменклатураФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.xbsl",
+      "role": "Документ — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПеренестиТабличнуюЧасть",
+        "СоздатьЧасть"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании",
+        "ПередЗаписью",
+        "ПослеЗаписи"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Подсистема.yaml",
+      "role": "Подсистема",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваров.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/РегистрТовары.xbsl",
+      "role": "РегистрНакопления — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/РегистрТовары.yaml",
+      "role": "РегистрНакопления",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/РегистрЦеныНоменклатуры.xbsl",
+      "role": "РегистрСведений — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/РегистрЦеныНоменклатуры.yaml",
+      "role": "РегистрСведений",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Склады.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/Склады.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Товары/СкладыФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/БанковскийСчет.xbsl",
+      "role": "Справочник — модуль",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "role": "Справочник",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/Подсистема.yaml",
+      "role": "Подсистема",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "role": "Документ",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплату.Объект.xbsl",
+      "role": "Объектный модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПриСозданииНаОсновании"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+      "role": "КомпонентИнтерфейса — модуль",
+      "staticDiagnostics": [],
+      "methods": [
+        "ПослеСоздания",
+        "ПредставлениеРедактированиеДанныхОбработчик"
+      ],
+      "runtimeStatus": "method-level-evidence-required"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.yaml",
+      "role": "КомпонентИнтерфейса",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    },
+    {
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "role": "Перечисление",
+      "staticDiagnostics": [],
+      "methods": [],
+      "runtimeStatus": "no-indexed-methods"
+    }
+  ],
+  "methods": [
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "АрхивироватьОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "form-write-and-open",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "ОбновитьПредставлениеАрхивирования",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "СуммаОтмеченногоСпросаОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "namespace": "CRM",
+      "module": "СделкаФормаОбъекта",
+      "method": "ПосчитатьУчастниковОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛица.Объект.xbsl",
+      "namespace": "CRM",
+      "module": "ФизическиеЛица.Объект",
+      "method": "ПередЗаписью",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-handlers",
+          "checkId": "person_before_write"
+        },
+        {
+          "assignment": "poc-handlers",
+          "checkId": "person_empty"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "CRM/ФизическиеЛица.Объект.xbsl",
+      "namespace": "CRM",
+      "module": "ФизическиеЛица.Объект",
+      "method": "СформироватьФИО",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-fio",
+          "checkId": "fio_normal"
+        },
+        {
+          "assignment": "poc-fio",
+          "checkId": "fio_trim"
+        },
+        {
+          "assignment": "poc-fio",
+          "checkId": "fio_empty"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ДанныеКомпании.xbsl",
+      "namespace": "Администрирование",
+      "module": "ДанныеКомпании",
+      "method": "ПолучитьДанные",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/РабочиеДни.xbsl",
+      "namespace": "Администрирование",
+      "module": "РабочиеДни",
+      "method": "ПолучитьДанные",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "ПолучитьНадписьТекущееВремя",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "СформироватьТекстОрганизации",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "ПолучитьТекстДня",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "КнопкаРассчитатьПриНажатии",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "namespace": "Администрирование",
+      "module": "ФормаПриветствие",
+      "method": "РассчитатьДни",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "constant-sets-and-runtime-calendar",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/Заказ.Объект.xbsl",
+      "namespace": "Продажи",
+      "module": "Заказ.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-handlers",
+          "checkId": "order_from_deal"
+        },
+        {
+          "assignment": "poc-handlers",
+          "checkId": "order_from_other_deal"
+        },
+        {
+          "assignment": "poc-handlers",
+          "checkId": "order_without_client"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "АрхивироватьОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "form-write-and-open",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "ОбновитьПредставлениеАрхивирования",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "ИтогиОтмеченныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "ОтгрузитьОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "form-write-and-open",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "namespace": "Продажи",
+      "module": "ЗаказФормаОбъекта",
+      "method": "РассчитатьИтоги",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-order",
+          "checkId": "empty_rows"
+        },
+        {
+          "assignment": "poc-order",
+          "checkId": "several_rows"
+        },
+        {
+          "assignment": "poc-order",
+          "checkId": "fractional_rows"
+        }
+      ],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Номенклатура.Объект.xbsl",
+      "namespace": "Товары",
+      "module": "Номенклатура.Объект",
+      "method": "ПослеЗаписи",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-platform",
+          "checkId": "price_after_write"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.xbsl",
+      "namespace": "Товары",
+      "module": "Отгрузка",
+      "method": "ПеренестиТабличнуюЧасть",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.xbsl",
+      "namespace": "Товары",
+      "module": "Отгрузка",
+      "method": "СоздатьЧасть",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "namespace": "Товары",
+      "module": "Отгрузка.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "namespace": "Товары",
+      "module": "Отгрузка.Объект",
+      "method": "ПередЗаписью",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-platform",
+          "checkId": "stock_sufficient"
+        },
+        {
+          "assignment": "poc-platform",
+          "checkId": "stock_exact"
+        },
+        {
+          "assignment": "poc-platform",
+          "checkId": "stock_insufficient"
+        },
+        {
+          "assignment": "poc-platform",
+          "checkId": "stock_missing"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "namespace": "Товары",
+      "module": "Отгрузка.Объект",
+      "method": "ПослеЗаписи",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-movements",
+          "checkId": "movements_empty"
+        },
+        {
+          "assignment": "poc-movements",
+          "checkId": "movements_one"
+        },
+        {
+          "assignment": "poc-movements",
+          "checkId": "movements_multiple"
+        },
+        {
+          "assignment": "poc-movements",
+          "checkId": "movements_fractional"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "namespace": "Товары",
+      "module": "ОтгрузкаФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "namespace": "Товары",
+      "module": "ОтгрузкаФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваров.Объект.xbsl",
+      "namespace": "Товары",
+      "module": "ПоступлениеТоваров.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [
+        {
+          "assignment": "poc-receipt",
+          "checkId": "receipt_empty"
+        },
+        {
+          "assignment": "poc-receipt",
+          "checkId": "receipt_one"
+        },
+        {
+          "assignment": "poc-receipt",
+          "checkId": "receipt_multiple"
+        },
+        {
+          "assignment": "poc-receipt",
+          "checkId": "receipt_fractional"
+        },
+        {
+          "assignment": "poc-receipt",
+          "checkId": "receipt_append"
+        }
+      ],
+      "nextStage": "existing-assignment",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+      "namespace": "Товары",
+      "module": "ПоступлениеТоваровФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+      "namespace": "Товары",
+      "module": "ПоступлениеТоваровФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.Объект.xbsl",
+      "namespace": "Финансы",
+      "module": "ПоступлениеДенежныхСредств.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "ПоступлениеДенежныхСредствФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "ПоступлениеДенежныхСредствФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+      "namespace": "Финансы",
+      "module": "РасходДенежныхСредств.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "РасходДенежныхСредствФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "РасходДенежныхСредствФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплату.Объект.xbsl",
+      "namespace": "Финансы",
+      "module": "СчетНаОплату.Объект",
+      "method": "ПриСозданииНаОсновании",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "remaining-business-corpus",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "СчетНаОплатуФормаОбъекта",
+      "method": "ПослеСоздания",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    },
+    {
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+      "namespace": "Финансы",
+      "module": "СчетНаОплатуФормаОбъекта",
+      "method": "ПредставлениеРедактированиеДанныхОбработчик",
+      "existingDeclaredRuntimeChecks": [],
+      "nextStage": "34",
+      "executionEvidence": "not-refreshed-by-this-inventory"
+    }
+  ]
+}

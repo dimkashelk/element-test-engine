@@ -1,0 +1,82 @@
+name: Portable form context
+checks:
+- id: scope-Alpha
+  type: runtime
+  points: 1
+  target:
+    module: Panel
+    namespace: Alpha
+    method: Init
+  context:
+    Объект:
+      Номер: R
+      Rows:
+      - Value: 1.25
+    Notice: seed
+  lifecycle:
+    isNew: true
+  args: []
+  observe:
+  - Notice
+  - Changed
+  - Компоненты.Summary.Значение
+  - Объект.Rows
+  sequence:
+  - method: Init
+    args: []
+  - method: Apply
+    args:
+    - true
+    - {}
+  expected:
+    actions:
+    - Notice: fresh
+      Changed: false
+      Компоненты.Summary.Значение: 'label: fresh'
+      Объект.Rows:
+      - Value: 1.25
+    - Notice: fresh
+      Changed: true
+      Компоненты.Summary.Значение: local
+      Объект.Rows:
+      - Value: 1.25
+- id: scope-Beta
+  type: runtime
+  points: 1
+  target:
+    module: Panel
+    namespace: Beta
+    method: Init
+  context:
+    Объект:
+      Номер: R
+      Rows:
+      - Value: 1.25
+    Notice: seed
+  lifecycle:
+    isNew: false
+  args: []
+  observe:
+  - Notice
+  - Changed
+  - Компоненты.Summary.Значение
+  - Объект.Rows
+  sequence:
+  - method: Init
+    args: []
+  - method: Apply
+    args:
+    - true
+    - {}
+  expected:
+    actions:
+    - Notice: 'old: R'
+      Changed: false
+      Компоненты.Summary.Значение: 'label: old: R'
+      Объект.Rows:
+      - Value: 1.25
+    - Notice: 'old: R'
+      Changed: true
+      Компоненты.Summary.Значение: local
+      Объект.Rows:
+      - Value: 1.25
