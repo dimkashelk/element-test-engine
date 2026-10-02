@@ -283,7 +283,7 @@ def constructor_types(method):
 
 
 def body_type_references(method):
-    """Type spans in reachable local declarations and casts, ignoring text/comments."""
+    """Type spans in local declarations, casts and type tests, ignoring text/comments."""
     declaration = parse_module(method)[0][0]
     tokens = [token for token in lex(call_code(method)) if token.start >= declaration.header_end]
     references = []
@@ -292,7 +292,7 @@ def body_type_references(method):
             if index + 2 >= len(tokens) or not re.fullmatch(IDENT, tokens[index + 1].value) or tokens[index + 2].value != ":":
                 continue
             first = index + 3
-        elif token.value == "как":
+        elif token.value in {"как", "это"}:
             first = index + 1
         else:
             continue

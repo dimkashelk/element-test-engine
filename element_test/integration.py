@@ -171,7 +171,7 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
             if operation == 'metadata-storage':
                 from .runtime import prepare_script
                 from .storage import PostgresSession
-                from .yaml_io import InputError
+                from .yaml_io import InputError, InvalidTestError
                 try:
                     path = prepare_script(root, model, check, directory)
                     path.rename(directory / 'SqlSmoke.sbsl')
@@ -182,6 +182,8 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
                         adapter = directory / 'ТестСессия.sbsl'
                         adapter.write_text(adapter.read_text().replace('Соединение.СоздатьЗапросБезВыборки("COMMIT").Выполнить()',
                             'если не Подготовка\n            Соединение.СоздатьЗапросБезВыборки("INSERT INTO smoke.missing VALUES (1)").Выполнить()\n        ;\n        Соединение.СоздатьЗапросБезВыборки("COMMIT").Выполнить()'))
+                except InvalidTestError as exc:
+                    return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': 'invalid_test'}
                 except InputError as exc:
                     return {'status': 'UNSUPPORTED', 'message': str(exc), 'reasonCode': 'unsupported_contract'}
             if plan_sink is not None and (directory / 'execution-plan.json').is_file():

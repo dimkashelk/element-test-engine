@@ -6,8 +6,9 @@ from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 
 
 class PlatformMocks:
-    def __init__(self, contracts, mocks, check):
+    def __init__(self, contracts, mocks, check, *, storage=False):
         self.contracts = contracts
+        self.storage_registers = storage
         self.query_contract_explicit = 'queries' in mocks
         if any(e['name'] in {'ТестПлатформа', 'ТестКонтекст'} for e in contracts.model['elements']):
             raise InputError('Проект использует зарезервированное имя тестового модуля')
@@ -71,6 +72,8 @@ class PlatformMocks:
             fields = [{'Имя': 'Период', 'Тип': 'ДатаВремя'},
                       {'Имя': 'ВидЗаписи', 'Тип': 'ВидЗаписиРегистраНакопления'}] + [
                           f for f in fields if f['Имя'] != 'Регистратор']
+            if self.storage_registers:
+                fields += registrars + [{'Имя': 'Активность', 'Тип': 'Булево', 'ЗначениеПоУмолчанию': True}]
             enum = 'ВидЗаписиРегистраНакопления'
             if any(e['name'] == enum for e in self.contracts.model['elements']):
                 raise InputError('Проект использует зарезервированное имя ' + enum)
@@ -81,9 +84,10 @@ class PlatformMocks:
                 '@Глобально\nконст Приход = Значение.Приход\n'
                 '@Глобально\nконст Расход = Значение.Расход\n')
         elif properties.get('Периодичность', 'Непериодический') != 'Непериодический':
-            if properties['Периодичность'] != 'Момент':
+            periodicity = properties['Периодичность']
+            if periodicity != 'Момент' and not (self.storage_registers and periodicity in {'День', 'Секунда'}):
                 raise InputError('Периодичность мока пока поддерживается только Момент')
-            fields = [{'Имя': 'Период', 'Тип': 'Момент'}] + fields
+            fields = [{'Имя': 'Период', 'Тип': {'День': 'Дата', 'Секунда': 'ДатаВремя'}.get(periodicity, 'Момент')}] + fields
         names = [f['Имя'] for f in fields]
         if len(set(names)) != len(names) or any(not re.fullmatch(IDENT, n) for n in names):
             raise InputError('Некорректные поля регистра ' + name)
@@ -97,6 +101,8 @@ class PlatformMocks:
         def add_signature():
             parameters = []
             for field in fields:
+                if self.storage_registers and accumulation and field['Имя'] in {'Регистратор', 'Активность'}:
+                    continue
                 declaration = signature([field])
                 if accumulation and field['Имя'] not in {'Период', 'ВидЗаписи'}:
                     if 'ЗначениеПоУмолчанию' in field:
@@ -127,7 +133,9 @@ class PlatformMocks:
             '    пер Фильтр: ФильтрНабора\n    пер Записи: Массив<Запись>\n'
             '    @Глобально\n' + ('    @ИменованныеПараметры\n' if accumulation else '')
             + '    метод ДобавитьЗапись(' + add_signature() + '): Запись\n'
-            '        знч НоваяЗапись = новый Запись(' + ', '.join(n + ' = ' + n for n in names) + ')\n'
+            '        знч НоваяЗапись = новый Запись(' + ', '.join(n + ' = ' +
+                ('Фильтр.ЗначениеРегистратора' if self.storage_registers and accumulation and n == 'Регистратор'
+                 else 'Истина' if self.storage_registers and accumulation and n == 'Активность' else n) for n in names) + ')\n'
             '        Записи.Добавить(НоваяЗапись)\n        ' + self.log(name, 'ДобавитьЗапись', names)
             + '\n        возврат НоваяЗапись\n    ;\n'
             '    @Глобально\n    метод Записать(Замещать: Булево = Истина)\n        '

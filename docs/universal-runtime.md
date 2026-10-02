@@ -147,3 +147,12 @@ sourceTransforms теперь также входят в ExecutionPlan.
 агрегаты и общий XBQL остаются недоступны. Результат — detached-массив;
 native cursor API не воспроизводится. Файловый отказ остаётся инфраструктурным
 даже при общем catch. Полный контракт — [storage-backed-queries.md](storage-backed-queries.md).
+
+
+Этап №32 добавляет `НаборЗаписей.Прочитать()` и обход доказанного metadata-типа
+по AST с сохранением исходных зависимостей. Полные фильтры, native Дата для День,
+новые строки, teacher `initialRegisters`, замещение/добавление, транзакции,
+коллизии типов регистратора и independent SQL audit описаны в
+[storage-backed-record-sets.md](storage-backed-record-sets.md). Частичные
+фильтры и неподтверждённый native API остаются UNSUPPORTED; прежние mocks и
+legacy-контракты сохраняются.

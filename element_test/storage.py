@@ -84,6 +84,7 @@ def session_module(path, *, postgres=False):
 ;
 @Глобально
 метод Записать(Тип: Строка, Ид: Строка, Значение: Строка)
+    ПроверитьТранзакцию()
     знч Записи = ЧитатьВсе()
     если не Записи.СодержитКлюч(Тип)
         Записи.Вставить(Тип, новый Соответствие<Строка, Строка>())
@@ -171,6 +172,7 @@ def session_module(path, *, postgres=False):
     если не новый Файл(Резерв).Существует()
         возврат
     ;
+    ПроверитьТранзакцию()
     ПубликацияГраницы()
     Удалить(".backup")
     Удалить(".locks")
@@ -186,6 +188,7 @@ def session_module(path, *, postgres=False):
     Удалить(".source")
     Удалить(".locks")
     Событие("driver:rollback")
+    Удалить(".invalid")
 ;
 @Глобально
 метод НачатьИсходную()
@@ -201,6 +204,7 @@ def session_module(path, *, postgres=False):
         возврат
     ;
     попытка
+        ПроверитьТранзакцию()
         если не новый Файл(Резерв).Существует()
             ПубликацияГраницы()
         ;
@@ -225,6 +229,19 @@ def session_module(path, *, postgres=False):
         Удалить(".locks")
     ;
     Событие("source:rollback")
+    Удалить(".invalid")
+;
+@Глобально
+метод ИспортитьТранзакцию()
+    если ЕстьАктивная()
+        исп Поток = новый Файл(Путь + ".invalid").ОткрытьПотокЗаписи()
+        СериализацияJson.ЗаписатьОбъект(Поток, Истина)
+    ;
+;
+метод ПроверитьТранзакцию()
+    если новый Файл(Путь + ".invalid").Существует()
+        выбросить новый ИсключениеНедопустимоеСостояние("Транзакция непригодна после нарушения уникальности")
+    ;
 ;
 @Глобально
 метод Аудит(): Массив<Объкт?>
@@ -340,8 +357,8 @@ def session_module(path, *, postgres=False):
 
 class MetadataStorage:
     def __init__(self, contracts, config):
-        if not isinstance(config, dict) or set(config) - {'backend', 'idType', 'initial', 'transaction', 'registers'}:
-            raise InvalidTestError('storage принимает backend, idType, initial, transaction, registers')
+        if not isinstance(config, dict) or set(config) - {'backend', 'idType', 'initial', 'initialRegisters', 'transaction', 'registers'}:
+            raise InvalidTestError('storage принимает backend, idType, initial, initialRegisters, transaction, registers')
         if config.get('backend', 'memory') not in {'memory', 'postgres'}:
             raise InputError('Неподдержанный backend storage')
         if config.get('idType', 'Строка') not in {'Строка', 'Ууид'}:
@@ -350,6 +367,7 @@ class MetadataStorage:
             raise InvalidTestError('storage.transaction должен быть Булево')
         self.contracts, self.config = contracts, config
         self.attached = set()
+        self.register_schemas = {}
         contracts.reference_id_type = config.get('idType', 'Строка')
         import uuid
         self.path = '/tmp/element-storage-' + uuid.uuid4().hex + '.json'
@@ -368,48 +386,8 @@ class MetadataStorage:
 
     def attach_register(self, name):
         """Reuse declaration-derived signatures, replace all spy behavior with state operations."""
-        import re
-        from .platform_mocks import PlatformMocks
-        c = self.contracts
-        matches = c.resolve(name)
-        if len(matches) != 1 or matches[0]['elementType'] not in {'РегистрСведений', 'РегистрНакопления'}:
-            raise InputError('Хранение набора требует однозначный регистр')
-        element = matches[0]
-        previous = c.namespace, c.imports
-        c.namespace, c.imports = element['namespace'], ()
-        try:
-            PlatformMocks(c, {'registers': [name]}, {})
-            dimensions = element['properties'].get('Измерения', [])
-            if element['elementType'] == 'РегистрНакопления':
-                dimensions = [f for f in element['properties'].get('Реквизиты', []) if f['Имя'] == 'Регистратор']
-            dimensions = [{**f, 'Тип': c.canonical_type(f['Тип'])} for f in dimensions]
-        finally:
-            c.namespace, c.imports = previous
-        owner = c.canonical_type(qualified(element))
-        filter_type, set_type, record = owner + '.ФильтрНабора', owner + '.НаборЗаписей', owner + '.Запись'
-        if not dimensions:
-            raise InputError('UNSUPPORTED: набор хранения требует измерения/регистратор')
-        signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in dimensions)
-        key = '{' + ', '.join(c.literal(f['Имя'], 'Строка') + ': ' + f['Имя'] for f in dimensions) + '}'
-        c.definitions[filter_type] = ('@Глобально\nструктура ФильтрНабора\n    пер Ключ: Строка?\n'
-            '    @Глобально\n    метод Установить(' + signature + ')\n'
-            '        Ключ = СериализацияJson.ЗаписатьОбъект(' + key + ')\n    ;\n;\n')
-        definition = c.definitions[set_type]
-        # These spans belong to trusted generated code, not to student source.
-        definition = re.sub(r'        ТестПлатформа\.ЗаписатьВызов\([^\n]*\)\n', '', definition)
-        start = definition.index('    @Глобально\n    метод Записать(')
-        typename = 'Массив<' + record + '>'
-        identity = c.literal(qualified(element), 'Строка')
-        definition = definition[:start] + ('    @Глобально\n    метод Записать(Замещать: Булево = Истина)\n'
-            '        если Фильтр.Ключ == Неопределено\n            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")\n        ;\n'
-            '        знч Ключ = Фильтр.Ключ как Строка\n        знч Результат = новый ' + typename + '()\n'
-            '        если не Замещать\n            знч Предыдущие = ТестСессия.Прочитать(' + identity + ', Ключ)\n'
-            '            если Предыдущие != Неопределено\n                Результат.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<' + typename + '>(Предыдущие как Строка, Результат.ПолучитьТип()))\n            ;\n        ;\n'
-            '        Результат.ДобавитьВсе(Записи)\n        ТестСессия.Записать(' + identity + ', Ключ, СериализацияJson.ЗаписатьОбъект(Результат))\n'
-            '        если не Замещать\n            Записи.Очистить()\n        ;\n    ;\n;\n')
-        c.definitions[set_type] = definition
-        c.method_dependencies[set_type] = ['ТестСессия.Записи']
-        c.method_dependencies[filter_type] = [f['Тип'] for f in dimensions]
+        from .record_sets import attach_register
+        return attach_register(self, name)
 
     def attach(self, element):
         c = self.contracts
@@ -491,4 +469,6 @@ class MetadataStorage:
             c.literal(identifier, c.reference_id_type)
             lines.append('    ТестСессия.Записать(' + c.literal(qualified(matches[0]), 'Строка') + ', '
                          + c.literal(identifier, 'Строка') + ', СериализацияJson.ЗаписатьОбъект(' + obj + '))')
+        from .record_sets import register_setup
+        lines.extend(register_setup(self))
         return '\n'.join(lines) + ('\n' if lines else '')

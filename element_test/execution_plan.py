@@ -68,8 +68,8 @@ class CapabilityRegistry:
     metadata_operations = {
         "Справочник": {"СоздатьОбъект", "ПолучитьСсылку", "ЗагрузитьОбъект", "Записать"},
         "Документ": {"СоздатьОбъект", "ПолучитьСсылку", "ЗагрузитьОбъект", "Записать"},
-        "РегистрСведений": {"ДобавитьЗапись", "Записать", "Установить"},
-        "РегистрНакопления": {"ДобавитьЗапись", "Записать", "Установить"},
+        "РегистрСведений": {"ДобавитьЗапись", "Записать", "Установить", "Прочитать"},
+        "РегистрНакопления": {"ДобавитьЗапись", "Записать", "Установить", "Прочитать"},
     }
 
     def bind(self, operation, owner, *, project=False, callback=False, metadata=None,
@@ -122,6 +122,7 @@ class ExecutionPlan:
     resources: list = field(default_factory=list)
     exception_types: set = field(default_factory=set)
     queries: list = field(default_factory=list)
+    record_sets: list = field(default_factory=list)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.model.get("compatibilityVersion", "9.0"),
@@ -137,6 +138,7 @@ class ExecutionPlan:
                 "resources": [asdict(r) for r in self.resources],
                 "exceptionContracts": sorted(self.exception_types),
                 "queries": self.queries,
+                "recordSets": self.record_sets,
                 "observations": self.observations, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -193,14 +195,30 @@ def plan_execution(root, source_model, check):
         from .generated_types import ProjectTypes
         from .runtime import constructor_types, body_type_references
         pending = list(reachable)
+        handler_sources = {m['sourceFile']: (root / m['sourceFile']).read_text(encoding='utf-8-sig')
+                           for m in runtime_model['modules']}
+        handler_declarations = {p: parse_module(s)[0] for p, s in handler_sources.items()}
         seen_methods = {(o['sourceFile'], parse_module(t)[0][0].name) for o,t,_ in reachable}
         visited_owners = set()
         while pending:
             owner, text, parameters = pending.pop()
             c = ProjectTypes(runtime_model, owner['namespace'], owner.get('imports', []))
             node = parse_module(text)[0][0]
-            requirement_types = parameters + [node.return_type(text) or '']
-            requirement_types += [t for _,_,t in constructor_types(text) + body_type_references(text)]
+            # Merely reading or passing a reference does not make its write
+            # handlers reachable. Teacher seeds bypass source handlers as well.
+            from .call_types import infer_receiver_type
+            from .indexer import method_local_bindings
+            locals_ = method_local_bindings(text, node)
+            requirement_types = []
+            for call in method_call_expressions(text, node):
+                if call.name != 'Записать':
+                    continue
+                typ = infer_receiver_type(text, node, call, owner, runtime_model,
+                                          handler_declarations, handler_sources, locals_)
+                if typ and typ.rstrip('?').endswith('.Объект'):
+                    requirement_types.append(typ)
+                elif call.receiver is None and owner.get('moduleType') == 'object':
+                    requirement_types.append(owner['name'])
             for requirement in requirement_types:
                 for type_owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Ссылка|Данные)", requirement):
                     matches = c.resolve(type_owner)
@@ -325,7 +343,7 @@ def plan_execution(root, source_model, check):
                     metadata = candidates[0]
                     if metadata not in plan.storage_elements:
                         plan.storage_elements.append(metadata)
-            if inferred and call.name in {'ЗагрузитьОбъект', 'Записать', 'Установить', 'ДобавитьЗапись'}:
+            if inferred and call.name in {'ЗагрузитьОбъект', 'Записать', 'Установить', 'ДобавитьЗапись', 'Прочитать'}:
                 from .generated_types import ProjectTypes
                 c = ProjectTypes(runtime_model, symbol.owner['namespace'], symbol.owner.get('imports', []))
                 matches = c.resolve(inferred.rstrip('?').partition('.')[0])
@@ -355,6 +373,8 @@ def plan_execution(root, source_model, check):
     bind_types(plan)
     from .storage_queries import bind_queries
     bind_queries(plan)
+    from .record_sets import bind_record_sets
+    bind_record_sets(plan)
     bind_system_ids(plan)
     return plan
 

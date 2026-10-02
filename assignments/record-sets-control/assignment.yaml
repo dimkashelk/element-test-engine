@@ -1,0 +1,312 @@
+name: Контроль независимых исходов №32
+checks:
+- id: wrong-answer
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Copy
+  args:
+  - base
+  - target
+  - 3
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Key: base
+        Region: EU
+      rows:
+      - Период: '2026-09-29'
+        Key: base
+        Region: EU
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: base
+        Region: EU
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      filter:
+        Key: target
+        Region: EU
+      rows:
+      - Период: '2025-01-01'
+        Key: target
+        Region: EU
+        Price: 99
+        Factor: 7
+        Link: null
+    - type: Data::Prices
+      filter:
+        Key: neighbor
+        Region: US
+      rows:
+      - Период: '2026-09-29'
+        Key: neighbor
+        Region: US
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: neighbor
+        Region: US
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+  timeout: 15s
+  trace: true
+  expected:
+    result: null
+    storage:
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"base\",\n  \"Region\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: base
+        Region: EU
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: base
+        Region: EU
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"target\",\n  \"Region\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: target
+        Region: EU
+        Price: 123
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: target
+        Region: EU
+        Price: 12
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"neighbor\",\n  \"Region\" : \"US\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: neighbor
+        Region: US
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: neighbor
+        Region: US
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+- id: partial-filter
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Partial
+  args: []
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Key: base
+        Region: EU
+      rows:
+      - Период: '2026-09-29'
+        Key: base
+        Region: EU
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: base
+        Region: EU
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      filter:
+        Key: target
+        Region: EU
+      rows:
+      - Период: '2025-01-01'
+        Key: target
+        Region: EU
+        Price: 99
+        Factor: 7
+        Link: null
+    - type: Data::Prices
+      filter:
+        Key: neighbor
+        Region: US
+      rows:
+      - Период: '2026-09-29'
+        Key: neighbor
+        Region: US
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: neighbor
+        Region: US
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+  timeout: 15s
+  trace: true
+  expected: null
+- id: recovery
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Copy
+  args:
+  - base
+  - target
+  - 3
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Key: base
+        Region: EU
+      rows:
+      - Период: '2026-09-29'
+        Key: base
+        Region: EU
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: base
+        Region: EU
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      filter:
+        Key: target
+        Region: EU
+      rows:
+      - Период: '2025-01-01'
+        Key: target
+        Region: EU
+        Price: 99
+        Factor: 7
+        Link: null
+    - type: Data::Prices
+      filter:
+        Key: neighbor
+        Region: US
+      rows:
+      - Период: '2026-09-29'
+        Key: neighbor
+        Region: US
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: neighbor
+        Region: US
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+  timeout: 15s
+  trace: true
+  expected:
+    result: null
+    storage:
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"base\",\n  \"Region\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: base
+        Region: EU
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: base
+        Region: EU
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"target\",\n  \"Region\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: target
+        Region: EU
+        Price: 7.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: target
+        Region: EU
+        Price: 12
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+    - type: Data::Prices
+      id: "{\n  \"Key\" : \"neighbor\",\n  \"Region\" : \"US\"\n}"
+      value:
+      - Период: '2026-09-29'
+        Key: neighbor
+        Region: US
+        Price: 2.5
+        Factor: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-09-30'
+        Key: neighbor
+        Region: US
+        Price: 4
+        Factor: 1
+        Link:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc

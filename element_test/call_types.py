@@ -26,6 +26,30 @@ def _matching(tokens, end, opening, closing):
     return None
 
 
+def _static_result(prefix, module, model, bindings, offset):
+    """Resolve external source signatures in their own namespace/import scope."""
+    from types import SimpleNamespace
+    from .resolution import qualified
+    path = _spelling(prefix)
+    owner, dot, method = path.rpartition('.')
+    if not dot or method_binding_visible(bindings, prefix[0].value, offset):
+        return None
+    destinations = resolve_call_modules(model['modules'], owner, module.get('namespace', ''),
+                                       module.get('imports', ()), model.get('properties'))
+    found = [(m, n) for m in destinations for n in m.get('methods', [])
+             if n['name'] == method and method_visible(SimpleNamespace(annotations=n['annotations']), module, m)]
+    if len(found) != 1:
+        return None
+    destination, declaration = found[0]
+    result = declaration.get('returnType')
+    if not result:
+        return None
+    def qualify(match):
+        e = _element(model, match[1], destination)
+        return qualified(e) + '.' + match[2] if e else match[0]
+    return re.sub(rf'({IDENT}(?:::{IDENT})*)\.({IDENT})', qualify, result)
+
+
 def _local_type(source, method, name, offset, bindings, module, model):
     if not method_binding_visible(bindings, name, offset):
         # Form context properties are declared in the companion YAML.
@@ -89,7 +113,13 @@ def _local_type(source, method, name, offset, bindings, module, model):
                     receiver = _local_type(source, method, value, method.header_end + tokens[index + 3].start, bindings, module, model)
                     found.append(receiver[:-len('Ссылка')] + 'Объект?' if receiver and receiver.endswith('.Ссылка') else None)
                 else:
-                    found.append(None)
+                    prefix = []
+                    for part in tokens[index + 3:]:
+                        if part.value in {'(', ';', '\n'}:
+                            break
+                        prefix.append(part)
+                    found.append(_static_result(prefix, module, model, bindings,
+                                                method.header_end + tokens[index + 3].start))
         else:
             found.append(None)
     # Reused names and shadowing need a full scoped data-flow proof. A
@@ -197,7 +227,7 @@ def infer_receiver_type(source, method, call, module, model, declarations, sourc
                         if len(methods) == 1:
                             item, node = methods[0]
                             return node.return_type(sources[item['sourceFile']])
-                return None
+                return _static_result(prefix, module, model, bindings, offset)
             # Same-module and explicitly addressed static methods.
             if len(prefix) == 1:
                 element = _element(model, module['name'], module)

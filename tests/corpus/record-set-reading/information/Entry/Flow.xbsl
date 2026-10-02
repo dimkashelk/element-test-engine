@@ -1,0 +1,101 @@
+импорт Data::Prices как Book
+импорт Service::Reader как Helper
+метод Copy(From: Строка, To: Строка, N: Число)
+    знч R = Helper.Load(From)
+    для Row из R
+        Row.Key = To
+        Row.Price *= N
+    ;
+    R.Фильтр.Установить(Key = To, Region = "EU")
+    R.Записать()
+;
+метод Read(Key: Строка): Объект
+    знч R = новый Book.НаборЗаписей()
+    R.Фильтр.Установить(Key = Key, Region = "EU")
+    R.Прочитать()
+    возврат R.Записи
+;
+метод Detached(): Объект
+    знч A = новый Book.НаборЗаписей()
+    A.Фильтр.Установить(Key = "base", Region = "EU")
+    A.Прочитать()
+    знч B: Book.НаборЗаписей = Helper.Load("base")
+    знч Old = A.Записи
+    для Row из A
+        Row.Price = 999
+        Row.Link = Неопределено
+    ;
+    A.Очистить()
+    A.Фильтр.Установить(Key = "neighbor", Region = "US")
+    Helper.Refresh(A)
+    возврат {"old": Old, "second": B.Записи, "refreshed": A.Записи}
+;
+метод Repeat(): Объект
+    знч A: Book.НаборЗаписей = Helper.Load("base")
+    знч Old = A.Записи
+    Copy("base", "base", 2)
+    Helper.Refresh(A)
+    возврат {"old": Old, "new": A.Записи}
+;
+метод Append(): Объект
+    знч R = новый Book.НаборЗаписей()
+    R.Фильтр.Установить(Key = "base", Region = "EU")
+    R.ДобавитьЗапись(Период = новый Дата(2026, 10, 1), Key = "base", Region = "EU", Price = 8, Factor = 5, Link = Неопределено)
+    R.Записать(Замещать = Ложь)
+    знч Empty = R.Пусто()
+    R.Прочитать()
+    возврат {"emptyAfterAppend": Empty, "rows": R.Записи}
+;
+метод Clear()
+    знч R = новый Book.НаборЗаписей()
+    R.Фильтр.Установить(Key = "base", Region = "EU")
+    R.Прочитать()
+    R.Очистить()
+    R.Записать()
+;
+метод Rollback(): Объект
+    попытка
+        исп Транзакции.Начать()
+        Copy("base", "target", 3)
+        знч Seen = Read("target")
+        выбросить новый ИсключениеВалидации(СериализацияJson.ЗаписатьОбъект(Seen))
+    поймать E: ИсключениеВалидации
+        возврат Read("target")
+    ;
+;
+метод MissingFilter()
+    знч R = новый Book.НаборЗаписей()
+    R.Прочитать()
+;
+метод Partial()
+    знч R = новый Book.НаборЗаписей()
+    R.Фильтр.Установить(Key = "base")
+    R.Прочитать()
+;
+метод Duplicate()
+    знч R: Book.НаборЗаписей = Helper.Load("base")
+    R.Записать(Замещать = Ложь)
+;
+метод SwallowSql(): Строка
+    попытка
+        исп Транзакции.Начать()
+        Copy("base", "target", 3)
+    поймать E: Исключение
+        возврат "swallowed"
+    ;
+    возврат "normal"
+;
+метод Poison(): Объект
+    попытка
+        исп Транзакции.Начать()
+        Copy("base", "target", 3)
+        попытка
+            Duplicate()
+        поймать E: ИсключениеНедопустимоеСостояние
+            Copy("base", "neighbor", 3)
+        ;
+    поймать E: ИсключениеНедопустимоеСостояние
+        возврат Read("target")
+    ;
+    возврат "incorrect-commit"
+;

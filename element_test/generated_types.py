@@ -336,6 +336,14 @@ class ProjectTypes:
                 raise InvalidTestError('Некорректная ДатаВремя') from exc
             return 'новый ДатаВремя(' + ', '.join(str(n) for n in (
                 date.year, date.month, date.day, date.hour, date.minute, date.second)) + ')'
+        if type_name == 'Дата':
+            if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', value):
+                raise InvalidTestError('Дата требует строку YYYY-MM-DD')
+            try:
+                date = datetime.fromisoformat(value)
+            except ValueError as exc:
+                raise InvalidTestError('Некорректная Дата') from exc
+            return f'новый Дата({date.year}, {date.month}, {date.day})'
         if type_name in self.enums:
             if not isinstance(value, str):
                 raise InvalidTestError(f"Ожидалось имя элемента {type_name}")
