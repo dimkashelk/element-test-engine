@@ -25,6 +25,11 @@ def generate_query(query, contracts):
         return name
     parameters = unique_parameters(query)
     required = {f.name: f for f,_ in query.projections + query.predicates + query.ordering}
+    sliced = query.source_kind == 'slice-last'
+    if sliced:
+        from .query_plan import QueryField
+        required.update({f.name: f for f in query.dimensions})
+        required['Период'] = QueryField(query.owner, 'Период', 'Дата', True)
     def declaration(structure, fields, readonly=False):
         return '@Глобально\nструктура ' + structure + '\n' + ''.join(
             '    ' + ('знч' if readonly else 'пер') + ' ' + label + ': ' + f.type + '\n'
@@ -33,18 +38,38 @@ def generate_query(query, contracts):
     text += declaration('СтрокаРезультата', query.projections, readonly=True)
     text += '@Глобально\nструктура Запрос\n'
     text += ''.join('    знч П' + str(p.slot) + ': ' + p.type + '\n' for p in parameters)
+    if sliced:
+        text += '    знч Граница: Дата\n'
     text += '    @Глобально\n    метод Выполнить(): Массив<СтрокаРезультата>\n'
     text += ('        знч Строки = новый Массив<Данные>()\n'
              '        знч Состояние = ТестСессия.ЧитатьВсе()\n'
              '        если Состояние.СодержитКлюч(' + contracts.literal(query.owner,'Строка') + ')\n'
              '            знч Таблица = Состояние[' + contracts.literal(query.owner,'Строка') + ']\n'
              '            для JSON из Таблица.Значения()\n'
-             '                знч Снимок = СериализацияJson.ПрочитатьОбъект(JSON) как Соответствие<Строка, Объект?>\n')
+             '                знч Значение = СериализацияJson.ПрочитатьОбъект(JSON)\n')
+    if sliced:
+        text += '                для ЗначениеСтроки из (Значение как Массив<Объект?>)\n                    знч Снимок = ЗначениеСтроки как Соответствие<Строка, Объект?>\n'
+    else:
+        text += '                знч Снимок = Значение как Соответствие<Строка, Объект?>\n'
     projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': Снимок[' + contracts.literal(f.name,'Строка') + ']'
                               for f in required.values()) + '}'
     text += ('                знч Проекция = СериализацияJson.ЗаписатьОбъект(' + projected + ')\n'
              '                знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип())\n')
-    condition = ' и '.join('СтрокаДанных.' + f.name + ' == П' + str(slot) for f,slot in query.predicates) or 'Истина'
+    if sliced:
+        # Group only after the inclusive boundary. WHERE is applied to complete
+        # slices below; a resource predicate must never resurrect an older row.
+        key = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': {"type": ' +
+            contracts.literal(f.type,'Строка') + ', "value": СтрокаДанных.' + f.name + '}' for f in query.dimensions) + '}'
+        text = text.replace('        знч Строки = новый Массив<Данные>()\n',
+            '        знч Строки = новый Массив<Данные>()\n        знч Группы = новый Соответствие<Строка, Данные>()\n')
+        text += ('                    если СтрокаДанных.Период <= Граница\n'
+                 '                        знч Ключ = СериализацияJson.ЗаписатьОбъект(' + key + ')\n'
+                 '                        если не Группы.СодержитКлюч(Ключ) или Группы[Ключ].Период < СтрокаДанных.Период\n'
+                 '                            Группы[Ключ] = СтрокаДанных\n'
+                 '                        ;\n                    ;\n                ;\n            ;\n        ;\n'
+                 '        для СтрокаДанных из Группы.Значения()\n')
+    condition = ' и '.join(('СтрокаДанных.' + f.name + ' != Неопределено и ' if f.type.endswith('?') else '') +
+                           'СтрокаДанных.' + f.name + ' == П' + str(slot) for f,slot in query.predicates) or 'Истина'
     text += '                если ' + condition + '\n'
     if query.ordering:
         # Insertion sort keeps tie order internal; no tie order is promised.
@@ -52,7 +77,8 @@ def generate_query(query, contracts):
         text += '                    Строки.Вставить(Позиция, СтрокаДанных)\n'
     else:
         text += '                    Строки.Добавить(СтрокаДанных)\n'
-    text += '                ;\n            ;\n        ;\n        знч Результат = новый Массив<СтрокаРезультата>()\n        для С из Строки\n'
+    text += ('                ;\n        ;\n' if sliced else '                ;\n            ;\n        ;\n')
+    text += '        знч Результат = новый Массив<СтрокаРезультата>()\n        для С из Строки\n'
     if query.limit:
         text += '            если Результат.Размер() >= ' + str(query.limit) + '\n                прервать\n            ;\n'
     text += '            Результат.Добавить(новый СтрокаРезультата(' + ', '.join(label + ' = С.' + f.name for f,label in query.projections) + '))\n'
@@ -67,7 +93,16 @@ def generate_query(query, contracts):
         name = 'П' + str(p.slot)
         return ('новый ' + p.type + '(Идентификатор = ' + name + '.Идентификатор)'
                 if p.type.endswith('.Ссылка') else name)
-    text += '@Глобально\nметод Создать(' + signature + '): Запрос\n    возврат новый Запрос(' + ', '.join('П' + str(p.slot) + ' = ' + captured(p) for p in parameters) + ')\n;\n'
+    args = ['П' + str(p.slot) + ' = ' + captured(p) for p in parameters]
+    prelude = ''
+    if sliced:
+        period = 'П' + str(query.period_slot) if query.period_slot is not None else 'Неопределено'
+        strict_period = next((p.type == 'Дата' for p in parameters if p.slot == query.period_slot),False)
+        boundary = period if strict_period else period + ' ?? Дата.Сейчас(новый ЧасовойПояс("UTC"))'
+        prelude = ('    знч ДатаГраницы = ' + boundary + '\n'
+                   '    ТестСессия.Событие("query:slice-boundary:" + ДатаГраницы.ВСтроку())\n')
+        args.append('Граница = ДатаГраницы')
+    text += '@Глобально\nметод Создать(' + signature + '): Запрос\n' + prelude + '    возврат новый Запрос(' + ', '.join(args) + ')\n;\n'
     contracts.definitions[name] = text
     contracts.method_dependencies[name] = ['ТестСессия.Записи'] + [f.type for f in required.values()]
     return name
@@ -104,19 +139,26 @@ def bind_queries(plan):
                     or 'Запрос' in c.local_by_source.get(c.current_source, {}) or c.resolve('Запрос')):
                 raise UnsupportedSyntaxError('Затенённый владелец литерала Запрос')
             query = parse_storage_query(text,c)
+            if (query.source_kind == 'slice-last' and
+                    (method_binding_visible(locals_,query.source_name.split('::')[0],body+query.source_range[0])
+                     or query.source_name in c.local_by_source.get(c.current_source, {}))):
+                raise UnsupportedSyntaxError('Затенённый источник СрезПоследних')
+            if query.source_kind == 'slice-last' and query.owner not in plan.storage.register_schemas:
+                raise UnsupportedSyntaxError('СрезПоследних требует явный storage.registers: ' + query.owner)
             for p in query.parameters:
                 if re.fullmatch(IDENT,p.expression):
                     inferred = _local_type(symbol.source,node,p.expression,body+p.start,locals_,symbol.owner,plan.model)
-                    if inferred and c.canonical_type(inferred) != p.type:
+                    compatible = {p.type, 'Дата'} if p.type == 'Дата?' else {p.type}
+                    if inferred and c.canonical_type(inferred) not in compatible:
                         raise UnsupportedSyntaxError('Несовместимый тип параметра запроса: ' + p.expression)
             name = generate_query(query,c)
             plan.queries.append({'sourceFile': symbol.identity.source_file, 'symbol': symbol.identity.declaration,
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
                 'text': text, 'ast': query.to_dict(), 'rowType': name + '.СтрокаРезультата',
                 'backend': plan.storage.config.get('backend','memory'),
-                'limitations': ['single-source', 'equality-and', 'no-nullable-predicate', 'no-unsorted-order-guarantee']})
+                'limitations': ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']})
             element = c.resolve(query.owner)[0]
-            if element not in plan.storage_elements:
+            if query.source_kind == 'ordinary' and element not in plan.storage_elements:
                 plan.storage_elements.append(element)
             plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'],[]).append(name + '.Запрос')
             plan.bindings.append(CapabilityBinding('query','Выполнить',query.owner,query.mode,

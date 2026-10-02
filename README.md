@@ -811,8 +811,21 @@ bin/element-test test --project tests/corpus/record-set-reading/information \
 Регистратор, активность, период и вид движения сохраняются без вычисления остатков.
 Частичные фильтры и прочие неподтверждённые API дают UNSUPPORTED.
 
-Следующее подготовленное [задание №33](docs/tasks/033-storage-backed-information-register-slices.md) —
-СрезПоследних регистра сведений по текущему storage. Приёмочный кандидат:
-ПолучитьПоследнююЦенуЗакупки в неизменённом Примеры_new; нужны период День,
-все измерения группы, nullable-равенство заполненному параметру и сортировка
-Дата. Это план расширения, реализация №33 ещё не выполнена.
+[Задание №33](docs/tasks/033-storage-backed-information-register-slices.md) добавляет
+СрезПоследних для периодичности День в общий query AST. Script читает текущую
+историю по всем измерениям, применяет включительную дату, затем ГДЕ, сортировку
+Дата и ПЕРВЫЕ. Nullable-ссылка сравнивается с заполненным параметром точного
+типа. Пустая дата в объявленном адаптере фиксирует текущую дату UTC из Docker
+при создании запроса; будущие строки исключаются.
+[Семантика, подтверждения и ограничения](docs/storage-backed-information-register-slices.md).
+
+```bash
+bin/element-test test --project Prakticheskie-primery-2026-09-30-15-20.xdump \
+  --assignment assignments/slices-real --output result/slices-real
+bin/element-test run --project tests/corpus/information-register-slices/prices \
+  --assignment assignments/slices-prices --output result/slices-prices
+```
+
+Для PostgreSQL используйте задание `-sql` и `--integration` с временным паролем
+окружения. Исходный ПолучитьПоследнююЦенуЗакупки исполняется без mocks;
+сравниваются цена/Неопределено и неизменность независимой истории.

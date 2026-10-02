@@ -1,0 +1,24 @@
+структура Ref
+    пер ID: Ууид
+;
+структура QueryCapture
+    знч Boundary: Дата
+    знч Product: Ref
+;
+метод DateValue(Calls: Массив<Строка>, D: Дата): Дата
+    Calls.Добавить("date")
+    возврат D
+;
+метод ProductValue(Calls: Массив<Строка>, R: Ref): Ref
+    Calls.Добавить("product")
+    возврат новый Ref(ID = R.ID)
+;
+метод Скрипт()
+    знч Calls = новый Массив<Строка>()
+    пер D: Дата? = Неопределено
+    знч R = новый Ref(ID = новый Ууид("12345678-1234-4234-8234-123456789abc"))
+    знч Q = новый QueryCapture(Boundary = DateValue(Calls, D ?? Дата.Сейчас(новый ЧасовойПояс("UTC"))), Product = ProductValue(Calls, R))
+    D = новый Дата(9999, 12, 31)
+    R.ID = новый Ууид("33333333-1234-4234-8234-123456789abc")
+    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"calls": Calls, "captured": Q, "later": {"date": D, "ref": R}}))
+;

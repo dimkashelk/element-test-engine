@@ -1,0 +1,752 @@
+name: Срез последних — slices-prices
+checks:
+- id: latest
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Find
+  args:
+  - Идентификатор: 12345678-1234-4234-8234-123456789abc
+  - '2026-09-30'
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product: null
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+  timeout: 15s
+  trace: true
+  expected:
+    result: 5
+    storage:
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : null,\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+- id: boundary
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Find
+  args:
+  - Идентификатор: 12345678-1234-4234-8234-123456789abc
+  - '2026-09-29'
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product: null
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+  timeout: 15s
+  trace: true
+  expected:
+    result: 8
+    storage:
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : null,\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+- id: post-slice-filter
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    module: Flow
+    namespace: Entry
+    method: Resource
+  args:
+  - '2026-09-30'
+  - 100
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Prices
+    initialRegisters:
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+      rows:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product: null
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      filter:
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+      rows:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+  timeout: 15s
+  trace: true
+  expected:
+    result: []
+    storage:
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 100
+        Factor: 1
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-30'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 5
+        Factor: 2
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '9999-12-31'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 999
+        Factor: 3
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-27'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 70
+        Factor: 4
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+      - Период: '2026-09-29'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 8
+        Factor: 5
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"abcdef12-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Product:
+          Идентификатор: abcdef12-1234-4234-8234-123456789abc
+        Vendor:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Zone: EU
+        Price: 45
+        Factor: 6
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : null,\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-26'
+        Product: null
+        Vendor: null
+        Zone: EU
+        Price: 2
+        Factor: 7
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
+    - type: Data::Prices
+      id: "{\n  \"Product\" : {\n    \"Идентификатор\" : \"12345678-1234-4234-8234-123456789abc\"\
+        \n  },\n  \"Vendor\" : null,\n  \"Zone\" : \"EU\"\n}"
+      value:
+      - Период: '2026-09-25'
+        Product:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Vendor: null
+        Zone: EU
+        Price: 3
+        Factor: 8
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+        Note: null
