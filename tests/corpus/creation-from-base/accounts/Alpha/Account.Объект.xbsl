@@ -1,0 +1,11 @@
+@Обработчик
+метод BuildFrom(Base: Tests::accounts::Beta::Account.Ссылка)
+    знч Source = Base.ЗагрузитьОбъект()
+    Note = Source.Note
+    Origin = Base
+    Account.Append(Source.Entries, этот)
+;
+@ВПроекте
+метод ЗагрузитьОбъект(): Число
+    возврат 72
+;

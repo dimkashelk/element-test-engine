@@ -109,7 +109,10 @@ class ProjectTypes:
 
     def sbsl_type(self, type_name):
         """Enums live in script modules; constants retain their XBSL spelling."""
-        return re.sub(IDENT, lambda m: self.enum_types.get(m[0], m[0]), self.canonical_type(type_name))
+        # Already lowered Enum.Value must stay idempotent when reused in
+        # dependency contracts; only an unqualified enum type needs a variant.
+        return re.sub(rf'(?<![\w.]){IDENT}(?![\w.])', lambda m: self.enum_types.get(m[0], m[0]),
+                      self.canonical_type(type_name))
 
     def require(self, type_name, namespace=None):
         if not isinstance(type_name, str):
@@ -267,7 +270,7 @@ class ProjectTypes:
     def attach_method(self, type_name, method, signature_types):
         self.require(type_name)
         type_name = self.canonical_type(type_name)
-        self.methods[type_name] = self.methods.get(type_name, "") + "@Глобально\n" + method
+        self.methods[type_name] = self.methods.get(type_name, "") + "@Глобально\n" + method.rstrip() + "\n"
         self.method_dependencies.setdefault(type_name, []).extend(signature_types)
 
     def configure_references(self, mocks):

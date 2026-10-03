@@ -1,0 +1,29 @@
+импорт Tests::accounts::Beta::Account как Source
+@ВПроекте
+метод Append(Input: Массив<Source.Entries>, Destination: Account.Объект)
+    для Item из Input
+        Destination.Entries.Добавить(новый Account.Entries(Cost = Item.Cost, Optional = Item.Optional))
+    ;
+;
+@ВПроекте
+метод Make(Input: Массив<Source.Entries>): Account.Объект
+    знч Value = новый Account.Объект()
+    Append(Input, Value)
+    возврат Value
+;
+@ВПроекте
+метод Fresh(Base: Tests::accounts::Beta::Account.Ссылка): Массив<Account.Entries>
+    знч Loaded = Base.ЗагрузитьОбъект()
+    знч A = Make(Loaded.Entries)
+    знч B = Make(Loaded.Entries)
+    A.Entries[0].Cost = 99
+    Loaded.Entries[0].Cost = 98
+    знч Again = Base.ЗагрузитьОбъект()
+    Append(Again.Entries, B)
+    возврат B.Entries
+;
+@ВПроекте
+метод Own(): Число
+    знч ЗагрузитьОбъект = () -> 71
+    возврат ЗагрузитьОбъект()
+;

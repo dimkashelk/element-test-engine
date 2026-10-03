@@ -927,7 +927,21 @@ bin/element-test test --project Dvizhok.xdump \
 подтверждают мутации, переносимость, batch и неизменность архивов.
 Шесть прямых бизнес-корней, YAML-привязки и браузерный UI — следующие этапы.
 
-Следующее [задание №37](docs/tasks/037-dvizhok-remaining-business-roots.md)
-подготовлено: четыре обработчика создания на основании и два helper Отгрузки
-с собственными прямыми критериями. Цель — **44/44 методов** с сохранением
-прежних 38 корней и всех 266 тестов; YAML/UI остаются отдельными этапами.
+[Задание №37](docs/tasks/037-dvizhok-remaining-business-roots.md) реализовано:
+четыре обработчика создания на основании и два helper Отгрузки имеют собственные
+прямые критерии. Публичные test/run — по **70/70 PASS** в memory/PostgreSQL;
+[карта 44/44](docs/dvizhok-coverage-after-037.md) объединяет шесть новых прямых
+оценок и сохранённые свидетельства прежних 38 методов №36.
+
+Проверен только изменённый участок: целевые тесты, переносимость, исполнимые
+мутации и два свежих batch. Полная регрессия и свежий повтор прежних корней
+по указанию пользователя оставлены ночному CI. [Измерения](docs/dvizhok-stage-037-measurements.json)
+отделяют первичные отказы от успешных повторов. [Контракт](docs/creation-from-base.md)
+описывает defaults, snapshotArgs, sequence и пробы живых экземпляров.
+YAML/UI и платформенный жизненный цикл остаются отдельными этапами.
+
+```sh
+bin/element-test test --project Dvizhok.xdump \
+  --assignment assignments/dvizhok-remaining-business-roots \
+  --output result/dvizhok-remaining-business-roots/test --integration
+```

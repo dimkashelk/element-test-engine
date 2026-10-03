@@ -23,6 +23,10 @@ def render_plan(plan, sandbox):
     mocks = check.get('mocks', {})
     if not isinstance(check.get('captureException', False), bool):
         raise InvalidTestError('captureException должен быть Булево')
+    if not isinstance(check.get('snapshotArgs', False), bool):
+        raise InvalidTestError('snapshotArgs должен быть Булево')
+    if not isinstance(check.get('observeFailure', False), bool) or check.get('observeFailure') and check.get('captureException'):
+        raise InvalidTestError('observeFailure должен быть Булево, отдельно от captureException')
     signature = parse_module(method)[0][0]
     return_type = signature.return_type(method)
     reachable = [(item.owner, item.source, item.parameter_types) for item in plan.symbols]
@@ -180,7 +184,29 @@ def render_plan(plan, sandbox):
     module_declarations = [d['source'] for d in plan.declarations.get(module['sourceFile'], [])]
     method = "\n".join(module_declarations + list(contracts.required_structures.values()) + adapted)
     from .form_context import form_argument
-    def argument(value, typ):
+    def argument(value, typ, index=None):
+        if isinstance(value, dict) and set(value) in ({'actionArg'}, {'actionResult'}):
+            if index is None or not plan.sequence or not check.get('snapshotArgs'):
+                raise InvalidTestError('actionArg/actionResult требуют sequence и snapshotArgs')
+            ref = value.get('actionArg', value.get('actionResult'))
+            action = ref[0] if isinstance(ref, list) and len(ref) == 2 else ref
+            if type(action) is not int or not 0 <= action < int(index):
+                raise InvalidTestError('Ссылка sequence требует предыдущий action')
+            step = plan.sequence[action]
+            symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == module['sourceFile'] and s.identity.declaration == step['method'])
+            if 'actionArg' in value:
+                if not isinstance(ref, list) or len(ref) != 2 or type(ref[1]) is not int or not 0 <= ref[1] < len(symbol.parameter_types):
+                    raise InvalidTestError('actionArg требует [action, argument]')
+                actual_type = symbol.parameter_types[ref[1]]
+                expression = 'ТестАргумент' + str(action) + '_' + str(ref[1])
+            else:
+                if type(ref) is not int:
+                    raise InvalidTestError('actionResult требует номер action')
+                actual_type = parse_module(symbol.source)[0][0].return_type(symbol.source)
+                expression = 'Результат' + str(action)
+            if not actual_type or contracts.canonical_type(actual_type) != contracts.canonical_type(typ):
+                raise InvalidTestError('Несовместимый тип ссылки sequence')
+            return expression
         return form_argument(plan, value, typ) or contracts.literal(value, typ)
     call = ", ".join(argument(v, t) for v, t in zip(args, types))
     setup = ""
@@ -210,13 +236,13 @@ def render_plan(plan, sandbox):
             contracts.fields[context_type] = contracts.fields[object_type]
             contracts.definitions[context_type] = contracts.definitions[object_type]
             object_type = context_type
-        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted), signature_types + body_types)
+        contracts.attach_method(object_type, "\n@Глобально\n".join(adapted),
+                                [typ for values in module_type_dependencies.values() for typ in values])
         contracts.method_dependencies[object_type].extend(
             [name + '.НаборЗаписей' for name in mocks.get('registers', [])]
             + (['ТестПлатформа.Запрос'] if mocks.get('queries') else []))
-        if plan.form:
-            contracts.method_dependencies[object_type].extend(module_type_dependencies.get(module['sourceFile'], []))
-            contracts.method_dependencies[object_type].extend(aliases[p] + '.Вызов' for p in module_dependencies.get(module['sourceFile'], ()))
+        contracts.method_dependencies[object_type].extend(module_type_dependencies.get(module['sourceFile'], []))
+        contracts.method_dependencies[object_type].extend(aliases[p] + '.Вызов' for p in module_dependencies.get(module['sourceFile'], ()))
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
         if plan.form and plan.form['objectType']:
             setup += '    Контекст.Объект.ТестСостояниеНовизны = ' + sbsl_literal(check['lifecycle']['isNew'], 'Булево') + '\n'
@@ -232,8 +258,9 @@ def render_plan(plan, sandbox):
             runtime_metadata = ', "runtimeDateTime": ВремяТеста'
         expression = 'Контекст.' + expression
         method = ""
+    live_values = []
     def drive(name, parameter_types, values, result_type, index=''):
-        prepared = [argument(v, t) for v, t in zip(values, parameter_types)]
+        prepared = [argument(v, t, index if plan.sequence else None) for v, t in zip(values, parameter_types)]
         argument_setup = ''
         if check.get('snapshotArgs', False):
             variables = ['ТестАргумент' + index + '_' + str(i) for i in range(len(prepared))]
@@ -250,16 +277,16 @@ def render_plan(plan, sandbox):
             actual = observed if is_object else 'Неопределено'
         if platform.capture:
             actual = '{"context": ' + actual + ', "calls": ' + calls + '}'
-        if check.get('captureException', False):
+        if check.get('captureException', False) or check.get('observeFailure', False):
             invocation = invocation.replace('знч ' + result + ' =', result + ' =')
             exception = 'ИсключениеРезультат' + index
             invocation = ('    пер ' + result + ': Объект? = Неопределено\n    пер ' + exception + ': Объект? = Неопределено\n    попытка\n'
                           + ''.join('    ' + line + '\n' for line in invocation.splitlines())
                           + '    поймать Ошибка: Исключение\n'
-                          + '        если не (Ошибка это ИсключениеНедопустимоеСостояние'
+                          + ('        если Ошибка это ИсключениеНеподдерживаемаяОперация\n            выбросить Ошибка\n        ;\n        ТестОтказ = Ошибка.Описание\n' if check.get('observeFailure') else '        если не (Ошибка это ИсключениеНедопустимоеСостояние'
                           + (' или Ошибка это ТестБизнесИсключения.ИсключениеВалидации' if 'ИсключениеВалидации' in plan.exception_types else '')
                           + (' или Ошибка это ИсключениеНедопустимыйАргумент' if 'ИсключениеНедопустимыйАргумент' in check.get('captureExceptionTypes', []) else '')
-                          + ')\n            выбросить Ошибка\n        ;\n'
+                          + ')\n            выбросить Ошибка\n        ;\n')
                           + ('        ТестСессия.Откатить()\n' if storage and storage.config.get('transaction') else '')
                           + '        ' + exception + ' = {"type": '
                           + ('(Ошибка это ТестБизнесИсключения.ИсключениеВалидации ? "ИсключениеВалидации" : Ошибка.ПолучитьТип().ВСтроку())'
@@ -268,7 +295,7 @@ def render_plan(plan, sandbox):
                           + '    ;\n')
             actual = '{"result": ' + actual + ', "exception": ' + exception + '}'
         if check.get('snapshotArgs', False):
-            actual = '{"result": ' + actual + ', "args": [' + arguments + ']}'
+            actual = '{"result": ' + actual + ', "args": ' + ('[' + arguments + ']' if arguments else 'новый Массив<Объект?>()') + '}'
         if check.get('snapshotConstants', False):
             from .session_contracts import constants_observation
             actual = '{"result": ' + actual + ', "constants": ' + constants_observation(plan) + '}'
@@ -286,14 +313,27 @@ def render_plan(plan, sandbox):
         return argument_setup + invocation, actual
     invocation, actual = drive(target['method'], types, args, return_type)
     if plan.sequence:
-        invocation = '    знч Действия = новый Массив<Объект?>()\n'
+        invocation = '    знч Действия = новый Массив<Строка>()\n'
         for index, step in enumerate(plan.sequence):
             symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == module['sourceFile']
                           and s.identity.declaration == step['method'])
             result_type = parse_module(symbol.source)[0][0].return_type(symbol.source)
             invoke, value = drive(step['method'], symbol.parameter_types, step['args'], result_type, str(index))
-            invocation += invoke + '    Действия.Добавить(СериализацияJson.ПрочитатьОбъект(СериализацияJson.ЗаписатьОбъект(' + value + ')))\n'
+            invocation += invoke + '    Действия.Добавить(СериализацияJson.ЗаписатьОбъект(' + value + '))\n'
+            live_values.append(value)
         actual = '{"actions": Действия}'
+    else:
+        live_values.append(actual)
+    if plan.probes:
+        invocation += ('    знч СнимокДоПроб = СериализацияJson.ЗаписатьОбъект(' + actual + ')\n'
+                       '    знч Пробы = новый Массив<Строка>()\n')
+        for probe in plan.probes:
+            invocation += ('    ' + probe['expression'] + ' = ' + probe['literal'] + '\n'
+                           '    Пробы.Добавить(СериализацияJson.ЗаписатьОбъект([' + ', '.join(live_values) + ']))\n')
+        actual = '{"result": СнимокДоПроб, "probes": Пробы}'
+    if check.get('observeFailure'):
+        setup = '    пер ТестОтказ: Строка? = Неопределено\n' + setup
+        runtime_metadata += ', "status": ТестОтказ == Неопределено ? "EXECUTED" : "ERROR", "message": ТестОтказ'
     if storage:
         for element in plan.storage_elements:
             storage.attach(element)
@@ -302,7 +342,13 @@ def render_plan(plan, sandbox):
         if storage.config.get('backend') == 'postgres':
             setup = '    ТестСессия.НастроитьSql(Путь)\n' + setup + '    ТестСессия.Опубликовать(Путь, Истина)\n'
             invocation += '    ТестСессия.Опубликовать(Путь)\n'
-        actual = '{"result": ' + actual + ', "storage": ТестСессия.Аудит()}'
+        actual = '{"result": ' + actual + ', "storage": ТестСессия.Аудит(Истина)}'
+    for path, owner in plan.co_located_modules.items():
+        bodies = external.pop(owner, [])
+        key = owner + '.ИсходныйМодуль'
+        contracts.definitions[key] = '\n'.join('@Глобально\n' + body.rstrip() + '\n' for body in bodies)
+        contracts.method_dependencies[key] = module_type_dependencies.get(path, []) + [
+            aliases[dep] + '.Вызов' for dep in module_dependencies.get(path, ())]
     imports = contracts.write(sandbox)
     from .session_contracts import render_session
     session_setup, session_metadata = render_session(plan, sandbox)
@@ -334,7 +380,15 @@ def render_plan(plan, sandbox):
     if 'runtimeDateTime' in check and not is_object:
         raise InvalidTestError('runtimeDateTime требует объектный context')
     metadata = runtime_metadata
+    snapshot_mode = ('probes-' if plan.probes else '') + ('sequence' if plan.sequence else 'single')
+    if plan.probes or plan.sequence:
+        metadata += ', "_snapshotMode": ' + sbsl_literal(snapshot_mode, 'Строка')
+    from .resolution import qualified
+    identities = {'Scripts::' + typ: qualified(contracts.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
+                  for typ in contracts.fields if '.' in typ and typ.split('.')[0] in contracts.canonical_elements}
+    metadata += ', "_typeIdentities": ' + contracts.literal(identities, 'Соответствие<Строка, Строка>')
     if storage:
+        metadata += ', "_rawStorage": Истина'
         metadata += ', "storageTrace": ТестСессия.Трасса()'
         metadata += ', "storageDiagnostics": {"active": ТестСессия.ЕстьАктивная(), "locks": ТестСессия.Блокировок()}'
     if platform.capture:

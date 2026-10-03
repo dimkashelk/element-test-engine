@@ -1,0 +1,29 @@
+импорт Tests::ledgers::Beta::Ledger как Source
+@ВПроекте
+метод Transfer(Input: Массив<Source.Rows>, Destination: Ledger.Объект)
+    для Item из Input
+        Destination.Rows.Добавить(новый Ledger.Rows(Amount = Item.Amount, Optional = Item.Optional))
+    ;
+;
+@ВПроекте
+метод Create(Input: Массив<Source.Rows>): Ledger.Объект
+    знч Value = новый Ledger.Объект()
+    Transfer(Input, Value)
+    возврат Value
+;
+@ВПроекте
+метод Fresh(Base: Tests::ledgers::Beta::Ledger.Ссылка): Массив<Ledger.Rows>
+    знч Loaded = Base.ЗагрузитьОбъект()
+    знч A = Create(Loaded.Rows)
+    знч B = Create(Loaded.Rows)
+    A.Rows[0].Amount = 99
+    Loaded.Rows[0].Amount = 98
+    знч Again = Base.ЗагрузитьОбъект()
+    Transfer(Again.Rows, B)
+    возврат B.Rows
+;
+@ВПроекте
+метод Own(): Число
+    знч ЗагрузитьОбъект = () -> 71
+    возврат ЗагрузитьОбъект()
+;

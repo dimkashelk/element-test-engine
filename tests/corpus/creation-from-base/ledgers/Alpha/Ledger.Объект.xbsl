@@ -1,0 +1,11 @@
+@Обработчик
+метод Derive(Base: Tests::ledgers::Beta::Ledger.Ссылка)
+    знч Source = Base.ЗагрузитьОбъект()
+    Label = Source.Label
+    Origin = Base
+    Ledger.Transfer(Source.Rows, этот)
+;
+@ВПроекте
+метод ЗагрузитьОбъект(): Число
+    возврат 72
+;

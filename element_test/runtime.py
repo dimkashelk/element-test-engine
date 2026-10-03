@@ -29,6 +29,17 @@ RUNTIME_CONSTRUCTORS = {'ИсключениеНедопустимоеСосто�
                         'Стд::ИсключениеНетАктивнойТранзакции', 'Ууид'}
 
 
+def neutralize_types(value, identities):
+    """Transport native union tags using declaration identities, without loading types."""
+    if isinstance(value, list):
+        return [neutralize_types(item, identities) for item in value]
+    if isinstance(value, dict):
+        if set(value) == {'@type', '@value'} and value['@type'] in identities:
+            return {'type': identities[value['@type']], 'value': neutralize_types(value['@value'], identities)}
+        return {key: neutralize_types(item, identities) for key, item in value.items()}
+    return value
+
+
 def decode_output(text):
     """executor prints the entry method return value after its console output."""
     calls, trace = [], []
@@ -45,6 +56,23 @@ def decode_output(text):
         raise InputError("Runtime вывел посторонние данные после JSON")
     if trace:
         value['trace'] = trace
+    raw_storage = value.pop('_rawStorage', False)
+    if raw_storage:
+        for item in value['actual']['storage']:
+            item['value'] = json.loads(item['value'])
+    snapshot_mode = value.pop('_snapshotMode', None)
+    if snapshot_mode:
+        observation = value['actual']['result'] if raw_storage else value['actual']
+        if snapshot_mode.startswith('probes-'):
+            observation['result'] = json.loads(observation['result'])
+            observation['probes'] = [json.loads(probe) for probe in observation['probes']]
+            observation = observation['result']
+        if snapshot_mode.endswith('sequence'):
+            observation['actions'] = [json.loads(action) for action in observation['actions']]
+    identities = value.pop('_typeIdentities', {})
+    value = neutralize_types(value, identities)
+    if identities:
+        value['typeIdentities'] = identities
     if value.pop('_captureCalls', False):
         observe = value.pop('_observeCallArguments', None)
         if observe is not None:
@@ -341,7 +369,11 @@ def prepare_script(root, model, check, sandbox):
     from .execution_plan import plan_execution
     from .renderer import render_plan
     plan = plan_execution(root, model, check)
-    script = render_plan(plan, sandbox)
+    try:
+        script = render_plan(plan, sandbox)
+    except InputError as exc:
+        entry = plan.entry
+        raise type(exc)(f'{exc} ({entry.identity.source_file}:{entry.start}-{entry.end})') from exc
     (sandbox / "execution-plan.json").write_text(plan.to_json(), encoding="utf-8")
     return script
 
@@ -446,6 +478,8 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
         if decoded.get('status') == 'UNSUPPORTED':
             return status('UNSUPPORTED', 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
         evidence = {"status": "EXECUTED", "actual": decoded['actual']}
+        if decoded.get('status') == 'ERROR':
+            evidence.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
         if 'trace' in decoded:
             evidence['trace'] = decoded['trace']
         if 'storageTrace' in decoded:

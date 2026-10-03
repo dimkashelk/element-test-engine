@@ -54,7 +54,7 @@ def attach_register(storage, name):
     def clone_ref(expr, typ):
         from .generated_types import union_members
         variants = union_members(typ) or [typ]
-        choices = [t.rstrip('?') for t in variants]
+        choices = [t.rstrip('?') for t in variants if t != '?']
         if any(not t.endswith('.Ссылка') for t in choices):
             raise UnsupportedSyntaxError('Регистратор требует ссылочный тип документа')
         parts = ['новый ' + t + '(Идентификатор = (' + expr + ' как ' + t + ').Идентификатор)' for t in choices]

@@ -246,6 +246,8 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                 decoded = decode_output(stdout)
                 if (decoded.get('status') == 'EXECUTED' or operation == 'metadata-storage' and 'actual' in decoded) and isinstance(decoded.get('actual'), dict):
                     result = {'status': 'EXECUTED', 'actual': decoded['actual']}
+                    if decoded.get('status') == 'ERROR':
+                        result.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
                     if 'trace' in decoded:
                         result['trace'] = decoded['trace']
                     if 'storageTrace' in decoded:
@@ -259,6 +261,8 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                     result = {'status': 'ERROR', 'message': 'Интеграция: ошибка выполнения запроса', 'reasonCode': 'execution_error'}
                 if operation in {'shipment-storage', 'metadata-storage'}:
                     committed = audit(database, docker)
+                    from .runtime import neutralize_types
+                    committed = neutralize_types(committed, decoded.get('typeIdentities', {}))
                     if operation == 'metadata-storage' and 'formEffects' in check:
                         history = session.audit_history(database, docker)
                         if result['status'] == 'EXECUTED':

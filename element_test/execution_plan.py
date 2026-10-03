@@ -112,6 +112,8 @@ class ExecutionPlan:
     unavailable: list = field(default_factory=list)
     storage_elements: list = field(default_factory=list)
     sequence: list = field(default_factory=list)
+    probes: list = field(default_factory=list)
+    co_located_modules: dict = field(default_factory=dict)
     type_requirements: list = field(default_factory=list)
     contracts: object = None
     platform: object = None
@@ -138,6 +140,7 @@ class ExecutionPlan:
                              "source": s.source, "parameterTypes": s.parameter_types, "annotations": list(s.annotations),
                              "annotationRanges": s.annotation_ranges} for s in self.symbols],
                 "dependencies": {k: sorted(v) for k, v in self.module_dependencies.items()},
+                "coLocatedModules": self.co_located_modules,
                 "bindings": [asdict(b) for b in self.bindings],
                 "transforms": [{"sourceFile": path, "method": name, "spans": spans}
                                for (path, name), spans in self.rewrites.items()],
@@ -149,7 +152,7 @@ class ExecutionPlan:
                 "recordSets": self.record_sets,
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
-                "observations": self.observations, "declarations": self.declarations,
+                "observations": self.observations, "instanceProbes": self.probes, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
     def to_json(self):
@@ -321,7 +324,7 @@ def plan_execution(root, source_model, check):
                                     tuple(absolute.annotations), annotation_ranges))
     plan = ExecutionPlan(root, runtime_model, check, module, original, symbols[0], symbols,
                          aliases, rewrites, dependencies,
-                         observations={k: check[k] for k in ("observe", "captureCalls", "captureException", "trace", "snapshotArgs", "snapshotConstants") if k in check})
+                         observations={k: check[k] for k in ("observe", "captureCalls", "captureException", "observeFailure", "trace", "snapshotArgs", "snapshotConstants") if k in check})
     if sequence:
         plan.sequence = sequence
     if not isinstance(check.get('trace', False), bool):
@@ -422,6 +425,8 @@ def plan_execution(root, source_model, check):
                     if 'storage' not in check and not (call.name == 'ЗагрузитьОбъект' and check.get('mocks', {}).get('objects')):
                         from .yaml_io import InputError
                         raise InputError('Операция объекта требует явный storage контракт')
+                    if not project and 'storage' in check and metadata not in plan.storage_elements:
+                        plan.storage_elements.append(metadata)
             if call.name in {'ПолучитьСсылку', 'СоздатьОбъект'} and owner is None:
                 matches = [e for e in runtime_model['elements'] if e['name'] == symbol.owner['name']
                            and e['namespace'] == symbol.owner['namespace']]
@@ -434,6 +439,11 @@ def plan_execution(root, source_model, check):
                                   source_file=symbol.identity.source_file,
                                   start=symbol.start + call.start, end=symbol.start + call.end))
     bind_types(plan)
+    from .instance_probes import prepare_probes
+    try:
+        prepare_probes(plan)
+    except InvalidTestError as exc:
+        raise InvalidTestError(f'{exc} ({plan.entry.identity.source_file}:{plan.entry.start}-{plan.entry.end})') from exc
     from .storage_queries import bind_queries
     bind_queries(plan)
     from .record_sets import bind_record_sets
@@ -496,7 +506,10 @@ def bind_types(plan):
         body += [t for _,_,t in body_type_references(symbol.source) if _project_body_type(c,t)]
         plan.body_types.extend(body)
         for typ in types + body:
-            c.require(typ)
+            try:
+                c.require(typ)
+            except InputError as exc:
+                raise type(exc)(f'{exc} ({symbol.identity.source_file}:{symbol.start}-{symbol.end})') from exc
             canonical = c.sbsl_type(typ)
             plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'], []).append(canonical)
             plan.type_requirements.append({'type': typ, 'canonical': canonical,
@@ -506,6 +519,20 @@ def bind_types(plan):
     from .form_context import generate_form_types
     generate_form_types(plan, c)
     plan.contracts = c
+    # Script forbids A.Object -> A's source manager -> A.Object imports.
+    # Co-locate that original static manager with its generated metadata types.
+    if plan.module.get('moduleType') == 'object' and 'context' in plan.check:
+        owner = plan.module['name'].removesuffix('.Объект')
+        canonical = c.canonical_type(owner)
+        for symbol in plan.symbols:
+            source = symbol.owner
+            if source['name'] == owner and source['namespace'] == plan.module['namespace']:
+                path = source['sourceFile']
+                old_alias = plan.aliases[path]
+                plan.co_located_modules[path] = canonical
+                plan.aliases[path] = canonical
+                for key, spans in plan.rewrites.items():
+                    plan.rewrites[key] = [(a,b,canonical if value == old_alias else value) for a,b,value in spans]
     from .form_effects import generate_effects
     generate_effects(plan, c)
     from .session_contracts import generate_session_types
