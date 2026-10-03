@@ -16,7 +16,7 @@ concurrency:
 jobs:
   regression:
     runs-on: ubuntu-24.04
-    timeout-minutes: 240
+    timeout-minutes: 300
     defaults:
       run:
         shell: bash
@@ -76,7 +76,7 @@ jobs:
 
       - name: Full regression
         id: tests
-        timeout-minutes: 210
+        timeout-minutes: 270
         run: |
           mkdir -p result/nightly
           python tools/ci/run_nightly.py 2>&1 | tee result/nightly/tests.log

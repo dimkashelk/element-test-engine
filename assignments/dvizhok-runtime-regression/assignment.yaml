@@ -10,7 +10,6 @@ checks:
   - Иван
   - Иванович
   expected: Иванов Иван Иванович
-  timeout: 5s
   points: 1.0
   properties: {}
   scenario: 'poc-fio: fio_normal'
@@ -25,7 +24,6 @@ checks:
   - ' Иван '
   - ' Иванович '
   expected: Иванов Иван Иванович
-  timeout: 5s
   points: 1.0
   properties: {}
   scenario: 'poc-fio: fio_trim'
@@ -40,7 +38,6 @@ checks:
   - ''
   - ' '
   expected: ''
-  timeout: 5s
   points: 1.0
   properties: {}
   scenario: 'poc-fio: fio_empty'

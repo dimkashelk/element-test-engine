@@ -12,7 +12,9 @@ from urllib.parse import quote
 import uuid
 import zipfile
 
-from .runtime import REPO, decode_output
+from .runtime import REPO, decode_output, executor_cpu_ulimit
+
+EXECUTOR_TIMEOUT = 30
 
 
 class BackendUnavailable(Exception):
@@ -95,7 +97,7 @@ def executor_command(runtime, home, directory, network, name, compatibility):
     return ['create', '--name', name, '--pull', 'never', '--network', network,
             '--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
             '--user', '65534:65534', '--memory', '384m', '--memory-swap', '384m',
-            '--cpus', '1', '--pids-limit', '64', '--ulimit', 'cpu=8:8',
+            '--cpus', '1', '--pids-limit', '64', '--ulimit', executor_cpu_ulimit(EXECUTOR_TIMEOUT),
             '--ulimit', 'fsize=2097152:2097152', '--log-driver', 'none',
             '--tmpfs', '/tmp:rw,noexec,nosuid,size=64m', '--workdir', '/tmp',
             '--mount', f'type=bind,source={home},target=/runtime,readonly',
@@ -116,7 +118,7 @@ def executor_output(executor, directory):
     try:
         with stdout_path.open('w+b') as out, stderr_path.open('w+b') as err:
             process = subprocess.Popen(['docker', 'start', '--attach', executor], stdout=out, stderr=err)
-            deadline = time.monotonic() + 30
+            deadline = time.monotonic() + EXECUTOR_TIMEOUT
             while process.poll() is None:
                 if time.monotonic() > deadline:
                     raise BackendUnavailable('Интеграция: превышен timeout executor')
@@ -127,7 +129,7 @@ def executor_output(executor, directory):
                 diagnostics = stdout_path.read_text(errors='replace') + stderr_path.read_text(errors='replace')
                 if any(marker in diagnostics for marker in ('Script compilation error:', 'Ошибки компиляции скрипта:')):
                     raise BackendUnavailable('Script executor: неподдержанная компиляция исходного обращения', 'unsupported_syntax')
-                raise BackendUnavailable('Интеграция: ошибка executor')
+                raise BackendUnavailable(f'Интеграция: ошибка executor (код {process.returncode})')
             if stdout_path.stat().st_size + stderr_path.stat().st_size > 1024 * 1024:
                 raise BackendUnavailable('Интеграция: ошибка executor или превышен лимит вывода')
             out.seek(0)

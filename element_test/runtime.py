@@ -409,6 +409,12 @@ def execution_timeout(check):
     return timeout
 
 
+def executor_cpu_ulimit(timeout):
+    """Allow JVM startup and compilation for the entire bounded wall budget."""
+    seconds = math.ceil(timeout)
+    return f'cpu={seconds}:{seconds}'
+
+
 def run_pure(root, model, check, temporary, *, plan_sink=None):
     """Run one standalone method in Docker; return evidence, never award points."""
     def status(name, message, reason):
@@ -439,11 +445,15 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             plan_sink.append(json.loads((generated / 'execution-plan.json').read_text()))
         home = Path(os.environ.get("ELEMENT_SCRIPT_HOME", REPO / runtime["directory"])).resolve()
         image = os.environ.get("ELEMENT_TEST_DOCKER_IMAGE", runtime["image"])
+        try:
+            timeout = execution_timeout(check)
+        except ValueError as exc:
+            return status('ERROR', str(exc), 'invalid_test')
         command = ["docker", "create", "--name", container, "--pull", "never",
                    "--network", "none", "--read-only", "--cap-drop", "ALL",
                    "--security-opt", "no-new-privileges", "--user", "65534:65534",
                    "--memory", "384m", "--memory-swap", "384m", "--cpus", "1", "--pids-limit", "64",
-                   "--ulimit", "cpu=8:8", "--ulimit", "fsize=2097152:2097152", "--log-driver", "none",
+                   "--ulimit", executor_cpu_ulimit(timeout), "--ulimit", "fsize=2097152:2097152", "--log-driver", "none",
                    "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m", "--workdir", "/tmp",
                    "--mount", f"type=bind,source={home},target=/runtime,readonly",
                    "--mount", f"type=bind,source={script.parent},target=/generated,readonly", image,
@@ -460,10 +470,6 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             java_at = command.index('java')
             language, country = prepared_plan['executorLocale'].split('-')
             command[java_at + 1:java_at + 1] = ['-Duser.language=' + language, '-Duser.country=' + country]
-        try:
-            timeout = execution_timeout(check)
-        except ValueError as exc:
-            return status('ERROR', str(exc), 'invalid_test')
         creation = subprocess.run(command, capture_output=True, text=True, timeout=30)
         if creation.returncode:
             return status("UNSUPPORTED", creation.stderr[:4000], "backend_unavailable")

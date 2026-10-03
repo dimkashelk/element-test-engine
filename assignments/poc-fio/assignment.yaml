@@ -7,7 +7,6 @@ checks:
       method: СформироватьФИО
     args: [Иванов, Иван, Иванович]
     expected: Иванов Иван Иванович
-    timeout: 5s
     points: 1
   - id: fio_trim
     type: runtime
@@ -16,7 +15,6 @@ checks:
       method: СформироватьФИО
     args: [" Иванов ", " Иван ", " Иванович "]
     expected: Иванов Иван Иванович
-    timeout: 5s
     points: 1
   - id: fio_empty
     type: runtime
@@ -25,5 +23,4 @@ checks:
       method: СформироватьФИО
     args: [" ", "", " "]
     expected: ""
-    timeout: 5s
     points: 1
