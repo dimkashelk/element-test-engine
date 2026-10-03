@@ -32,15 +32,17 @@ def generate_query(query, contracts):
         required['Период'] = QueryField(query.owner, 'Период', 'Дата', True)
     def declaration(structure, fields, readonly=False):
         return '@Глобально\nструктура ' + structure + '\n' + ''.join(
-            '    ' + ('знч' if readonly else 'пер') + ' ' + label + ': ' + f.type + '\n'
+            '    ' + ('знч' if readonly else 'пер') + ' ' + label + ': ' + contracts.sbsl_type(f.type) + '\n'
             for f,label in fields) + ';\n'
     text = declaration('Данные', [(f,f.name) for f in required.values()])
-    text += declaration('СтрокаРезультата', query.projections, readonly=True)
+    row_type = query.fill['type'] if query.fill else 'СтрокаРезультата'
+    if not query.fill:
+        text += declaration('СтрокаРезультата', query.projections, readonly=True)
     text += '@Глобально\nструктура Запрос\n'
     text += ''.join('    знч П' + str(p.slot) + ': ' + p.type + '\n' for p in parameters)
     if sliced:
         text += '    знч Граница: Дата\n'
-    text += '    @Глобально\n    метод Выполнить(): Массив<СтрокаРезультата>\n'
+    text += '    @Глобально\n    метод Выполнить(): Массив<' + row_type + '>\n'
     text += ('        знч Строки = новый Массив<Данные>()\n'
              '        знч Состояние = ТестСессия.ЧитатьВсе()\n'
              '        если Состояние.СодержитКлюч(' + contracts.literal(query.owner,'Строка') + ')\n'
@@ -78,10 +80,19 @@ def generate_query(query, contracts):
     else:
         text += '                    Строки.Добавить(СтрокаДанных)\n'
     text += ('                ;\n        ;\n' if sliced else '                ;\n            ;\n        ;\n')
-    text += '        знч Результат = новый Массив<СтрокаРезультата>()\n        для С из Строки\n'
+    text += '        знч Результат = новый Массив<' + row_type + '>()\n        для С из Строки\n'
     if query.limit:
         text += '            если Результат.Размер() >= ' + str(query.limit) + '\n                прервать\n            ;\n'
-    text += '            Результат.Добавить(новый СтрокаРезультата(' + ', '.join(label + ' = С.' + f.name for f,label in query.projections) + '))\n'
+    # Each projected reference is detached independently, including two columns
+    # sourced from the same field. Native scalars/enums are immutable.
+    def projection(field):
+        value = 'С.' + field.name
+        if field.type.rstrip('?').endswith('.Ссылка'):
+            base = field.type.rstrip('?')
+            copied = 'новый ' + base + '(Идентификатор = ' + value + '.Идентификатор)'
+            return '(' + value + ' == Неопределено ? Неопределено : ' + copied + ')' if field.type.endswith('?') else copied
+        return value
+    text += '            Результат.Добавить(новый ' + row_type + '(' + ', '.join(label + ' = ' + projection(f) for f,label in query.projections) + '))\n'
     text += '        ;\n        возврат Результат\n    ;\n;\n'
     if query.ordering:
         text += '@Глобально\nметод Раньше(А: Данные, Б: Данные): Булево\n'
@@ -105,6 +116,8 @@ def generate_query(query, contracts):
     text += '@Глобально\nметод Создать(' + signature + '): Запрос\n' + prelude + '    возврат новый Запрос(' + ', '.join(args) + ')\n;\n'
     contracts.definitions[name] = text
     contracts.method_dependencies[name] = ['ТестСессия.Записи'] + [f.type for f in required.values()]
+    if query.fill:
+        contracts.method_dependencies[name].append(row_type)
     return name
 
 
@@ -139,6 +152,10 @@ def bind_queries(plan):
                     or 'Запрос' in c.local_by_source.get(c.current_source, {}) or c.resolve('Запрос')):
                 raise UnsupportedSyntaxError('Затенённый владелец литерала Запрос')
             query = parse_storage_query(text,c)
+            if query.fill and (method_binding_visible(locals_,query.fill['sourceName'].split('::')[0],body+query.fill['typeRange'][0])
+                              or query.fill['sourceName'] in c.local_by_source.get(c.current_source, {})):
+                raise UnsupportedSyntaxError('Затенённый тип ЗАПОЛНИТЬ: ' + query.fill['sourceName'] +
+                                             f" ({symbol.start+body+query.fill['typeRange'][0]}-{symbol.start+body+query.fill['typeRange'][1]})")
             if (query.source_kind == 'slice-last' and
                     (method_binding_visible(locals_,query.source_name.split('::')[0],body+query.source_range[0])
                      or query.source_name in c.local_by_source.get(c.current_source, {}))):
@@ -154,7 +171,7 @@ def bind_queries(plan):
             name = generate_query(query,c)
             plan.queries.append({'sourceFile': symbol.identity.source_file, 'symbol': symbol.identity.declaration,
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
-                'text': text, 'ast': query.to_dict(), 'rowType': name + '.СтрокаРезультата',
+                'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else name + '.СтрокаРезультата',
                 'backend': plan.storage.config.get('backend','memory'),
                 'limitations': ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']})
             element = c.resolve(query.owner)[0]

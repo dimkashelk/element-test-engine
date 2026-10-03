@@ -1,0 +1,649 @@
+name: Именованное заполнение — storage-query-fill-daily
+checks:
+- id: Rows
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Rows
+  args:
+  - '2026-09-30'
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Book
+    initial:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    initialRegisters:
+    - type: Data::Book
+      filter:
+        Label: A
+      rows:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      filter:
+        Label: B
+      rows:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+  timeout: 15s
+  trace: true
+  expected:
+    result:
+    - Name: B
+      Amount: 1
+      Note: note
+      Ref: null
+      Second: null
+      Default: authored
+      Empty: ''
+      Flag: false
+      Day: '2026-09-29'
+      Key: 22222222-2222-4222-8222-222222222222
+      Kind: Second
+    - Name: A
+      Amount: 3
+      Note: null
+      Ref:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+      Second:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+      Default: authored
+      Empty: ''
+      Flag: true
+      Day: '2026-09-30'
+      Key: 11111111-1111-4111-8111-111111111111
+      Kind: First
+    storage:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"A\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"B\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+- id: Construct
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Construct
+  args: []
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Book
+    initial:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    initialRegisters:
+    - type: Data::Book
+      filter:
+        Label: A
+      rows:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      filter:
+        Label: B
+      rows:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+  timeout: 15s
+  trace: true
+  expected:
+    result:
+    - Name: new
+      Amount: 9
+      Note: null
+      Ref: null
+      Second: null
+      Default: authored
+      Empty: ''
+      Flag: false
+      Day: null
+      Key: null
+      Kind: null
+    storage:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"A\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"B\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+- id: Collision
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Collision
+  args:
+  - '2026-09-30'
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Book
+    initial:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    initialRegisters:
+    - type: Data::Book
+      filter:
+        Label: A
+      rows:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      filter:
+        Label: B
+      rows:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+  timeout: 15s
+  trace: true
+  expected:
+    result:
+      local:
+      - Name: B
+        Amount: 1
+        Note: note
+        Ref: null
+        Second: null
+        Default: authored
+        Empty: ''
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Name: A
+        Amount: 3
+        Note: null
+        Ref:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Second:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Default: authored
+        Empty: ''
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      other:
+        Name: neighbor
+        Amount: null
+        Note: null
+        Ref: null
+        Second: null
+        Default: authored
+        Empty: ''
+        Flag: false
+        Day: null
+        Key: null
+        Kind: null
+    storage:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"A\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: A
+        Total: 100
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-09-30'
+        Label: A
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      - Период: '2026-10-02'
+        Label: A
+        Total: 200
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    - type: Data::Book
+      id: "{\n  \"Label\" : \"B\"\n}"
+      value:
+      - Период: '2026-09-28'
+        Label: B
+        Total: 100
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-09-30'
+        Label: B
+        Total: 1
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+      - Период: '2026-10-02'
+        Label: B
+        Total: 200
+        Optional: note
+        Link: null
+        Flag: false
+        Day: '2026-09-29'
+        Key: 22222222-2222-4222-8222-222222222222
+        Kind: Second
+- id: empty
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Rows
+  args:
+  - '2026-09-30'
+  storage:
+    idType: Ууид
+    registers:
+    - Data::Book
+    initial:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+    initialRegisters: []
+  timeout: 15s
+  trace: true
+  expected:
+    result: []
+    storage:
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Label: neighbor
+        Total: 3
+        Optional: null
+        Link:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Flag: true
+        Day: '2026-09-30'
+        Key: 11111111-1111-4111-8111-111111111111
+        Kind: First
+      id: 11111111-1111-4111-8111-111111111111

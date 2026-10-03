@@ -1,0 +1,1 @@
+ВЫБРАТЬ A.Label ИЗ Data::Item КАК A ВНУТРЕННЕЕ СОЕДИНЕНИЕ Other::Item КАК B ПО A.Key == B.Key

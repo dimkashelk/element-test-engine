@@ -1,0 +1,284 @@
+{
+  "stage": 39,
+  "date": "2026-10-03",
+  "status": "implemented-within-named-fill-scope",
+  "compatibilityVersion": "9.0",
+  "documentationReferenceVersion": "9.1",
+  "documentationSelection": "User clarified compatibility 9.0 permits documentation 9.1/9.2/9.3; source catalog uses official 9.1. Native/runtime use -c 9.0.",
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0"
+  },
+  "postgres": {
+    "backend": "postgres",
+    "image": "postgres:17@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f"
+  },
+  "catalog": {
+    "identical": true,
+    "hashes": {
+      "docs/query-contract-catalog.json": "ad8571f6c1b8806145e7db3ab381030de919c4c715371771fe261839033b0296",
+      "docs/query-contract-catalog.md": "9f943db2904a88c0c24072c9fcccb92e9a6b39f095c829524511a73015e0e43d"
+    },
+    "archives": [
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "counts": {
+      "literal": 213,
+      "api-candidate": 227,
+      "xbql-file": 18,
+      "documented-form": 35,
+      "documentation-index": 83
+    },
+    "statuses": {
+      "discovered": 576,
+      "parsed": 25,
+      "planned": 1,
+      "executed": 1,
+      "independentlyAssessed": 1
+    }
+  },
+  "native": {
+    "file": "result/storage-query-fill/native/results.json",
+    "probes": 11,
+    "expectationsMatch": true
+  },
+  "baseline": "result/storage-query-fill/baseline.json",
+  "public": [
+    {
+      "mode": "test",
+      "file": "result/storage-query-fill/public-test/result.json",
+      "score": 16,
+      "maxScore": 16,
+      "unavailablePoints": 0,
+      "counts": {
+        "PASS": 16
+      }
+    },
+    {
+      "mode": "run",
+      "file": "result/storage-query-fill/public-run/result.json",
+      "score": 16,
+      "maxScore": 16,
+      "unavailablePoints": 0,
+      "counts": {
+        "PASS": 16
+      }
+    }
+  ],
+  "batches": [
+    {
+      "file": "result/storage-query-fill/batch-1/batch-result.json",
+      "scope": "Four portable ordinary-source memory criteria, three independent submissions: correct/mutated-default/neighbor. Does not cover all catalog groups or SQL.",
+      "scores": [
+        4,
+        1,
+        4
+      ],
+      "cacheHit": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "file": "result/storage-query-fill/batch-2/batch-result.json",
+      "scope": "Four portable ordinary-source memory criteria, three independent submissions: correct/mutated-default/neighbor. Does not cover all catalog groups or SQL.",
+      "scores": [
+        4,
+        1,
+        4
+      ],
+      "cacheHit": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "sql": [
+    {
+      "file": "result/storage-query-fill/sql-daily-state.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    },
+    {
+      "file": "result/storage-query-fill/sql-ordinary-state.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    },
+    {
+      "file": "result/storage-query-fill/sql-real-formula.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    },
+    {
+      "file": "result/storage-query-fill/sql-real-found.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    },
+    {
+      "file": "result/storage-query-fill/sql-real-missing.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    },
+    {
+      "file": "result/storage-query-fill/sql-real-zero-factor.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "audit": "independent PostgreSQL SELECT of actual.storage; full histories/UUID/periods compared by SBSL"
+    }
+  ],
+  "schemas": {
+    "file": "result/storage-query-fill/schema-validation.json",
+    "valid": true,
+    "checks": 52
+  },
+  "testRuns": [
+    {
+      "file": "result/storage-query-fill/target-final.log",
+      "tests": 27,
+      "seconds": 525.771,
+      "status": "OK",
+      "skipped": 0
+    },
+    {
+      "file": "result/storage-query-fill/target-additional.log",
+      "tests": 7,
+      "seconds": 19.294,
+      "status": "OK",
+      "skipped": 0
+    },
+    {
+      "file": "result/storage-query-fill/target-final-additions.log",
+      "tests": 3,
+      "seconds": 27.301,
+      "status": "OK",
+      "skipped": 0
+    },
+    {
+      "file": "result/storage-query-fill/target-status-evidence.log",
+      "tests": 1,
+      "seconds": 3.298,
+      "status": "OK",
+      "skipped": 0
+    }
+  ],
+  "distinctTests": 29,
+  "distinctNewTests": 16,
+  "distinctPreviousAffectedTests": 13,
+  "tests": [
+    "test_generated_types.GeneratedTypesTest.test_ambiguous_and_unsupported_types_are_not_guessed.test_ambiguous_and_unsupported_types_are_not_guessed",
+    "test_generated_types.GeneratedTypesTest.test_lazy_rows_references_and_invalid_inputs.test_lazy_rows_references_and_invalid_inputs",
+    "test_generated_types.GeneratedTypesTest.test_private_type_in_package_is_visible_within_subsystem.test_private_type_in_package_is_visible_within_subsystem",
+    "test_generated_types.GeneratedTypesTest.test_union_variants_dates_and_strict_inputs.test_union_variants_dates_and_strict_inputs",
+    "test_information_register_slices.SliceDockerTest.test_reexecution_captured_effects_refs_and_transaction_rollback.test_reexecution_captured_effects_refs_and_transaction_rollback",
+    "test_information_register_slices.SlicePlanTest.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected",
+    "test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys.test_invalid_teacher_rows_and_period_and_duplicate_keys",
+    "test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing",
+    "test_storage_queries.StorageQueryDockerTest.test_portable_fields_filters_order_limit_empty_single_reference_and_detachment.test_portable_fields_filters_order_limit_empty_single_reference_and_detachment",
+    "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes",
+    "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations.test_plan_binding_original_spans_aliases_and_no_expectations",
+    "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges.test_reused_parameter_has_one_slot_and_all_source_ranges",
+    "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections.test_token_boundaries_nested_parameters_comments_and_rejections",
+    "test_storage_query_fill.FillDockerTest.test_business_mutations_are_sbsl_fail_and_recovery.test_business_mutations_are_sbsl_fail_and_recovery",
+    "test_storage_query_fill.FillDockerTest.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots",
+    "test_storage_query_fill.FillDockerTest.test_invalid_fixture_timeout_unsupported_and_next_supported.test_invalid_fixture_timeout_unsupported_and_next_supported",
+    "test_storage_query_fill.FillDockerTest.test_nominal_structure_input_uses_helper_constructor_and_rejects_missing_required_field.test_nominal_structure_input_uses_helper_constructor_and_rejects_missing_required_field",
+    "test_storage_query_fill.FillDockerTest.test_portable_defaults_nominal_helper_new_array_fresh_and_collision.test_portable_defaults_nominal_helper_new_array_fresh_and_collision",
+    "test_storage_query_fill.FillDockerTest.test_real_both_direct_roots_and_independent_rounding_history.test_real_both_direct_roots_and_independent_rounding_history",
+    "test_storage_query_fill.FillDockerTest.test_sticky_backend_error_after_catch_and_recovery.test_sticky_backend_error_after_catch_and_recovery",
+    "test_storage_query_fill.FillPlanTest.test_catalog_all_projects_stable_ids_and_visible_malformed_candidates.test_catalog_all_projects_stable_ids_and_visible_malformed_candidates",
+    "test_storage_query_fill.FillPlanTest.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root",
+    "test_storage_query_fill.FillPlanTest.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected",
+    "test_storage_query_fill.FillPlanTest.test_ordinary_readonly_and_literal_strings_comments_nested_parameters.test_ordinary_readonly_and_literal_strings_comments_nested_parameters",
+    "test_storage_query_fill.FillPlanTest.test_type_rejections_have_ranges_and_unreachable_types_are_lazy.test_type_rejections_have_ranges_and_unreachable_types_are_lazy",
+    "test_storage_query_fill.FillPlanTest.test_visibility_fully_qualified_and_alias_same_nominal_type.test_visibility_fully_qualified_and_alias_same_nominal_type",
+    "test_storage_query_fill.FillPublicTest.test_public_test_run_control_two_fresh_batches_and_nominal_inputs.test_public_test_run_control_two_fresh_batches_and_nominal_inputs",
+    "test_storage_query_fill.FillSqlTest.test_portable_state_rollback_parity_and_sql_cleanup.test_portable_state_rollback_parity_and_sql_cleanup",
+    "test_storage_query_fill.FillSqlTest.test_real_both_roots_no_publication_independent_full_history_audit.test_real_both_roots_no_publication_independent_full_history_audit"
+  ],
+  "initialFailures": [
+    {
+      "file": "result/storage-query-fill/target-initial.log",
+      "tests": 9,
+      "seconds": 185.862,
+      "errors": 1,
+      "reason": "Harness used failure-only storageEvidence on a successful SQL execution; corrected to independently audited actual.storage."
+    },
+    {
+      "file": "result/storage-query-fill/state-sql-repeat.log",
+      "tests": 4,
+      "seconds": 51.592,
+      "failures": 2,
+      "reason": "Daily portable Write omitted required record-set method arguments. Fixed fixture call; business expected unchanged."
+    }
+  ],
+  "mutations": {
+    "count": 9,
+    "studentExecution": "EXECUTED",
+    "independentGrader": "SBSL",
+    "expectedStatus": "FAIL",
+    "assessmentFile": "result/storage-query-fill/mutation-assessments.json",
+    "cases": [
+      "resource",
+      "swap",
+      "date",
+      "currency",
+      "division",
+      "round",
+      "missing",
+      "zero",
+      "default"
+    ]
+  },
+  "statusEvidence": {
+    "invalid-fixture": "result/storage-query-fill/invalid-fixture.json",
+    "timeout": "result/storage-query-fill/timeout.json",
+    "unsupported": "result/storage-query-fill/unsupported.json",
+    "sticky-error": "result/storage-query-fill/sticky-error.json"
+  },
+  "cleanup": {
+    "sqlReportsAllTrue": true,
+    "lastSuccessfulResourceInventory": "No element-test containers or element-integration containers/networks observed after targeted tests.",
+    "finalResourceInventory": "Docker socket unavailable on final repeat; daemon no longer running. No cleanup failure in any SQL result."
+  },
+  "notRun": [
+    "full unittest discovery",
+    "303 forms",
+    "44 previous Dvizhok business roots",
+    "four archive validate commands",
+    "nightly CI"
+  ],
+  "unchanged": [
+    "four source archives",
+    "old assignments and expected",
+    "runtime limits",
+    "CI workflow and schedule"
+  ],
+  "remaining": "Documented review templates and API candidates are queued, not executable acceptance. Query groups 040-045 retain concrete tasks. Positional/custom/nested constructors and nullable narrowing are outside named-fill scope."
+}

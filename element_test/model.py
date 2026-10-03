@@ -9,8 +9,8 @@ from .resolution import same_subsystem
 from .yaml_io import InputError, InvalidTestError, load_yaml
 
 ELEMENT_TYPES = {"Справочник", "Документ", "Перечисление", "НаборКонстант", "РегистрНакопления",
-                 "РегистрСведений", "КомпонентИнтерфейса", "Модуль", "Подсистема"}
-MEMBERS = ("Реквизиты", "Измерения", "Ресурсы", "Константы", "Элементы", "ТабличныеЧасти")
+                 "РегистрСведений", "КомпонентИнтерфейса", "Модуль", "Подсистема", "Структура"}
+MEMBERS = ("Реквизиты", "Измерения", "Ресурсы", "Константы", "Элементы", "ТабличныеЧасти", "Поля")
 COMMAND_ELEMENTS = {"ФрагментКомандногоИнтерфейса"}
 
 
@@ -108,7 +108,7 @@ def _analyze_single(root):
         identities.add(key)
         containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
         for container in containers:
-            for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы"):
+            for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы", "Поля"):
                 for member in container.get(group, []):
                     if "Тип" not in member:
                         continue  # System fields may have implicit platform types.

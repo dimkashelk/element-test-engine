@@ -116,6 +116,7 @@ class StorageQuery:
     source_range: tuple | None = None
     source_name: str = ''
     boundary: str | None = None
+    fill: dict | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -205,13 +206,24 @@ def parse_storage_query(text, contracts):
             raise UnsupportedSyntaxError('ПЕРВЫЕ требует положительный целый литерал')
         limit = int(tokens[pos][1])
         pos += 1
-    projections = []
+    projections, projection_ranges = [], []
     while True:
+        projection_start = tokens[pos][2] if pos < len(tokens) else len(text)
         path = field_path()
         label = identifier() if accept('КАК') else path[1]
         projections.append((path, label))
+        projection_ranges.append((projection_start, tokens[pos-1][3]))
         if not accept(','):
             break
+    fill_name, fill_range, fill_type_range = None, None, None
+    if accept('ЗАПОЛНИТЬ'):
+        fill_start = tokens[pos-1][2]
+        type_start = tokens[pos][2] if pos < len(tokens) else len(text)
+        fill_name = identifier()
+        while accept('::'):
+            fill_name += '::' + identifier()
+        fill_range = (fill_start, tokens[pos-1][3])
+        fill_type_range = (type_start, tokens[pos-1][3])
     expect('ИЗ')
     source_start = tokens[pos][2] if pos < len(tokens) else len(text)
     owner = identifier()
@@ -269,15 +281,50 @@ def parse_storage_query(text, contracts):
         field = fields[name]
         if source_kind == 'slice-last' and '|' in field.type:
             raise UnsupportedSyntaxError('Union-поле среза требует отдельного типизированного контракта')
-        scalars = {'Строка', 'Число', 'Булево', 'Ууид'} | ({'Дата'} if source_kind == 'slice-last' else set())
-        if field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка'):
+        scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата'}
+        enum = contracts.canonical_elements.get(field.type.rstrip('?'))
+        if field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
             raise UnsupportedSyntaxError('Тип поля запроса вне контракта: ' + field.type)
         contracts.require(field.type)
         return field
 
     bound_projections = tuple((bind(path), label) for path,label in projections)
     if len({label for _,label in projections}) != len(projections):
-        raise UnsupportedSyntaxError('Повторяющийся псевдоним проекции запроса')
+        seen = set()
+        for (_,label), span in zip(projections, projection_ranges):
+            if label in seen:
+                raise UnsupportedSyntaxError(f'Повторяющийся псевдоним проекции запроса: {label} ({span[0]}-{span[1]})')
+            seen.add(label)
+    fill = None
+    if fill_name:
+        from .yaml_io import InputError
+        try:
+            targets = contracts.resolve(fill_name)
+            if len(targets) != 1 or targets[0]['elementType'] != 'Структура':
+                raise UnsupportedSyntaxError('Тип ЗАПОЛНИТЬ отсутствует, неоднозначен, недоступен или не является YAML-структурой: ' + fill_name)
+            target = targets[0]
+            canonical = contracts.canonical_type(qualified(target))
+            contracts.require(canonical)
+            target_fields = contracts.fields[canonical]
+            by_name = {f['Имя']: f for f in target_fields}
+            mapping = []
+            for (column,label), span in zip(bound_projections, projection_ranges):
+                if label not in by_name:
+                    raise UnsupportedSyntaxError(f'Неизвестная колонка ЗАПОЛНИТЬ: {label} ({span[0]}-{span[1]})')
+                field = by_name[label]
+                if column.type != field['Тип'] and column.type + '?' != field['Тип']:
+                    raise UnsupportedSyntaxError(f'Несовместимые типы ЗАПОЛНИТЬ: {column.type} → {field["Тип"]}, {label} ({span[0]}-{span[1]})')
+                mapping.append({'column': column.name, 'parameter': label, 'columnType': column.type,
+                                'fieldType': field['Тип'], 'range': span})
+            supplied = {label for _,label in bound_projections}
+            for field in target_fields:
+                if field['constructorRequired'] and field['Имя'] not in supplied:
+                    raise UnsupportedSyntaxError('Отсутствующее обязательное поле ЗАПОЛНИТЬ: ' + field['Имя'])
+            fill = {'owner': qualified(target), 'sourceFile': target['sourceFile'], 'type': canonical,
+                    'sourceName': fill_name, 'range': fill_range, 'typeRange': fill_type_range,
+                    'constructor': 'automatic-named', 'fields': tuple(target_fields), 'mapping': tuple(mapping)}
+        except InputError as exc:
+            raise UnsupportedSyntaxError(str(exc) + f' (ЗАПОЛНИТЬ {fill_type_range[0]}-{fill_type_range[1]})') from exc
     predicates, parameters, slots, slot_types = [], [], {}, {}
     def parameter(token, typ):
         _, expression, start, end = token
@@ -325,7 +372,7 @@ def parse_storage_query(text, contracts):
             # XBQL permits a projection alias in ORDER BY.
             projected = [f for f,label in bound_projections if path == (None,label)]
             field = projected[0] if projected else bind(path)
-            if field.type not in ({'Число', 'Строка', 'Дата'} if source_kind == 'slice-last' else {'Число', 'Строка'}):
+            if field.type not in {'Число', 'Строка', 'Дата'}:
                 raise UnsupportedSyntaxError('Сортировка вне подтверждённых не-nullable типов')
             descending = accept('УБЫВ')
             if not descending:
@@ -341,4 +388,4 @@ def parse_storage_query(text, contracts):
     return StorageQuery(identity, alias, bound_projections, tuple(predicates), tuple(parameters), tuple(ordering), limit,
         'storage-slice-last-day-v1' if source_kind == 'slice-last' else 'storage-staged-executor-v1',
         source_kind, 'День' if source_kind == 'slice-last' else None, dimensions, period_slot, period_range,
-        source_range, owner, 'captured-date-or-runtime-UTC-at-creation' if source_kind == 'slice-last' else None)
+        source_range, owner, 'captured-date-or-runtime-UTC-at-creation' if source_kind == 'slice-last' else None, fill)

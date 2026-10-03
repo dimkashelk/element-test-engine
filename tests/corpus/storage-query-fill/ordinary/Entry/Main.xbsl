@@ -1,0 +1,62 @@
+импорт Data::Card как Result
+импорт Service::Helper как Helper
+метод Rows(D: Дата): Массив<Result>
+    возврат Запрос{ВЫБРАТЬ ПЕРВЫЕ 2 P.Total КАК Amount, P.Link КАК Ref, P.Label КАК Name, P.Optional КАК Note, P.Link КАК Second, P.Flag КАК Flag, P.Day КАК Day, P.Key КАК Key, P.Kind КАК Kind ЗАПОЛНИТЬ Result ИЗ Data::Item КАК P УПОРЯДОЧИТЬ ПО P.Total ВОЗР}.Выполнить()
+;
+метод Single(D: Дата): Result?
+    возврат Rows(D).ЕдинственныйИлиНеопределено()
+;
+метод Identity(Value: Result): Result
+    возврат Helper.Identity(Value)
+;
+метод Construct(): Массив<Result>
+    знч Value = новый Result(Name = "new", Amount = 9)
+    возврат [Identity(Value)]
+;
+метод Detached(D: Дата): Объект
+    знч Old = Rows(D)
+    знч Fresh = Rows(D)
+    Fresh[0].Amount = 999
+    если Fresh[1].Ref != Неопределено
+        Fresh[1].Ref.Идентификатор = новый Ууид("33333333-3333-4333-8333-333333333333")
+    ;
+    возврат {"old": Old, "fresh": Fresh, "again": Rows(D)}
+;
+метод Neighbor(): Other::Card
+    возврат Запрос{ВЫБРАТЬ Label КАК Name ЗАПОЛНИТЬ Other::Card ИЗ Other::Item}.Выполнить().Единственный()
+;
+метод Collision(D: Дата): Объект
+    возврат {"local": Rows(D), "other": Neighbor()}
+;
+метод Unsupported(): Объект
+    возврат Запрос{ВЫБРАТЬ Label КАК Missing ЗАПОЛНИТЬ Result ИЗ Data::Item}.Выполнить()
+;
+метод Write(D: Дата, L: Строка, N: Число)
+    знч Value = новый Data::Item.Объект(Ссылка = Data::Item.ПолучитьСсылку(новый Ууид("11111111-1111-4111-8111-111111111111")), Label = L, Total = N)
+    Value.Записать()
+;
+метод State(D: Дата, L: Строка): Объект
+    знч Calls = новый Массив<Строка>()
+    знч Q = Запрос{ВЫБРАТЬ Label КАК Name, Total КАК Amount ЗАПОЛНИТЬ Result ИЗ Data::Item ГДЕ Label == %{Helper.Label(Calls, L)}}
+    знч Old = Q.Выполнить()
+    пер Seen = новый Массив<Result>()
+    пер Again = новый Массив<Result>()
+    попытка
+        исп Транзакции.Начать()
+        Write(D, L, 17)
+        Seen = Q.Выполнить()
+        Seen[0].Amount = 700
+        Again = Q.Выполнить()
+        выбросить новый ИсключениеВалидации("rollback")
+    поймать E: ИсключениеВалидации
+        возврат {"old": Old, "seen": Seen, "again": Again, "after": Q.Выполнить(), "calls": Calls}
+    ;
+;
+метод Swallow(D: Дата): Строка
+    попытка
+        Rows(D)
+    поймать E: Исключение
+        возврат "caught"
+    ;
+    возврат "ok"
+;

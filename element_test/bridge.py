@@ -27,7 +27,7 @@ def canonicalize_model_types(model):
         for element in project["elements"]:
             containers = [element["properties"]] + element["properties"].get("ТабличныеЧасти", [])
             for container in containers:
-                for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы"):
+                for group in ("Реквизиты", "Измерения", "Ресурсы", "Константы", "Поля"):
                     for member in container.get(group, []):
                         if "Тип" in member:
                             try:

@@ -834,7 +834,7 @@ bin/element-test run --project tests/corpus/information-register-slices/prices \
 [Задание №34](docs/tasks/034-dvizhok-form-context-and-coverage.md) реализовано:
 контекст семи форм объектов и независимая оценка 20 реальных методов Dvizhok.
 Инвентаризация всех 75 файлов / 44 методов обновляется по архиву и журналам.
-ЗАПОЛНИТЬ для ДемоСРМ отложено; дальнейшие контракты описаны в
+Именованное ЗАПОЛНИТЬ реализовано в [№39](docs/storage-query-fill.md); дальнейшие контракты описаны в
 [следующих шагах](docs/next-task.md).
 
 
@@ -977,3 +977,17 @@ bin/element-test test --project Dvizhok.xdump \
 результат: снимок декларации/сигнатур и поддержанные runtime-сценарии.
 Суммарно подготовлены 312 сценариев значений и 326 структурных критериев;
 ограничения остальных выражений перечислены в отчётах, без runtime PASS.
+
+
+Реализовано [задание №39](docs/tasks/039-query-contract-catalog-and-typed-fill.md):
+[каталог запросов](docs/query-contract-catalog.md) четырёх дампов и
+[именованное ЗАПОЛНИТЬ](docs/storage-query-fill.md) существующую YAML-структуру.
+Два прямых корня ДемоСРМ, memory/PostgreSQL; публичные test/run — по 16/16 PASS.
+Проверены 29 различных целевых тестов; полный набор не запускался.
+[Следующее №40](docs/tasks/040-joins-and-null.md) — соединения и NULL.
+
+```bash
+python3 -m element_test.query_catalog
+bin/element-test test --project Demo-SRM-dev-2026-09-28-21-38.xdump \
+  --assignment assignments/storage-query-fill-real --output result/storage-query-fill/public-test
+```

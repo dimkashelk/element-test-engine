@@ -76,7 +76,8 @@ class ProjectTypes:
                 return self.platform_type_aliases[token]
             owner, dot, variant = token.partition(".")
             if owner in self.canonical_elements:
-                return token
+                element = self.canonical_elements[owner]
+                return token + '.Значение' if element['elementType'] == 'Структура' and not dot else token
             local = self.local_by_source.get(self.current_source, {})
             if owner in local:
                 key = (self.current_source, owner)
@@ -104,7 +105,7 @@ class ProjectTypes:
                 technical = 'ТестТип' + sha256(str(identity).encode()).hexdigest()[:16]
             self.claim_owner(technical, element)
             self.canonical_elements[technical] = element
-            return technical + (dot + variant if dot else "")
+            return technical + (dot + variant if dot else '.Значение' if element['elementType'] == 'Структура' else "")
 
         return re.sub(pattern, shorten, type_name)
 
@@ -180,6 +181,12 @@ class ProjectTypes:
         if type_name in self.canonical_elements:
             namespace = self.canonical_elements[type_name]['namespace']
         if type_name in self.definitions:
+            return
+        structure_owner = type_name.removesuffix('.Значение')
+        element = self.canonical_elements.get(structure_owner)
+        if element and element['elementType'] == 'Структура':
+            from .project_structures import generate_structure
+            generate_structure(self, type_name, element)
             return
         if re.fullmatch(IDENT, type_name):
             matches = [self.canonical_elements[type_name]] if type_name in self.canonical_elements else self.resolve(type_name, namespace)
@@ -385,6 +392,9 @@ class ProjectTypes:
             fields = {f["Имя"]: f["Тип"] for f in self.fields[type_name]}
             if set(value) - fields.keys():
                 raise InvalidTestError(f"Неизвестные поля {type_name}: {sorted(set(value) - fields.keys())}")
+            missing = [f['Имя'] for f in self.fields[type_name] if f.get('constructorRequired') and f['Имя'] not in value]
+            if missing:
+                raise InvalidTestError(f"Отсутствуют обязательные поля {type_name}: {missing}")
             arguments = [f"{key} = {self.literal(v, fields[key])}" for key, v in value.items()]
             return f"новый {type_name}(" + ", ".join(arguments) + ")"
         raise InputError(f"Вход для типа {type_name} пока не поддерживается")
