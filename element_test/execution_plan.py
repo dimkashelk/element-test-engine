@@ -11,7 +11,7 @@ import re
 from .indexer import call_code, parse_module, method_call_expressions, method_local_callable_bindings
 from .model import select_check_project
 from .resolution import combined_library_symbols
-from .yaml_io import InvalidTestError, UnsupportedSyntaxError
+from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
 
 
 @dataclass(frozen=True)

@@ -20,6 +20,10 @@ from element_test.yaml_io import InputError, InvalidTestError, UnsupportedSyntax
 from form_effect_fixtures import *
 
 
+def setUpModule():
+    OUT.mkdir(parents=True, exist_ok=True)
+
+
 def assess(root,checks,output,sql=False,inject_failure=False):
     output.mkdir(parents=True,exist_ok=True)
     model=analyze(root)

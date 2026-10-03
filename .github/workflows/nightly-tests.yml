@@ -47,17 +47,12 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install -e .
 
-      - name: Download private runtime assets
+      - name: Download runtime assets
         env:
           GH_TOKEN: ${{ github.token }}
           ASSETS_TAG: ${{ vars.CI_ASSETS_TAG || 'ci-assets-v1' }}
           ASSETS_SHA256: ${{ vars.CI_ASSETS_SHA256 }}
-          REPOSITORY_VISIBILITY: ${{ github.event.repository.private }}
         run: |
-          if [[ "$REPOSITORY_VISIBILITY" != 'true' ]]; then
-            echo 'Nightly assets require a private repository.' >&2
-            exit 1
-          fi
           gh release download "$ASSETS_TAG" --repo "$GITHUB_REPOSITORY" \
             --pattern element-ci-assets.tar.gz --dir "$RUNNER_TEMP/element-ci-assets"
           python tools/ci/assets.py unpack \

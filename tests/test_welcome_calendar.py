@@ -19,6 +19,10 @@ from element_test.yaml_io import InputError
 from welcome_fixtures import *
 
 
+def setUpModule():
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+
+
 def grade(model, checks, output):
     write_json(output/'model.json',model)
     write_json(output/'assignment.json',{'name':'Independent welcome assessment','checks':checks})
