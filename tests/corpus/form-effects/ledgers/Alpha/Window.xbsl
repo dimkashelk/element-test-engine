@@ -1,0 +1,6 @@
+метод Start()
+    Caption = "opened: ${Lines.Размер()}"
+    если Lines.Размер() > 0
+        Lines[0].Amount = 999
+    ;
+;

@@ -105,6 +105,8 @@ def _local_type(source, method, name, offset, bindings, module, model):
                     found.append(owner['name'] + ('.Ссылка' if value == 'ПолучитьСсылку' else '.Объект'))
                 elif len(candidates) == 1 and tokens[index + 4].value == '(':
                     found.append(candidates[0].return_type(source))
+                elif tokens[index + 4].value == '(' and len([m for m in module.get('methods', []) if m['name'] == value]) == 1:
+                    found.append(next(m.get('returnType') for m in module['methods'] if m['name'] == value))
                 elif index + 6 < len(tokens) and tokens[index + 4].value == '.' and tokens[index + 5].value in {'ПолучитьСсылку', 'СоздатьОбъект'}:
                     manager = _element(model, value, module)
                     found.append(('::'.join(filter(None, (manager['namespace'], manager['name'])))

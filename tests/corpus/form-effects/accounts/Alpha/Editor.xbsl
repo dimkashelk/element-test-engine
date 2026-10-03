@@ -1,0 +1,19 @@
+импорт Beta::Dialog как Destination
+метод Switch(C: ОбычнаяКоманда)
+    Объект.Disabled = не Объект.Disabled
+    Записать()
+    Refresh()
+;
+метод Refresh()
+    Caption = Объект.Disabled ? "on" : "off"
+;
+метод Display(Rows: Массив<Beta::Account.Entries>)
+    Destination.Открыть(Lines = Rows, Optional = Неопределено)
+    если Rows.Размер() > 0
+        Rows[0].Cost = 33
+    ;
+    Destination.Открыть(Lines = Rows)
+;
+метод Local()
+    Записать()
+;

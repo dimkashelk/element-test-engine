@@ -39,7 +39,10 @@ class PostgresSession(StorageSession):
 PRIMARY KEY(type,id));
 CREATE TABLE smoke.records(type text NOT NULL, registrar_type text NOT NULL, id text NOT NULL,
 position integer NOT NULL, value jsonb NOT NULL, PRIMARY KEY(type,registrar_type,id,position));
-GRANT SELECT,INSERT,UPDATE,DELETE ON smoke.objects,smoke.records TO smoke;'''
+CREATE TABLE smoke.form_snapshots(ordinal bigserial PRIMARY KEY, value jsonb NOT NULL);
+GRANT SELECT,INSERT,UPDATE,DELETE ON smoke.objects,smoke.records TO smoke;
+GRANT SELECT,INSERT ON smoke.form_snapshots TO smoke;
+GRANT USAGE ON SEQUENCE smoke.form_snapshots_ordinal_seq TO smoke;'''
 
     def audit(self, database, docker):
         import json
@@ -52,7 +55,17 @@ FROM (SELECT type,id,value FROM smoke.objects LIMIT 1001) r;''')
         return values
 
 
-def session_module(path, *, postgres=False):
+    def audit_history(self, database, docker):
+        import json
+        result = docker('exec', '-i', database, 'psql', '-U', 'postgres', '-d', 'integration',
+                        '-At', '-v', 'ON_ERROR_STOP=1', input="SELECT COALESCE(json_agg(value ORDER BY ordinal),'[]'::json) FROM smoke.form_snapshots;")
+        values = json.loads(result)
+        if len(values) > 1000:
+            raise InputError('Превышен лимит SQL-аудита границ форм')
+        return values
+
+
+def session_module(path, *, postgres=False, audit_history=False):
     from .runtime import sbsl_literal
     text = """конст Путь = __PATH__
 конст Резерв = __BACKUP__
@@ -321,6 +334,10 @@ def session_module(path, *, postgres=False):
     ;
 ;
 """
+    if postgres and audit_history:
+        sql = "INSERT INTO smoke.form_snapshots(value) SELECT COALESCE(jsonb_agg(jsonb_build_object('type',type,'id',id,'value',value) ORDER BY type,id),'[]'::jsonb) FROM smoke.objects"
+        commit = '        Соединение.СоздатьЗапросБезВыборки("COMMIT").Выполнить()'
+        text = text.replace(commit, '        Соединение.СоздатьЗапросБезВыборки(' + sbsl_literal(sql, 'Строка') + ').Выполнить()\n' + commit)
     # A source catch must not turn file infrastructure failures into a graded
     # result. Record the failure outside the staging snapshot, so rollback
     # cannot clear it; the driver always checks this marker before publishing.
@@ -356,7 +373,7 @@ def session_module(path, *, postgres=False):
 
 
 class MetadataStorage:
-    def __init__(self, contracts, config):
+    def __init__(self, contracts, config, *, audit_history=False):
         if not isinstance(config, dict) or set(config) - {'backend', 'idType', 'initial', 'initialRegisters', 'transaction', 'registers'}:
             raise InvalidTestError('storage принимает backend, idType, initial, initialRegisters, transaction, registers')
         if config.get('backend', 'memory') not in {'memory', 'postgres'}:
@@ -377,7 +394,7 @@ class MetadataStorage:
         failure_type = EXCEPTION_OWNER + '.СбойХранилища'
         contracts.definitions.setdefault(failure_type, '@Глобально\nисключение СбойХранилища\n;\n')
         contracts.method_dependencies['ТестСессия'] = [canonical]
-        contracts.definitions['ТестСессия'] = session_module(self.path, postgres=config.get('backend') == 'postgres')
+        contracts.definitions['ТестСессия'] = session_module(self.path, postgres=config.get('backend') == 'postgres', audit_history=audit_history)
         registers = config.get('registers', [])
         if not isinstance(registers, list) or len(set(str(r) for r in registers)) != len(registers):
             raise InvalidTestError('storage.registers требует список уникальных типов')
@@ -428,7 +445,7 @@ class MetadataStorage:
     возврат новый {ref}(Идентификатор = Ид == Неопределено ? новый Ууид() : Ид как Ууид)
 ;
 '''
-        projection = ', '.join(f['Имя'] + ' = ' + f['Имя'] for f in c.fields[data])
+        projection = ', '.join(f['Имя'] + ' = этот.' + f['Имя'] for f in c.fields[data])
         previous_projection = ', '.join(f['Имя'] + ' = Снимок.' + f['Имя'] for f in c.fields[data])
         before = (f'    знч Старый = Ссылка.ЗагрузитьОбъект()\n    пер До: {data}\n'
                   f'    если Старый == Неопределено\n        До = новый {data}({projection})\n'
@@ -439,10 +456,13 @@ class MetadataStorage:
         calls_after = '    ПослеЗаписи(До, новый ' + owner + '.ПараметрыЗаписи())\n' if 'метод ПослеЗаписи(' in handlers else ''
         if calls_before or calls_after:
             c.require(owner + '.ПараметрыЗаписи')
-        snapshot = ', '.join(f['Имя'] + ' = ' + f['Имя'] for f in c.fields[obj])
+        snapshot = ', '.join(f['Имя'] + ' = этот.' + f['Имя'] for f in c.fields[obj])
+        stored = 'новый ' + obj + '(' + snapshot + ')'
+        if 'ТестСостояниеНовизны' in c.definitions[obj]:
+            stored = '{' + ', '.join(literal(f['Имя']) + ': этот.' + f['Имя'] for f in c.fields[obj]) + '}'
         id_text = 'Ссылка.Идентификатор.ВСтроку()' if id_type == 'Ууид' else 'Ссылка.Идентификатор'
         c.attach_method(obj, f'''метод Записать()
-{before}{calls_before}    ТестСессия.Записать({literal(schema.identity)}, {id_text}, СериализацияJson.ЗаписатьОбъект(новый {obj}({snapshot})))
+{before}{calls_before}    ТестСессия.Записать({literal(schema.identity)}, {id_text}, СериализацияJson.ЗаписатьОбъект({stored}))
 {calls_after};
 ''', ['ТестСессия.Записи', data])
 
@@ -465,6 +485,8 @@ class MetadataStorage:
                 raise InvalidTestError('Начальная запись требует Ссылка')
             typ = c.canonical_type(owner + '.Объект')
             obj = c.literal(value, typ)
+            if 'ТестСостояниеНовизны' in c.definitions[typ]:
+                obj = '{' + ', '.join(c.literal(f['Имя'], 'Строка') + ': (' + obj + ').' + f['Имя'] for f in c.fields[typ]) + '}'
             identifier = value['Ссылка'].get('Идентификатор')
             c.literal(identifier, c.reference_id_type)
             lines.append('    ТестСессия.Записать(' + c.literal(qualified(matches[0]), 'Строка') + ', '

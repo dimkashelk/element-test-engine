@@ -1,0 +1,19 @@
+импорт Beta::Window как Destination
+метод Apply(C: ОбычнаяКоманда)
+    Объект.Archived = не Объект.Archived
+    Записать()
+    Decorate()
+;
+метод Decorate()
+    Caption = Объект.Archived ? "on" : "off"
+;
+метод Show(Rows: Массив<Beta::Ledger.Rows>)
+    Destination.Открыть(Lines = Rows, Optional = Неопределено)
+    если Rows.Размер() > 0
+        Rows[0].Amount = 33
+    ;
+    Destination.Открыть(Lines = Rows)
+;
+метод Local()
+    Записать()
+;

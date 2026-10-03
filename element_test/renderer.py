@@ -36,6 +36,28 @@ def render_plan(plan, sandbox):
     external = {aliases[path]: [d['source'] for d in declarations] for path,declarations in plan.declarations.items()
                 if path != module['sourceFile']}
     root_compiled = {}
+    # A project method addressed through a form's module is still an original
+    # static declaration. Only the explicit lifecycle roots need an instance.
+    static_form_methods = {}
+    if plan.open_forms:
+        from .indexer import method_call_expressions
+        from .runtime import method_closure
+        targets = {aliases[f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl']:
+                   f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl'
+                   for f in plan.open_forms.values()
+                   if f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl' in aliases}
+        for source_symbol in plan.symbols:
+            source_node = parse_module(source_symbol.source)[0][0]
+            source_calls = method_call_expressions(source_symbol.source, source_node)
+            for a,b,alias in call_rewrites.get((source_symbol.owner['sourceFile'],source_node.name), []):
+                if alias not in targets:
+                    continue
+                path = targets[alias]
+                for call in source_calls:
+                    if call.receiver_start == a and call.receiver_end == b:
+                        text = (root / path).read_text(encoding='utf-8-sig')
+                        static_form_methods.setdefault(path, set()).update(
+                            parse_module(t)[0][0].name for t,_ in method_closure(text, call.name))
     for owner, dependency, _ in reachable:
         contracts.current_source = owner["sourceFile"]
         contracts.namespace, contracts.imports = owner["namespace"], owner.get("imports", [])
@@ -117,6 +139,12 @@ def render_plan(plan, sandbox):
         if owner["sourceFile"] == module["sourceFile"]:
             adapted.append(compiled)
             root_compiled[declaration.name] = compiled
+        elif any(f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl' == owner['sourceFile'] for f in plan.open_forms.values()):
+            target_form = next(f for f in plan.open_forms.values() if f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl' == owner['sourceFile'])
+            contracts.attach_method(target_form['canonical'], compiled, module_type_dependencies.get(owner['sourceFile'], []))
+            contracts.method_dependencies[target_form['canonical']].extend(aliases[p] + '.Вызов' for p in module_dependencies.get(owner['sourceFile'], ()))
+            if declaration.name in static_form_methods.get(owner['sourceFile'], set()):
+                external.setdefault(aliases[owner['sourceFile']], []).append(compiled)
         elif owner.get('moduleType') == 'object':
             object_type = '::'.join(filter(None, (owner['namespace'], owner['name'])))
             contracts.attach_method(object_type, compiled, module_type_dependencies.get(owner['sourceFile'], []))
@@ -192,6 +220,8 @@ def render_plan(plan, sandbox):
         setup = '    знч Контекст = ' + contracts.literal(context, object_type) + '\n'
         if plan.form and plan.form['objectType']:
             setup += '    Контекст.Объект.ТестСостояниеНовизны = ' + sbsl_literal(check['lifecycle']['isNew'], 'Булево') + '\n'
+        if plan.form and 'formEffects' in check and plan.form['objectType'] and 'Ссылка' not in context.get('Объект', {}):
+            setup += '    Контекст.Объект.Ссылка.Идентификатор = Ууид.Случайный()\n'
         if 'runtimeDateTime' in check:
             field = check['runtimeDateTime']
             date_fields = {f['Имя'] for f in contracts.fields[object_type] if f['Тип'] == 'ДатаВремя'}
@@ -242,6 +272,8 @@ def render_plan(plan, sandbox):
         if check.get('snapshotConstants', False):
             from .session_contracts import constants_observation
             actual = '{"result": ' + actual + ', "constants": ' + constants_observation(plan) + '}'
+        if 'formEffects' in check:
+            actual = '{"result": ' + actual + ', "openings": ТестЗапросыФорм.Читать(), "lifecycle": Контекст.Объект.ЭтоНовый(), "storage": ТестСессия.Аудит()}'
         if storage and storage.config.get('transaction', False):
             fact = 'Факты' + index
             invocation = ('    пер ' + fact + ': Объект? = Неопределено\n    ТестСессия.Начать()\n    попытка\n'
@@ -249,6 +281,8 @@ def render_plan(plan, sandbox):
                           + '        ' + fact + ' = ' + actual + '\n        ТестСессия.Завершить()\n'
                           + '    поймать Сбой: Исключение\n        ТестСессия.Откатить()\n        выбросить Сбой\n    ;\n')
             actual = fact
+        if 'formEffects' in check and storage.config.get('transaction', False):
+            actual = '{"result": ' + actual + ', "committed": ТестСессия.Аудит()}'
         return argument_setup + invocation, actual
     invocation, actual = drive(target['method'], types, args, return_type)
     if plan.sequence:

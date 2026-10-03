@@ -259,6 +259,12 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                     result = {'status': 'ERROR', 'message': 'Интеграция: ошибка выполнения запроса', 'reasonCode': 'execution_error'}
                 if operation in {'shipment-storage', 'metadata-storage'}:
                     committed = audit(database, docker)
+                    if operation == 'metadata-storage' and 'formEffects' in check:
+                        history = session.audit_history(database, docker)
+                        if result['status'] == 'EXECUTED':
+                            result['actual']['sqlSnapshots'] = history
+                        else:
+                            result['sqlSnapshots'] = history
                     if result['status'] == 'EXECUTED':
                         result['actual']['storage' if operation == 'metadata-storage' else 'database'] = committed
                     else:

@@ -1,0 +1,109 @@
+{
+  "stage": 36,
+  "date": "2026-10-03",
+  "publicChecks": 46,
+  "newDirectRoots": 3,
+  "previousIndependentMethods": 35,
+  "previousFormChecks": 77,
+  "previousWelcomeChecks": 70,
+  "previousBusinessChecks": 22,
+  "mutations": 24,
+  "portableProjects": [
+    "ledgers",
+    "accounts"
+  ],
+  "batchPassed": 2,
+  "batchMutatedFailed": 1,
+  "schemas": {
+    "grading.json": 13,
+    "batch-result.json": 2,
+    "batch-manifest.json": 1,
+    "events": 40
+  },
+  "archivesUnchanged": 4,
+  "coverage": {
+    "files": 75,
+    "yaml": 46,
+    "xbsl": 29,
+    "methods": 44,
+    "directTargets": 38,
+    "preparedDirectTargets": 38,
+    "withoutPreparedDirectScenario": 6,
+    "assessedMethods": 38,
+    "withoutDirectScenario": 6
+  },
+  "regression": {
+    "testsRun": 266,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 3129.173,
+    "successful": true,
+    "failureTests": [],
+    "errorTests": []
+  },
+  "archiveHashes": {
+    "Dvizhok.xdump": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+    "Prakticheskie-primery-2026-09-30-15-20.xdump": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+    "Demo-SRM-dev-2026-09-28-21-38.xdump": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+    "autocheck-2026-09-24-16-14.xdump": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135"
+  },
+  "primaryAcceptance": {
+    "testsRun": 16,
+    "failures": 4,
+    "errors": 1,
+    "skipped": 0,
+    "seconds": 551.754,
+    "successful": false,
+    "failureTests": [
+      "test_successful_write_then_error_with_and_without_driver_rollback (test_form_effects.FormEffectDockerTest.test_successful_write_then_error_with_and_without_driver_rollback)",
+      "test_two_public_batches_memory_sql_same_uuid_and_fresh_outputs (test_form_effects.FormEffectDockerTest.test_two_public_batches_memory_sql_same_uuid_and_fresh_outputs)",
+      "test_write_rejection_storage_instance_properties_and_successor (test_form_effects.FormEffectDockerTest.test_write_rejection_storage_instance_properties_and_successor)",
+      "test_sql_rejection_and_successor (test_form_effects.FormEffectSqlTest.test_sql_rejection_and_successor)"
+    ],
+    "errorTests": [
+      "test_project_write_and_open_methods_not_replaced (test_form_effects.FormEffectPlanTest.test_project_write_and_open_methods_not_replaced)"
+    ]
+  },
+  "focusedRepeat": {
+    "testsRun": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 124.488,
+    "successful": true
+  },
+  "primaryRegression": {
+    "testsRun": 266,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 3313.215,
+    "successful": false,
+    "failureTests": [
+      "test_original_archive_public_test_run_all_seventy_criteria (test_welcome_calendar.WelcomeDockerTest.test_original_archive_public_test_run_all_seventy_criteria)"
+    ],
+    "errorTests": []
+  },
+  "regressionFocusedRepeat": {
+    "testsRun": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 371.592,
+    "successful": true
+  },
+  "evidenceHashes": {
+    "full-regression.log": "3721af575674fdbc1e2d46253b3e0181b1c66e7e33044f28085c498ddd9de3b8",
+    "target-tests-primary.log": "03c4a5d9ef71b01713bea512a99b5de7bbf91d4636a4b94a5b0a2e48d29b405a",
+    "target-repeat.log": "5ae00005d60e6e17885fcae15727e0abc777a1263529315e9afff23b7cb168f4",
+    "final-focused.log": "fda34e28366744605cafc49e9646c09d6bdc8615e10f6eea5ae7f81dabf232e0",
+    "full-regression-primary.log": "d66fd875cefba5e94c0cbd33f1aac31f3484ae419bd6ad769d3af512cfc716de",
+    "regression-focused-repeat.log": "b49780e7ba2da99956e061ec37e28f125c21de525a589b7a5cf9552f55bd5cbc",
+    "mutations.json": "5192fd52cb960edb8953c475c8a06ee8272905df6bf411961f0772f6d286e998",
+    "public-equivalence.json": "f5abded5a52a928f0a54a6a55c64b86268896d21c253d92670a1ff8172f7f712",
+    "schema-verification.json": "27867622b57f98ee1510b91aae661b321579ee2395064c74c1a516b08bf336b0",
+    "cleanup.json": "32c7936ac5e27b52d5a12f19efc6a91b64e58806b201c070ef239e3000f8070e",
+    "baseline.json": "bd164f17b53b1abff3ba8944e76bbc5786c4ee5fee2642c8a67266426227a3ed"
+  }
+}

@@ -847,7 +847,7 @@ observe задаёт пути, например `Компоненты.Caption.З
 экземпляра в параметр с совпадающим типом; её изменения доступны observe. Sequence сохраняет один экземпляр; критерии и batch изолированы.
 Исходные helper исполняются, expected не входит в IR. JVM локаль форм фиксирована
 в en-US (дробные числа в надписях с точкой); ссылки используют native UUID.
-Записать/Открыть из формы, вычисление YAML-выражений и браузерный UI недоступны.
+Без formEffects Записать/Открыть из формы недоступны; вычисление YAML-выражений и браузерный UI не реализованы.
 
 Контракт и границы: [form-context.md](docs/form-context.md).
 Публичный корпус: `assignments/dvizhok-form-context`, переносимые проекты —
@@ -909,7 +909,20 @@ bin/element-test test --project Dvizhok.xdump \
 сохраняет прежние 27 корней; [измерения](docs/dvizhok-stage-035-measurements.json)
 фиксируют мутации, переносимость, batch и неизменность четырёх архивов.
 
-Следующее [задание №36](docs/tasks/036-dvizhok-form-effects.md) подготовлено:
-запись объекта формы с независимым storage/SQL-аудитом и типизированные
-запросы открытия отгрузки. Цель — **38/44 методов** с сохранением прежних
-35 корней и 246 регрессионных тестов.
+[Задание №36](docs/tasks/036-dvizhok-form-effects.md) реализовано:
+явный formEffects включает запись текущего объекта и типизированный запрос
+открытия с detached снимками и opt-in lifecycle. Storage и исходные
+ПередЗаписью/ПослеЗаписи переиспользуются; PostgreSQL независимо проверяет
+каждую фиксацию. [Контракт](docs/form-effects.md).
+
+```sh
+bin/element-test test --project Dvizhok.xdump \
+  --assignment assignments/dvizhok-form-effects \
+  --output result/dvizhok-form-effects/test --integration
+```
+
+Приёмка №36: test/run — по **46/46**, полная Docker/SQL-регрессия —
+**266/266 без пропусков**. [Карта 38/44](docs/dvizhok-coverage-after-036.md)
+сохраняет прежние 35 методов; [измерения](docs/dvizhok-stage-036-measurements.json)
+подтверждают мутации, переносимость, batch и неизменность архивов.
+Шесть прямых бизнес-корней, YAML-привязки и браузерный UI — следующие этапы.

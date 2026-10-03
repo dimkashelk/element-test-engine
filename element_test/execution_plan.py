@@ -125,6 +125,8 @@ class ExecutionPlan:
     queries: list = field(default_factory=list)
     record_sets: list = field(default_factory=list)
     form: dict = field(default_factory=dict)
+    openings: list = field(default_factory=list)
+    open_forms: dict = field(default_factory=dict)
     constants: dict = field(default_factory=dict)
     clock: dict = field(default_factory=dict)
     executor_locale: str = None
@@ -145,7 +147,7 @@ class ExecutionPlan:
                 "exceptionContracts": sorted(self.exception_types),
                 "queries": self.queries,
                 "recordSets": self.record_sets,
-                "formContext": self.form,
+                "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
                 "observations": self.observations, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
@@ -173,8 +175,10 @@ def plan_execution(root, source_model, check):
     from .form_context import form_declaration
     if "context" in check and ((module.get("moduleType") != "object" and not form_declaration(selected, module)) or not isinstance(check["context"], dict)):
         raise InvalidTestError("context допустим только как объект для модуля Объект")
+    from .form_effects import contract, lifecycle_roots
+    effect_contract = contract(check, selected, module)
     method, types = extract_method(original, target["method"], allow_void=True)
-    if "context" in check and form_declaration(selected, module):
+    if "context" in check and form_declaration(selected, module) and effect_contract is None:
         from .indexer import method_local_bindings, method_binding_visible
         selected_node = parse_module(method)[0][0]
         local_bindings = method_local_bindings(method, selected_node)
@@ -215,6 +219,13 @@ def plan_execution(root, source_model, check):
             for owner, text, params in more:
                 all_reachable[(owner['sourceFile'], parse_module(text)[0][0].name)] = (owner,text,params)
         reachable = list(all_reachable.values())
+    for lifecycle_module, lifecycle_method in lifecycle_roots(root, runtime_model, effect_contract):
+        more, a, w, deps = project_method_closure(root, runtime_model, lifecycle_module, lifecycle_method)
+        aliases.update(a); rewrites.update(w)
+        for path, values in deps.items():
+            dependencies.setdefault(path, set()).update(values)
+        existing = {(o['sourceFile'], parse_module(t)[0][0].name) for o,t,_ in reachable}
+        reachable.extend((o,t,p) for o,t,p in more if (o['sourceFile'],parse_module(t)[0][0].name) not in existing)
     # Contract handlers are additional roots; their bodies remain original declarations.
     if 'storage' in check:
         from .generated_types import ProjectTypes
@@ -242,6 +253,10 @@ def plan_execution(root, source_model, check):
                                           handler_declarations, handler_sources, locals_)
                 if typ and typ.rstrip('?').endswith('.Объект'):
                     requirement_types.append(typ)
+                elif effect_contract and owner['sourceFile'] == module['sourceFile'] and call.receiver in {None, 'этот'} and not any(n.name == 'Записать' for n in handler_declarations[owner['sourceFile']]):
+                    element = form_declaration(runtime_model, module)
+                    from .form_context import describe_form
+                    requirement_types.append(describe_form(element)['objectType'])
                 elif call.receiver is None and owner.get('moduleType') == 'object':
                     requirement_types.append(owner['name'])
             for requirement in requirement_types:
@@ -332,6 +347,10 @@ def plan_execution(root, source_model, check):
     from .source_contracts import bind_source_contracts, bind_system_ids
     from .form_context import prepare_form, bind_form_call
     prepare_form(plan)
+    from .form_context import describe_form
+    from .resolution import qualified
+    plan.open_forms = {qualified(e): describe_form(e) for e in runtime_model['elements']
+                       if qualified(e) in (effect_contract or {}).get('lifecycle', {})}
     from .session_contracts import prepare_session, bind_session_call
     prepare_session(plan)
     bind_source_contracts(plan)
@@ -463,7 +482,7 @@ def bind_types(plan):
         from .storage import MetadataStorage
         if mocks:
             raise InvalidTestError('storage и mocks требуют разных сценариев')
-        plan.storage = MetadataStorage(c, plan.check['storage'])
+        plan.storage = MetadataStorage(c, plan.check['storage'], audit_history='formEffects' in plan.check)
     c.configure_references(mocks.get('objects', {}))
     plan.platform = PlatformMocks(c, mocks, plan.check)
     plan.platform.storage_mode = plan.storage is not None
@@ -486,6 +505,9 @@ def bind_types(plan):
     c.namespace, c.imports = plan.module['namespace'], plan.module.get('imports', [])
     from .form_context import generate_form_types
     generate_form_types(plan, c)
+    plan.contracts = c
+    from .form_effects import generate_effects
+    generate_effects(plan, c)
     from .session_contracts import generate_session_types
     generate_session_types(plan, c)
     for typ,fields in c.fields.items():

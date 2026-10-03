@@ -75,6 +75,9 @@ def prepare_form(plan):
     if not element:
         return
     plan.form = describe_form(element)
+    if 'formEffects' in plan.check:
+        plan.form['limitations'] = [v for v in plan.form['limitations'] if v != 'No form write/open effects']
+        plan.form['limitations'].append('Only explicitly allowed formEffects; synchronous storage adapter and detached open requests')
     lifecycle = plan.check.get('lifecycle')
     if plan.form['objectType'] and (not isinstance(lifecycle, dict) or set(lifecycle) != {'isNew'} or not isinstance(lifecycle['isNew'], bool)):
         raise InvalidTestError('Контекст формы требует lifecycle: {isNew: Булево}')
@@ -86,7 +89,7 @@ def prepare_form(plan):
             if len(methods) != 1 or [p.partition(':')[2].strip() for p in methods[0].parameters(plan.original)] != ['Кнопка', 'СобытиеПриНажатии'] or methods[0].return_span:
                 raise UnsupportedSyntaxError('ПриНажатии требует собственный метод (Кнопка, СобытиеПриНажатии) без результата')
             handler['status'] = 'SIGNATURE_CHECKED_NO_UI_EVENT'
-    if 'storage' in plan.check or 'mocks' in plan.check:
+    if ('storage' in plan.check or 'mocks' in plan.check) and 'formEffects' not in plan.check:
         raise InvalidTestError('Контекст формы не поддерживает storage/mocks')
 
 
@@ -117,26 +120,30 @@ def passive_argument_names(source, node):
 
 def bind_form_call(plan, symbol, node, call):
     """Return a binding only for a proved system receiver, respecting locals."""
-    if not plan.form or symbol.owner['sourceFile'] != plan.module['sourceFile']:
+    form = plan.form if symbol.owner['sourceFile'] == plan.module['sourceFile'] else next(
+        (f for f in plan.open_forms.values() if f['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl' == symbol.owner['sourceFile']), None)
+    if not form:
         return None
-    fields = {'Объект', 'Компоненты'} | {f['Имя'] for f in plan.form['fields']}
+    fields = {'Объект', 'Компоненты'} | {f['Имя'] for f in form['fields']}
     bindings = method_local_bindings(symbol.source, node)
     path = rooted_path((call.receiver or '').split('.') if call.receiver else None,
                        bindings, call.receiver_start or call.start, fields)
     command_names = passive_argument_names(symbol.source, node)
     if call.receiver and call.receiver.split('.')[0] in command_names:
         raise UnsupportedSyntaxError('API пассивного аргумента команды недоступен: ' + call.receiver + '.' + call.name)
-    if call.receiver is None and any(s.identity.declaration == call.name and s.owner['sourceFile'] == symbol.owner['sourceFile'] for s in plan.symbols):
+    if call.receiver in {None, 'этот'} and any(s.identity.declaration == call.name and s.owner['sourceFile'] == symbol.owner['sourceFile'] for s in plan.symbols):
         return None
-    if call.name in {'Записать', 'Открыть'} and (path is not None or call.receiver is None or any(
-            e['name'] == call.receiver and e['elementType'] == 'КомпонентИнтерфейса' for e in plan.model['elements'])):
-        raise UnsupportedSyntaxError('Эффект формы ' + call.name + ' вне контракта №34')
+    if call.name in {'Записать', 'Открыть'}:
+        from .form_effects import bind_effect
+        effect = bind_effect(plan, symbol, node, call, path, bindings)
+        if effect:
+            return effect
     if path == ['Объект']:
         if call.name != 'ЭтоНовый':
             raise UnsupportedSyntaxError('Операция объекта формы вне контракта №34: ' + call.name)
         from .generated_types import ProjectTypes
         resolver = ProjectTypes(plan.model, symbol.owner['namespace'], symbol.owner.get('imports', []))
-        owners = resolver.resolve(plan.form['objectType'].removesuffix('.Объект'))
+        owners = resolver.resolve(form['objectType'].removesuffix('.Объект'))
         if len(owners) != 1:
             raise UnsupportedSyntaxError('Тип объекта формы отсутствует или неоднозначен')
         owner = owners[0]
@@ -145,7 +152,7 @@ def bind_form_call(plan, symbol, node, call):
                for m in plan.model['modules']):
             raise UnsupportedSyntaxError('Проектный ЭтоНовый требует исходную декларацию; системная подмена запрещена')
         from .execution_plan import CapabilityBinding
-        return CapabilityBinding('form-system', call.name, plan.form['objectType'], 'form-session-lifecycle',
+        return CapabilityBinding('form-system', call.name, form['objectType'], 'form-session-lifecycle',
                                  'Explicit object lifecycle, independent of business fields', symbol.identity.source_file,
                                  symbol.start + call.start, symbol.start + call.end)
     return None
@@ -170,10 +177,12 @@ def add_structure(c, name, fields):
         for f in canonical) + ';\n'
 
 
-def generate_form_types(plan, c):
-    form = plan.form
+def generate_form_types(plan, c, *, form=None):
+    form = form or plan.form
     if not form:
         return
+    c.namespace = form['identity']['namespace']
+    c.imports = next((m.get('imports', []) for m in plan.model['modules'] if m['sourceFile'] == form['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl'), [])
     alias = 'ТестФорма' + sha256(str(form['identity']).encode()).hexdigest()[:16]
     # Use a separate technical module per form; canonical metadata owners keep their identity.
     label = alias + '.Надпись'
@@ -198,8 +207,10 @@ def generate_form_types(plan, c):
         form['objectCanonical'] = obj
         if any(f['Имя'] == 'ТестСостояниеНовизны' for f in c.fields[obj]):
             raise UnsupportedSyntaxError('Конфликт технического поля жизненного цикла')
-        c.definitions[obj] = c.definitions[obj].rsplit(';',1)[0] + '    пер ТестСостояниеНовизны: Булево?\n;\n'
-        c.attach_method(obj, 'метод ЭтоНовый(): Булево\n'
+        if 'ТестСостояниеНовизны' not in c.definitions[obj]:
+            c.definitions[obj] = c.definitions[obj].rsplit(';',1)[0] + '    пер ТестСостояниеНовизны: Булево?\n;\n'
+        if 'метод ЭтоНовый()' not in c.methods.get(obj, ''):
+            c.attach_method(obj, 'метод ЭтоНовый(): Булево\n'
             '    если ТестСостояниеНовизны == Неопределено\n'
             '        выбросить новый ИсключениеНеподдерживаемаяОперация("Не объявлено состояние объекта")\n    ;\n'
             '    возврат ТестСостояниеНовизны как Булево\n;\n', [])
@@ -207,9 +218,10 @@ def generate_form_types(plan, c):
     form_type = alias + '.Экземпляр'
     add_structure(c, form_type, object_fields + form['fields'] + [{'Имя':'Компоненты','Тип':components}])
     form['canonical'] = form_type
-    c.literal(plan.check['context'], form_type)  # Validate before writing artifacts.
+    if form is plan.form:
+        c.literal(plan.check['context'], form_type)  # Validate before writing artifacts.
     for symbol in plan.symbols:
-        if symbol.owner['sourceFile'] != plan.module['sourceFile']:
+        if symbol.owner['sourceFile'] != form['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl':
             continue
         node = parse_module(symbol.source)[0][0]
         bindings = method_local_bindings(symbol.source, node)
@@ -233,12 +245,14 @@ def generate_form_types(plan, c):
             for child in n.children:
                 visit(child, n)
         visit(node.expression_tree)
-    observe = plan.check.get('observe')
+    observe = plan.check.get('observe') if form is plan.form else plan.check['formEffects']['lifecycle'].get('::'.join(filter(None,(form['identity']['namespace'],form['identity']['name']))),{}).get('observe')
     if observe is not None:
         if not isinstance(observe,list) or not observe or any(not isinstance(p,str) for p in observe) or len(set(observe))!=len(observe):
             raise InvalidTestError('observe формы требует непустой список уникальных путей')
         for path in observe:
             validate_path(c, form_type, path.split('.'), teacher=True)
+    if form is not plan.form:
+        return
     form['argumentBindings'] = []
     calls = plan.sequence or [{'method': plan.entry.identity.declaration, 'args': plan.check.get('args', [])}]
     for step in calls:
@@ -277,15 +291,15 @@ def form_argument(plan, value, typ, *, contracts=None):
     return 'Контекст.' + path
 
 
-def form_observation(plan):
+def form_observation(plan, *, form=None, paths=None, variable='Контекст'):
     from .runtime import sbsl_literal
-    c, form = plan.contracts, plan.form
+    c, form = plan.contracts, form or plan.form
     def snapshot(expression, typ):
         # Metadata fields deliberately exclude the internal lifecycle bit.
         if typ in c.fields:
             return '{' + ', '.join(sbsl_literal(f['Имя'],'Строка') + ': ' + snapshot(expression+'.'+f['Имя'],f['Тип'])
                                    for f in c.fields[typ]) + '}'
         return expression
-    paths = plan.check.get('observe') or [f['Имя'] for f in c.fields[form['canonical']]]
-    return '{' + ', '.join(sbsl_literal(p,'Строка') + ': ' + snapshot('Контекст.'+p,
+    paths = paths or plan.check.get('observe') or [f['Имя'] for f in c.fields[form['canonical']]]
+    return '{' + ', '.join(sbsl_literal(p,'Строка') + ': ' + snapshot(variable+'.'+p,
                             validate_path(c,form['canonical'],p.split('.'),teacher=True)) for p in paths) + '}'

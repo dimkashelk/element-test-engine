@@ -129,6 +129,10 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             query['sourceHash'] = sha256(query.pop('text').encode()).hexdigest()
             for parameter in query['ast']['parameters']:
                 parameter['expressionHash'] = sha256(parameter.pop('expression').encode()).hexdigest()
+    for item in plans:
+        for opening in item.get('plan', {}).get('formOpenings', []):
+            for argument in opening['arguments']:
+                argument['expressionHash'] = sha256(argument.pop('expression').encode()).hexdigest()
     write_json(output / 'execution-plans.json', plans)
     from .grading import safe
     write_json(output / 'runtime-evidence.json', safe([
