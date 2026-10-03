@@ -83,6 +83,53 @@ class PreflightTest(unittest.TestCase):
                 docker('create', '--env', 'POSTGRES_PASSWORD')
             self.assertNotIn('private-secret', str(error.exception))
 
+    def test_container_can_read_sql_inputs_with_private_host_parent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            present = set()
+            inspected = []
+
+            def command(*args, **kwargs):
+                if args[:2] == ('network', 'create'):
+                    present.add(args[-1])
+                elif args[0] == 'create':
+                    present.add(args[args.index('--name') + 1])
+                    if '--user' in args:
+                        self.assertEqual(args[args.index('--user') + 1], '65534:65534')
+                        mount = next(a for a in args if 'target=/trusted,' in a)
+                        inputs = Path(mount.split('source=', 1)[1].split(',', 1)[0])
+                        self.assertTrue(mount.endswith(',readonly'))
+                        self.assertEqual(inputs.parent.stat().st_mode & 0o777, 0o700)
+                        self.assertEqual(inputs.stat().st_mode & 0o005, 0o005)
+                        for name in ('SqlSmoke.sbsl', 'connection.json'):
+                            self.assertTrue((inputs / name).stat().st_mode & 0o004)
+                        inspected.append(inputs)
+                elif args[0] == 'inspect':
+                    return json.dumps({'ExitCode': 0, 'OOMKilled': False})
+                elif args[0] == 'ps' or args[:2] == ('network', 'ls'):
+                    name = args[-1].removeprefix('name=')
+                    return name if name in present else ''
+                elif args[0] == 'rm' or args[:2] == ('network', 'rm'):
+                    present.discard(args[-1])
+                return ''
+
+            previous_umask = os.umask(0o077)
+            try:
+                with patch('element_test.integration.preflight', return_value=(
+                        {'image': 'fixture'}, {'image': 'fixture'}, root, 'host-secret')), \
+                        patch('element_test.integration.docker', side_effect=command), \
+                        patch('element_test.integration.executor_output', return_value=(
+                            '{"status":"EXECUTED","actual":{}}')):
+                    result = run_integration(contract(), {'compatibilityVersion': '9.0'}, root, enabled=True)
+            finally:
+                os.umask(previous_umask)
+            self.assertEqual(result['status'], 'EXECUTED', result)
+            self.assertEqual(len(inspected), 1)
+            self.assertFalse(inspected[0].exists())
+            self.assertTrue(result['integration']['cleanup'])
+            self.assertEqual(present, set())
+            self.assertNotIn('host-secret', json.dumps(result))
+
     def test_partial_provision_is_cleaned_without_mocking_a_smoke_pass(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

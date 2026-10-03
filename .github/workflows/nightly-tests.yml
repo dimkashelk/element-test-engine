@@ -23,6 +23,7 @@ jobs:
     env:
       ELEMENT_TEST_DOCKER_TESTS: '1'
       ELEMENT_TEST_INTEGRATION_TESTS: '1'
+      ELEMENT_TEST_RUNTIME_TIMEOUT: '15s'
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v7

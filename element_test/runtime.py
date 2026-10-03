@@ -1,5 +1,6 @@
 """Minimal XBSL → SBSL adapter. Student business logic is copied verbatim."""
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -391,6 +392,17 @@ def sbsl_literal(value, type_name):
     raise InvalidTestError(f"Вход не соответствует типу {type_name}")
 
 
+def execution_timeout(check):
+    value = check.get('timeout', os.environ.get('ELEMENT_TEST_RUNTIME_TIMEOUT', '5s'))
+    try:
+        timeout = float(str(value).removesuffix('s'))
+    except ValueError:
+        raise ValueError('timeout должен быть числом секунд') from None
+    if not math.isfinite(timeout) or not 0 < timeout <= 30:
+        raise ValueError('timeout должен быть в диапазоне (0, 30] секунд')
+    return timeout
+
+
 def run_pure(root, model, check, temporary, *, plan_sink=None):
     """Run one standalone method in Docker; return evidence, never award points."""
     def status(name, message, reason):
@@ -443,11 +455,9 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             language, country = prepared_plan['executorLocale'].split('-')
             command[java_at + 1:java_at + 1] = ['-Duser.language=' + language, '-Duser.country=' + country]
         try:
-            timeout = float(str(check.get("timeout", "5s")).removesuffix("s"))
-        except ValueError:
-            return status("ERROR", "timeout должен быть числом секунд", "invalid_test")
-        if not 0 < timeout <= 30:
-            return status("ERROR", "timeout должен быть в диапазоне (0, 30] секунд", "invalid_test")
+            timeout = execution_timeout(check)
+        except ValueError as exc:
+            return status('ERROR', str(exc), 'invalid_test')
         creation = subprocess.run(command, capture_output=True, text=True, timeout=30)
         if creation.returncode:
             return status("UNSUPPORTED", creation.stderr[:4000], "backend_unavailable")

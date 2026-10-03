@@ -25,6 +25,10 @@ EVIDENCE = REPO/'result/storage-backed-queries'
 ARCHIVE = REPO/'Prakticheskie-primery-2026-09-30-15-20.xdump'
 ID = '12345678-1234-4234-8234-123456789abc'
 OTHER = 'abcdef12-1234-4234-8234-123456789abc'
+
+
+def setUpModule():
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
 THIRD = '33333333-1234-4234-8234-123456789abc'
 
 

@@ -20,6 +20,10 @@ from element_test.yaml_io import InputError, InvalidTestError
 from slice_fixtures import *
 from test_record_sets import grade, normalized
 
+
+def setUpModule():
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+
 class SlicePlanTest(unittest.TestCase):
     def test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected(self):
         for renamed in (False,True):

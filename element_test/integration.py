@@ -159,7 +159,10 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
     phase = 'provision'
     # Directory must outlive containers; no credentials are copied to reports.
     with TemporaryDirectory(prefix='integration-', dir=temporary) as work:
-        directory = Path(work)
+        # Keep the private 0700 parent on the host; mount only its readable child.
+        directory = Path(work) / 'trusted'
+        directory.mkdir()
+        directory.chmod(0o755)
         try:
             if operation == 'shipment-storage':
                 from .shipment_storage import prepare, SCHEMA, audit
@@ -233,8 +236,11 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                               + '&connectTimeout=3&socketTimeout=5',
                 'first': 'first-' + run_id, 'second': 'second-' + run_id,
                 'injectFailure': inject_failure}))
-            # The temporary parent is 0700 on host. Only this trusted container
-            # sees only the restricted role credential; admin/bootstrap are not mounted.
+            # UID 65534 must read these files even with a restrictive host umask.
+            # The host's private parent protects credentials from other users.
+            for path in directory.iterdir():
+                if path.is_file():
+                    path.chmod(0o644)
             resources.append(('container', executor))
             docker(*executor_command(runtime, home, directory, network, executor, model['compatibilityVersion']))
             phase = 'execute'

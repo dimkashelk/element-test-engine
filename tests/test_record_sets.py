@@ -21,6 +21,10 @@ from record_set_fixtures import *
 EVIDENCE = REPO/'result/record-set-reading'
 
 
+def setUpModule():
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+
+
 def normalized(actual):
     value = copy.deepcopy(actual)
     for r in value['storage']:
