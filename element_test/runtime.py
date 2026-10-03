@@ -371,8 +371,14 @@ def prepare_script(root, model, check, sandbox):
     from .renderer import render_plan
     plan = plan_execution(root, model, check)
     try:
-        script = render_plan(plan, sandbox)
+        if 'formRequirement' in check:
+            from .declarative_bindings import render_binding
+            script = render_binding(plan, sandbox)
+        else:
+            script = render_plan(plan, sandbox)
     except InputError as exc:
+        if 'formRequirement' in check:
+            raise
         entry = plan.entry
         raise type(exc)(f'{exc} ({entry.identity.source_file}:{entry.start}-{entry.end})') from exc
     (sandbox / "execution-plan.json").write_text(plan.to_json(), encoding="utf-8")
@@ -488,6 +494,8 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
         if decoded.get('status') == 'UNSUPPORTED':
             return status('UNSUPPORTED', 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
         evidence = {"status": "EXECUTED", "actual": decoded['actual']}
+        if 'formRequirement' in check:
+            evidence['bindings'] = prepared_plan.get('declarativeBindings', [])
         if decoded.get('status') == 'ERROR':
             evidence.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
         if 'trace' in decoded:

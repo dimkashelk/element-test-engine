@@ -32,11 +32,29 @@ def contract(check, model, module):
     if not isinstance(lifecycle, dict) or set(lifecycle) - set(owners):
         raise InvalidTestError('formEffects.lifecycle требует разрешённые open owners')
     for owner, cfg in lifecycle.items():
-        if (not isinstance(cfg, dict) or set(cfg) != {'method', 'isNew', 'observe'}
+        if (not isinstance(cfg, dict) or set(cfg) - {'method', 'isNew', 'observe', 'bindings'}
+                or not {'method', 'isNew', 'observe'} <= set(cfg)
                 or not isinstance(cfg['method'], str) or not isinstance(cfg['isNew'], bool)
                 or not isinstance(cfg['observe'], list) or not cfg['observe']
                 or any(not isinstance(p,str) for p in cfg['observe'])):
             raise InvalidTestError('lifecycle открытия требует method, isNew, observe')
+        if 'bindings' in cfg:
+            from .form_requirements import validate_selector, validate_type
+            bindings = cfg['bindings']
+            if not isinstance(bindings,list) or not bindings:
+                raise InvalidTestError('bindings открытия требует непустой список')
+            ids = set()
+            for binding in bindings:
+                if (not isinstance(binding,dict) or set(binding) != {'id','selector','property','outputType'}
+                        or not isinstance(binding['id'],str) or binding['id'] in ids
+                        or not isinstance(binding['property'],str)):
+                    raise InvalidTestError('Некорректный контракт binding открытия')
+                ids.add(binding['id'])
+                validate_selector(binding['selector'])
+                try:
+                    validate_type(binding['outputType'])
+                except ValueError as exc:
+                    raise InvalidTestError(str(exc)) from exc
     if 'storage' not in check or check['storage'].get('idType') != 'Ууид':
         raise InvalidTestError('formEffects требует storage с idType: Ууид')
     if 'mocks' in check:
@@ -223,7 +241,13 @@ def generate_effects(plan,c):
             if form['objectType']:
                 body+='    '+target_name+'.Объект.ТестСостояниеНовизны = '+c.literal(lifecycle['isNew'],'Булево')+'\n'
             body+='    '+target_name+'.'+lifecycle['method']+'()\n'
-            body+='    ТестЗапросыФорм.Дополнить('+form_observation(plan,form=form,paths=lifecycle['observe'],variable=target_name)+')\n'
+            observation = form_observation(plan,form=form,paths=lifecycle['observe'],variable=target_name)
+            if lifecycle.get('bindings'):
+                from .declarative_bindings import opening_observation
+                code,bindings = opening_observation(plan,form,lifecycle['bindings'],target_name)
+                body += code
+                observation = observation[:-1]+', "bindings": '+bindings+'}'
+            body+='    ТестЗапросыФорм.Дополнить('+observation+')\n'
             deps.append(form['canonical'])
         c.definitions[opening['alias']]='@Глобально\n@ИменованныеПараметры\nметод Открыть('+', '.join(a['name']+': '+a['canonical'] for a in args)+')\n'+body+';\n'
         c.method_dependencies[opening['alias']]=deps

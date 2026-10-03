@@ -49,9 +49,10 @@ native `Ууид` поддержан в №29; прежние fixtures недо�
 структуры по владельцам, native UUID, единый driver и хранение по метаданным.
 Новые поля runtime-задания, матрица возможностей и оставшиеся границы — в
 [контракте универсального runtime](docs/universal-runtime.md).
-Следующее [задание №30](docs/tasks/030-transactions-and-business-exceptions.md)
-подготовлено: исходные транзакции, бизнес-исключения и атомарность
-нескольких записей; реализация ещё не начата.
+[Задание №38](docs/tasks/038-dvizhok-declarative-bindings.md) добавляет проверку
+формы по версионированному описанию: структурные связи и вычисление привязок
+в Script с оценкой SBSL. [Контракт](docs/declarative-bindings.md),
+[карта 16 форм / 133 значений / 128 команд](docs/dvizhok-coverage-after-038.md).
 
 Исходные проекты открываются только на чтение. Архивы распаковываются во временный
 каталог, который удаляется после запуска. Отчёт внутри исходного каталога запрещён.
@@ -945,3 +946,34 @@ bin/element-test test --project Dvizhok.xdump \
   --assignment assignments/dvizhok-remaining-business-roots \
   --output result/dvizhok-remaining-business-roots/test --integration
 ```
+
+[Задание №38](docs/tasks/038-dvizhok-declarative-bindings.md) реализовано:
+16 независимых описаний, 133 выражения значений с Script/SBSL оценкой,
+128 структурных связей команд, пять таблиц и 14 привязок обработчиков.
+Публичные test/run: 453 PASS и отдельные 32 PASS собственных свойств/defaults.
+Формы без XBSL не требуют искусственного метода; Запись констант доступна
+только для чтения. Ожидания исключены из плана и renderer. Два переносимых
+проекта принимаются одним описанием; мутации оцениваются FAIL в SBSL.
+Новые тесты и точечные прежние проверки выполнены; полная регрессия — в CI.
+[Формат](docs/declarative-bindings.md), [карта](docs/dvizhok-coverage-after-038.md),
+[измерения](docs/dvizhok-stage-038-measurements.json). Browser/native UI отдельно.
+
+```sh
+bin/element-test author-form --description description.txt \
+  --contract requirements.yaml --output normalized.yaml
+bin/element-test test --project Dvizhok.xdump \
+  --assignment assignments/dvizhok-declarative-bindings \
+  --output result/new-declarative-run
+```
+
+[Общий план по четырём эталонным дампам](docs/corpus-verification-plan.md)
+требует полного исполнения query-контрактов, расширения хранения и метаданных,
+проверки прав и интеграций. Описания требований, граничные тесты и мутации
+автор составляет самостоятельно по эталонам до проверки работ студентов.
+
+
+Ночной набор теперь включает [все 303 UI-декларации четырёх дампов](tests/corpus/all-dump-forms/README.md),
+в том числе формы отдельной библиотеки БазаЗнаний. Каждая форма имеет отдельный
+результат: снимок декларации/сигнатур и поддержанные runtime-сценарии.
+Суммарно подготовлены 312 сценариев значений и 326 структурных критериев;
+ограничения остальных выражений перечислены в отчётах, без runtime PASS.

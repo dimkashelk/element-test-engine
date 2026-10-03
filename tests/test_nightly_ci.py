@@ -9,10 +9,22 @@ import unittest
 from unittest.mock import patch
 
 from tools.ci.assets import digest, package, unpack
-from tools.ci.run_nightly import run_suite, summary
+from tools.ci.run_nightly import form_corpus_summary, run_suite, summary
 
 
 class NightlyCiTest(unittest.TestCase):
+    def test_form_summary_preserves_missing_and_unavailable_coverage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);manifest=root/'manifest.json'
+            manifest.write_text(json.dumps({'forms':3}))
+            for index,status in enumerate(('passed','failed')):
+                path=root/'evidence'/'project'/str(index);path.mkdir(parents=True)
+                (path/'coverage.json').write_text(json.dumps({'status':status,'runtimeChecksExecuted':2,
+                    'notRuntimeChecked':[{'reason':'native UI adapter absent'}]}))
+            data=form_corpus_summary(manifest,root/'evidence')
+            self.assertEqual(data,{'expected':3,'completed':2,'passed':1,'failed':1,
+                                   'runtimeChecksExecuted':4,'expressionsWithoutRuntime':2})
+
     def run_example(self, case):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / 'result.json'

@@ -113,6 +113,17 @@ def run_suite(suite, output, info, stream=None):
     return 0 if data['status'] == 'passed' else 1
 
 
+def form_corpus_summary(manifest, directory):
+    """Report completed form checks separately from unsupported UI behavior."""
+    expected=json.loads(manifest.read_text())['forms']
+    reports=[json.loads(path.read_text()) for path in directory.glob('*/*/coverage.json')]
+    return {'expected':expected,'completed':len(reports),
+            'passed':sum(r.get('status')=='passed' for r in reports),
+            'failed':sum(r.get('status')=='failed' for r in reports),
+            'runtimeChecksExecuted':sum(r['runtimeChecksExecuted'] for r in reports),
+            'expressionsWithoutRuntime':sum(len(r['notRuntimeChecked']) for r in reports)}
+
+
 def summary(output, job_status='success'):
     data = json.loads(output.read_text()) if output.exists() else {
         **metadata(), 'status': 'not_started', 'message': 'Tests did not start; inspect setup steps.'}
@@ -120,6 +131,9 @@ def summary(output, job_status='success'):
         data['status'] = 'incomplete'
     if data['status'] == 'passed' and job_status != 'success':
         data['status'] = 'incomplete'
+    manifest=ROOT/'tests/corpus/all-dump-forms/manifest.json'
+    if output==OUTPUT and manifest.exists():
+        data['formCorpus']=form_corpus_summary(manifest,ROOT/'result/all-dump-forms/nightly')
     save(output, data)
     lines = ['# Nightly regression', '', f"Status: **{data['status']}**",
              f"Commit: `{data['commit']}`", f"Started (UTC): {data['startedAt']}"]
@@ -140,6 +154,14 @@ def summary(output, job_status='success'):
             lines.append(f"- `{row['test']}`: {row['seconds']:.1f}s")
     if data.get('message'):
         lines += ['', data['message']]
+    if 'formCorpus' in data:
+        forms=data['formCorpus']
+        lines += ['', '## Reference forms', '',
+                  f"Forms completed: {forms['completed']}/{forms['expected']}; passed: {forms['passed']}; failed: {forms['failed']}.",
+                  f"Executed supported criteria: {forms['runtimeChecksExecuted']}.",
+                  f"Expressions checked only in the declaration baseline: {forms['expressionsWithoutRuntime']}.",
+                  'Per-form results, observations, plans and runtime limitations: result/all-dump-forms/nightly/.',
+                  'Declaration baselines do not establish native/browser behavior.']
     lines += ['', 'Detailed results and generated reports are in the workflow artifacts.']
     text = '\n'.join(lines) + '\n'
     output.with_name('summary.md').write_text(text, encoding='utf-8')

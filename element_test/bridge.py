@@ -90,6 +90,12 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             plans = []
             for check in assignment["checks"]:
                 if check["type"] == "runtime" and not check.get("skip"):
+                    if 'formRequirement' in check:
+                        from .declarative_bindings import preflight
+                        facts = preflight(root, model, check)
+                        if facts is not None:
+                            check['execution'] = facts
+                            continue
                     if 'integration' in check:
                         if 'library' in check:
                             check["execution"] = {"status": "UNSUPPORTED", "reasonCode": "unsupported_contract",
@@ -110,6 +116,26 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
                                 k: check['execution'].get(k) for k in ('status', 'reasonCode', 'message')}})
             write_json(assignment_path, assignment)
             result = execute_engine("test", model_path, assignment_path, temporary)
+            # Add teacher provenance and source diagnostics without changing
+            # the status, comparison or score computed by SBSL.
+            authored = {c['id']:c for c in assignment['checks'] if 'formRequirement' in c}
+            for item in result['checks']:
+                check = authored.get(item['id'])
+                if check is None:
+                    continue
+                cfg = check['formRequirement']
+                item['requirement'] = cfg
+                execution = check.get('execution',{})
+                sources = execution.get('bindings',[])
+                if 'sourceFile' in execution:
+                    sources = [execution]
+                locations = [v['sourceFile']+': '+ '/'.join(v.get('yamlPath',[])) for v in sources]
+                message = cfg['clause']['text']
+                if execution.get('message'):
+                    message += ' '+execution['message']
+                if locations:
+                    message += ' Источник: '+ '; '.join(locations)
+                item['message'] = message
     result["projectIdentity"] = model["projectIdentity"]
     result["libraries"] = [{key: library[key] for key in ("provider", "name", "version", "kind", "sourceHash")}
                            for library in model["libraries"]]
@@ -144,6 +170,10 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
 def main():
     parser = argparse.ArgumentParser(description="Element Test Engine — ядро на 1С:Элемент Скрипт")
     commands = parser.add_subparsers(dest="command", required=True)
+    author = commands.add_parser('author-form')
+    author.add_argument('--description', required=True, type=Path)
+    author.add_argument('--contract', required=True, type=Path)
+    author.add_argument('--output', required=True, type=Path)
     for name in ("inspect", "validate"):
         sub = commands.add_parser(name)
         sub.add_argument("project")
@@ -165,6 +195,10 @@ def main():
     batch.add_argument("--integration", action="store_true")
     args = parser.parse_args()
     try:
+        if args.command == 'author-form':
+            from .form_requirements import author_form
+            author_form(args.description, args.contract, args.output)
+            return 0
         if args.command == "batch":
             from .batch import run_batch
             return run_batch(args.manifest, args.output, args.workers, args.integration)

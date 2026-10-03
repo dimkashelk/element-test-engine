@@ -149,7 +149,7 @@ def inventory(root, model, assignments=(), evidence=()):
         if owned:
             f['runtimeStatus']='PARTLY_ASSESSED' if any(m['status']=='ASSESSED' for m in owned) else 'METHOD_EVIDENCE_REQUIRED'
     prepared=sum(any(c['planned'] for c in m['directCriteria']) for m in methods)
-    return {'schemaVersion':1,'sourceHash':model['sourceHash'],'projectIdentity':model.get('projectIdentity'),
+    result = {'schemaVersion':1,'sourceHash':model['sourceHash'],'projectIdentity':model.get('projectIdentity'),
             'counts':{'files':len(file_items),'yaml':sum(f['sourceFile'].endswith('.yaml') for f in file_items),
                       'xbsl':sum(f['sourceFile'].endswith('.xbsl') for f in file_items),'methods':len(methods),
                       'directTargets':sum(bool(m['directCriteria']) for m in methods),
@@ -159,15 +159,81 @@ def inventory(root, model, assignments=(), evidence=()):
             'notes':['No indexed methods is not runtime PASS','No diagnostics is not platform compilation',
                      'Dependency invocation is not independent branch assessment','YAML expressions and browser UI remain NOT_CHECKED'],
             'files':file_items,'methods':methods}
+    attach_declarative_coverage(result, model, assignments, logs)
+    return result
+
+
+def attach_declarative_coverage(data, model, assignments, logs):
+    """Absolute YAML occurrence identities; inventory never implies assessment."""
+    from .declarative_bindings import form_element, resolver_for, unique_component, DeclarationMismatch
+    indexed = {}
+    for file in data['files']:
+        if 'yamlDeclaration' not in file:
+            continue
+        entries = []
+        for expression in expression_values(file['yamlDeclaration']):
+            entry = {**expression, 'structure':[], 'runtime':[], 'browserUi':'NOT_CHECKED'}
+            indexed[(file['sourceFile'],tuple(expression['yamlPath']))] = entry
+            entries.append(entry)
+        file['yamlBindings'] = entries
+    for assignment in assignments:
+        for check in load_assignment(assignment)['checks']:
+            if 'formRequirement' not in check:
+                continue
+            cfg = check['formRequirement']; req = cfg['requirement']
+            try:
+                element = form_element(model,cfg['form'])
+                c = resolver_for(model,element)
+                path,_ = unique_component(element,req.get('selector',{}),c)
+            except InputError:
+                continue
+            category = req['kind']
+            if category == 'binding':
+                paths = [path+tuple(req['property'].split('.'))]
+            elif req.get('assert',{}).get('command'):
+                command = req['assert']['command']
+                paths = [tuple(command['path']) if isinstance(command,dict) else tuple(command) if isinstance(command,list)
+                         else path+tuple(command.split('.'))]
+            else:
+                paths = [p for source,p in indexed if source == element['sourceFile'] and p[:-1] == path]
+            for p in paths:
+                entry = indexed.get((element['sourceFile'],p))
+                if entry is None:
+                    continue
+                evidence = {'assignment':str(assignment),'criterionId':check['id'],'clause':cfg['clause'],
+                            'status':'DECLARED','independentlyAssessed':False,'executions':[]}
+                for directory,results,facts,plans in logs:
+                    result = results.get(check['id']); fact = facts.get(check['id'])
+                    if not result or not fact:
+                        continue
+                    assessed = fact['status'] == 'EXECUTED' and result['status'] in {'PASS','FAIL'}
+                    evidence['executions'].append({'status':result['status'],'independentlyAssessed':assessed,
+                        'reasonCode':fact.get('reasonCode'),'journal':str(directory/'runtime-evidence.json')})
+                    if assessed:
+                        evidence.update(status=result['status'],independentlyAssessed=True)
+                entry['runtime' if category == 'binding' else 'structure'].append(evidence)
+                if evidence['independentlyAssessed']:
+                    entry['status'] = 'ASSESSED'
+    values = list(indexed.values())
+    data['counts']['yamlExpressionOccurrences'] = len(values)
+    data['counts']['runtimeAssessedYamlValues'] = sum(any(c['independentlyAssessed'] for c in e['runtime']) for e in values)
+    data['counts']['structurallyAssessedYamlOccurrences'] = sum(any(c['independentlyAssessed'] for c in e['structure']) for e in values)
+    data['notes'] = [n for n in data['notes'] if n != 'YAML expressions and browser UI remain NOT_CHECKED']
+    data['notes'].append('Each yamlBindings occurrence records separate structural/runtime evidence; browserUi remains NOT_CHECKED')
 
 
 def markdown(data):
     lines=['# Карта фактического покрытия Dvizhok','',json.dumps(data['counts'],ensure_ascii=False),'',
-           'Вызов, план и оценка разделены; полнота веток не заявляется. YAML/UI остаются непроверенными.','',
+           'Вызов, план и оценка разделены; полнота веток и browser/native UI не заявляются. YAML-свидетельства перечислены отдельно.','',
            '| Файл | Роль | Статическая проверка | Runtime |','|---|---|---|---|']
     lines += [f"| {f['sourceFile']} | {f['role']} | {f['staticStatus']} | {f['runtimeStatus']} |" for f in data['files']]
     lines += ['','| Метод | Сценарии | Статус | Следующий контракт |','|---|---|---|---|']
     lines += [f"| {m['identity']['namespace']}::{m['identity']['module']}.{m['identity']['method']} | {len(m['directCriteria'])} | {m['status']} | {m['nextContract'].replace('|','/')} |" for m in data['methods']]
+    lines += ['','| YAML-файл | Путь от корня | Структура | Runtime | Browser |','|---|---|---|---|---|']
+    for file in data['files']:
+        for entry in file.get('yamlBindings',[]):
+            assessed = lambda kind: 'ASSESSED' if any(c['independentlyAssessed'] for c in entry[kind]) else 'NOT_CHECKED'
+            lines.append('| '+file['sourceFile']+' | '+'/'.join(entry['yamlPath'])+' | '+assessed('structure')+' | '+assessed('runtime')+' | NOT_CHECKED |')
     return '\n'.join(lines)+'\n'
 
 

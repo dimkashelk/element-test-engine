@@ -16,6 +16,15 @@ def load_assignment(source):
     main = source / "assignment.yaml" if source.is_dir() else source
     config = load_yaml(main)
     checks = list(config.get("checks", []))
+    if 'formRequirements' in config:
+        from .form_requirements import expand_requirements
+        contracts = config['formRequirements']
+        if not isinstance(contracts, list):
+            contracts = [contracts]
+        for contract in contracts:
+            if isinstance(contract, str):
+                contract = load_yaml(main.parent / contract)
+            checks.extend(expand_requirements(contract))
     if source.is_dir():
         for directory in ("structural", "runtime"):
             for path in sorted((source / directory).glob("*.yaml")):

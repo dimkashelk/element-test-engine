@@ -38,6 +38,7 @@ class ProjectTypes:
         self.inline_locals = True
         self.reference_id_type = "Строка"
         self.platform_type_aliases = {}
+        self.declarative_read = False
 
     def resolve(self, name, namespace=None):
         if name in self.canonical_elements:
@@ -226,6 +227,10 @@ class ProjectTypes:
             fields = []
         elif variant in {"Объект", "Данные"}:
             fields = [dict(f) for f in element["properties"].get("Реквизиты", [])]
+            if (self.declarative_read and element['elementType'] == 'Справочник'
+                    and element['properties'].get('Иерархический') is True
+                    and not any(f['Имя'] == 'Родитель' for f in fields)):
+                fields.append({'Имя':'Родитель','Тип':owner+'.Ссылка?'})
             for field in fields:
                 if field['Имя'] == 'Наименование' and element['elementType'] == 'Справочник':
                     field.setdefault('Тип', 'Строка')

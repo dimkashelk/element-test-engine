@@ -1,0 +1,207 @@
+schemaVersion: 1
+description: Форма показывает название регистра и строки проводок. Обычный источник
+  — строки документа. В режиме выбора показаны переданные строки. Колонка показывает
+  дебет. Кнопки запрещены. Порядок колонок и имена компонентов свободны.
+clauses:
+- id: fields
+  text: Название документа, без кнопок.
+- id: rows
+  text: Дебет строк выбранного источника с сохранением порядка и повторов.
+form:
+  name: Panel
+  namespace: Alpha
+requirements:
+- id: caption-structure
+  clause: fields
+  kind: structure
+  selector:
+    role: ПолеВвода
+    binding: Объект.Caption
+  assert:
+    type: ПолеВвода<Строка>
+- id: caption
+  clause: fields
+  kind: binding
+  selector:
+    role: ПолеВвода
+    binding: Объект.Caption
+  property: Значение
+  outputType: Строка
+  scenarios:
+  - context:
+      Объект:
+        Caption: caption-marker
+        Other: other-marker
+        Entries:
+        - Debit: 17
+          Credit: 23
+        - Debit: 19
+          Credit: 29
+        - Debit: 17
+          Credit: 23
+      Selected: false
+      Supplied:
+      - Debit: 31
+        Credit: 47
+      Lost:
+      - Debit: 17
+        Credit: 23
+      Reordered:
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+      Duplicated:
+      - Debit: 17
+        Credit: 23
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+    expected:
+      actions:
+      - caption-marker
+- id: source
+  clause: rows
+  kind: binding
+  selector:
+    role: Таблица
+  property: Источник.Данные
+  outputType: Массив<Alpha::Ledger.Entries>
+  scenarios:
+  - context:
+      Объект:
+        Caption: caption-marker
+        Other: other-marker
+        Entries:
+        - Debit: 17
+          Credit: 23
+        - Debit: 19
+          Credit: 29
+        - Debit: 17
+          Credit: 23
+      Selected: false
+      Supplied:
+      - Debit: 31
+        Credit: 47
+      Lost:
+      - Debit: 17
+        Credit: 23
+      Reordered:
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+      Duplicated:
+      - Debit: 17
+        Credit: 23
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+    steps:
+    - snapshot: true
+    - set:
+        path: Selected
+        value: true
+    - snapshot: true
+    - set:
+        path: Selected
+        value: false
+    - snapshot: true
+    expected:
+      actions:
+      - - Debit: 17
+          Credit: 23
+        - Debit: 19
+          Credit: 29
+        - Debit: 17
+          Credit: 23
+      - - Debit: 31
+          Credit: 47
+      - - Debit: 17
+          Credit: 23
+        - Debit: 19
+          Credit: 29
+        - Debit: 17
+          Credit: 23
+- id: debit
+  clause: rows
+  kind: binding
+  selector:
+    role: СтандартнаяКолонкаТаблицы
+    within:
+      role: Таблица
+  property: Значение
+  outputType: Число
+  scenarios:
+  - context:
+      Объект:
+        Caption: caption-marker
+        Other: other-marker
+        Entries:
+        - Debit: 17
+          Credit: 23
+        - Debit: 19
+          Credit: 29
+        - Debit: 17
+          Credit: 23
+      Selected: false
+      Supplied:
+      - Debit: 31
+        Credit: 47
+      Lost:
+      - Debit: 17
+        Credit: 23
+      Reordered:
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+      Duplicated:
+      - Debit: 17
+        Credit: 23
+      - Debit: 19
+        Credit: 29
+      - Debit: 17
+        Credit: 23
+      - Debit: 17
+        Credit: 23
+    steps:
+    - snapshot: true
+    - set:
+        path: Selected
+        value: true
+    - snapshot: true
+    - set:
+        path: Selected
+        value: false
+    - snapshot: true
+    expected:
+      actions:
+      - - 17
+        - 19
+        - 17
+      - - 31
+      - - 17
+        - 19
+        - 17
+- id: no-button
+  clause: fields
+  kind: structure
+  selector:
+    role: Кнопка
+  assert:
+    exists: false
+underdetermined:
+- Пиксельная компоновка

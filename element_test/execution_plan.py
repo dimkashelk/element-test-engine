@@ -160,6 +160,9 @@ class ExecutionPlan:
 
 
 def plan_execution(root, source_model, check):
+    if 'formRequirement' in check:
+        from .declarative_bindings import plan_binding
+        return plan_binding(root, source_model, check)
     from .runtime import extract_method, project_method_closure
     root, selected = select_check_project(root, source_model, check)
     if 'storage' in check and not isinstance(check['storage'], dict):
@@ -459,6 +462,7 @@ def bind_types(plan):
     from .platform_mocks import PlatformMocks
     from .runtime import constructor_types, body_type_references, _project_body_type, RUNTIME_CONSTRUCTORS
     c = ProjectTypes(plan.model, plan.module['namespace'], plan.module.get('imports', []))
+    c.declarative_read = plan.check.get('_declarativeBindings', False)
     if plan.form:
         c.reference_id_type = 'Ууид'
     c.rename_collisions = True

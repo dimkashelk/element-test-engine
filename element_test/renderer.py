@@ -352,6 +352,7 @@ def render_plan(plan, sandbox):
     imports = contracts.write(sandbox)
     from .session_contracts import render_session
     session_setup, session_metadata = render_session(plan, sandbox)
+    plan.rendered_session = (session_setup, session_metadata)
     setup = session_setup + setup
     runtime_metadata += session_metadata
     generated_owners = {name.split(".")[0] for name in contracts.definitions}

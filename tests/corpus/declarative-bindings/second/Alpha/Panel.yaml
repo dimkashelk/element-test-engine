@@ -1,0 +1,30 @@
+ВидЭлемента: КомпонентИнтерфейса
+Имя: Panel
+ОбластьВидимости: ВПроекте
+Свойства:
+- Имя: Selected
+  Тип: Булево
+- Имя: Supplied
+  Тип: Массив<Alpha::Ledger.Entries>
+- Имя: Lost
+  Тип: Массив<Alpha::Ledger.Entries>
+- Имя: Reordered
+  Тип: Массив<Alpha::Ledger.Entries>
+- Имя: Duplicated
+  Тип: Массив<Alpha::Ledger.Entries>
+Наследует:
+  Тип: ФормаОбъекта<Alpha::Ledger.Объект>
+  Содержимое:
+    Тип: Группа
+    Содержимое:
+    - Тип: Таблица<ИсточникДанныхМассив<Alpha::Ledger.Entries>>
+      Имя: GridB
+      Источник:
+        Данные: '=не Selected ? Объект.Entries : Supplied'
+      Колонки:
+      - Тип: СтандартнаяКолонкаТаблицы<Alpha::Ledger.Entries, Число>
+        Имя: AmountB
+        Значение: =RowData.Debit
+    - Тип: ПолеВвода<Строка>
+      Имя: LabelB
+      Значение: =Объект.Caption

@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-03",
+  "counts": {
+    "files": 75,
+    "yaml": 46,
+    "xbsl": 29,
+    "methods": 44,
+    "directTargets": 44,
+    "preparedDirectTargets": 44,
+    "withoutPreparedDirectScenario": 0,
+    "assessedMethods": 44,
+    "withoutDirectScenario": 0,
+    "yamlExpressionOccurrences": 261,
+    "runtimeAssessedYamlValues": 133,
+    "structurallyAssessedYamlOccurrences": 256,
+    "forms": 16,
+    "valueExpressions": 133,
+    "commandReferences": 128,
+    "tables": 5,
+    "ownHandlerBindings": 14,
+    "describedForms": 16,
+    "assessedValueExpressions": 133,
+    "assessedCommandReferences": 128,
+    "freshMethods38": 10
+  },
+  "public": {
+    "core": {
+      "checks": 453,
+      "score": 427.0,
+      "status": "PASS",
+      "directories": [
+        "test",
+        "run"
+      ]
+    },
+    "properties": {
+      "checks": 32,
+      "score": 32,
+      "status": "PASS",
+      "directories": [
+        "properties-test-final",
+        "properties-run-final"
+      ]
+    },
+    "batches": [
+      {
+        "name": "batch-1",
+        "statuses": [
+          "passed",
+          "failed",
+          "passed"
+        ],
+        "cacheHit": false,
+        "scope": "five portable declarative criteria"
+      },
+      {
+        "name": "batch-2",
+        "statuses": [
+          "passed",
+          "failed",
+          "passed"
+        ],
+        "cacheHit": false,
+        "scope": "five portable declarative criteria"
+      }
+    ],
+    "archiveSha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+    "archiveUnchanged": true,
+    "jsonSchemas": "PASS",
+    "fullRegression": "NOT_RUN",
+    "fourValidate": "NOT_RUN"
+  },
+  "checks": 485,
+  "normalizedRequirements": 459,
+  "targetedTests": {
+    "newTests": 12,
+    "newTestLog": "result/dvizhok-declarative-bindings/target-tests-complete.log",
+    "additionalPlannerTests": 2,
+    "finalPlannerTests": 8,
+    "additionalPlannerLog": "result/dvizhok-declarative-bindings/planner-contract-final.log",
+    "affectedExistingTests": 30,
+    "affectedExistingLog": "result/dvizhok-declarative-bindings/affected-existing-tests.log"
+  },
+  "opening": {
+    "backend": "PostgreSQL",
+    "status": "PASS",
+    "journal": "result/dvizhok-declarative-bindings/opening/runtime-evidence.json"
+  },
+  "initialFailures": [
+    {
+      "journal": "result/dvizhok-declarative-bindings/test-initial",
+      "pass": 451,
+      "unsupported": 1,
+      "fail": 1,
+      "causes": [
+        "Session renderer called twice",
+        "Union ownership dropped by direct native serialization"
+      ]
+    },
+    {
+      "journal": "result/dvizhok-declarative-bindings/retry",
+      "pass": 1,
+      "error": 1,
+      "cause": "Welcome fixture omitted explicit ru-RU locale"
+    },
+    {
+      "journal": "result/dvizhok-declarative-bindings/target-tests-final.log",
+      "cause": "Constant division by zero compiled as an error; probe changed to runtime fixture divisor"
+    }
+  ],
+  "limitsChanged": false,
+  "fullRegression": "NOT_RUN",
+  "all44MethodsReplay": "NOT_RUN",
+  "fourValidate": "NOT_RUN",
+  "nativeBrowserUi": "NOT_CHECKED",
+  "batchScope": "Five portable criteria, not full Dvizhok assignment",
+  "resourceCleanup": {
+    "status": "PASS",
+    "containerNameFilter": "element-",
+    "containers": [],
+    "networkNameFilter": "element-",
+    "networks": [],
+    "checks": "docker ps -a and docker network ls after all targeted Docker/SQL runs"
+  }
+}

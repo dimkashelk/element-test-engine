@@ -1,0 +1,1579 @@
+{
+  "schemaVersion": 1,
+  "form": {
+    "name": "РабочиеДниФормаЗаписи",
+    "namespace": "Администрирование",
+    "sourceFile": "Администрирование/РабочиеДниФормаЗаписи.yaml"
+  },
+  "description": "Регрессия декларации эталонной формы РабочиеДниФормаЗаписи; поведение оценивают отдельно зафиксированные сценарии.",
+  "declaration": {
+    "ВидЭлемента": "КомпонентИнтерфейса",
+    "Ид": "d20662ff-5c73-4cd5-8d10-315b8c3299cf",
+    "Имя": "РабочиеДниФормаЗаписи",
+    "ОбластьВидимости": "ВПодсистеме",
+    "Наследует": {
+      "Тип": "ФормаЗаписиНабораКонстант<РабочиеДни.Запись>",
+      "ВключатьВАвтоИнтерфейс": true,
+      "Заголовок": "Рабочие дни",
+      "Представление": "Рабочие дни",
+      "ДополнительныеКоманды": {
+        "Тип": "ФрагментКомандногоИнтерфейса",
+        "Элементы": [
+          "=Обновить"
+        ]
+      },
+      "ОбычныеКоманды": {
+        "Тип": "ФрагментКомандногоИнтерфейса",
+        "Элементы": [
+          "=Записать"
+        ]
+      },
+      "ОсновнаяКоманда": "=ЗаписатьИЗакрыть",
+      "Содержимое": {
+        "Тип": "ПроизвольныйШаблонФормы",
+        "ШиринаВКолонках": "Двойная",
+        "Содержимое": {
+          "Тип": "Группа",
+          "Имя": "ГруппаПолей",
+          "Компоновка": "Вертикальная",
+          "Содержимое": [
+            {
+              "Тип": "Флажок",
+              "Имя": "Понедельник",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Понедельник"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Вторник",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Вторник"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Среда",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Среда"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Четверг",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Четверг"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Пятница",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Пятница"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Суббота",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Суббота"
+            },
+            {
+              "Тип": "Флажок",
+              "Имя": "Воскресенье",
+              "Вид": "Флажок",
+              "Значение": "=Запись.Воскресенье"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expressions": [
+    {
+      "expression": "=Обновить",
+      "yamlPath": [
+        "Наследует",
+        "ДополнительныеКоманды",
+        "Элементы",
+        "0"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Записать",
+      "yamlPath": [
+        "Наследует",
+        "ОбычныеКоманды",
+        "Элементы",
+        "0"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=ЗаписатьИЗакрыть",
+      "yamlPath": [
+        "Наследует",
+        "ОсновнаяКоманда"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Понедельник",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "0",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Вторник",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "1",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Среда",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "2",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Четверг",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "3",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Пятница",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "4",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Суббота",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "5",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    },
+    {
+      "expression": "=Запись.Воскресенье",
+      "yamlPath": [
+        "Наследует",
+        "Содержимое",
+        "Содержимое",
+        "Содержимое",
+        "6",
+        "Значение"
+      ],
+      "status": "NOT_CHECKED"
+    }
+  ],
+  "runtimeContract": null,
+  "existingChecks": [
+    {
+      "type": "runtime",
+      "id": "form-05-000",
+      "points": 1.0,
+      "group": "form-05-000",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-000",
+          "clause": "form-05-000",
+          "kind": "structure",
+          "points": 1,
+          "selector": {},
+          "assert": {
+            "type": "ФормаЗаписиНабораКонстант<РабочиеДни.Запись>"
+          }
+        },
+        "clause": {
+          "id": "form-05-000",
+          "text": "Базовый тип формы и владелец данных: ФормаЗаписиНабораКонстант<РабочиеДни.Запись>."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-001",
+      "points": 1.0,
+      "group": "form-05-001",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-001",
+          "clause": "form-05-001",
+          "kind": "structure",
+          "points": 1,
+          "selector": {},
+          "assert": {
+            "command": {
+              "path": [
+                "Наследует",
+                "ДополнительныеКоманды",
+                "Элементы",
+                "0"
+              ],
+              "reference": "=Обновить"
+            }
+          }
+        },
+        "clause": {
+          "id": "form-05-001",
+          "text": "Связь команды в фрагменте Наследует/ДополнительныеКоманды/Элементы/0 указывает Обновить, без запуска эффектов."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-002",
+      "points": 1.0,
+      "group": "form-05-002",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-002",
+          "clause": "form-05-002",
+          "kind": "structure",
+          "points": 1,
+          "selector": {},
+          "assert": {
+            "command": {
+              "path": [
+                "Наследует",
+                "ОбычныеКоманды",
+                "Элементы",
+                "0"
+              ],
+              "reference": "=Записать"
+            }
+          }
+        },
+        "clause": {
+          "id": "form-05-002",
+          "text": "Связь команды в фрагменте Наследует/ОбычныеКоманды/Элементы/0 указывает Записать, без запуска эффектов."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-003",
+      "points": 1.0,
+      "group": "form-05-003",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-003",
+          "clause": "form-05-003",
+          "kind": "structure",
+          "points": 1,
+          "selector": {},
+          "assert": {
+            "command": {
+              "path": [
+                "Наследует",
+                "ОсновнаяКоманда"
+              ],
+              "reference": "=ЗаписатьИЗакрыть"
+            }
+          }
+        },
+        "clause": {
+          "id": "form-05-003",
+          "text": "Связь команды в фрагменте Наследует/ОсновнаяКоманда указывает ЗаписатьИЗакрыть, без запуска эффектов."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-004-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-004",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-004",
+          "clause": "form-05-004",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Понедельник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-004",
+          "text": "Компонент Понедельник в указанной области: Значение показывает Запись.Понедельник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-004-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-004",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-004",
+          "clause": "form-05-004",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Понедельник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-004",
+          "text": "Компонент Понедельник в указанной области: Значение показывает Запись.Понедельник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-004-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-004",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-004",
+          "clause": "form-05-004",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Понедельник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-004",
+          "text": "Компонент Понедельник в указанной области: Значение показывает Запись.Понедельник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-005",
+      "points": 1.0,
+      "group": "form-05-005",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-005",
+          "clause": "form-05-005",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Понедельник"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-005",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-006-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-006",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-006",
+          "clause": "form-05-006",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Вторник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-006",
+          "text": "Компонент Вторник в указанной области: Значение показывает Запись.Вторник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-006-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-006",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-006",
+          "clause": "form-05-006",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Вторник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-006",
+          "text": "Компонент Вторник в указанной области: Значение показывает Запись.Вторник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-006-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-006",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-006",
+          "clause": "form-05-006",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Вторник"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-006",
+          "text": "Компонент Вторник в указанной области: Значение показывает Запись.Вторник. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-007",
+      "points": 1.0,
+      "group": "form-05-007",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-007",
+          "clause": "form-05-007",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Вторник"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-007",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-008-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-008",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-008",
+          "clause": "form-05-008",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Среда"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-008",
+          "text": "Компонент Среда в указанной области: Значение показывает Запись.Среда. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-008-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-008",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-008",
+          "clause": "form-05-008",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Среда"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-008",
+          "text": "Компонент Среда в указанной области: Значение показывает Запись.Среда. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-008-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-008",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-008",
+          "clause": "form-05-008",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Среда"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-008",
+          "text": "Компонент Среда в указанной области: Значение показывает Запись.Среда. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-009",
+      "points": 1.0,
+      "group": "form-05-009",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-009",
+          "clause": "form-05-009",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Среда"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-009",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-010-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-010",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-010",
+          "clause": "form-05-010",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Четверг"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-010",
+          "text": "Компонент Четверг в указанной области: Значение показывает Запись.Четверг. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-010-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-010",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-010",
+          "clause": "form-05-010",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Четверг"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-010",
+          "text": "Компонент Четверг в указанной области: Значение показывает Запись.Четверг. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-010-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-010",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-010",
+          "clause": "form-05-010",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Четверг"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-010",
+          "text": "Компонент Четверг в указанной области: Значение показывает Запись.Четверг. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-011",
+      "points": 1.0,
+      "group": "form-05-011",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-011",
+          "clause": "form-05-011",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Четверг"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-011",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-012-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-012",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-012",
+          "clause": "form-05-012",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Пятница"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-012",
+          "text": "Компонент Пятница в указанной области: Значение показывает Запись.Пятница. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-012-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-012",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-012",
+          "clause": "form-05-012",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Пятница"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-012",
+          "text": "Компонент Пятница в указанной области: Значение показывает Запись.Пятница. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-012-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-012",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-012",
+          "clause": "form-05-012",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Пятница"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-012",
+          "text": "Компонент Пятница в указанной области: Значение показывает Запись.Пятница. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-013",
+      "points": 1.0,
+      "group": "form-05-013",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-013",
+          "clause": "form-05-013",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Пятница"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-013",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-014-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-014",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-014",
+          "clause": "form-05-014",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Суббота"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-014",
+          "text": "Компонент Суббота в указанной области: Значение показывает Запись.Суббота. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-014-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-014",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-014",
+          "clause": "form-05-014",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Суббота"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-014",
+          "text": "Компонент Суббота в указанной области: Значение показывает Запись.Суббота. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-014-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-014",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-014",
+          "clause": "form-05-014",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Суббота"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-014",
+          "text": "Компонент Суббота в указанной области: Значение показывает Запись.Суббота. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-015",
+      "points": 1.0,
+      "group": "form-05-015",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-015",
+          "clause": "form-05-015",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Суббота"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-015",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-016-0",
+      "points": 0.3333333333333333,
+      "group": "form-05-016",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-016",
+          "clause": "form-05-016",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Воскресенье"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-016",
+          "text": "Компонент Воскресенье в указанной области: Значение показывает Запись.Воскресенье. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-016-1",
+      "points": 0.3333333333333333,
+      "group": "form-05-016",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-016",
+          "clause": "form-05-016",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Воскресенье"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-016",
+          "text": "Компонент Воскресенье в указанной области: Значение показывает Запись.Воскресенье. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": true,
+          "Вторник": true,
+          "Среда": true,
+          "Четверг": true,
+          "Пятница": true,
+          "Суббота": true,
+          "Воскресенье": true
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          true
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-016-2",
+      "points": 0.3333333333333333,
+      "group": "form-05-016",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-016",
+          "clause": "form-05-016",
+          "kind": "binding",
+          "points": 1,
+          "selector": {
+            "name": "Воскресенье"
+          },
+          "property": "Значение",
+          "outputType": "Булево"
+        },
+        "clause": {
+          "id": "form-05-016",
+          "text": "Компонент Воскресенье в указанной области: Значение показывает Запись.Воскресенье. Допускаются эквивалентные выражения."
+        }
+      },
+      "context": {
+        "Запись": {
+          "Понедельник": false,
+          "Вторник": false,
+          "Среда": false,
+          "Четверг": false,
+          "Пятница": false,
+          "Суббота": false,
+          "Воскресенье": false
+        }
+      },
+      "steps": [
+        {
+          "snapshot": true
+        }
+      ],
+      "expected": {
+        "actions": [
+          false
+        ]
+      },
+      "properties": {}
+    },
+    {
+      "type": "runtime",
+      "id": "form-05-017",
+      "points": 1.0,
+      "group": "form-05-017",
+      "formRequirement": {
+        "form": {
+          "name": "РабочиеДниФормаЗаписи",
+          "namespace": "Администрирование"
+        },
+        "requirement": {
+          "id": "form-05-017",
+          "clause": "form-05-017",
+          "kind": "structure",
+          "points": 1,
+          "selector": {
+            "name": "Воскресенье"
+          },
+          "assert": {
+            "type": "Флажок"
+          }
+        },
+        "clause": {
+          "id": "form-05-017",
+          "text": "Тип требуемого компонента соответствует данным Булево."
+        }
+      },
+      "expected": true,
+      "properties": {}
+    }
+  ],
+  "unavailable": [],
+  "moduleSignatures": []
+}

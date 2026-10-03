@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "form-requirements-v1",
+  "title": "Teacher form description contract v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "description",
+    "clauses",
+    "form",
+    "requirements"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clauses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "form": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "underdetermined": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "within": {
+          "$ref": "#/$defs/selector"
+        },
+        "declaration": {
+          "type": "object"
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "required": [
+        "id",
+        "clause",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "clause": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "structure",
+            "binding"
+          ]
+        },
+        "points": {
+          "type": "number",
+          "minimum": 0
+        },
+        "selector": {
+          "$ref": "#/$defs/selector"
+        },
+        "assert": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "properties": {
+              "type": "object"
+            },
+            "exists": {
+              "type": "boolean"
+            },
+            "handler": {
+              "type": "boolean"
+            },
+            "order": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "command": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "reference"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "reference": {
+                      "type": "string",
+                      "pattern": "^="
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "property": {
+          "type": "string"
+        },
+        "outputType": {
+          "type": "string"
+        },
+        "scenarios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "context",
+              "expected"
+            ],
+            "properties": {
+              "context": {
+                "type": "object"
+              },
+              "steps": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "snapshot"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "snapshot": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "set"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "set": {
+                          "type": "object",
+                          "required": [
+                            "path",
+                            "value"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "value": {}
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "call"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "call": {
+                          "type": "object",
+                          "required": [
+                            "args"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "method": {
+                              "type": "string"
+                            },
+                            "selector": {
+                              "$ref": "#/$defs/selector"
+                            },
+                            "args": {
+                              "type": "array"
+                            }
+                          },
+                          "oneOf": [
+                            {
+                              "required": [
+                                "method"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "selector"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "expected": {},
+              "lifecycle": {
+                "type": "object",
+                "required": [
+                  "isNew"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "isNew": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "constants": {
+                "type": "object"
+              },
+              "clock": {
+                "type": "object"
+              },
+              "executorLocale": {
+                "type": "string"
+              },
+              "timeout": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "structure"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "assert"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "binding"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "property",
+              "outputType",
+              "scenarios"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}
