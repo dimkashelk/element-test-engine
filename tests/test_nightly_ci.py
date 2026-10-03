@@ -1,10 +1,12 @@
 """CI must reject skipped/empty suites and preserve progress on interruption."""
 import io
 import json
+import os
 from pathlib import Path
 import tarfile
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from tools.ci.assets import digest, package, unpack
 from tools.ci.run_nightly import run_suite, summary
@@ -64,7 +66,9 @@ class NightlyCiTest(unittest.TestCase):
             self.assertEqual((data['status'], data['passed']), ('incomplete', 1))
             data['status'] = 'running'  # Hard-killed processes retain the last checkpoint.
             output.write_text(json.dumps(data))
-            self.assertEqual(summary(output, 'cancelled')['status'], 'incomplete')
+            with patch.dict(os.environ, {'GITHUB_STEP_SUMMARY': ''}), \
+                    unittest.mock.patch('sys.stdout', new_callable=io.StringIO):
+                self.assertEqual(summary(output, 'cancelled')['status'], 'incomplete')
 
     def test_bundle_roundtrip_readable_by_container_and_checksum_enforced(self):
         with tempfile.TemporaryDirectory() as directory:
