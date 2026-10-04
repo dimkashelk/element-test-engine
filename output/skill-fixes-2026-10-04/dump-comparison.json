@@ -1,0 +1,74 @@
+[
+  {
+    "dump": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+    "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+    "unchanged": true,
+    "before": {
+      "files": 86,
+      "errors": 22,
+      "warnings": 34
+    },
+    "after": {
+      "files": 86,
+      "errors": 22,
+      "warnings": 34
+    },
+    "new_errors": [],
+    "removed_errors": [],
+    "engine_validate_exit": 0
+  },
+  {
+    "dump": "Dvizhok.xdump",
+    "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+    "unchanged": true,
+    "before": {
+      "files": 46,
+      "errors": 2,
+      "warnings": 20
+    },
+    "after": {
+      "files": 46,
+      "errors": 2,
+      "warnings": 20
+    },
+    "new_errors": [],
+    "removed_errors": [],
+    "engine_validate_exit": 0
+  },
+  {
+    "dump": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+    "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+    "unchanged": true,
+    "before": {
+      "files": 627,
+      "errors": 12,
+      "warnings": 242
+    },
+    "after": {
+      "files": 627,
+      "errors": 12,
+      "warnings": 242
+    },
+    "new_errors": [],
+    "removed_errors": [],
+    "engine_validate_exit": 1
+  },
+  {
+    "dump": "autocheck-2026-09-24-16-14.xdump",
+    "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+    "unchanged": true,
+    "before": {
+      "files": 234,
+      "errors": 27,
+      "warnings": 102
+    },
+    "after": {
+      "files": 234,
+      "errors": 27,
+      "warnings": 102
+    },
+    "new_errors": [],
+    "removed_errors": [],
+    "engine_validate_exit": 1
+  }
+]
