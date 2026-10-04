@@ -62,7 +62,9 @@ class SlicePlanTest(unittest.TestCase):
             with self.assertRaisesRegex(InputError,'Затенённый'):plan_execution(root,analyze(root),check(s,'Current',['x']))
             main.write_text(original)
             meta=root/'Data/Prices.yaml';meta.write_text(meta.read_text().replace('Периодичность: День','Периодичность: Секунда'))
-            with self.assertRaisesRegex(InputError,'только для День'):plan_execution(root,analyze(root),check(s))
+            # Task 43 accepts second histories, but a Day-typed boundary cannot
+            # be silently coerced to DateTime after the metadata change.
+            with self.assertRaisesRegex(InputError,'тип параметра'):plan_execution(root,analyze(root),check(s))
             meta.write_text(meta.read_text().replace('Периодичность: Секунда','Периодичность: День').replace(
                 'Тип: Item.Ссылка?', 'Тип: "Item.Ссылка|Partner.Ссылка"'))
             with self.assertRaisesRegex(InputError,'Union'):

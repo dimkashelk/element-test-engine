@@ -182,12 +182,14 @@ class Parser:
         start = self.tokens[self.pos][2]
         owner = self.identifier()
         while self.accept('::'): owner += '::' + self.identifier()
-        sliced = self.accept('.')
-        if sliced:
-            self.expect('СРЕЗПОСЛЕДНИХ'); self.expect('(')
-            if not self.accept(')'):
-                if self.pos == len(self.tokens) or self.tokens[self.pos][0] != 'parameter': self.fail('Граница среза требует параметр')
-                self.pos += 1; self.expect(')')
+        member=self.identifier() if self.accept('.') else ''
+        if self.accept('('):
+            depth=1
+            while self.pos<len(self.tokens) and depth:
+                t=self.tokens[self.pos]
+                if t[0]=='token':depth+=(t[1]=='(')-(t[1]==')')
+                self.pos+=1
+            if depth:self.fail('Незакрытые параметры источника',start)
         end = self.tokens[self.pos-1][3]
         alias = owner.split('::')[-1]
         if self.accept('КАК'):
@@ -197,8 +199,11 @@ class Parser:
         if alias in [s.alias for s in self.sources]: self.fail('Повторяющийся псевдоним источника: ' + alias,start)
         raw = self.text[start:end]
         # Reuse the established metadata/type/slice contract; no row evaluation.
-        base = parse_simple_storage_query('ВЫБРАТЬ ' + ('Период' if sliced else 'Ссылка') + ' ИЗ ' + raw + ' КАК ' + alias, self.contracts)
-        raw_start = len('ВЫБРАТЬ ' + ('Период' if sliced else 'Ссылка') + ' ИЗ ')
+        from .query_sources import source_schema
+        schema=source_schema(self.contracts,owner,member)
+        probe=schema['fields'][0].name
+        base = parse_simple_storage_query('ВЫБРАТЬ ' + probe + ' ИЗ ' + raw + ' КАК ' + alias, self.contracts)
+        raw_start = len('ВЫБРАТЬ ' + probe + ' ИЗ ')
         parameters = tuple(replace(p,start=p.start-raw_start+start,end=p.end-raw_start+start) for p in base.parameters)
         base = replace(base,source_range=(start,end),source_name=owner,parameters=parameters,
                        period_range=tuple(x-raw_start+start for x in base.period_range) if base.period_range else None)
@@ -211,15 +216,13 @@ class Parser:
         matches = []
         for i,s in enumerate(self.sources[:visible]):
             if len(path) == 2 and path[0] != s.alias: continue
-            elements = self.contracts.resolve(s.owner)
-            props = elements[0]['properties']
-            names = {f['Имя'] for k in ('Реквизиты','Измерения','Ресурсы') for f in props.get(k,[])} | ({'Ссылка'} if s.source_kind=='ordinary' else {'Период'})
+            names = {f.name for f in s.fields}
             if e.name in names: matches.append(i)
         if len(matches) != 1: self.fail('Неизвестное или неоднозначное поле: ' + '.'.join(path),e.range[0])
         i = matches[0]
         if e.name not in self.fields[i]:
-            q = parse_simple_storage_query('ВЫБРАТЬ ' + e.name + ' ИЗ ' + self.raw_sources[i],self.contracts)
-            self.fields[i][e.name] = q.projections[0][0]
+            self.fields[i][e.name] = next(f for f in self.sources[i].fields if f.name==e.name)
+            self.contracts.require(self.fields[i][e.name].type)
         f = self.fields[i][e.name]; self.used[i][e.name] = f
         nullable = i in self.nullable
         return replace(e,source=i,type=f.type if not nullable or f.type.endswith('?') else f.type+'?',sql_nullable=nullable)
@@ -426,6 +429,8 @@ def generate_relational_query(query, contracts):
     signature=', '.join('П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
     def captured(p):
         v='П'+str(p.slot)
+        if p.type.startswith('Массив<'):
+            return 'СериализацияJson.ПрочитатьОбъект<'+contracts.sbsl_type(p.type)+'>(СериализацияJson.ЗаписатьОбъект('+v+'), Тип<'+contracts.sbsl_type(p.type)+'>)'
         if p.type.rstrip('?').endswith('.Ссылка'):
             clone='новый '+p.type.rstrip('?')+'(Идентификатор = '+v+'.Идентификатор)'
             return '('+v+' == Неопределено ? Неопределено : '+clone+')' if p.type.endswith('?') else clone

@@ -199,8 +199,8 @@ def register_setup(storage):
                 raise InvalidTestError('Начальная строка требует все поля схемы')
             if any(row[f['Имя']] != filt[f['Имя']] for f in dims):
                 raise InvalidTestError('Начальная строка не соответствует фильтру')
-            if schema['kind'] == 'РегистрНакопления' and row.get('Активность') is not True:
-                raise InvalidTestError('Поддержаны начальные движения с Активность=Истина')
+            # Query fixtures include inactive historical movements. Writes keep
+            # their existing active-record contract; totals ignore these rows.
         # Validate duplicate information keys before Script so teacher mistakes
         # cannot be reported as student failures.
         if schema['kind'] == 'РегистрСведений':
@@ -214,8 +214,12 @@ def register_setup(storage):
         lines += ['    ТестСессия.Событие("teacher:register-setup")',
                   '    знч ' + name + ' = новый ' + schema['setType'] + '()',
                   '    ' + name + '.Фильтр.Установить(' + args + ')',
-                  '    ' + name + '.Записи.ДобавитьВсе(' + expr + ')',
-                  '    ' + name + '.Записать()']
+                  '    ' + name + '.Записи.ДобавитьВсе(' + expr + ')']
+        if schema['kind']=='РегистрНакопления' and any(not row['Активность'] for row in rows):
+            # Author setup represents historical inactive rows, without
+            # expanding the student's record-set write contract.
+            lines += ['    ТестСессия.Записать('+c.literal(schema['owner'],'Строка')+', '+name+'.Фильтр.Ключ как Строка, СериализацияJson.ЗаписатьОбъект('+name+'.Записи))']
+        else:lines += ['    ' + name + '.Записать()']
     return lines
 
 

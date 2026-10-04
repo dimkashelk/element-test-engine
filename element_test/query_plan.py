@@ -117,6 +117,13 @@ class StorageQuery:
     source_name: str = ''
     boundary: str | None = None
     fill: dict | None = None
+    fields: tuple = ()
+    member: str = ''
+    resources: tuple = ()
+    register_kind: str = ''
+    end_slot: int | None = None
+    definition: object = None
+    definition_source: dict | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -141,13 +148,28 @@ def query_literals(source):
 
 def parse_storage_query(text, contracts):
     """Parse typed storage/relational AST without evaluating data."""
-    if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ)\b|;|\(\s*ВЫБРАТЬ', mask_noncode(text), re.I):
+    # Captured Script expressions are opaque to the XBQL dispatcher. Their
+    # method calls/arithmetic must not turn an ordinary slice into an aggregate.
+    routing = list(mask_noncode(text))
+    i = 0
+    while i < len(routing)-1:
+        if routing[i:i+2] == ['%', '{']:
+            end, depth = i+2, 1
+            while end < len(routing) and depth:
+                depth += (routing[end] == '{') - (routing[end] == '}')
+                end += 1
+            routing[i:end] = ' ' * (end-i)
+            i = end
+        else:
+            i += 1
+    routing = ''.join(routing)
+    if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ)\b|;|\(\s*ВЫБРАТЬ|\bВ\s*\(', routing, re.I):
         from .query_composites import parse_composite_query
         return parse_composite_query(text, contracts)
-    if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', mask_noncode(text), re.I):
+    if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', routing, re.I):
         from .query_projections import parse_computed_query
         return parse_computed_query(text, contracts)
-    if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', mask_noncode(text), re.I):
+    if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', routing, re.I):
         from .query_joins import parse_relational_query
         return parse_relational_query(text, contracts)
     return parse_simple_storage_query(text, contracts)
@@ -243,47 +265,33 @@ def parse_simple_storage_query(text, contracts):
     while accept('::'):
         owner += '::' + identifier()
     source_kind, period_token, period_range = 'ordinary', None, None
+    member, end_token = '', None
     if accept('.'):
-        expect('СРЕЗПОСЛЕДНИХ')
-        source_kind = 'slice-last'
-        expect('(')
+        member = identifier()
+    from .query_sources import source_schema
+    schema = source_schema(contracts, owner, member)
+    source_kind = schema['kind']
+    if accept('('):
+        if source_kind not in {'slice-last','slice-first','balance','turnover','balance-turnover'}:
+            raise UnsupportedSyntaxError('Параметры для этого источника не поддержаны')
         period_start = tokens[pos-1][2]
         if not accept(')'):
-            if pos >= len(tokens) or tokens[pos][0] != 'parameter':
-                raise UnsupportedSyntaxError('Граница среза требует %Дата или %{выражение}')
-            period_token = tokens[pos]
-            pos += 1
+            if pos < len(tokens) and tokens[pos][0] == 'parameter':
+                period_token = tokens[pos]; pos += 1
+            elif not (pos < len(tokens) and tokens[pos][1] == ','):
+                raise UnsupportedSyntaxError('Граница виртуальной таблицы требует параметр')
+            if accept(','):
+                if source_kind not in {'turnover','balance-turnover'}:
+                    raise UnsupportedSyntaxError('Фильтр виртуальной таблицы пока вне контракта')
+                if pos < len(tokens) and tokens[pos][0] == 'parameter':
+                    end_token = tokens[pos]; pos += 1
             expect(')')
         period_range = (period_start, tokens[pos-1][3])
+    elif source_kind in {'slice-last','slice-first'}:
+        raise UnsupportedSyntaxError('Срез требует скобки параметров')
     source_range = (source_start, tokens[pos-1][3])
     alias = identifier() if accept('КАК') else owner.split('::')[-1]
-    matches = contracts.resolve(owner)
-    kinds = {'РегистрСведений'} if source_kind == 'slice-last' else {'Справочник', 'Документ'}
-    if len(matches) != 1 or matches[0]['elementType'] not in kinds:
-        raise UnsupportedSyntaxError('Источник запроса отсутствует, неоднозначен или вне контракта: ' + owner)
-    element = matches[0]
-    if source_kind == 'slice-last' and element['properties'].get('Периодичность') != 'День':
-        raise UnsupportedSyntaxError('СрезПоследних подтверждён только для День')
-    identity = qualified(element)
-    fields = {}
-    previous = contracts.namespace, contracts.imports
-    contracts.namespace, contracts.imports = element['namespace'], ()
-    try:
-        declarations = element['properties'].get('Реквизиты', [])
-        if source_kind == 'slice-last':
-            declarations = ([{'Имя': 'Период', 'Тип': 'Дата'}] + element['properties'].get('Измерения', [])
-                            + element['properties'].get('Ресурсы', []) + declarations)
-        for f in declarations:
-            typ = f.get('Тип', 'Строка' if f['Имя'] == 'Наименование' and element['elementType'] == 'Справочник' else '')
-            if f['Имя'] in fields:
-                raise UnsupportedSyntaxError('Повторяющееся поле источника запроса: ' + f['Имя'])
-            fields[f['Имя']] = QueryField(identity, f['Имя'], contracts.canonical_type(typ))
-        if source_kind == 'ordinary' and 'Ссылка' in fields:
-            raise UnsupportedSyntaxError('Обычный член Ссылка конфликтует с системной ссылкой')
-        if source_kind == 'ordinary':
-            fields['Ссылка'] = QueryField(identity, 'Ссылка', contracts.canonical_type(identity + '.Ссылка'), True)
-    finally:
-        contracts.namespace, contracts.imports = previous
+    identity, fields = schema['owner'], {f.name:f for f in schema['fields']}
 
     def bind(path):
         qualifier, name = path
@@ -292,7 +300,7 @@ def parse_simple_storage_query(text, contracts):
         if name not in fields:
             raise UnsupportedSyntaxError('Неизвестное поле запроса: ' + identity + '.' + name)
         field = fields[name]
-        if source_kind == 'slice-last' and '|' in field.type:
+        if source_kind in {'slice-last','slice-first'} and '|' in field.type:
             raise UnsupportedSyntaxError('Union-поле среза требует отдельного типизированного контракта')
         scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата', 'ДатаВремя'}
         enum = contracts.canonical_elements.get(field.type.rstrip('?'))
@@ -343,10 +351,10 @@ def parse_simple_storage_query(text, contracts):
         _, expression, start, end = token
         key = expression if re.fullmatch(IDENT, expression) else (start,end)
         if key in slots and slot_types[slots[key]] != typ:
-            if {slot_types[slots[key]], typ} == {'Дата', 'Дата?'}:
+            if {slot_types[slots[key]], typ} in ({'Дата', 'Дата?'},{'ДатаВремя','ДатаВремя?'}):
                 # A shared boundary/WHERE date has the stricter non-nullable
                 # signature required by WHERE; capture still happens once.
-                typ = 'Дата'
+                typ = typ.rstrip('?')
                 parameters[:] = [replace(p,type=typ) if p.slot == slots[key] else p for p in parameters]
             else:
                 raise UnsupportedSyntaxError('Несовместимые типы одного параметра запроса')
@@ -354,7 +362,8 @@ def parse_simple_storage_query(text, contracts):
         slot_types[slot] = typ
         parameters.append(QueryParameter(expression, start, end, typ, slot))
         return slot
-    period_slot = parameter(period_token, 'Дата?') if period_token else None
+    period_slot = parameter(period_token, schema['period_type']+'?') if period_token else None
+    end_slot = parameter(end_token, schema['period_type']+'?') if end_token else None
     if accept('ГДЕ'):
         while True:
             field = bind(field_path())
@@ -366,7 +375,7 @@ def parse_simple_storage_query(text, contracts):
             pos += 1
             # Nullable equality is intentionally unavailable: SQL NULL and
             # XBSL Неопределено are different contracts, not interchangeable.
-            nullable_reference = source_kind == 'slice-last' and field.type.endswith('.Ссылка?')
+            nullable_reference = source_kind in {'slice-last','slice-first'} and field.type.endswith('.Ссылка?')
             if field.type.endswith('?') and not nullable_reference:
                 raise UnsupportedSyntaxError('Сравнение nullable-поля запроса не подтверждено')
             # Simple variable interpolation reuses one captured value. Each
@@ -385,7 +394,7 @@ def parse_simple_storage_query(text, contracts):
             # XBQL permits a projection alias in ORDER BY.
             projected = [f for f,label in bound_projections if path == (None,label)]
             field = projected[0] if projected else bind(path)
-            if field.type not in {'Число', 'Строка', 'Дата'}:
+            if field.type not in {'Число', 'Строка', 'Дата', 'ДатаВремя'}:
                 raise UnsupportedSyntaxError('Сортировка вне подтверждённых не-nullable типов')
             descending = accept('УБЫВ')
             if not descending:
@@ -395,10 +404,10 @@ def parse_simple_storage_query(text, contracts):
                 break
     if pos != len(tokens):
         raise UnsupportedSyntaxError('Достижимый запрос вне storage AST: ' + tokens[pos][1])
-    dimensions = tuple(bind((None,f['Имя'])) for f in element['properties'].get('Измерения', [])) if source_kind == 'slice-last' else ()
-    if source_kind == 'slice-last' and not dimensions:
-        raise UnsupportedSyntaxError('Срез требует измерения регистра')
+    dimensions = schema['dimensions']
     return StorageQuery(identity, alias, bound_projections, tuple(predicates), tuple(parameters), tuple(ordering), limit,
-        'storage-slice-last-day-v1' if source_kind == 'slice-last' else 'storage-staged-executor-v1',
-        source_kind, 'День' if source_kind == 'slice-last' else None, dimensions, period_slot, period_range,
-        source_range, owner, 'captured-date-or-runtime-UTC-at-creation' if source_kind == 'slice-last' else None, fill)
+        'storage-slice-last-day-v1' if source_kind == 'slice-last' and schema['periodicity']=='День' else 'storage-staged-executor-v1' if source_kind=='ordinary' else 'storage-virtual-sources-v1',
+        source_kind, schema['periodicity'], dimensions, period_slot, period_range,
+        source_range, owner, 'captured-date-or-runtime-UTC-at-creation' if source_kind in {'slice-last','slice-first'} else None, fill,
+        schema['fields'], member, schema['resources'], schema['register_kind'], end_slot,
+        schema.get('definition'),schema.get('definition_source'))

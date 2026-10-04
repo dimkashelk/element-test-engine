@@ -109,6 +109,7 @@ def column_type(e):
 
 def nodes(query):
     yield query
+    if getattr(query,'definition',None):yield from nodes(query.definition)
     for s in getattr(query,'sources',()): yield from nodes(s)
     for s in getattr(query,'statements',()):
         if s.query: yield from nodes(s.query)
@@ -116,7 +117,8 @@ def nodes(query):
 
 
 def leaves(query):
-    return (q for q in nodes(query) if q.source_kind in ('ordinary','slice-last'))
+    from .query_sources import LEAF_KINDS
+    return (q for q in nodes(query) if q.source_kind in LEAF_KINDS)
 
 
 def needs_context(query):
@@ -164,18 +166,17 @@ class NestedParser(ComputedParser):
         return len(self.sources)-1
 
     def field(self,e,visible):
+        from .query_sources import LEAF_KINDS
         matching=[]
         for i,s in enumerate(self.sources[:visible]):
             if len(e.value)==2 and e.value[0]!=s.alias:continue
-            if s.source_kind in ('ordinary','slice-last'):
-                elements=self.contracts.resolve(s.owner)
-                props=elements[0]['properties']
-                names={f['Имя'] for k in ('Реквизиты','Измерения','Ресурсы') for f in props.get(k,[])}|{'Ссылка','Период'}
+            if s.source_kind in LEAF_KINDS:
+                names={f.name for f in s.fields}
             else:names={label for _,label in s.projections}
             if e.name in names:matching.append(i)
         if len(matching)!=1:self.fail('Неизвестное или неоднозначное поле: '+'.'.join(e.value),e.range[0])
         i=matching[0];s=self.sources[i]
-        if s.source_kind in ('ordinary','slice-last'):return super().field(e,visible)
+        if s.source_kind in LEAF_KINDS:return super().field(e,visible)
         index=next(n for n,(_,l) in enumerate(s.projections) if l==e.name)
         column=s.projections[index][0];typ=column_type(column)
         self.fields[i][e.name]=QueryField(s.owner,e.name,typ)
@@ -210,10 +211,20 @@ class NestedParser(ComputedParser):
                 items.append(self.expression())
                 if not self.accept(','):break
             self.expect(')')
-            e=Expression('in','Булево',children=(e,*items),range=(e.range[0],self.tokens[self.pos-1][3]))
+            kind='in-capture' if len(items)==1 and items[0].kind=='parameter' else 'in'
+            e=Expression(kind,'Булево',children=(e,*items),range=(e.range[0],self.tokens[self.pos-1][3]))
         return Expression('not','Булево',children=(e,),range=e.range) if negative else e
 
     def bind(self,e,visible,expected=None):
+        if e.kind=='in-capture':
+            capture=e.children[1]
+            inferred=getattr(self.contracts,'query_parameter_type',lambda *args:None)(capture.value[1],capture.range[0])
+            is_array=inferred.startswith('Массив<') if inferred else bool(re.search(r'\.Преобразовать\s*\(|\bновый\s+Массив<',capture.value[1]))
+            if not is_array:
+                return super().bind(replace(e,kind='in'),visible,expected)
+            first=self.bind(e.children[0],visible)
+            array=self.bind(e.children[1],visible,'Массив<'+first.type+'>')
+            return replace(e,kind='in-array',children=(first,array),sql_nullable=first.sql_nullable)
         if e.kind=='in-query':
             q=self.subqueries[e.value];typ=q.projections[0][0].type
             left=self.bind(e.children[0],visible,typ.rstrip('?'))
@@ -227,7 +238,8 @@ class NestedParser(ComputedParser):
         return replace(q,subqueries=tuple(self.subqueries))
 
     def prune_source(self,i,s):
-        if s.source_kind not in ('ordinary','slice-last'):return s
+        from .query_sources import LEAF_KINDS
+        if s.source_kind not in LEAF_KINDS:return s
         return super().prune_source(i,s)
 
 
@@ -389,6 +401,8 @@ def generate_composite_query(query,contracts):
     sig=', '.join('П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in params)
     def captured(p):
         v='П'+str(p.slot)
+        if p.type.startswith('Массив<'):
+            return 'СериализацияJson.ПрочитатьОбъект<'+contracts.sbsl_type(p.type)+'>(СериализацияJson.ЗаписатьОбъект('+v+'), Тип<'+contracts.sbsl_type(p.type)+'>)'
         if p.type.rstrip('?').endswith('.Ссылка'):
             clone='новый '+p.type.rstrip('?')+'(Идентификатор = '+v+'.Идентификатор)'
             return '('+v+' == Неопределено ? Неопределено : '+clone+')' if p.type.endswith('?') else clone

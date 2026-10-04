@@ -1,0 +1,735 @@
+..........FFF........................................................... [  7%]
+.............FFF........................................................ [ 15%]
+...........................................................FF........... [ 23%]
+..F...FFFF.......FF..................................................... [ 31%]
+...........................................F..........FF................ [ 39%]
+....................F...F..FFF....F...FFFF.............................. [ 46%]
+........F..........................F.FFFFFFF............................ [ 54%]
+..........................................FFFFFFFF...F......FFF....FFFF. [ 62%]
+F...................FF............................FFF....F.............. [ 70%]
+.........FFFF.....FF.................................................... [ 78%]
+........................................................................ [ 85%]
+..........................................F........................F.... [ 93%]
+...FFFFFFFFFFFFFFFFFFFF...................................F              [100%]
+=================================== FAILURES ===================================
+_______ test_processing_summary_resolves_operation_override_and_fallback _______
+tests/skills/xbsl_access_set/test_access_state.py:165: in test_processing_summary_resolves_operation_override_and_fallback
+    assert len(objects) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+___________ test_processing_operation_set_changes_only_selected_call ___________
+tests/skills/xbsl_access_set/test_access_state.py:185: in test_processing_operation_set_changes_only_selected_call
+    reason, updated = access_state.set_processing_operation_call(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'access_state_under_test' has no attribute 'set_processing_operation_call'
+_______________ test_processing_operation_cli_dry_run_then_apply _______________
+tests/skills/xbsl_access_set/test_access_state.py:205: in test_processing_operation_cli_dry_run_then_apply
+    access_state.main()
+skills/xbsl-access-set/scripts/access_state.py:440: in main
+    args = parse_args()
+           ^^^^^^^^^^^^
+skills/xbsl-access-set/scripts/access_state.py:436: in parse_args
+    return parser.parse_args()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py:2012: in parse_args
+    self.error(msg)
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py:2785: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/argparse.py:2772: in exit
+    _sys.exit(status)
+E   SystemExit: 2
+----------------------------- Captured stderr call -----------------------------
+usage: access_state.py [-h] [--root ROOT] [--set ЗНАЧЕНИЕ] [--object OBJECT]
+                       [--apply]
+access_state.py: error: unrecognized arguments: --operation Запустить
+_______________ test_skill_uses_uploaded_assembly_id_for_new_app _______________
+tests/skills/xbsl_deploy/test_api.py:687: in test_skill_uses_uploaded_assembly_id_for_new_app
+    assert "--version-id <assembly-id>" in create_app
+E   AssertionError: assert '--version-id <assembly-id>' in '\nСпроси имя приложения если не указано.\n\n```bash\n{python} skills/xbsl-deploy/scripts/api.py --action create-app --name <name> --space-id <space-id> --project-id <project-id>\n```\n\nСохрани `id` из ответа как `app-id`.\n\n'
+________ test_create_app_http_error_exits_nonzero_with_json_diagnostic _________
+tests/skills/xbsl_deploy/test_api.py:703: in test_create_app_http_error_exits_nonzero_with_json_diagnostic
+    result = run_main(
+tests/skills/xbsl_deploy/test_api.py:52: in run_main
+    with pytest.raises(SystemExit) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'SystemExit'>
+----------------------------- Captured stdout call -----------------------------
+{
+  "error": "HTTP 400",
+  "details": {
+    "message": "Default assembly not found"
+  }
+}
+_______ test_upload_build_http_error_exits_nonzero_with_json_diagnostic ________
+tests/skills/xbsl_deploy/test_api.py:729: in test_upload_build_http_error_exits_nonzero_with_json_diagnostic
+    result = run_upload_build(
+tests/skills/xbsl_deploy/test_api.py:101: in run_upload_build
+    return run_main(api, monkeypatch, capsys, argv, expected_exit=expected_exit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/skills/xbsl_deploy/test_api.py:52: in run_main
+    with pytest.raises(SystemExit) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'SystemExit'>
+----------------------------- Captured stdout call -----------------------------
+{
+  "error": "HTTP 503",
+  "details": {
+    "message": "Upload unavailable"
+  }
+}
+_ test_should_include_filters_paths[acme/demo/\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0435/\u041a\u043b\u0438\u0435\u043d\u0442\u0417\u0430\u043a\u0430\u0437\u043e\u0432.Wsdl.1-True] _
+tests/skills/xbsl_deploy/test_build.py:172: in test_should_include_filters_paths
+    assert build.should_include(rel_path) is expected
+E   AssertionError: assert False is True
+E    +  where False = <function should_include at 0x10b6456f0>('acme/demo/Основное/КлиентЗаказов.Wsdl.1')
+E    +    where <function should_include at 0x10b6456f0> = <module 'build_under_test' from '/private/tmp/xbsl-skills-review-ig80qjo5/repo/skills/xbsl-deploy/scripts/build.py'>.should_include
+_ test_should_include_filters_paths[acme/demo/\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0435/\u041a\u043b\u0438\u0435\u043d\u0442\u0417\u0430\u043a\u0430\u0437\u043e\u0432.Xsd.2-True] _
+tests/skills/xbsl_deploy/test_build.py:172: in test_should_include_filters_paths
+    assert build.should_include(rel_path) is expected
+E   AssertionError: assert False is True
+E    +  where False = <function should_include at 0x10b6f4d50>('acme/demo/Основное/КлиентЗаказов.Xsd.2')
+E    +    where <function should_include at 0x10b6f4d50> = <module 'build_under_test' from '/private/tmp/xbsl-skills-review-ig80qjo5/repo/skills/xbsl-deploy/scripts/build.py'>.should_include
+____________ test_build_xasm_preserves_soap_wsdl_and_xsd_companions ____________
+tests/skills/xbsl_deploy/test_build.py:259: in test_build_xasm_preserves_soap_wsdl_and_xsd_companions
+    assert member in names
+E   AssertionError: assert 'acme/demo/КлиентЗаказов.Wsdl.1.wsdl' in {'Assembly.yaml', 'acme/demo/КлиентЗаказов.yaml', 'acme/demo/Проект.yaml'}
+______ test_extension_is_never_built_as_application_or_library[override0] ______
+tests/skills/xbsl_deploy/test_build.py:331: in test_extension_is_never_built_as_application_or_library
+    captured = run_main(
+tests/skills/xbsl_deploy/test_build.py:33: in run_main
+    with pytest.raises(SystemExit) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'SystemExit'>
+----------------------------- Captured stdout call -----------------------------
+/private/var/folders/ks/6kc_y03j58x9cshvhjz_v16w0000gn/T/pytest-of-dimkashelk/pytest-0/test_extension_is_never_built_0/out/DemoApp 1.0-1.xasm
+______ test_extension_is_never_built_as_application_or_library[override1] ______
+tests/skills/xbsl_deploy/test_build.py:331: in test_extension_is_never_built_as_application_or_library
+    captured = run_main(
+tests/skills/xbsl_deploy/test_build.py:33: in run_main
+    with pytest.raises(SystemExit) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'SystemExit'>
+----------------------------- Captured stdout call -----------------------------
+/private/var/folders/ks/6kc_y03j58x9cshvhjz_v16w0000gn/T/pytest-of-dimkashelk/pytest-0/test_extension_is_never_built_1/out/DemoApp 1.0-1.xasm
+______ test_extension_is_never_built_as_application_or_library[override2] ______
+tests/skills/xbsl_deploy/test_build.py:331: in test_extension_is_never_built_as_application_or_library
+    captured = run_main(
+tests/skills/xbsl_deploy/test_build.py:33: in run_main
+    with pytest.raises(SystemExit) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'SystemExit'>
+----------------------------- Captured stdout call -----------------------------
+/private/var/folders/ks/6kc_y03j58x9cshvhjz_v16w0000gn/T/pytest-of-dimkashelk/pytest-0/test_extension_is_never_built_2/out/DemoApp 1.0-1.xlib
+_______________ test_extension_direct_build_cannot_bypass_guard ________________
+tests/skills/xbsl_deploy/test_build.py:346: in test_extension_direct_build_cannot_bypass_guard
+    with pytest.raises(ValueError, match='Расширение нельзя собирать'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_______ test_extension_project_rejected_before_api_or_app_update[False] ________
+tests/skills/xbsl_deploy/test_deploy.py:82: in test_extension_project_rejected_before_api_or_app_update
+    assert json.loads(captured.err)['rule_id'] == 'xbsl-deploy.extension_requires_separate_route'
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:363: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+________ test_extension_project_rejected_before_api_or_app_update[True] ________
+tests/skills/xbsl_deploy/test_deploy.py:82: in test_extension_project_rejected_before_api_or_app_update
+    assert json.loads(captured.err)['rule_id'] == 'xbsl-deploy.extension_requires_separate_route'
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:363: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+_______ test_favorites_are_optional_and_version_gated_in_skill_guidance ________
+tests/skills/xbsl_form_add/test_favorites_10.py:36: in test_favorites_are_optional_and_version_gated_in_skill_guidance
+    assert "10.0+" in text
+E   AssertionError: assert '10.0+' in '# Регистрация в навигационной панели\n\nФорма **не появляется автоматически** — нужно зарегистрировать в навигации.\n...ВПроекте` у формы, если `Приложение.yaml` находится\nв другой подсистеме и ссылается на `ТипФормы: ГлавнаяСтраница`.\n'
+______ test_build_form_yaml_places_10_list_settings_at_documented_levels _______
+tests/skills/xbsl_form_cards/test_generate.py:177: in test_build_form_yaml_places_10_list_settings_at_documented_levels
+    form_text = generate.build_form_yaml(
+E   TypeError: build_form_yaml() got an unexpected keyword argument 'settings_mode'
+_____________ test_card_list_settings_reject_unknown_source_field ______________
+tests/skills/xbsl_form_cards/test_generate.py:206: in test_card_list_settings_reject_unknown_source_field
+    assert exc_info.value.code == 1
+E   assert 2 == 1
+E    +  where 2 = SystemExit(2).code
+E    +    where SystemExit(2) = <ExceptionInfo SystemExit(2) tblen=6>.value
+----------------------------- Captured stderr call -----------------------------
+usage: python3.14 -m pytest [-h] --object OBJECT [--root ROOT]
+                            [--min-width MIN_WIDTH] [--apply]
+python3.14 -m pytest: error: unrecognized arguments: --auto-filter Неизвестное:Всегда
+_______________ test_main_prints_expected_json_for_found_object ________________
+tests/skills/xbsl_form_info/test_form_info.py:275: in test_main_prints_expected_json_for_found_object
+    assert result == {
+E   AssertionError: assert {'additional_...': None}, ...} == {'additional_...': None}, ...}
+E     
+E     Omitting 15 identical items, use -vv to show
+E     Right contains 2 more items:
+E     {'hierarchy_kind': None, 'parent_reference_type': None}
+E     Use -v to get more diff
+_______ test_report_layout_required_parameter_is_available_to_form_skill _______
+tests/skills/xbsl_form_info/test_form_info.py:376: in test_report_layout_required_parameter_is_available_to_form_skill
+    assert result["report_params"] == [
+E   AssertionError: assert [] == [{'name': 'Да... 'ДатаВремя'}]
+E     
+E     Right contains one more item: {'name': 'ДатаОтчета', 'required': True, 'type': 'ДатаВремя'}
+E     Use -v to get more diff
+__________________ test_build_result_detects_simple_hierarchy __________________
+tests/skills/xbsl_form_info/test_form_info.py:459: in test_build_result_detects_simple_hierarchy
+    assert result["hierarchy_kind"] == "ИерархияГруппИЭлементов"
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'hierarchy_kind'
+_____________ test_build_result_detects_explicit_element_hierarchy _____________
+tests/skills/xbsl_form_info/test_form_info.py:474: in test_build_result_detects_explicit_element_hierarchy
+    assert result["hierarchy_kind"] == "ИерархияЭлементов"
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'hierarchy_kind'
+_____________ test_build_result_uses_old_default_before_element_10 _____________
+tests/skills/xbsl_form_info/test_form_info.py:485: in test_build_result_uses_old_default_before_element_10
+    result = form_info.build_result(found, "9.2")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: build_result() takes 1 positional argument but 2 were given
+___________________ test_new_project_targets_10_0_by_default ___________________
+tests/skills/xbsl_init/test_compatibility_contract.py:37: in test_new_project_targets_10_0_by_default
+    assert defaults == ["10.0"]
+E   AssertionError: assert ['9.0'] == ['10.0']
+E     
+E     At index 0 diff: '9.0' != '10.0'
+E     Use -v to get more diff
+__________ test_release_guidance_uses_actual_or_build_derived_version __________
+tests/skills/xbsl_lib_connect/test_lib_connect.py:21: in test_release_guidance_uses_actual_or_build_derived_version
+    assert 'expected_release_version' in skill
+E   AssertionError: assert 'expected_release_version' in '---\nname: xbsl-lib-connect\ndescription: >\n  Подключение внешней библиотеки (.xlib) к проекту 1С:Элемент. Автоматиз... к проекту.\n✓ Проект.yaml обновлён.\n\nСледующий шаг: пересобрать приложение, чтобы изменения вступили в силу.\n```\n'
+________________________ TestInspect.test_valid_library ________________________
+tests/skills/xbsl_lib_connect/test_lib_connect.py:87: in test_valid_library
+    assert result['expected_release_version'] == '1.0'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'expected_release_version'
+____________________ TestInspect.test_inspect_with_release _____________________
+tests/skills/xbsl_lib_connect/test_lib_connect.py:96: in test_inspect_with_release
+    assert result['expected_release_version'] == '2.0.1'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'expected_release_version'
+_ TestInspect.test_unreleased_build_derives_release_version_without_numeric_suffix _
+tests/skills/xbsl_lib_connect/test_lib_connect.py:105: in test_unreleased_build_derives_release_version_without_numeric_suffix
+    assert result['expected_release_version'] == '3.4.2'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'expected_release_version'
+____ test_entity_contract_10_module_and_singleton_examples_are_conditional _____
+tests/skills/xbsl_meta_add/test_contracts_and_reports.py:182: in test_entity_contract_10_module_and_singleton_examples_are_conditional
+    assert any(
+E   assert False
+E    +  where False = any(<generator object test_entity_contract_10_module_and_singleton_examples_are_conditional.<locals>.<genexpr> at 0x10b628ad0>)
+___________________ test_data_journal_registry_and_reference ___________________
+tests/skills/xbsl_meta_add/test_data_journal.py:27: in test_data_journal_registry_and_reference
+    record = record_for('ЖурналДанных')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/skills/xbsl_meta_add/helpers.py:56: in record_for
+    return next(
+E   StopIteration
+_______ test_mixed_journal_fixture_resolves_catalog_document_and_column ________
+tests/skills/xbsl_meta_add/test_data_journal.py:56: in test_mixed_journal_fixture_resolves_catalog_document_and_column
+    assert validator.main(['--format', 'json', str(FIXTURE)]) == 0
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function main at 0x10b647ab0>(['--format', 'json', '/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/data-journal'])
+E    +    where <function main at 0x10b647ab0> = <module 'journal_validator' from '/private/tmp/xbsl-skills-review-ig80qjo5/repo/skills/xbsl-validate/scripts/validate.py'>.main
+----------------------------- Captured stdout call -----------------------------
+{
+  "schema_version": 1,
+  "diagnostics": [
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/data-journal/Основное/ОбщийЖурнал.yaml",
+      "line": null,
+      "severity": "error",
+      "rule_id": "coverage.unknown_type",
+      "message": "Unknown object type: ЖурналДанных"
+    },
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/data-journal/Основное/Подсистема.yaml",
+      "line": null,
+      "severity": "warning",
+      "rule_id": "coverage.out_of_scope",
+      "message": "Project and subsystem containers have dedicated workflows."
+    },
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/data-journal/Проект.yaml",
+      "line": null,
+      "severity": "warning",
+      "rule_id": "coverage.out_of_scope",
+      "message": "Project and subsystem containers have dedicated workflows."
+    }
+  ],
+  "summary": {
+    "files": 5,
+    "errors": 1,
+    "warnings": 2
+  }
+}
+_ test_journal_invalid_references_are_diagnostic[\u042d\u043b\u0435\u043c\u0435\u043d\u0442: \u0417\u0430\u043a\u0430\u0437\u044b-\u042d\u043b\u0435\u043c\u0435\u043d\u0442: \u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439-owner.data_journal.source] _
+tests/skills/xbsl_meta_add/test_data_journal.py:82: in test_journal_invalid_references_are_diagnostic
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.source' in set()
+_ test_journal_invalid_references_are_diagnostic[\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-owner.data_journal.attribute_source] _
+tests/skills/xbsl_meta_add/test_data_journal.py:82: in test_journal_invalid_references_are_diagnostic
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.attribute_source' in set()
+_ test_journal_invalid_references_are_diagnostic[\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439-owner.data_journal.attribute_missing] _
+tests/skills/xbsl_meta_add/test_data_journal.py:82: in test_journal_invalid_references_are_diagnostic
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.attribute_missing' in set()
+_ test_journal_invalid_references_are_diagnostic[\u0418\u0434: 10000000-0000-4000-8000-000000000007-\u0418\u0434: bad-owner.data_journal.column_uuid] _
+tests/skills/xbsl_meta_add/test_data_journal.py:82: in test_journal_invalid_references_are_diagnostic
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.column_uuid' in set()
+_ test_journal_invalid_references_are_diagnostic[\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b:\n      - \u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439\n      - \u0417\u0430\u043a\u0430\u0437\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b: []-owner.data_journal.attributes] _
+tests/skills/xbsl_meta_add/test_data_journal.py:82: in test_journal_invalid_references_are_diagnostic
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.attributes' in set()
+_______________________ test_journal_rejects_own_access ________________________
+tests/skills/xbsl_meta_add/test_data_journal.py:94: in test_journal_rejects_own_access
+    assert 'owner.data_journal.access' in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.data_journal.access' in set()
+______________ test_integrable_application_registry_and_reference ______________
+tests/skills/xbsl_meta_add/test_integrable_application.py:26: in test_integrable_application_registry_and_reference
+    record = record_for('ИнтегрируемоеПриложение')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/skills/xbsl_meta_add/helpers.py:56: in record_for
+    return next(
+E   StopIteration
+__________ test_one_initiator_pair_has_matching_plans_and_valid_links __________
+tests/skills/xbsl_meta_add/test_integrable_application.py:50: in test_one_initiator_pair_has_matching_plans_and_valid_links
+    assert validator.main(['--format', 'json', str(sender)]) == 0
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function main at 0x10b9a2350>(['--format', 'json', '/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/integrable-app/sender'])
+E    +    where <function main at 0x10b9a2350> = <module 'integration_validator' from '/private/tmp/xbsl-skills-review-ig80qjo5/repo/skills/xbsl-validate/scripts/validate.py'>.main
+----------------------------- Captured stdout call -----------------------------
+{
+  "schema_version": 1,
+  "diagnostics": [
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/integrable-app/sender/Обмен/Подсистема.yaml",
+      "line": null,
+      "severity": "warning",
+      "rule_id": "coverage.out_of_scope",
+      "message": "Project and subsystem containers have dedicated workflows."
+    },
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/integrable-app/sender/Обмен/ПриложениеСклад.yaml",
+      "line": null,
+      "severity": "error",
+      "rule_id": "coverage.unknown_type",
+      "message": "Unknown object type: ИнтегрируемоеПриложение"
+    },
+    {
+      "path": "/private/tmp/xbsl-skills-review-ig80qjo5/repo/tests/skills/xbsl_meta_add/fixtures/integrable-app/sender/Проект.yaml",
+      "line": null,
+      "severity": "warning",
+      "rule_id": "coverage.out_of_scope",
+      "message": "Project and subsystem containers have dedicated workflows."
+    }
+  ],
+  "summary": {
+    "files": 5,
+    "errors": 1,
+    "warnings": 2
+  }
+}
+_ test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043c\u044f: \u041d\u0435\u0442\u0422\u0430\u043a\u043e\u0433\u043e-owner.exchange_plan.connection] _
+tests/skills/xbsl_meta_add/test_integrable_application.py:76: in test_invalid_plan_link_or_transfer_setting_reports_rule
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.exchange_plan.connection' in set()
+_ test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043c\u044f: \u0422\u043e\u0432\u0430\u0440\u044b-owner.exchange_plan.connection_kind] _
+tests/skills/xbsl_meta_add/test_integrable_application.py:76: in test_invalid_plan_link_or_transfer_setting_reports_rule
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.exchange_plan.connection_kind' in set()
+_ test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u0435\u043c\u044b\u0435\u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f:\n    - \u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u0435\u043c\u044b\u0435\u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f: []-owner.exchange_plan.connections] _
+tests/skills/xbsl_meta_add/test_integrable_application.py:76: in test_invalid_plan_link_or_transfer_setting_reports_rule
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.exchange_plan.connections' in set()
+_ test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430-\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u041e\u0448\u0438\u0431\u043a\u0430-owner.exchange_plan.transfer] _
+tests/skills/xbsl_meta_add/test_integrable_application.py:76: in test_invalid_plan_link_or_transfer_setting_reports_rule
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.exchange_plan.transfer' in set()
+_ test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430-\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430\n  \u0412\u0438\u0434\u041f\u0430\u043a\u0435\u0442\u0430\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0438\u0414\u0430\u043d\u043d\u044b\u0445: \u041e\u0448\u0438\u0431\u043a\u0430-owner.exchange_plan.batch_kind] _
+tests/skills/xbsl_meta_add/test_integrable_application.py:76: in test_invalid_plan_link_or_transfer_setting_reports_rule
+    assert rule in {diagnostic.rule_id for diagnostic in diagnostics}
+E   AssertionError: assert 'owner.exchange_plan.batch_kind' in set()
+________ test_system_connection_settings_cannot_be_declared_in_project _________
+tests/skills/xbsl_meta_add/test_integrable_application.py:90: in test_system_connection_settings_cannot_be_declared_in_project
+    assert 'owner.integrable_application.system_settings' in {
+E   AssertionError: assert 'owner.integrable_application.system_settings' in set()
+______ test_integration_status_balance_finishes_all_local_partial_records ______
+tests/skills/xbsl_meta_add/test_integration_objects.py:107: in test_integration_status_balance_finishes_all_local_partial_records
+    assert statuses == {"supported": 33, "partial": 0, "routed": 1}
+E   AssertionError: assert {'partial': 0...upported': 31} == {'partial': 0...upported': 33}
+E     
+E     Omitting 2 identical items, use -vv to show
+E     Differing items:
+E     {'supported': 31} != {'supported': 33}
+E     Use -v to get more diff
+_________ test_external_process_nodes_require_runtime_permission_check _________
+tests/skills/xbsl_meta_add/test_integration_permissions_10.py:29: in test_external_process_nodes_require_runtime_permission_check
+    assert len(permission) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+_______ test_permission_reference_distinguishes_local_and_remote_denial ________
+tests/skills/xbsl_meta_add/test_integration_permissions_10.py:47: in test_permission_reference_distinguishes_local_and_remote_denial
+    assert expected in text
+E   AssertionError: assert 'ОшибкаПроверкиРазрешенийПроцессаИнтеграции' in '# Спецификация: ПроцессИнтеграции\n\n## Назначение\n\nPlatform facts:\n\n- `ВидЭлемента: ПроцессИнтеграции` декларати... `unknown_process_node`.\n- `unknown_participant_group`.\n- `missing_process_module`.\n- `handler_method_not_found`.\n'
+________ test_registry_has_exact_schema_initial_balance_and_safe_paths _________
+tests/skills/xbsl_meta_add/test_object_coverage.py:47: in test_registry_has_exact_schema_initial_balance_and_safe_paths
+    renderer.validate_coverage_data(data, repo_root=REPOSITORY_ROOT)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+_ test_registry_validation_rejects_contract_breaks[<lambda>-expected exact fields0] _
+tests/skills/xbsl_meta_add/test_object_coverage.py:151: in test_registry_validation_rejects_contract_breaks
+    renderer.validate_coverage_data(bad, repo_root=REPOSITORY_ROOT)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+
+During handling of the above exception, another exception occurred:
+tests/skills/xbsl_meta_add/test_object_coverage.py:150: in test_registry_validation_rejects_contract_breaks
+    with pytest.raises(renderer.CoverageValidationError, match=message):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'expected exact fields'
+E    Input: 'objects: expected exactly 34 records'
+_______ test_registry_validation_rejects_contract_breaks[<lambda>-path] ________
+tests/skills/xbsl_meta_add/test_object_coverage.py:151: in test_registry_validation_rejects_contract_breaks
+    renderer.validate_coverage_data(bad, repo_root=REPOSITORY_ROOT)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+
+During handling of the above exception, another exception occurred:
+tests/skills/xbsl_meta_add/test_object_coverage.py:150: in test_registry_validation_rejects_contract_breaks
+    with pytest.raises(renderer.CoverageValidationError, match=message):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'path'
+E    Input: 'objects: expected exactly 34 records'
+_ test_registry_validation_rejects_contract_breaks[<lambda>-expected exact fields1] _
+tests/skills/xbsl_meta_add/test_object_coverage.py:151: in test_registry_validation_rejects_contract_breaks
+    renderer.validate_coverage_data(bad, repo_root=REPOSITORY_ROOT)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+
+During handling of the above exception, another exception occurred:
+tests/skills/xbsl_meta_add/test_object_coverage.py:150: in test_registry_validation_rejects_contract_breaks
+    with pytest.raises(renderer.CoverageValidationError, match=message):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'expected exact fields'
+E    Input: 'objects: expected exactly 34 records'
+________ test_version_gate_is_numeric_and_rejects_features_above_target ________
+tests/skills/xbsl_meta_add/test_object_coverage.py:160: in test_version_gate_is_numeric_and_rejects_features_above_target
+    renderer.validate_coverage_data(allowed, repo_root=REPOSITORY_ROOT)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+________ test_public_examples_and_positive_fixtures_pass_xbsl_validate _________
+tests/skills/xbsl_meta_add/test_public_acceptance.py:47: in test_public_examples_and_positive_fixtures_pass_xbsl_validate
+    assert [item['rule_id'] for item in report['diagnostics']] == [
+E   AssertionError: assert [] == ['owner.integ...ions_runtime']
+E     
+E     Right contains one more item: 'owner.integration_process.permissions_runtime'
+E     Use -v to get more diff
+____ test_subordinated_information_register_reference_uses_system_registrar ____
+tests/skills/xbsl_meta_add/test_reference_contracts.py:486: in test_subordinated_information_register_reference_uses_system_registrar
+    assert len(subordinate) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+____ test_information_register_documents_leading_default_and_explicit_false ____
+tests/skills/xbsl_meta_add/test_reference_contracts.py:494: in test_information_register_documents_leading_default_and_explicit_false
+    assert "`Ведущее` — `Истина` по умолчанию у измерений независимого регистра" in text
+E   AssertionError: assert '`Ведущее` — `Истина` по умолчанию у измерений независимого регистра' in '# Спецификация: РегистрСведений\n\n## Дефолты\n\n- **Имя** — PascalCase, существительное во множественном числе (`Кур...\n```xbsl\nзнч КлючЗаписи = новый <ИмяРегистра>.КлючЗаписи(\n    <Измерение> = Значение\n)\nУдалить(КлючЗаписи)\n```\n'
+____________ test_rendered_markdown_is_deterministic_and_committed _____________
+tests/skills/xbsl_meta_add/test_render_coverage.py:25: in test_rendered_markdown_is_deterministic_and_committed
+    data = renderer.load_coverage(COVERAGE_PATH)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/render_xbsl_meta_add_coverage.py:242: in load_coverage
+    validate_coverage_data(data)
+scripts/render_xbsl_meta_add_coverage.py:200: in validate_coverage_data
+    _fail("objects: expected exactly 34 records")
+scripts/render_xbsl_meta_add_coverage.py:60: in _fail
+    raise CoverageValidationError(message)
+E   coverage_renderer.CoverageValidationError: objects: expected exactly 34 records
+___________ test_renderer_check_is_read_only_when_markdown_is_stale ____________
+tests/skills/xbsl_meta_add/test_render_coverage.py:52: in test_renderer_check_is_read_only_when_markdown_is_stale
+    assert result == 1
+E   assert 2 == 1
+----------------------------- Captured stdout call -----------------------------
+error: objects: expected exactly 34 records
+_____________ test_renderer_default_check_accepts_repository_copy ______________
+tests/skills/xbsl_meta_add/test_render_coverage.py:58: in test_renderer_default_check_accepts_repository_copy
+    assert renderer.main(["--check"]) == 0
+E   AssertionError: assert 2 == 0
+E    +  where 2 = <function main at 0x10ba3c5c0>(['--check'])
+E    +    where <function main at 0x10ba3c5c0> = <module 'coverage_renderer' from '/private/tmp/xbsl-skills-review-ig80qjo5/repo/scripts/render_xbsl_meta_add_coverage.py'>.main
+----------------------------- Captured stdout call -----------------------------
+error: objects: expected exactly 34 records
+_ test_security_and_events_status_balance_finishes_security_events_without_new_public_issue_links _
+tests/skills/xbsl_meta_add/test_security_and_events.py:85: in test_security_and_events_status_balance_finishes_security_events_without_new_public_issue_links
+    assert statuses == {"supported": 33, "partial": 0, "routed": 1}
+E   AssertionError: assert {'partial': 0...upported': 31} == {'partial': 0...upported': 33}
+E     
+E     Omitting 2 identical items, use -vv to show
+E     Differing items:
+E     {'supported': 31} != {'supported': 33}
+E     Use -v to get more diff
+_________ test_extract_info_register_returns_metadata_for_nonperiodic __________
+tests/skills/xbsl_pattern_register/test_extract_meta.py:237: in test_extract_info_register_returns_metadata_for_nonperiodic
+    assert extract_meta.extract_info_register(text) == {
+E   AssertionError: assert {'dimensions'...Товаров', ...} == {'dimensions'...': False, ...}
+E     
+E     Omitting 7 identical items, use -vv to show
+E     Right contains 3 more items:
+E     {'filter_fields': ['Товар', 'Склад'],
+E      'registrar_type': None,
+E      'writing_mode': 'Независимый'}
+E     Use -v to get more diff
+__________ test_extract_info_register_periodic_sets_is_periodic_true ___________
+tests/skills/xbsl_pattern_register/test_extract_meta.py:267: in test_extract_info_register_periodic_sets_is_periodic_true
+    assert result["writing_mode"] == "Независимый"
+           ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'writing_mode'
+________ test_extract_subordinated_info_register_uses_registrar_filter _________
+tests/skills/xbsl_pattern_register/test_extract_meta.py:281: in test_extract_subordinated_info_register_uses_registrar_filter
+    assert result == {
+E   AssertionError: assert {'dimensions'...ныеЦены', ...} == {'dimensions'...c': True, ...}
+E     
+E     Omitting 6 identical items, use -vv to show
+E     Differing items:
+E     {'requisites': ['Регистратор']} != {'requisites': []}
+E     Right contains 3 more items:
+E     {'filter_fields': ['Регистратор'],
+E      'registrar_type': 'ДокументИзменениеЦен.Ссылка?',
+E      'writing_mode': 'ПодчинениеРегистратору'}
+E     Use -v to get more diff
+_____________________ test_main_prints_info_register_json ______________________
+tests/skills/xbsl_pattern_register/test_extract_meta.py:315: in test_main_prints_info_register_json
+    assert json.loads(capsys.readouterr().out) == {
+E   AssertionError: assert {'dimensions'...вателей', ...} == {'dimensions'...': False, ...}
+E     
+E     Omitting 7 identical items, use -vv to show
+E     Right contains 3 more items:
+E     {'filter_fields': ['Пользователь'],
+E      'registrar_type': None,
+E      'writing_mode': 'Независимый'}
+E     Use -v to get more diff
+__________ test_access_key_lifecycle_modes_are_explicit_for_target_10 __________
+tests/skills/xbsl_pattern_rls/test_contract.py:51: in test_access_key_lifecycle_modes_are_explicit_for_target_10
+    assert "РучнаяВыдача: Ложь               # обязательно в target 10.0" in reference
+E   AssertionError: assert 'РучнаяВыдача: Ложь               # обязательно в target 10.0' in '# RLS-паттерны для объектов 1С:Элемент\n\n## Двухуровневая модель (обязательно оба уровня)\n\n```\nУровень 1: доступ ...`Сущность.Право.Изменение` | Редактирование существующих записей |\n| `Сущность.Право.Удаление` | Удаление записей |\n'
+____________ test_bulk_grant_example_uses_grantable_access_key_type ____________
+tests/skills/xbsl_pattern_rls/test_contract.py:65: in test_bulk_grant_example_uses_grantable_access_key_type
+    assert "ВыдаваемыйКлючДоступа.Объект" in snippets
+E   AssertionError: assert 'ВыдаваемыйКлючДоступа.Объект' in '@Обработчик\nметод ВычислитьРазрешенияДоступа(): Массив<РазрешениеДоступа>\n    возврат [\n        новый РазрешениеДо...        ЧитаемоеСоответствие<\n            КлючДоступа.Объект,\n            ЧитаемаяКоллекция<Пользователи.Ссылка>>)\n'
+_________ test_supported_object_validators_accept_documented_fixtures __________
+tests/skills/xbsl_validate/test_validate.py:434: in test_supported_object_validators_accept_documented_fixtures
+    assert code == 0
+E   assert 1 == 0
+_ test_object_specific_fixture_maps_to_exact_diagnostic[access_key/invalid_missing_manual_mode/\u041a\u043b\u044e\u0447\u0417\u0430\u043a\u0430\u0437\u043e\u0432.yaml-None-owner.access_key.manual_grant_required-requires explicit \u0420\u0443\u0447\u043d\u0430\u044f\u0412\u044b\u0434\u0430\u0447\u0430] _
+tests/skills/xbsl_validate/test_validate.py:621: in test_object_specific_fixture_maps_to_exact_diagnostic
+    assert code == 1
+E   assert 0 == 1
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.write_mode] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.write_mode' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar0] _
+tests/skills/xbsl_validate/test_validate.py:774: in test_subordinated_info_register_rejects_invalid_contract
+    assert code == 1
+E   assert 0 == 1
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar1] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.registrar' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar2] _
+tests/skills/xbsl_validate/test_validate.py:774: in test_subordinated_info_register_rejects_invalid_contract
+    assert code == 1
+E   assert 0 == 1
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.next_period] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.next_period' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.subordinate_filter0] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.subordinate_filter' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.subordinate_filter1] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.subordinate_filter' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.reserved_member] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.reserved_member' in {'owner.register.member'}
+_ test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar3] _
+tests/skills/xbsl_validate/test_validate.py:776: in test_subordinated_info_register_rejects_invalid_contract
+    assert rule_id in {item["rule_id"] for item in data["diagnostics"]}
+E   AssertionError: assert 'owner.register.registrar' in {'owner.register.member'}
+_ test_processing_call_right_contract[<lambda>-owner.processing.access_shape0] _
+tests/skills/xbsl_validate/test_validate.py:824: in test_processing_call_right_contract
+    assert code == 1
+E   assert 0 == 1
+__ test_processing_call_right_contract[<lambda>-owner.processing.call_right] ___
+tests/skills/xbsl_validate/test_validate.py:824: in test_processing_call_right_contract
+    assert code == 1
+E   assert 0 == 1
+___ test_processing_call_right_contract[<lambda>-owner.processing.handler0] ____
+tests/skills/xbsl_validate/test_validate.py:824: in test_processing_call_right_contract
+    assert code == 1
+E   assert 0 == 1
+___ test_processing_call_right_contract[<lambda>-owner.processing.handler1] ____
+tests/skills/xbsl_validate/test_validate.py:824: in test_processing_call_right_contract
+    assert code == 1
+E   assert 0 == 1
+_ test_processing_call_right_contract[<lambda>-owner.processing.access_shape1] _
+tests/skills/xbsl_validate/test_validate.py:824: in test_processing_call_right_contract
+    assert code == 1
+E   assert 0 == 1
+__________ test_processing_computed_root_right_requires_event_handler __________
+tests/skills/xbsl_validate/test_validate.py:841: in test_processing_computed_root_right_requires_event_handler
+    assert code == 1
+E   assert 0 == 1
+__________ test_report_10_layout_rejects_invalid_settings[<lambda>0] ___________
+tests/skills/xbsl_validate/test_validate.py:876: in test_report_10_layout_rejects_invalid_settings
+    assert code == 1
+E   assert 0 == 1
+__________ test_report_10_layout_rejects_invalid_settings[<lambda>1] ___________
+tests/skills/xbsl_validate/test_validate.py:876: in test_report_10_layout_rejects_invalid_settings
+    assert code == 1
+E   assert 0 == 1
+__________ test_report_10_layout_rejects_invalid_settings[<lambda>2] ___________
+tests/skills/xbsl_validate/test_validate.py:876: in test_report_10_layout_rejects_invalid_settings
+    assert code == 1
+E   assert 0 == 1
+__________ test_report_10_layout_rejects_invalid_settings[<lambda>3] ___________
+tests/skills/xbsl_validate/test_validate.py:876: in test_report_10_layout_rejects_invalid_settings
+    assert code == 1
+E   assert 0 == 1
+__________ test_report_10_layout_rejects_invalid_settings[<lambda>4] ___________
+tests/skills/xbsl_validate/test_validate.py:876: in test_report_10_layout_rejects_invalid_settings
+    assert code == 1
+E   assert 0 == 1
+_________ test_document_requires_standard_date_in_cloud_smoke_fixture __________
+tests/skills/xbsl_validate/test_validate.py:1167: in test_document_requires_standard_date_in_cloud_smoke_fixture
+    assert code == 1
+E   assert 0 == 1
+---- generated xml file: /private/tmp/xbsl-skills-review-ig80qjo5/tests.xml ----
+=========================== short test summary info ============================
+FAILED tests/skills/xbsl_access_set/test_access_state.py::test_processing_summary_resolves_operation_override_and_fallback
+FAILED tests/skills/xbsl_access_set/test_access_state.py::test_processing_operation_set_changes_only_selected_call
+FAILED tests/skills/xbsl_access_set/test_access_state.py::test_processing_operation_cli_dry_run_then_apply
+FAILED tests/skills/xbsl_deploy/test_api.py::test_skill_uses_uploaded_assembly_id_for_new_app
+FAILED tests/skills/xbsl_deploy/test_api.py::test_create_app_http_error_exits_nonzero_with_json_diagnostic
+FAILED tests/skills/xbsl_deploy/test_api.py::test_upload_build_http_error_exits_nonzero_with_json_diagnostic
+FAILED tests/skills/xbsl_deploy/test_build.py::test_should_include_filters_paths[acme/demo/\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0435/\u041a\u043b\u0438\u0435\u043d\u0442\u0417\u0430\u043a\u0430\u0437\u043e\u0432.Wsdl.1-True]
+FAILED tests/skills/xbsl_deploy/test_build.py::test_should_include_filters_paths[acme/demo/\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0435/\u041a\u043b\u0438\u0435\u043d\u0442\u0417\u0430\u043a\u0430\u0437\u043e\u0432.Xsd.2-True]
+FAILED tests/skills/xbsl_deploy/test_build.py::test_build_xasm_preserves_soap_wsdl_and_xsd_companions
+FAILED tests/skills/xbsl_deploy/test_build.py::test_extension_is_never_built_as_application_or_library[override0]
+FAILED tests/skills/xbsl_deploy/test_build.py::test_extension_is_never_built_as_application_or_library[override1]
+FAILED tests/skills/xbsl_deploy/test_build.py::test_extension_is_never_built_as_application_or_library[override2]
+FAILED tests/skills/xbsl_deploy/test_build.py::test_extension_direct_build_cannot_bypass_guard
+FAILED tests/skills/xbsl_deploy/test_deploy.py::test_extension_project_rejected_before_api_or_app_update[False]
+FAILED tests/skills/xbsl_deploy/test_deploy.py::test_extension_project_rejected_before_api_or_app_update[True]
+FAILED tests/skills/xbsl_form_add/test_favorites_10.py::test_favorites_are_optional_and_version_gated_in_skill_guidance
+FAILED tests/skills/xbsl_form_cards/test_generate.py::test_build_form_yaml_places_10_list_settings_at_documented_levels
+FAILED tests/skills/xbsl_form_cards/test_generate.py::test_card_list_settings_reject_unknown_source_field
+FAILED tests/skills/xbsl_form_info/test_form_info.py::test_main_prints_expected_json_for_found_object
+FAILED tests/skills/xbsl_form_info/test_form_info.py::test_report_layout_required_parameter_is_available_to_form_skill
+FAILED tests/skills/xbsl_form_info/test_form_info.py::test_build_result_detects_simple_hierarchy
+FAILED tests/skills/xbsl_form_info/test_form_info.py::test_build_result_detects_explicit_element_hierarchy
+FAILED tests/skills/xbsl_form_info/test_form_info.py::test_build_result_uses_old_default_before_element_10
+FAILED tests/skills/xbsl_init/test_compatibility_contract.py::test_new_project_targets_10_0_by_default
+FAILED tests/skills/xbsl_lib_connect/test_lib_connect.py::test_release_guidance_uses_actual_or_build_derived_version
+FAILED tests/skills/xbsl_lib_connect/test_lib_connect.py::TestInspect::test_valid_library
+FAILED tests/skills/xbsl_lib_connect/test_lib_connect.py::TestInspect::test_inspect_with_release
+FAILED tests/skills/xbsl_lib_connect/test_lib_connect.py::TestInspect::test_unreleased_build_derives_release_version_without_numeric_suffix
+FAILED tests/skills/xbsl_meta_add/test_contracts_and_reports.py::test_entity_contract_10_module_and_singleton_examples_are_conditional
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_data_journal_registry_and_reference
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_mixed_journal_fixture_resolves_catalog_document_and_column
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_invalid_references_are_diagnostic[\u042d\u043b\u0435\u043c\u0435\u043d\u0442: \u0417\u0430\u043a\u0430\u0437\u044b-\u042d\u043b\u0435\u043c\u0435\u043d\u0442: \u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439-owner.data_journal.source]
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_invalid_references_are_diagnostic[\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-owner.data_journal.attribute_source]
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_invalid_references_are_diagnostic[\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0439-owner.data_journal.attribute_missing]
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_invalid_references_are_diagnostic[\u0418\u0434: 10000000-0000-4000-8000-000000000007-\u0418\u0434: bad-owner.data_journal.column_uuid]
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_invalid_references_are_diagnostic[\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b:\n      - \u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439\n      - \u0417\u0430\u043a\u0430\u0437\u044b.\u041e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439-\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b: []-owner.data_journal.attributes]
+FAILED tests/skills/xbsl_meta_add/test_data_journal.py::test_journal_rejects_own_access
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_integrable_application_registry_and_reference
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_one_initiator_pair_has_matching_plans_and_valid_links
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043c\u044f: \u041d\u0435\u0442\u0422\u0430\u043a\u043e\u0433\u043e-owner.exchange_plan.connection]
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043c\u044f: \u0422\u043e\u0432\u0430\u0440\u044b-owner.exchange_plan.connection_kind]
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u0435\u043c\u044b\u0435\u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f:\n    - \u0418\u043c\u044f: \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u0421\u043a\u043b\u0430\u0434-\u0418\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u0435\u043c\u044b\u0435\u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f: []-owner.exchange_plan.connections]
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430-\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u041e\u0448\u0438\u0431\u043a\u0430-owner.exchange_plan.transfer]
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_invalid_plan_link_or_transfer_setting_reports_rule[\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430-\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c: \u0418\u0441\u0442\u0438\u043d\u0430\n  \u0412\u0438\u0434\u041f\u0430\u043a\u0435\u0442\u0430\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0438\u0414\u0430\u043d\u043d\u044b\u0445: \u041e\u0448\u0438\u0431\u043a\u0430-owner.exchange_plan.batch_kind]
+FAILED tests/skills/xbsl_meta_add/test_integrable_application.py::test_system_connection_settings_cannot_be_declared_in_project
+FAILED tests/skills/xbsl_meta_add/test_integration_objects.py::test_integration_status_balance_finishes_all_local_partial_records
+FAILED tests/skills/xbsl_meta_add/test_integration_permissions_10.py::test_external_process_nodes_require_runtime_permission_check
+FAILED tests/skills/xbsl_meta_add/test_integration_permissions_10.py::test_permission_reference_distinguishes_local_and_remote_denial
+FAILED tests/skills/xbsl_meta_add/test_object_coverage.py::test_registry_has_exact_schema_initial_balance_and_safe_paths
+FAILED tests/skills/xbsl_meta_add/test_object_coverage.py::test_registry_validation_rejects_contract_breaks[<lambda>-expected exact fields0]
+FAILED tests/skills/xbsl_meta_add/test_object_coverage.py::test_registry_validation_rejects_contract_breaks[<lambda>-path]
+FAILED tests/skills/xbsl_meta_add/test_object_coverage.py::test_registry_validation_rejects_contract_breaks[<lambda>-expected exact fields1]
+FAILED tests/skills/xbsl_meta_add/test_object_coverage.py::test_version_gate_is_numeric_and_rejects_features_above_target
+FAILED tests/skills/xbsl_meta_add/test_public_acceptance.py::test_public_examples_and_positive_fixtures_pass_xbsl_validate
+FAILED tests/skills/xbsl_meta_add/test_reference_contracts.py::test_subordinated_information_register_reference_uses_system_registrar
+FAILED tests/skills/xbsl_meta_add/test_reference_contracts.py::test_information_register_documents_leading_default_and_explicit_false
+FAILED tests/skills/xbsl_meta_add/test_render_coverage.py::test_rendered_markdown_is_deterministic_and_committed
+FAILED tests/skills/xbsl_meta_add/test_render_coverage.py::test_renderer_check_is_read_only_when_markdown_is_stale
+FAILED tests/skills/xbsl_meta_add/test_render_coverage.py::test_renderer_default_check_accepts_repository_copy
+FAILED tests/skills/xbsl_meta_add/test_security_and_events.py::test_security_and_events_status_balance_finishes_security_events_without_new_public_issue_links
+FAILED tests/skills/xbsl_pattern_register/test_extract_meta.py::test_extract_info_register_returns_metadata_for_nonperiodic
+FAILED tests/skills/xbsl_pattern_register/test_extract_meta.py::test_extract_info_register_periodic_sets_is_periodic_true
+FAILED tests/skills/xbsl_pattern_register/test_extract_meta.py::test_extract_subordinated_info_register_uses_registrar_filter
+FAILED tests/skills/xbsl_pattern_register/test_extract_meta.py::test_main_prints_info_register_json
+FAILED tests/skills/xbsl_pattern_rls/test_contract.py::test_access_key_lifecycle_modes_are_explicit_for_target_10
+FAILED tests/skills/xbsl_pattern_rls/test_contract.py::test_bulk_grant_example_uses_grantable_access_key_type
+FAILED tests/skills/xbsl_validate/test_validate.py::test_supported_object_validators_accept_documented_fixtures
+FAILED tests/skills/xbsl_validate/test_validate.py::test_object_specific_fixture_maps_to_exact_diagnostic[access_key/invalid_missing_manual_mode/\u041a\u043b\u044e\u0447\u0417\u0430\u043a\u0430\u0437\u043e\u0432.yaml-None-owner.access_key.manual_grant_required-requires explicit \u0420\u0443\u0447\u043d\u0430\u044f\u0412\u044b\u0434\u0430\u0447\u0430]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.write_mode]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar0]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar1]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar2]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.next_period]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.subordinate_filter0]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.subordinate_filter1]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.reserved_member]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_subordinated_info_register_rejects_invalid_contract[<lambda>-owner.register.registrar3]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_call_right_contract[<lambda>-owner.processing.access_shape0]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_call_right_contract[<lambda>-owner.processing.call_right]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_call_right_contract[<lambda>-owner.processing.handler0]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_call_right_contract[<lambda>-owner.processing.handler1]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_call_right_contract[<lambda>-owner.processing.access_shape1]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_processing_computed_root_right_requires_event_handler
+FAILED tests/skills/xbsl_validate/test_validate.py::test_report_10_layout_rejects_invalid_settings[<lambda>0]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_report_10_layout_rejects_invalid_settings[<lambda>1]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_report_10_layout_rejects_invalid_settings[<lambda>2]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_report_10_layout_rejects_invalid_settings[<lambda>3]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_report_10_layout_rejects_invalid_settings[<lambda>4]
+FAILED tests/skills/xbsl_validate/test_validate.py::test_document_requires_standard_date_in_cloud_smoke_fixture
+89 failed, 834 passed in 3.73s

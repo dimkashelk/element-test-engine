@@ -1004,7 +1004,14 @@ CASE/ВЫРАЗИТЬ, DISTINCT, агрегаты и GROUP/HAVING. Два реа
 и пять review templates независимо оценены. 49 различных тестов успешны,
 семь SBSL FAIL мутаций, восемь SQL-сценариев; test/run по 5/5, batch 3/0/3.
 [Контракт и остаток](docs/unions-and-nesting.md), [измерения](docs/query-stage-042-measurements.json).
-[Следующее №43](docs/tasks/043-virtual-tables.md) — виртуальные таблицы и прочие источники.
+[№43](docs/tasks/043-virtual-tables.md) реализовало первые/последние срезы
+День/Секунда, итоги регистров, табличные части/массивы и ограниченный профиль
+системных/сохранённых источников. Прямой Dvizhok и четыре точных шаблона
+независимо оценены; 39 целевых тестов, шесть SBSL FAIL мутаций, девять
+SQL-сценариев. Public test/run по 2/2, два batch 3/0/3 без cacheHit.
+[Контракт и платформенный остаток](docs/virtual-tables.md),
+[измерения](docs/query-stage-043-measurements.json).
+[Следующее №44](docs/tasks/044-result-and-resources.md) — Query API, результат и ресурсы.
 
 ```bash
 python3 -m element_test.query_catalog

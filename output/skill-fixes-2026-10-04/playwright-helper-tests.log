@@ -1,0 +1,21 @@
+✔ uses the same date format for the control and absence query (0.500458ms)
+✔ a search that misses the known record cannot prove absence (0.2105ms)
+✔ a wrong or ambiguous control record is rejected (0.084208ms)
+✔ finds an erroneously saved candidate instead of declaring it absent (0.076958ms)
+✔ logical values and markers persist across processes and run IDs (91.677167ms)
+✔ verify never creates a missing task, new logical key or reservation (12.64325ms)
+✔ all created records and pending reservations share the lifetime limit (59.943792ms)
+✔ a terminated creator leaves pending durable and blocks later creates until reconciliation (67.745375ms)
+✔ observed identity is stable, confirmation is idempotent, absence/deletion never allow recreation (44.01525ms)
+✔ full application URL, limit and retention cannot reset an existing task (13.011375ms)
+✔ independent processes cannot both reserve the remaining slot (75.672375ms)
+✔ corrupt state and an existing lock fail without resetting data or removing the lock (9.700667ms)
+✔ non-JSON expected values are rejected and unusual logical keys remain ordinary records (18.429708ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 424.655917

@@ -1,0 +1,2177 @@
+{
+  "stage": "043",
+  "scopeCount": 27,
+  "counts": {
+    "parsed": 5,
+    "planned": 5,
+    "executed": 5,
+    "independentlyAssessed": 5
+  },
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true
+    }
+  ],
+  "reference": {
+    "version": "9.3",
+    "access": "authenticated in-app browser, read only",
+    "readDate": "2026-10-04",
+    "sources": [
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Balance_ru/",
+        "parameters": [
+          "Период: ДатаВремя? (exclusive)",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОстаток: Число",
+          "РесурсОстатокПоложительный: Число",
+          "РесурсОстатокОтрицательный: Число"
+        ],
+        "conditions": [
+          "kind Остатки",
+          "active movements"
+        ],
+        "adapter": "exclusive boundary; all dimension combinations; omit zero balances; filter in virtual arguments pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Turnovers_ru/",
+        "parameters": [
+          "НачалоПериода: ДатаВремя? (inclusive)",
+          "КонецПериода: ДатаВремя? (inclusive)",
+          "Периодичность: enum (default Период)",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОборот: Число",
+          "РесурсПриход: Число (kind Остатки)",
+          "РесурсРасход: Число (kind Остатки)",
+          "Период: ДатаВремя (explicit periodicity)",
+          "ПериодГод/Полугодие/Квартал/Месяц/Декада/Неделя/День/Час/Минута/Секунда/Записи: ДатаВремя (Авто)",
+          "Регистратор: Документ.Ссылка (Авто/Регистратор/Запись)",
+          "Индекс/НомерСтроки: Число (Авто/Запись)"
+        ],
+        "conditions": [
+          "active movements"
+        ],
+        "adapter": "Период totals; extra period expansion/argument filter pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.BalanceAndTurnovers_ru/",
+        "parameters": [
+          "НачалоПериода: ДатаВремя?",
+          "КонецПериода: ДатаВремя?",
+          "Периодичность: enum",
+          "СпособДополнения: enum",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОборот/Приход/Расход: Число",
+          "РесурсНачальныйОстаток/КонечныйОстаток: Число",
+          "РесурсНачальныйОстаток/КонечныйОстаток + Положительный/Отрицательный: Число",
+          "Период and Авто date-time fields",
+          "Регистратор: Документ.Ссылка?",
+          "Индекс/НомерСтроки: Число?"
+        ],
+        "conditions": [
+          "kind Остатки",
+          "active movements"
+        ],
+        "adapter": "Период totals only; complement/expansion pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Changes_ru/",
+        "parameters": [],
+        "fields": [
+          "КлючОсновногоФильтра: регистр.КлючОсновногоФильтра (Регистратор)",
+          "Узел: ПланОбмена.Ссылка",
+          "НомерСообщения: Null|Число"
+        ],
+        "conditions": [
+          "register included in exchange plan",
+          "rights same as base table"
+        ],
+        "adapter": "unsupported; requires exchange change registration, not a balance delta"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/InformationRegisterName/InformationRegisterName.SliceLast_ru/",
+        "parameters": [
+          "Период: Дата? (inclusive, undefined current)"
+        ],
+        "fields": [
+          "Измерения/Ресурсы/Реквизиты: declared types",
+          "Период: Дата",
+          "СледующийПериод: Дата (next record or maximum)",
+          "КлючОсновногоФильтра: declared structure",
+          "КлючЗаписи: declared structure"
+        ],
+        "conditions": [
+          "periodic register"
+        ],
+        "adapter": "День verified against reference; Секунда and СрезПервых explicit executor extensions; next-period/key fields pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithTabularPart.TabularPartName_ru/",
+        "parameters": [],
+        "fields": [
+          "Declared attributes",
+          "Владелец: owner.Ссылка",
+          "Индекс: Число (0 based)",
+          "НомерСтроки: Число (index + 1)"
+        ],
+        "adapter": "stored rows per owner with multiplicity"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithCollectionAttribute.CollectionAttributeName_ru/",
+        "parameters": [],
+        "fields": [
+          "Владелец: owner.Ссылка",
+          "Индекс: Число",
+          "Элемент: collection element type"
+        ],
+        "adapter": "Массив scalar/reference records; map/set structures pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/EntityContractName_ru/",
+        "fields": [],
+        "conditions": [
+          "removed after platform 7.0"
+        ],
+        "adapter": "version exclusion; no fabricated source"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/VirtualTableName_ru/",
+        "parameters": [
+          "declared saved query parameters"
+        ],
+        "fields": [
+          "projection types"
+        ],
+        "adapter": "recursive metadata/XBQL lookup, no-parameter non-null saved source; parameterized definitions pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/Users_ru/",
+        "parameters": [],
+        "fields": [
+          "Администратор/БылУспешныйВход/ЗапрещенВход/РазрешенДоступПоТокену: Булево",
+          "Ссылка: Пользователи.Ссылка",
+          "Представление: Строка",
+          "ЛокальОтображения/ЛокальФорматирования: Локаль?"
+        ],
+        "adapter": "explicit queryContext.users identity fixture; locale/authentication/rights pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/UndeletedObjects_ru/",
+        "fields": [
+          "Ключ: Ууид",
+          "УдаляемыйОбъект: Сущность.Ссылка?",
+          "СсылающиесяДанные: Сущность.Ссылка|СсылкаНаКлючЗаписи|?",
+          "ДатаАктуальности: Момент"
+        ],
+        "conditions": [
+          "system cleanup job populates records"
+        ],
+        "adapter": "unsupported; not all ordinary undeleted objects"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ExchangePlanName_ru/",
+        "fields": [
+          "Declared attributes",
+          "Ссылка: plan.Ссылка",
+          "МеткаВерсии: Ууид",
+          "МоментПометкиУдаления: Момент? (deletion-mark mode)",
+          "ПометкаУдаления: Булево (deletion-mark mode)",
+          "Код: Строка",
+          "НомерОтправленного/НомерПринятого: Число",
+          "ЭтотУзел: Булево",
+          "Представление: Строка"
+        ],
+        "adapter": "unsupported; exchange storage lifecycle pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ConstantsSetName/",
+        "fields": [
+          "declared constants"
+        ],
+        "adapter": "non-periodic session snapshot; periodic constant history pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/SettingsStorageName/",
+        "fields": [
+          "source-specific storage records/changes require detailed native contract"
+        ],
+        "adapter": "unsupported; rights/settings lifecycle pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/StandardSettingsStorage/",
+        "fields": [
+          "source-specific standard settings records/changes require detailed native contract"
+        ],
+        "adapter": "unsupported; rights/settings lifecycle pending"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "compatibility": "current",
+    "nativeXBQL": false,
+    "note": "Inventory paraphrases observed reference; no 9.1 template was treated as native 9.3 proof.",
+    "executionCompatibilityVersion": "current"
+  },
+  "contracts": [
+    {
+      "contractId": "query-a7d986aa3a553c1ee0983d93",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "alias",
+        "projection",
+        "turnover"
+      ],
+      "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "projectIdentity": {
+        "Поставщик": "ДемоСРМ",
+        "Имя": "ДемоСРМ",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "Пресейл",
+        "module": "ОтчетОПродажах"
+      },
+      "sourceHash": "6e96eb039aa3d61f419f2b494bbff9f584ccf2028319df5c8657086a1f004a42",
+      "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "file": "Пресейл/ОтчетОПродажах.xbql",
+      "range": [
+        0,
+        143
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    Направление как Направление,\n    Услуга как Услуга,\n    СуммаОборот как Сумма\nИЗ\n    Продажи.Обороты(&НачалоПериода, &КонецПериода)",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "External & parameter bindings need the typed Query API/result contract of stage 44; no source rewrite or fabricated execution criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "query-6ad92275674b4ed3e5f42e4c",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "balance"
+      ],
+      "archive": "Dvizhok.xdump",
+      "projectIdentity": {
+        "Поставщик": "Движок",
+        "Имя": "Движок",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "Товары",
+        "module": "Отгрузка.Объект"
+      },
+      "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+      "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+      "file": "Товары/Отгрузка.Объект.xbsl",
+      "range": [
+        326,
+        644
+      ],
+      "bodyStart": 333,
+      "line": 10,
+      "text": "\n        ВЫБРАТЬ\n            РегистрТовары.Номенклатура КАК Номенклатура,\n            РегистрТовары.КоличествоОстаток КАК Количество\n        ИЗ\n            РегистрТовары.Остатки КАК РегистрТовары\n        ГДЕ\n            РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})\n    ",
+      "target": {
+        "namespace": "Товары",
+        "module": "Отгрузка.Объект",
+        "method": "ПередЗаписью",
+        "parameters": [
+          "До: Отгрузка.Данные",
+          " ПараметрыЗаписи: Отгрузка.ПараметрыЗаписи"
+        ],
+        "returnType": null,
+        "range": [
+          226,
+          1199
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "adapter-storage-virtual-sources-043",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Товары::РегистрТовары",
+        "alias": "РегистрТовары",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Номенклатура.Ссылка?",
+              "name": "Номенклатура",
+              "source": 0,
+              "value": [
+                "РегистрТовары",
+                "Номенклатура"
+              ],
+              "children": [],
+              "range": [
+                29,
+                55
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Номенклатура"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "КоличествоОстаток",
+              "source": 0,
+              "value": [
+                "РегистрТовары",
+                "КоличествоОстаток"
+              ],
+              "children": [],
+              "range": [
+                86,
+                117
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Количество"
+          ]
+        ],
+        "predicates": [
+          {
+            "kind": "in-array",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": null,
+            "children": [
+              {
+                "kind": "field",
+                "type": "Номенклатура.Ссылка?",
+                "name": "Номенклатура",
+                "source": 0,
+                "value": [
+                  "РегистрТовары",
+                  "Номенклатура"
+                ],
+                "children": [],
+                "range": [
+                  220,
+                  246
+                ],
+                "sql_nullable": false,
+                "null_field": ""
+              },
+              {
+                "kind": "parameter",
+                "type": "Массив<Номенклатура.Ссылка?>",
+                "name": "",
+                "source": null,
+                "value": 0,
+                "children": [],
+                "range": [
+                  252,
+                  303
+                ],
+                "sql_nullable": false,
+                "null_field": ""
+              }
+            ],
+            "range": [
+              220,
+              305
+            ],
+            "sql_nullable": false,
+            "null_field": ""
+          }
+        ],
+        "parameters": [
+          {
+            "expression": "Товары.Преобразовать(Данные -> Данные.Номенклатура)",
+            "start": 252,
+            "end": 303,
+            "type": "Массив<Номенклатура.Ссылка?>",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Товары::РегистрТовары",
+            "alias": "РегистрТовары",
+            "projections": [
+              [
+                {
+                  "owner": "Товары::РегистрТовары",
+                  "name": "Номенклатура",
+                  "type": "Номенклатура.Ссылка?",
+                  "system": false
+                },
+                "Номенклатура"
+              ],
+              [
+                {
+                  "owner": "Товары::РегистрТовары",
+                  "name": "КоличествоОстаток",
+                  "type": "Число",
+                  "system": false
+                },
+                "КоличествоОстаток"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-virtual-sources-v1",
+            "source_kind": "balance",
+            "periodicity": null,
+            "dimensions": [
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "Номенклатура",
+                "type": "Номенклатура.Ссылка?",
+                "system": false
+              },
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "Склад",
+                "type": "Склады.Ссылка?",
+                "system": false
+              }
+            ],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              156,
+              177
+            ],
+            "source_name": "РегистрТовары",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "Номенклатура",
+                "type": "Номенклатура.Ссылка?",
+                "system": false
+              },
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "Склад",
+                "type": "Склады.Ссылка?",
+                "system": false
+              },
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "КоличествоОстаток",
+                "type": "Число",
+                "system": false
+              },
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "КоличествоОстатокПоложительный",
+                "type": "Число",
+                "system": false
+              },
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "КоличествоОстатокОтрицательный",
+                "type": "Число",
+                "system": false
+              }
+            ],
+            "member": "Остатки",
+            "resources": [
+              {
+                "owner": "Товары::РегистрТовары",
+                "name": "Количество",
+                "type": "Число",
+                "system": false
+              }
+            ],
+            "register_kind": "Остатки",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-unions-nesting-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": []
+      },
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [
+        {
+          "criterionId": "sufficient",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-direct",
+          "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+          "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+          "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+          "range": [
+            326,
+            644
+          ]
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-direct",
+          "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+          "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+          "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+          "range": [
+            326,
+            644
+          ]
+        },
+        {
+          "criterionId": "sufficient",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-direct",
+          "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+          "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+          "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+          "range": [
+            326,
+            644
+          ]
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-direct",
+          "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+          "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+          "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+          "range": [
+            326,
+            644
+          ]
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables/public-real-test",
+        "result/virtual-tables/public-real-test",
+        "result/virtual-tables/public-real-run",
+        "result/virtual-tables/public-real-run"
+      ],
+      "apiBinding": null,
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "query-a92a4816e7813359a23de063",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "projection",
+        "turnover"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОборотов",
+        "module": "ПродажиПоОрганизациям"
+      },
+      "sourceHash": "9504c89c2a1db5ff881fd8a603ea87ecf4f21d0efd21288a412d0a82dcfa9008",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОборотов/ПродажиПоОрганизациям.xbql",
+      "range": [
+        0,
+        99
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    Организация,\n    СуммаОборот\nИЗ\n    Продажи.Обороты(&НачалоПериода, &КонецПериода)\n    ",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "External & parameter bindings need the typed Query API/result contract of stage 44; no source rewrite or fabricated execution criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "query-d95db0d96373e442ed86bd7b",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "alias",
+        "projection",
+        "balance"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "ОстаткиТоваровНаСкладах"
+      },
+      "sourceHash": "1d898f484db178bd06b6859aa7a18b8895361ae38331b6ce5b806a8c19ba21e4",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОстатков/ОстаткиТоваровНаСкладах.xbql",
+      "range": [
+        0,
+        331
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    ОстаткиНоменклатурыОстатки.Номенклатура КАК Номенклатура,\n    ОстаткиНоменклатурыОстатки.Склад КАК Склад,\n    ОстаткиНоменклатурыОстатки.КоличествоОстаток КАК КоличествоОстаток,\n    ОстаткиНоменклатурыОстатки.СуммаОстаток КАК СуммаОстаток\nИЗ\n    ОстаткиНоменклатуры.Остатки(&ДатаОстатков) КАК ОстаткиНоменклатурыОстатки",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "External & parameter bindings need the typed Query API/result contract of stage 44; no source rewrite or fabricated execution criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documented-slice-last",
+      "family": "documented-form",
+      "operations": [
+        "slice-last",
+        "parameter"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Total ИЗ Data::Book.СрезПоследних(%D)",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-last.xbql",
+      "semantics": [
+        "adapter-storage-virtual-sources-043",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [
+        {
+          "criterionId": "slice_last",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-transferable",
+          "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+          "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            58,
+            111
+          ],
+          "fixtureHash": "3f9b5b263459d3f0cd611d57bc591eaac4053f23f71d3865b4eb0750f70ae304"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables/assessment-documented-slice_last.json",
+        "result/virtual-tables/documented-slice_last.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Book",
+        "alias": "Book",
+        "projections": [
+          [
+            {
+              "owner": "Data::Book",
+              "name": "Total",
+              "type": "Число",
+              "system": false
+            },
+            "Total"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "D",
+            "start": 43,
+            "end": 44,
+            "type": "Дата?",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-slice-last-day-v1",
+        "source_kind": "slice-last",
+        "periodicity": "День",
+        "dimensions": [
+          {
+            "owner": "Data::Book",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          }
+        ],
+        "period_slot": 0,
+        "period_range": [
+          41,
+          45
+        ],
+        "source_range": [
+          17,
+          45
+        ],
+        "source_name": "Data::Book",
+        "boundary": "captured-date-or-runtime-UTC-at-creation",
+        "fill": null,
+        "fields": [
+          {
+            "owner": "Data::Book",
+            "name": "Период",
+            "type": "Дата",
+            "system": true
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "member": "СрезПоследних",
+        "resources": [
+          {
+            "owner": "Data::Book",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "fixtureHash": "3f9b5b263459d3f0cd611d57bc591eaac4053f23f71d3865b4eb0750f70ae304"
+    },
+    {
+      "contractId": "documented-slice-first",
+      "family": "documented-form",
+      "operations": [
+        "slice-first",
+        "parameter"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Total ИЗ Data::Book.СрезПервых(%D)",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-first.xbql",
+      "semantics": [
+        "adapter-storage-virtual-sources-043",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [
+        {
+          "criterionId": "slice_first",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-transferable",
+          "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+          "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            173,
+            223
+          ],
+          "fixtureHash": "94e600dc9d23841159431b18dcac63526c4f71200856e5ddfd5e11a0bfc5d458"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables/assessment-documented-slice_first.json",
+        "result/virtual-tables/documented-slice_first.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Book",
+        "alias": "Book",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "Total",
+              "source": 0,
+              "value": [
+                "Total"
+              ],
+              "children": [],
+              "range": [
+                8,
+                13
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Total"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "D",
+            "start": 40,
+            "end": 41,
+            "type": "Дата?",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Book",
+            "alias": "Book",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Book",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [
+              {
+                "expression": "D",
+                "start": 40,
+                "end": 41,
+                "type": "Дата?",
+                "slot": 0
+              }
+            ],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-virtual-sources-v1",
+            "source_kind": "slice-first",
+            "periodicity": "День",
+            "dimensions": [
+              {
+                "owner": "Data::Book",
+                "name": "Key",
+                "type": "Строка",
+                "system": false
+              }
+            ],
+            "period_slot": 0,
+            "period_range": [
+              38,
+              42
+            ],
+            "source_range": [
+              17,
+              42
+            ],
+            "source_name": "Data::Book",
+            "boundary": "captured-date-or-runtime-UTC-at-creation",
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Book",
+                "name": "Период",
+                "type": "Дата",
+                "system": true
+              },
+              {
+                "owner": "Data::Book",
+                "name": "Key",
+                "type": "Строка",
+                "system": false
+              },
+              {
+                "owner": "Data::Book",
+                "name": "Total",
+                "type": "Число",
+                "system": false
+              }
+            ],
+            "member": "СрезПервых",
+            "resources": [
+              {
+                "owner": "Data::Book",
+                "name": "Total",
+                "type": "Число",
+                "system": false
+              }
+            ],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": []
+      },
+      "fixtureHash": "94e600dc9d23841159431b18dcac63526c4f71200856e5ddfd5e11a0bfc5d458"
+    },
+    {
+      "contractId": "documented-balances",
+      "family": "documented-form",
+      "operations": [
+        "balance"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ TotalОстаток ИЗ Ledger.Остатки",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/balances.xbql",
+      "semantics": [
+        "adapter-storage-virtual-sources-043",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [
+        {
+          "criterionId": "balances",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-transferable",
+          "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+          "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            275,
+            321
+          ],
+          "fixtureHash": "a1c32b96b5edbc93a95e3a0006bdfa274a43098561b52111ac91fe485d74c69b"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables/assessment-documented-balances.json",
+        "result/virtual-tables/documented-balances.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Ledger",
+        "alias": "Ledger",
+        "projections": [
+          [
+            {
+              "owner": "Data::Ledger",
+              "name": "TotalОстаток",
+              "type": "Число",
+              "system": false
+            },
+            "TotalОстаток"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-virtual-sources-v1",
+        "source_kind": "balance",
+        "periodicity": null,
+        "dimensions": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          }
+        ],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          24,
+          38
+        ],
+        "source_name": "Ledger",
+        "boundary": null,
+        "fill": null,
+        "fields": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalОстаток",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalОстатокПоложительный",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalОстатокОтрицательный",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "member": "Остатки",
+        "resources": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "register_kind": "Остатки",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "fixtureHash": "a1c32b96b5edbc93a95e3a0006bdfa274a43098561b52111ac91fe485d74c69b"
+    },
+    {
+      "contractId": "documented-turnovers",
+      "family": "documented-form",
+      "operations": [
+        "turnover"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ TotalОборот ИЗ Ledger.Обороты",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/turnovers.xbql",
+      "semantics": [
+        "adapter-storage-virtual-sources-043",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [
+        {
+          "criterionId": "turnovers",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-043-transferable",
+          "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+          "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            374,
+            419
+          ],
+          "fixtureHash": "8c22200e3cb1e7a85cbe94284cb6edb9b15f25704110a1468fe05a2ec781e76f"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables/assessment-documented-turnovers.json",
+        "result/virtual-tables/documented-turnovers.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Ledger",
+        "alias": "Ledger",
+        "projections": [
+          [
+            {
+              "owner": "Data::Ledger",
+              "name": "TotalОборот",
+              "type": "Число",
+              "system": false
+            },
+            "TotalОборот"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-virtual-sources-v1",
+        "source_kind": "turnover",
+        "periodicity": null,
+        "dimensions": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          }
+        ],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          23,
+          37
+        ],
+        "source_name": "Ledger",
+        "boundary": null,
+        "fill": null,
+        "fields": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Key",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalОборот",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalПриход",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Ledger",
+            "name": "TotalРасход",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "member": "Обороты",
+        "resources": [
+          {
+            "owner": "Data::Ledger",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "register_kind": "Остатки",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "fixtureHash": "8c22200e3cb1e7a85cbe94284cb6edb9b15f25704110a1468fe05a2ec781e76f"
+    },
+    {
+      "contractId": "documentation-table-elementwithcollectionattribute-collectionattributename_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-elementwithcollectionattribute-collectionattributename_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-elementwithcollectionattribute-collectionattributename_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-elementwithcollectionattribute-collectionattributename_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-elementwithtabularpart-tabularpartname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-elementwithtabularpart-tabularpartname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-elementwithtabularpart-tabularpartname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-elementwithtabularpart-tabularpartname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-entitycontractname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-entitycontractname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-entitycontractname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-entitycontractname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; entity-contract tables were removed after platform 7.0 (reference 9.3)",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-exchangeplanname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-exchangeplanname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-exchangeplanname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-exchangeplanname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-undeletedobjects_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-undeletedobjects_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-undeletedobjects_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-undeletedobjects_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-users_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-users_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-users_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-users_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; adapter covers six explicit identity fields, locale/authentication/rights remain unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-virtualtablename_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-virtualtablename_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-virtualtablename_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-virtualtablename_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; only no-parameter non-null saved definitions are supported",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-changes_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-changes_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-changes_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-changes_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-turnovers_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-turnovers_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-turnovers_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-turnovers_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-balance_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-balance_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-balance_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-balance_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-balanceandturnovers_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-balanceandturnovers_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-balanceandturnovers_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-balanceandturnovers_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-catalogname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-catalogname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-catalogname.md",
+      "semantics": [
+        "sidebar-9.1-table-catalogname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-constantssetname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-constantssetname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-constantssetname.md",
+      "semantics": [
+        "sidebar-9.1-table-constantssetname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-documentname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-documentname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-documentname.md",
+      "semantics": [
+        "sidebar-9.1-table-documentname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-informationregistername",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-informationregistername"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-informationregistername.md",
+      "semantics": [
+        "sidebar-9.1-table-informationregistername",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-settingsstoragename",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-settingsstoragename"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-settingsstoragename.md",
+      "semantics": [
+        "sidebar-9.1-table-settingsstoragename",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "documentation-table-standardsettingsstorage",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-standardsettingsstorage"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-standardsettingsstorage.md",
+      "semantics": [
+        "sidebar-9.1-table-standardsettingsstorage",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "review-template-execution-pending",
+      "reference043": {
+        "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
+        "inventoryHash": "ee15b659862154a01a61bf9e62607a080b3a96ee2334f589ab0d724d7c9f9e9c",
+        "referenceVersion": "9.3",
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    }
+  ],
+  "remainingCauses": {
+    "External & parameter bindings need the typed Query API/result contract of stage 44; no source rewrite or fabricated execution criterion": 3,
+    "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence": 11,
+    "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; entity-contract tables were removed after platform 7.0 (reference 9.3)": 1,
+    "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; exchange registration/settings/cleanup lifecycle needs native platform storage and rights, currently unavailable": 5,
+    "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; adapter covers six explicit identity fields, locale/authentication/rights remain unavailable": 1,
+    "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; only no-parameter non-null saved definitions are supported": 1
+  }
+}

@@ -1,0 +1,1342 @@
+{
+  "stage": 43,
+  "date": "2026-10-05",
+  "status": "implemented-within-virtual-source-executor-scope",
+  "reference": {
+    "version": "9.3",
+    "access": "authenticated in-app browser, read only",
+    "readDate": "2026-10-04",
+    "sources": [
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Balance_ru/",
+        "parameters": [
+          "Период: ДатаВремя? (exclusive)",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОстаток: Число",
+          "РесурсОстатокПоложительный: Число",
+          "РесурсОстатокОтрицательный: Число"
+        ],
+        "conditions": [
+          "kind Остатки",
+          "active movements"
+        ],
+        "adapter": "exclusive boundary; all dimension combinations; omit zero balances; filter in virtual arguments pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Turnovers_ru/",
+        "parameters": [
+          "НачалоПериода: ДатаВремя? (inclusive)",
+          "КонецПериода: ДатаВремя? (inclusive)",
+          "Периодичность: enum (default Период)",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОборот: Число",
+          "РесурсПриход: Число (kind Остатки)",
+          "РесурсРасход: Число (kind Остатки)",
+          "Период: ДатаВремя (explicit periodicity)",
+          "ПериодГод/Полугодие/Квартал/Месяц/Декада/Неделя/День/Час/Минута/Секунда/Записи: ДатаВремя (Авто)",
+          "Регистратор: Документ.Ссылка (Авто/Регистратор/Запись)",
+          "Индекс/НомерСтроки: Число (Авто/Запись)"
+        ],
+        "conditions": [
+          "active movements"
+        ],
+        "adapter": "Период totals; extra period expansion/argument filter pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.BalanceAndTurnovers_ru/",
+        "parameters": [
+          "НачалоПериода: ДатаВремя?",
+          "КонецПериода: ДатаВремя?",
+          "Периодичность: enum",
+          "СпособДополнения: enum",
+          "Фильтр: Булево по измерениям"
+        ],
+        "fields": [
+          "Измерения: declared types",
+          "РесурсОборот/Приход/Расход: Число",
+          "РесурсНачальныйОстаток/КонечныйОстаток: Число",
+          "РесурсНачальныйОстаток/КонечныйОстаток + Положительный/Отрицательный: Число",
+          "Период and Авто date-time fields",
+          "Регистратор: Документ.Ссылка?",
+          "Индекс/НомерСтроки: Число?"
+        ],
+        "conditions": [
+          "kind Остатки",
+          "active movements"
+        ],
+        "adapter": "Период totals only; complement/expansion pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Changes_ru/",
+        "parameters": [],
+        "fields": [
+          "КлючОсновногоФильтра: регистр.КлючОсновногоФильтра (Регистратор)",
+          "Узел: ПланОбмена.Ссылка",
+          "НомерСообщения: Null|Число"
+        ],
+        "conditions": [
+          "register included in exchange plan",
+          "rights same as base table"
+        ],
+        "adapter": "unsupported; requires exchange change registration, not a balance delta"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/InformationRegisterName/InformationRegisterName.SliceLast_ru/",
+        "parameters": [
+          "Период: Дата? (inclusive, undefined current)"
+        ],
+        "fields": [
+          "Измерения/Ресурсы/Реквизиты: declared types",
+          "Период: Дата",
+          "СледующийПериод: Дата (next record or maximum)",
+          "КлючОсновногоФильтра: declared structure",
+          "КлючЗаписи: declared structure"
+        ],
+        "conditions": [
+          "periodic register"
+        ],
+        "adapter": "День verified against reference; Секунда and СрезПервых explicit executor extensions; next-period/key fields pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithTabularPart.TabularPartName_ru/",
+        "parameters": [],
+        "fields": [
+          "Declared attributes",
+          "Владелец: owner.Ссылка",
+          "Индекс: Число (0 based)",
+          "НомерСтроки: Число (index + 1)"
+        ],
+        "adapter": "stored rows per owner with multiplicity"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithCollectionAttribute.CollectionAttributeName_ru/",
+        "parameters": [],
+        "fields": [
+          "Владелец: owner.Ссылка",
+          "Индекс: Число",
+          "Элемент: collection element type"
+        ],
+        "adapter": "Массив scalar/reference records; map/set structures pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/EntityContractName_ru/",
+        "fields": [],
+        "conditions": [
+          "removed after platform 7.0"
+        ],
+        "adapter": "version exclusion; no fabricated source"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/VirtualTableName_ru/",
+        "parameters": [
+          "declared saved query parameters"
+        ],
+        "fields": [
+          "projection types"
+        ],
+        "adapter": "recursive metadata/XBQL lookup, no-parameter non-null saved source; parameterized definitions pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/Users_ru/",
+        "parameters": [],
+        "fields": [
+          "Администратор/БылУспешныйВход/ЗапрещенВход/РазрешенДоступПоТокену: Булево",
+          "Ссылка: Пользователи.Ссылка",
+          "Представление: Строка",
+          "ЛокальОтображения/ЛокальФорматирования: Локаль?"
+        ],
+        "adapter": "explicit queryContext.users identity fixture; locale/authentication/rights pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/UndeletedObjects_ru/",
+        "fields": [
+          "Ключ: Ууид",
+          "УдаляемыйОбъект: Сущность.Ссылка?",
+          "СсылающиесяДанные: Сущность.Ссылка|СсылкаНаКлючЗаписи|?",
+          "ДатаАктуальности: Момент"
+        ],
+        "conditions": [
+          "system cleanup job populates records"
+        ],
+        "adapter": "unsupported; not all ordinary undeleted objects"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ExchangePlanName_ru/",
+        "fields": [
+          "Declared attributes",
+          "Ссылка: plan.Ссылка",
+          "МеткаВерсии: Ууид",
+          "МоментПометкиУдаления: Момент? (deletion-mark mode)",
+          "ПометкаУдаления: Булево (deletion-mark mode)",
+          "Код: Строка",
+          "НомерОтправленного/НомерПринятого: Число",
+          "ЭтотУзел: Булево",
+          "Представление: Строка"
+        ],
+        "adapter": "unsupported; exchange storage lifecycle pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ConstantsSetName/",
+        "fields": [
+          "declared constants"
+        ],
+        "adapter": "non-periodic session snapshot; periodic constant history pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/SettingsStorageName/",
+        "fields": [
+          "source-specific storage records/changes require detailed native contract"
+        ],
+        "adapter": "unsupported; rights/settings lifecycle pending"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/StandardSettingsStorage/",
+        "fields": [
+          "source-specific standard settings records/changes require detailed native contract"
+        ],
+        "adapter": "unsupported; rights/settings lifecycle pending"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "compatibility": "current",
+    "nativeXBQL": false,
+    "note": "Inventory paraphrases observed reference; no 9.1 template was treated as native 9.3 proof.",
+    "executionCompatibilityVersion": "current"
+  },
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0",
+    "executionCompatibilityVersion": "current",
+    "elementReferenceVersion": "9.3"
+  },
+  "sourceCompatibilityVersions": [
+    "9.0",
+    "9.3"
+  ],
+  "catalog": {
+    "scopeCount": 27,
+    "counts": {
+      "parsed": 5,
+      "planned": 5,
+      "executed": 5,
+      "independentlyAssessed": 5
+    },
+    "familyCounts": {
+      "xbql-file": 3,
+      "literal": 1,
+      "documented-form": 4,
+      "documentation-index": 19
+    },
+    "archives": [
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "scopeOnlyRefresh": true,
+    "completeQueryCatalogExecuted": false,
+    "outsideScopeUnchanged": {
+      "status": "PASS",
+      "unchangedOutsideStage43": 549,
+      "scopeCount": 27
+    },
+    "assessedOccurrences": [
+      {
+        "contractId": "query-6ad92275674b4ed3e5f42e4c",
+        "archive": "Dvizhok.xdump",
+        "fixture": null,
+        "fixtureHash": null,
+        "file": "Товары/Отгрузка.Объект.xbsl",
+        "range": [
+          326,
+          644
+        ],
+        "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+        "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+        "target": {
+          "namespace": "Товары",
+          "module": "Отгрузка.Объект",
+          "method": "ПередЗаписью",
+          "parameters": [
+            "До: Отгрузка.Данные",
+            " ПараметрыЗаписи: Отгрузка.ПараметрыЗаписи"
+          ],
+          "returnType": null,
+          "range": [
+            226,
+            1199
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "sufficient",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-direct",
+            "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+            "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+            "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+            "range": [
+              326,
+              644
+            ]
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-direct",
+            "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+            "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+            "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+            "range": [
+              326,
+              644
+            ]
+          },
+          {
+            "criterionId": "sufficient",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-direct",
+            "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+            "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+            "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+            "range": [
+              326,
+              644
+            ]
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-direct",
+            "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+            "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+            "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+            "range": [
+              326,
+              644
+            ]
+          }
+        ],
+        "evidence": [
+          "result/virtual-tables/public-real-test",
+          "result/virtual-tables/public-real-test",
+          "result/virtual-tables/public-real-run",
+          "result/virtual-tables/public-real-run"
+        ]
+      },
+      {
+        "contractId": "documented-slice-last",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-last.xbql",
+        "fixtureHash": "3f9b5b263459d3f0cd611d57bc591eaac4053f23f71d3865b4eb0750f70ae304",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "slice_last",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-transferable",
+            "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+            "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              58,
+              111
+            ],
+            "fixtureHash": "3f9b5b263459d3f0cd611d57bc591eaac4053f23f71d3865b4eb0750f70ae304"
+          }
+        ],
+        "evidence": [
+          "result/virtual-tables/assessment-documented-slice_last.json",
+          "result/virtual-tables/documented-slice_last.json"
+        ]
+      },
+      {
+        "contractId": "documented-slice-first",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-first.xbql",
+        "fixtureHash": "94e600dc9d23841159431b18dcac63526c4f71200856e5ddfd5e11a0bfc5d458",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "slice_first",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-transferable",
+            "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+            "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              173,
+              223
+            ],
+            "fixtureHash": "94e600dc9d23841159431b18dcac63526c4f71200856e5ddfd5e11a0bfc5d458"
+          }
+        ],
+        "evidence": [
+          "result/virtual-tables/assessment-documented-slice_first.json",
+          "result/virtual-tables/documented-slice_first.json"
+        ]
+      },
+      {
+        "contractId": "documented-balances",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/balances.xbql",
+        "fixtureHash": "a1c32b96b5edbc93a95e3a0006bdfa274a43098561b52111ac91fe485d74c69b",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "balances",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-transferable",
+            "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+            "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              275,
+              321
+            ],
+            "fixtureHash": "a1c32b96b5edbc93a95e3a0006bdfa274a43098561b52111ac91fe485d74c69b"
+          }
+        ],
+        "evidence": [
+          "result/virtual-tables/assessment-documented-balances.json",
+          "result/virtual-tables/documented-balances.json"
+        ]
+      },
+      {
+        "contractId": "documented-turnovers",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/turnovers.xbql",
+        "fixtureHash": "8c22200e3cb1e7a85cbe94284cb6edb9b15f25704110a1468fe05a2ec781e76f",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "turnovers",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-043-transferable",
+            "sourceHash": "d7c164e0e9289cf9f5f9bc734d8a564c2ace591465372fcd2ab6fba25df037f6",
+            "projectSourceHash": "bf1eacdf909f97d7c898399869b9a7463627ec05892c5f27d3b7eb0fdacf0f22",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              374,
+              419
+            ],
+            "fixtureHash": "8c22200e3cb1e7a85cbe94284cb6edb9b15f25704110a1468fe05a2ec781e76f"
+          }
+        ],
+        "evidence": [
+          "result/virtual-tables/assessment-documented-turnovers.json",
+          "result/virtual-tables/documented-turnovers.json"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "distinctSuccessfulMethods": 39,
+    "newMethods": 14,
+    "affectedLegacyMethods": 25,
+    "latestSuccessfulEvidence": {
+      "test_query_sources.SourcePlanTest.test_invalid_sources_fields_periods_shadowing_and_saved_cycles": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/plans-completion.log"
+      },
+      "test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/plans-completion.log"
+      },
+      "test_query_sources.SourcePlanTest.test_system_fixture_validation_and_nominal_refs": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/plans-completion.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_record_sets.RecordSetPlanTest.test_binding_spans_aliases_parameters_dependencies_and_unordered_grading": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_record_sets.RecordSetPlanTest.test_full_filter_required_and_teacher_input_errors": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_record_sets.RecordSetPlanTest.test_project_name_collision_shadowing_and_no_spy_reads": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_record_sets.RecordSetPlanTest.test_unconfirmed_period_and_filter_fields_are_unsupported": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_information_register_slices.SliceDockerTest.test_reexecution_captured_effects_refs_and_transaction_rollback": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/capture-scope-final.log"
+      },
+      "test_query_composites.CompositeMembershipEdgeTest.test_missing_join_side_membership_and_optional_derived_alias": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-final.log"
+      },
+      "test_query_joins.JoinDockerTest.test_fresh_reference_projections_capture_reexecute_write_and_rollback": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-methods-repeat.log"
+      },
+      "test_query_sources.SourceDockerTest.test_empty_sources_boundaries_and_post_selection_filter": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_exact_review_templates_independent_assessment": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_mutations_alternative_infrastructure_failure_and_recovery": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_real_direct_root_in_unchanged_archive": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/capture-scope-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourcePublicTest.test_public_real_test_run_and_fail_unsupported_pass": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourcePublicTest.test_two_fresh_isolated_batches": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/tests-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_scalar_and_array_in_capture_detached_at_creation": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/capture-assessment-final.log"
+      },
+      "test_query_sources.SourceDockerTest.test_multiple_dimensions_resources_and_raw_inactive_rows": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/edges-final.log"
+      },
+      "test_query_sources.SourceRealSqlTest.test_real_direct_root_independent_sql_audit_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/real-sql-final.log"
+      },
+      "test_storage_queries.StorageQueryDockerTest.test_colliding_owners_uuid_and_mutation_grading": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-negative-final.log"
+      },
+      "test_query_joins.JoinDockerTest.test_invalid_timeout_unsupported_sticky_infrastructure_error_then_pass": {
+        "status": "ok",
+        "evidence": "result/virtual-tables/legacy-negative-final.log"
+      }
+    },
+    "initialFailuresRetained": [
+      {
+        "file": "result/virtual-tables/legacy-first.log",
+        "sha256": "c74ff97b658829c59bd2fd435339979a997287a0a413d8b9b88b25ca7cad12e1",
+        "failures": [
+          "FAIL: test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected (test_information_register_slices.SlicePlanTest.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected)",
+          "FAIL: test_unconfirmed_sources_types_periodicity_nullable_and_shadowing (test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/tests-first.log",
+        "sha256": "8c3ca22c4aee22dd3e00a7592eb6ec9b007e5705dc1777c510430cd9a2c5b735",
+        "failures": [
+          "ERROR: test_two_fresh_isolated_batches (test_query_sources.SourcePublicTest.test_two_fresh_isolated_batches)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-repeat.log",
+        "sha256": "bc6457618495f6d5582f2a3c5f5af341e7e366e7b14250964a294b5f156d77b4",
+        "failures": [
+          "ERROR: test_invalid_sources_fields_periods_shadowing_and_saved_cycles (test_query_sources.SourcePlanTest.test_invalid_sources_fields_periods_shadowing_and_saved_cycles)",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='First')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Last')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='FirstAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Seconds')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='SecondsFirst')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Info')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Plain')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Balance')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='BalanceAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Turnover')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='TurnoverAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Combined')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Sales')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Rows')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Phones')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Join')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Nested')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Union')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='PostFilter')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Users')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Constants')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Saved')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='State')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='First')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Last')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='FirstAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Seconds')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='SecondsFirst')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Info')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Plain')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Balance')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='BalanceAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Turnover')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='TurnoverAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Combined')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Sales')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Rows')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Phones')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Join')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Nested')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Union')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='PostFilter')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Users')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Constants')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Saved')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='State')",
+          "ERROR: test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected (test_information_register_slices.SlicePlanTest.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected)",
+          "ERROR: test_invalid_teacher_rows_and_period_and_duplicate_keys (test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys) (change='missing')",
+          "ERROR: test_invalid_teacher_rows_and_period_and_duplicate_keys (test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys) (change='date')",
+          "ERROR: test_invalid_teacher_rows_and_period_and_duplicate_keys (test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys) (change='duplicate')",
+          "ERROR: test_invalid_teacher_rows_and_period_and_duplicate_keys (test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys) (change='filter')",
+          "ERROR: test_unconfirmed_sources_types_periodicity_nullable_and_shadowing (test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/tests-repeat.log",
+        "sha256": "0ede675b9befda843a643b41e46caab61fc0fd137510bac8e7442eca8fd51384",
+        "failures": [
+          "ERROR: test_empty_sources_boundaries_and_post_selection_filter (test_query_sources.SourceDockerTest.test_empty_sources_boundaries_and_post_selection_filter)",
+          "ERROR: test_exact_review_templates_independent_assessment (test_query_sources.SourceDockerTest.test_exact_review_templates_independent_assessment)",
+          "ERROR: test_mutations_alternative_infrastructure_failure_and_recovery (test_query_sources.SourceDockerTest.test_mutations_alternative_infrastructure_failure_and_recovery)",
+          "ERROR: test_real_direct_root_in_unchanged_archive (test_query_sources.SourceDockerTest.test_real_direct_root_in_unchanged_archive)",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='First')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Last')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='FirstAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Seconds')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='SecondsFirst')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Info')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Plain')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Balance')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='BalanceAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Turnover')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='TurnoverAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Combined')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Sales')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Rows')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Phones')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Join')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Nested')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Union')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='PostFilter')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Users')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Constants')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='Saved')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='ordinary', method='State')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='First')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Last')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='FirstAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Seconds')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='SecondsFirst')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Info')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Plain')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Balance')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='BalanceAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Turnover')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='TurnoverAll')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Combined')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Sales')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Rows')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Phones')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Join')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Nested')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Union')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='PostFilter')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Users')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Constants')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='Saved')",
+          "ERROR: test_two_portable_projects_semantics_in_script (test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script) (variant='renamed', method='State')",
+          "ERROR: test_invalid_sources_fields_periods_shadowing_and_saved_cycles (test_query_sources.SourcePlanTest.test_invalid_sources_fields_periods_shadowing_and_saved_cycles)",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='First')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Last')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='FirstAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Seconds')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='SecondsFirst')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Info')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Plain')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Balance')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='BalanceAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Turnover')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='TurnoverAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Combined')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Sales')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Rows')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Phones')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Join')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Nested')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Union')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='PostFilter')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Users')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Constants')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='Saved')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='ordinary', method='State')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='First')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Last')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='FirstAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Seconds')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='SecondsFirst')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Info')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Plain')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Balance')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='BalanceAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Turnover')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='TurnoverAll')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Combined')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Sales')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Rows')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Phones')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Join')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Nested')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Union')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='PostFilter')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Users')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Constants')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='Saved')",
+          "ERROR: test_metadata_types_source_ranges_and_expected_excluded (test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded) (variant='renamed', method='State')",
+          "ERROR: test_two_fresh_isolated_batches (test_query_sources.SourcePublicTest.test_two_fresh_isolated_batches)",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='ordinary', method='Balance')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='ordinary', method='Combined')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='ordinary', method='Rows')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='ordinary', method='State')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='renamed', method='Balance')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='renamed', method='Combined')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='renamed', method='Rows')",
+          "ERROR: test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup (test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup) (variant='renamed', method='State')",
+          "FAIL: test_public_real_test_run_and_fail_unsupported_pass (test_query_sources.SourcePublicTest.test_public_real_test_run_and_fail_unsupported_pass)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-corrected.log",
+        "sha256": "0b8eb8f2dced882668bee325c5c4cface304932616ed9344b667ec97bfecc739",
+        "failures": [
+          "FAIL: test_unconfirmed_sources_types_periodicity_nullable_and_shadowing (test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/legacy-final.log",
+        "sha256": "d61aa24348607f24853dcb012fee1576122420dbf43ef4b4a390ccfa8c687753",
+        "failures": [
+          "ERROR: test_repeated_snapshots_and_transaction_rollback (unittest.loader._FailedTest.test_repeated_snapshots_and_transaction_rollback)",
+          "ERROR: test_parameter_capture_once_and_returned_reference_detached (unittest.loader._FailedTest.test_parameter_capture_once_and_returned_reference_detached)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/mixed-captures-first.log",
+        "sha256": "3e494a69b4ff7cbe71ceec79eaf8037551ed22fb49d0fc9f466017841ac0bdcb",
+        "failures": [
+          "FAIL: test_scalar_and_array_in_capture_detached_at_creation (test_query_sources.SourceDockerTest.test_scalar_and_array_in_capture_detached_at_creation)"
+        ]
+      }
+    ],
+    "logs": [
+      {
+        "file": "result/virtual-tables/plans-final.log",
+        "sha256": "9f77b2d0984c48a3a0aa360b39eaff2729b93ab1f392bffdb2a25da5426e75b6",
+        "summary": [
+          "Ran 3 tests in 2.404s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/legacy-first.log",
+        "sha256": "c74ff97b658829c59bd2fd435339979a997287a0a413d8b9b88b25ca7cad12e1",
+        "summary": [
+          "Ran 23 tests in 63.397s",
+          "FAILED (failures=2)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/tests-first.log",
+        "sha256": "8c3ca22c4aee22dd3e00a7592eb6ec9b007e5705dc1777c510430cd9a2c5b735",
+        "summary": [
+          "Ran 11 tests in 405.477s",
+          "FAILED (errors=1)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-repeat.log",
+        "sha256": "bc6457618495f6d5582f2a3c5f5af341e7e366e7b14250964a294b5f156d77b4",
+        "summary": [
+          "Ran 6 tests in 2.275s",
+          "FAILED (errors=53)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/tests-repeat.log",
+        "sha256": "0ede675b9befda843a643b41e46caab61fc0fd137510bac8e7442eca8fd51384",
+        "summary": [
+          "Ran 11 tests in 6.538s",
+          "FAILED (failures=1, errors=106)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-corrected.log",
+        "sha256": "0b8eb8f2dced882668bee325c5c4cface304932616ed9344b667ec97bfecc739",
+        "summary": [
+          "Ran 6 tests in 2.658s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-final-repeat.log",
+        "sha256": "683b6c70f168d853a4ca9c99f0a7c458392e9e16bb6302f70f90ce0f77467838",
+        "summary": [
+          "Ran 6 tests in 2.649s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/edges-final.log",
+        "sha256": "3eeb5aceb612e3175ec97e8f9d7221143f940bc5709550cc0299095478422571",
+        "summary": [
+          "Ran 2 tests in 17.948s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/legacy-final.log",
+        "sha256": "d61aa24348607f24853dcb012fee1576122420dbf43ef4b4a390ccfa8c687753",
+        "summary": [
+          "Ran 23 tests in 26.964s",
+          "FAILED (errors=2)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/legacy-methods-repeat.log",
+        "sha256": "364428ca6f38d99a8fad7337b8cd51a80886e62f0d705b7f2b71d7bf148ac03a",
+        "summary": [
+          "Ran 2 tests in 35.819s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/captures-repeat.log",
+        "sha256": "b7fe79b19995c5d642d08e31921acd4ac2a4f88848e1653829dd2eabedec1a0f",
+        "summary": [
+          "Ran 1 test in 17.422s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/real-sql-final.log",
+        "sha256": "a57a7c381a9fd35d9490780fb89c34e4387fd2346191fdca77b66527d0a6a710",
+        "summary": [
+          "Ran 1 test in 6.199s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/legacy-negative-final.log",
+        "sha256": "155e7365001e0ede9f323b8fcb389061ef1aea0024c8091c44bd84659f916855",
+        "summary": [
+          "Ran 2 tests in 26.870s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/tests-final.log",
+        "sha256": "f058f1f3c94c8226473d0044cf2a1df3892ac0dd6761aecce60a34f9c0bb4e21",
+        "summary": [
+          "Ran 11 tests in 452.036s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/mixed-captures-first.log",
+        "sha256": "3e494a69b4ff7cbe71ceec79eaf8037551ed22fb49d0fc9f466017841ac0bdcb",
+        "summary": [
+          "Ran 1 test in 20.585s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/capture-scope-final.log",
+        "sha256": "dfd89a2221b291ebabacefda01bc9bf9fb872a6b2e7b7c6a4ae75ad84c9d8246",
+        "summary": [
+          "Ran 3 tests in 51.204s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/plans-completion.log",
+        "sha256": "6a8741fb5504ce2a2b44db3f4247070ab12dbdecf7045f849791c58b54144a5d",
+        "summary": [
+          "Ran 3 tests in 2.264s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/virtual-tables/capture-assessment-final.log",
+        "sha256": "25a7d406fc2fc6f1bbb57f2c649db60ff8447aeed053368d7a69c07a30c22048",
+        "summary": [
+          "Ran 1 test in 22.095s",
+          "OK"
+        ]
+      }
+    ],
+    "selectorMistake": "Two unavailable legacy method names produced loader errors; their actual methods passed in legacy-methods-repeat.log. No additional discovery was run."
+  },
+  "public": [
+    {
+      "folder": "result/virtual-tables/public-real-test",
+      "sourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/virtual-tables/public-real-run",
+      "sourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/virtual-tables/public-control",
+      "sourceHash": "3012b9a2541209fc6f2052dcf6e9b837d40957c65b7f591c43fc418bd539a9cb",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/virtual-tables/batch-1-repeat-1",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/virtual-tables/batch-2",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "schemas": {
+    "status": "PASS",
+    "validatedArtifacts": 46
+  },
+  "sql": [
+    {
+      "file": "result/virtual-tables/sql-ordinary-Balance.json",
+      "sha256": "ada656119eb6a6d5abbe55df411a80384a7ce1fa3a42a1bbe840dedfa3825ccb",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-ordinary-Combined.json",
+      "sha256": "297407253097f7a962655c62b84b238b9944c46ffe9f2ea28489cc1489007302",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-ordinary-Rows.json",
+      "sha256": "bb80429e1278c8204ee9f2dfb12de15604c6720d7b5cc3cd012109c73a839200",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-ordinary-State.json",
+      "sha256": "aacadb192abf591534998fb424ecd07727a569ae51ff392b45c727e1004e432e",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-real.json",
+      "sha256": "eb5b7cf338859bcb379eab20b404425b1d321ed528aa94064cd9e807380f1920",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-renamed-Balance.json",
+      "sha256": "b9227831bac67593b16a10d8fa4d6cac495caaeb16591439893ad18ac882b323",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-renamed-Combined.json",
+      "sha256": "8a930b3084904b50cb28d16d782d8f81dd9adedac4f587abdaaf66f85d897a39",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-renamed-Rows.json",
+      "sha256": "4a9836066b6e09c15507d508785a52b4eacaa4f5e55bf3e2052fafb2c1a534ae",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/virtual-tables/sql-renamed-State.json",
+      "sha256": "e292119213a9ed4bd2f43920f39417f09bc0fe16b1cf2151943bfa5cd349d012",
+      "status": "EXECUTED",
+      "cleanup": true
+    }
+  ],
+  "mutations": [
+    {
+      "label": "First",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-First.json",
+        "sha256": "a12c5b66b9fbad3dc7a2c31cfb47333c9ebadb081908a20a1920cf9f8aa774b9"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-First.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Balance",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-Balance.json",
+        "sha256": "39c8884c4554398266083a9daab37c05622d31d266f9a13d3a800f5c1626138c"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-Balance.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Turnover",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-Turnover.json",
+        "sha256": "5ae7427d8888916a8245b5d13246c734579b3e7ee3c161758d706d0fab493ec4"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-Turnover.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Rows",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-Rows.json",
+        "sha256": "fd91706585f416f1f18012e7fa74e0c01c99dc1ff1231d5ff557766de2a4aa9b"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-Rows.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Nested",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-Nested.json",
+        "sha256": "71a9dda5b64de16492d5704a34ad40c1ed82ad03adfb1b16c0d0ff244c9fbcea"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-Nested.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Phones",
+      "runtime": {
+        "file": "result/virtual-tables/mutation-Phones.json",
+        "sha256": "9011df3492d95e0ed346f518c08ef996fb183cabb4096b6582de49099caea324"
+      },
+      "assessment": {
+        "file": "result/virtual-tables/mutation-assessment-Phones.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    }
+  ],
+  "native": {
+    "executorVersion": "10.0.2-1",
+    "compatibility": "current",
+    "referenceVersion": "9.3",
+    "nativeXBQL": false,
+    "probes": [
+      {
+        "probe": "version",
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "values",
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "query",
+        "exitCode": 255,
+        "expectedSuccess": false
+      }
+    ]
+  },
+  "metadataValidation": {
+    "evidence": {
+      "file": "result/virtual-tables/metadata-final.json",
+      "sha256": "051682b672d1cb0713f4a19794b9edceb7f03b35c5c1f42f09d3caeca0b18a67"
+    },
+    "summary": {
+      "files": 36,
+      "errors": 0,
+      "warnings": 9
+    }
+  },
+  "nativeArtifacts": [
+    {
+      "file": "result/virtual-tables/native/query.stderr",
+      "sha256": "7c55f112608b7306943178ca7213f927004f6b097ea5da68995f0a0dd2d8d200"
+    },
+    {
+      "file": "result/virtual-tables/native/query.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/virtual-tables/native/results.json",
+      "sha256": "6a28bf0d9691423ef474762ebc7fe2d2814f5a482182787a3628c65c27898554"
+    },
+    {
+      "file": "result/virtual-tables/native/values.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/virtual-tables/native/values.stdout",
+      "sha256": "86cb66eb67701aeec717181f7c37395589c86833c40339a280863b4ed871a2d5"
+    },
+    {
+      "file": "result/virtual-tables/native/version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/virtual-tables/native/version.stdout",
+      "sha256": "d7eeb071d66900f6732d5bf46580ff906cce61c226325400cfb2936995bd6531"
+    }
+  ],
+  "preservedFailureArtifacts": [
+    {
+      "file": "result/virtual-tables/first-failures/mixed-capture-types.json",
+      "sha256": "5bef6c998408a7338fddb328de4b71b708ecdacb8820d3ad1a652c7629238399"
+    },
+    {
+      "file": "result/virtual-tables/first-failures/native-values.stderr",
+      "sha256": "a4192d9ea41f1e7a18a61723e55353ae23e79d11c25ba1411d8283c7044b0354"
+    }
+  ],
+  "initialProbes": [
+    {
+      "file": "result/virtual-tables/first-Balance.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/virtual-tables/first-Combined.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/virtual-tables/first-First.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/virtual-tables/first-Rows.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/virtual-tables/first-Sales.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/virtual-tables/first-Seconds.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    }
+  ],
+  "portableCases": {
+    "core": 46,
+    "empty": 9,
+    "boundaries": 6,
+    "extraCaptureAndMultiResourceCases": 7,
+    "documentedExactTemplates": 4,
+    "directRealRoot": 1,
+    "directRealCriteria": 2
+  },
+  "limits": [
+    "native XBQL and access rights are not implemented by standalone Script",
+    "virtual-source filter arguments and explicit/auto period expansion unsupported",
+    "exchange Changes requires platform change registration, not movement delta",
+    "users use six explicit identity fields; locale/authentication/rights unsupported",
+    "entity-contract tables excluded after platform 7.0",
+    "exchange plans, undeleted objects and settings require native lifecycle",
+    "saved definitions support only no-parameter non-null results; external & parameters queued for 44"
+  ],
+  "localExclusions": [
+    "303 forms",
+    "44 previous roots as a complete set",
+    "four validate",
+    "full discovery",
+    "full regression suite",
+    "nightly execution",
+    "platform compilation",
+    "browser UI"
+  ],
+  "preserved": [
+    "four source archives and SHA-256",
+    "previous assignment expected",
+    "runtime/input limits",
+    "CI schedule",
+    "unrelated workspace output"
+  ],
+  "legacyFixtureAdjustment": "Only negative source probes changed: first slice is now valid, so two task-33 Unsupported methods use Changes; numeric IN is now valid, so task-31 dynamic probe and task-40 builder/two fixtures use incompatible numeric/string members. Previous expected values remain unchanged. The old wrong Date boundary now expects a parameter type error for second-period metadata.",
+  "nextStage": "044-result-and-resources"
+}

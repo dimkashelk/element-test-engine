@@ -63,7 +63,7 @@ class PlatformMocks:
         dimensions = properties.get('Измерения', [])
         fields = dimensions + properties.get('Ресурсы', []) + properties.get('Реквизиты', [])
         if accumulation:
-            if properties.get('ВидРегистра', 'Остатки') != 'Остатки':
+            if properties.get('ВидРегистра', 'Остатки') != 'Остатки' and not (self.storage_registers and properties.get('ВидРегистра')=='Обороты'):
                 raise InputError('Мок регистра накопления поддерживает только Остатки')
             registrars = [f for f in properties.get('Реквизиты', []) if f['Имя'] == 'Регистратор']
             if len(registrars) != 1:
@@ -72,6 +72,7 @@ class PlatformMocks:
             fields = [{'Имя': 'Период', 'Тип': 'ДатаВремя'},
                       {'Имя': 'ВидЗаписи', 'Тип': 'ВидЗаписиРегистраНакопления'}] + [
                           f for f in fields if f['Имя'] != 'Регистратор']
+            if properties.get('ВидРегистра')=='Обороты':fields=[f for f in fields if f['Имя']!='ВидЗаписи']
             if self.storage_registers:
                 fields += registrars + [{'Имя': 'Активность', 'Тип': 'Булево', 'ЗначениеПоУмолчанию': True}]
             enum = 'ВидЗаписиРегистраНакопления'

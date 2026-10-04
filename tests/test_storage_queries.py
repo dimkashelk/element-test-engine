@@ -277,7 +277,7 @@ class StorageQueryDockerTest(unittest.TestCase):
             p.write_text(original)
             joined = self.execute(root,check(s,'Unavailable',[],[row(s)]),temp,'former-unavailable-join')
             self.assertEqual(joined['actual']['result'], [{'Label':'A'}])
-            p.write_text(original + '\nметод UnsupportedPredicate(): Объект\n    возврат Запрос{ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Amount В (1, 2)}.Выполнить()\n;\n')
+            p.write_text(original + '\nметод UnsupportedPredicate(): Объект\n    возврат Запрос{ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Amount В (1, "bad-type")}.Выполнить()\n;\n')
             bad=run_pure(root,analyze(root),check(s,'UnsupportedPredicate',[]),temp)
             self.assertEqual((bad['status'],bad['reasonCode']),('UNSUPPORTED','unsupported_syntax'))
             self.execute(root,check(s),temp,'after-unsupported')

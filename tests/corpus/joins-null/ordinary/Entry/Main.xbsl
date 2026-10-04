@@ -55,7 +55,7 @@
     возврат {"old": Old, "fresh": Fresh, "again": Left()}
 ;
 метод Unsupported(): Объект
-    возврат Запрос{ВЫБРАТЬ L.Label КАК Left ИЗ Data::Item КАК L ЛЕВОЕ СОЕДИНЕНИЕ Data::Entry КАК R ПО L.Key == R.Key ГДЕ R.Key В (1, 2)}.Выполнить()
+    возврат Запрос{ВЫБРАТЬ L.Label КАК Left ИЗ Data::Item КАК L ЛЕВОЕ СОЕДИНЕНИЕ Data::Entry КАК R ПО L.Key == R.Key ГДЕ R.Key В (1, "bad-type")}.Выполнить()
 ;
 метод Write(N: Число)
     знч V = новый Data::Entry.Объект(Ссылка = Data::Entry.ПолучитьСсылку(новый Ууид("44444444-4444-4444-8444-444444444444")), Key = 1, Label = "x", Amount = N)

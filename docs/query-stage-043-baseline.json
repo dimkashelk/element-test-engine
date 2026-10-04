@@ -1,0 +1,1038 @@
+{
+  "stage": "043",
+  "contracts": [
+    {
+      "contractId": "query-a7d986aa3a553c1ee0983d93",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "alias",
+        "projection",
+        "turnover"
+      ],
+      "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "projectIdentity": {
+        "Поставщик": "ДемоСРМ",
+        "Имя": "ДемоСРМ",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "Пресейл",
+        "module": "ОтчетОПродажах"
+      },
+      "sourceHash": "6e96eb039aa3d61f419f2b494bbff9f584ccf2028319df5c8657086a1f004a42",
+      "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "file": "Пресейл/ОтчетОПродажах.xbql",
+      "range": [
+        0,
+        143
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    Направление как Направление,\n    Услуга как Услуга,\n    СуммаОборот как Сумма\nИЗ\n    Продажи.Обороты(&НачалоПериода, &КонецПериода)",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-6ad92275674b4ed3e5f42e4c",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "balance"
+      ],
+      "archive": "Dvizhok.xdump",
+      "projectIdentity": {
+        "Поставщик": "Движок",
+        "Имя": "Движок",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "Товары",
+        "module": "Отгрузка.Объект"
+      },
+      "sourceHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+      "projectSourceHash": "567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02",
+      "file": "Товары/Отгрузка.Объект.xbsl",
+      "range": [
+        326,
+        644
+      ],
+      "bodyStart": 333,
+      "line": 10,
+      "text": "\n        ВЫБРАТЬ\n            РегистрТовары.Номенклатура КАК Номенклатура,\n            РегистрТовары.КоличествоОстаток КАК Количество\n        ИЗ\n            РегистрТовары.Остатки КАК РегистрТовары\n        ГДЕ\n            РегистрТовары.Номенклатура В (%{Товары.Преобразовать(Данные -> Данные.Номенклатура)})\n    ",
+      "target": {
+        "namespace": "Товары",
+        "module": "Отгрузка.Объект",
+        "method": "ПередЗаписью",
+        "parameters": [
+          "До: Отгрузка.Данные",
+          " ПараметрыЗаписи: Отгрузка.ПараметрыЗаписи"
+        ],
+        "returnType": null,
+        "range": [
+          226,
+          1199
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне storage AST: ожидается СРЕЗПОСЛЕДНИХ",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-a92a4816e7813359a23de063",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "projection",
+        "turnover"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОборотов",
+        "module": "ПродажиПоОрганизациям"
+      },
+      "sourceHash": "9504c89c2a1db5ff881fd8a603ea87ecf4f21d0efd21288a412d0a82dcfa9008",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОборотов/ПродажиПоОрганизациям.xbql",
+      "range": [
+        0,
+        99
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    Организация,\n    СуммаОборот\nИЗ\n    Продажи.Обороты(&НачалоПериода, &КонецПериода)\n    ",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-d95db0d96373e442ed86bd7b",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "alias",
+        "projection",
+        "balance"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "ОстаткиТоваровНаСкладах"
+      },
+      "sourceHash": "1d898f484db178bd06b6859aa7a18b8895361ae38331b6ce5b806a8c19ba21e4",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОстатков/ОстаткиТоваровНаСкладах.xbql",
+      "range": [
+        0,
+        331
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n    ОстаткиНоменклатурыОстатки.Номенклатура КАК Номенклатура,\n    ОстаткиНоменклатурыОстатки.Склад КАК Склад,\n    ОстаткиНоменклатурыОстатки.КоличествоОстаток КАК КоличествоОстаток,\n    ОстаткиНоменклатурыОстатки.СуммаОстаток КАК СуммаОстаток\nИЗ\n    ОстаткиНоменклатуры.Остатки(&ДатаОстатков) КАК ОстаткиНоменклатурыОстатки",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": null,
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "documented-slice-last",
+      "family": "documented-form",
+      "operations": [
+        "slice-last",
+        "parameter"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Total ИЗ Data::Book.СрезПоследних(%D)",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-last.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-slice-first",
+      "family": "documented-form",
+      "operations": [
+        "slice-first",
+        "parameter"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Total ИЗ Data::Book.СрезПервых(%D)",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/slice-first.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-balances",
+      "family": "documented-form",
+      "operations": [
+        "balance"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ TotalОстаток ИЗ Ledger.Остатки",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/balances.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-turnovers",
+      "family": "documented-form",
+      "operations": [
+        "turnover"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ TotalОборот ИЗ Ledger.Обороты",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/turnovers.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-elementwithcollectionattribute-collectionattributename_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-elementwithcollectionattribute-collectionattributename_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-elementwithcollectionattribute-collectionattributename_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-elementwithcollectionattribute-collectionattributename_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-elementwithtabularpart-tabularpartname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-elementwithtabularpart-tabularpartname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-elementwithtabularpart-tabularpartname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-elementwithtabularpart-tabularpartname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-entitycontractname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-entitycontractname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-entitycontractname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-entitycontractname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-exchangeplanname_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-exchangeplanname_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-exchangeplanname_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-exchangeplanname_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-undeletedobjects_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-undeletedobjects_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-undeletedobjects_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-undeletedobjects_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-users_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-users_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-users_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-users_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-virtualtablename_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-virtualtablename_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-virtualtablename_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-virtualtablename_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-changes_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-changes_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-changes_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-changes_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-turnovers_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-turnovers_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-turnovers_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-turnovers_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-balance_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-balance_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-balance_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-balance_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-accumulationregistername-accumulationregistername-balanceandturnovers_ru",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-accumulationregistername-accumulationregistername-balanceandturnovers_ru"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-accumulationregistername-accumulationregistername-balanceandturnovers_ru.md",
+      "semantics": [
+        "sidebar-9.1-table-accumulationregistername-accumulationregistername-balanceandturnovers_ru",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-catalogname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-catalogname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-catalogname.md",
+      "semantics": [
+        "sidebar-9.1-table-catalogname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-constantssetname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-constantssetname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-constantssetname.md",
+      "semantics": [
+        "sidebar-9.1-table-constantssetname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-documentname",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-documentname"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-documentname.md",
+      "semantics": [
+        "sidebar-9.1-table-documentname",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-informationregistername",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-informationregistername"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-informationregistername.md",
+      "semantics": [
+        "sidebar-9.1-table-informationregistername",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-settingsstoragename",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-settingsstoragename"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-settingsstoragename.md",
+      "semantics": [
+        "sidebar-9.1-table-settingsstoragename",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-table-standardsettingsstorage",
+      "family": "documentation-index",
+      "operations": [
+        "source",
+        "table-standardsettingsstorage"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/table-standardsettingsstorage.md",
+      "semantics": [
+        "sidebar-9.1-table-standardsettingsstorage",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "043-virtual-tables",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    }
+  ],
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04"
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97"
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc"
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135"
+    }
+  ],
+  "baselineReasons": {
+    "query-a7d986aa3a553c1ee0983d93": null,
+    "query-6ad92275674b4ed3e5f42e4c": "Запрос вне storage AST: ожидается СРЕЗПОСЛЕДНИХ",
+    "query-a92a4816e7813359a23de063": null,
+    "query-d95db0d96373e442ed86bd7b": null,
+    "documented-slice-last": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documented-slice-first": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documented-balances": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documented-turnovers": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-elementwithcollectionattribute-collectionattributename_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-elementwithtabularpart-tabularpartname_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-entitycontractname_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-exchangeplanname_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-undeletedobjects_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-users_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-virtualtablename_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername-accumulationregistername_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername-accumulationregistername-changes_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername-accumulationregistername-turnovers_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername-accumulationregistername-balance_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-accumulationregistername-accumulationregistername-balanceandturnovers_ru": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-catalogname": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-constantssetname": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-documentname": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-informationregistername": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-settingsstoragename": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+    "documentation-table-standardsettingsstorage": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion"
+  }
+}

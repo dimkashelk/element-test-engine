@@ -227,7 +227,7 @@ class ExpressionRenderer:
         if e.kind=='null':return 'Истина'
         if e.kind=='aggregate':return self.value(e,row,group)+' == Неопределено' if e.value[0]!='КОЛИЧЕСТВО' else 'Ложь'
         if e.kind=='coalesce':return '('+self.null(e.children[0],row,group)+') и ('+self.null(e.children[1],row,group)+')'
-        if e.kind in ('compare','and','or','not','in','in-query'):return self.tri(e,row,group)+' == -1'
+        if e.kind in ('compare','and','or','not','in','in-query','in-array'):return self.tri(e,row,group)+' == -1'
         if e.kind=='case':
             result=self.null(e.children[-1],row,group)
             for i in reversed(range(0,len(e.children)-1,2)):
@@ -274,6 +274,9 @@ class ExpressionRenderer:
         return '('+self.tri(e,row,group)+' == 1)'
 
     def tri(self,e,row='С',group='Группа'):
+        if e.kind=='in-array':
+            left,array=e.children
+            return '('+self.null(left,row,group)+' ? -1 : ('+self.value(array,row,group)+'.Содержит('+self.value(left,row,group)+') ? 1 : 0))'
         if e.kind=='compare':
             a,b=e.children;op={'=':'==','<>':'!='}.get(e.value,e.value)
             if a.kind=='null' or b.kind=='null':return '-1'

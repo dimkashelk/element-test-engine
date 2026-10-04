@@ -1,0 +1,206 @@
+{
+  "version": "9.3",
+  "access": "authenticated in-app browser, read only",
+  "readDate": "2026-10-04",
+  "sources": [
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Balance_ru/",
+      "parameters": [
+        "Период: ДатаВремя? (exclusive)",
+        "Фильтр: Булево по измерениям"
+      ],
+      "fields": [
+        "Измерения: declared types",
+        "РесурсОстаток: Число",
+        "РесурсОстатокПоложительный: Число",
+        "РесурсОстатокОтрицательный: Число"
+      ],
+      "conditions": [
+        "kind Остатки",
+        "active movements"
+      ],
+      "adapter": "exclusive boundary; all dimension combinations; omit zero balances; filter in virtual arguments pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Turnovers_ru/",
+      "parameters": [
+        "НачалоПериода: ДатаВремя? (inclusive)",
+        "КонецПериода: ДатаВремя? (inclusive)",
+        "Периодичность: enum (default Период)",
+        "Фильтр: Булево по измерениям"
+      ],
+      "fields": [
+        "Измерения: declared types",
+        "РесурсОборот: Число",
+        "РесурсПриход: Число (kind Остатки)",
+        "РесурсРасход: Число (kind Остатки)",
+        "Период: ДатаВремя (explicit periodicity)",
+        "ПериодГод/Полугодие/Квартал/Месяц/Декада/Неделя/День/Час/Минута/Секунда/Записи: ДатаВремя (Авто)",
+        "Регистратор: Документ.Ссылка (Авто/Регистратор/Запись)",
+        "Индекс/НомерСтроки: Число (Авто/Запись)"
+      ],
+      "conditions": [
+        "active movements"
+      ],
+      "adapter": "Период totals; extra period expansion/argument filter pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.BalanceAndTurnovers_ru/",
+      "parameters": [
+        "НачалоПериода: ДатаВремя?",
+        "КонецПериода: ДатаВремя?",
+        "Периодичность: enum",
+        "СпособДополнения: enum",
+        "Фильтр: Булево по измерениям"
+      ],
+      "fields": [
+        "Измерения: declared types",
+        "РесурсОборот/Приход/Расход: Число",
+        "РесурсНачальныйОстаток/КонечныйОстаток: Число",
+        "РесурсНачальныйОстаток/КонечныйОстаток + Положительный/Отрицательный: Число",
+        "Период and Авто date-time fields",
+        "Регистратор: Документ.Ссылка?",
+        "Индекс/НомерСтроки: Число?"
+      ],
+      "conditions": [
+        "kind Остатки",
+        "active movements"
+      ],
+      "adapter": "Период totals only; complement/expansion pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/AccumulationRegisterName/AccumulationRegisterName.Changes_ru/",
+      "parameters": [],
+      "fields": [
+        "КлючОсновногоФильтра: регистр.КлючОсновногоФильтра (Регистратор)",
+        "Узел: ПланОбмена.Ссылка",
+        "НомерСообщения: Null|Число"
+      ],
+      "conditions": [
+        "register included in exchange plan",
+        "rights same as base table"
+      ],
+      "adapter": "unsupported; requires exchange change registration, not a balance delta"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/InformationRegisterName/InformationRegisterName.SliceLast_ru/",
+      "parameters": [
+        "Период: Дата? (inclusive, undefined current)"
+      ],
+      "fields": [
+        "Измерения/Ресурсы/Реквизиты: declared types",
+        "Период: Дата",
+        "СледующийПериод: Дата (next record or maximum)",
+        "КлючОсновногоФильтра: declared structure",
+        "КлючЗаписи: declared structure"
+      ],
+      "conditions": [
+        "periodic register"
+      ],
+      "adapter": "День verified against reference; Секунда and СрезПервых explicit executor extensions; next-period/key fields pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithTabularPart.TabularPartName_ru/",
+      "parameters": [],
+      "fields": [
+        "Declared attributes",
+        "Владелец: owner.Ссылка",
+        "Индекс: Число (0 based)",
+        "НомерСтроки: Число (index + 1)"
+      ],
+      "adapter": "stored rows per owner with multiplicity"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ElementWithCollectionAttribute.CollectionAttributeName_ru/",
+      "parameters": [],
+      "fields": [
+        "Владелец: owner.Ссылка",
+        "Индекс: Число",
+        "Элемент: collection element type"
+      ],
+      "adapter": "Массив scalar/reference records; map/set structures pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/EntityContractName_ru/",
+      "fields": [],
+      "conditions": [
+        "removed after platform 7.0"
+      ],
+      "adapter": "version exclusion; no fabricated source"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/VirtualTableName_ru/",
+      "parameters": [
+        "declared saved query parameters"
+      ],
+      "fields": [
+        "projection types"
+      ],
+      "adapter": "recursive metadata/XBQL lookup, no-parameter non-null saved source; parameterized definitions pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/Users_ru/",
+      "parameters": [],
+      "fields": [
+        "Администратор/БылУспешныйВход/ЗапрещенВход/РазрешенДоступПоТокену: Булево",
+        "Ссылка: Пользователи.Ссылка",
+        "Представление: Строка",
+        "ЛокальОтображения/ЛокальФорматирования: Локаль?"
+      ],
+      "adapter": "explicit queryContext.users identity fixture; locale/authentication/rights pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/UndeletedObjects_ru/",
+      "fields": [
+        "Ключ: Ууид",
+        "УдаляемыйОбъект: Сущность.Ссылка?",
+        "СсылающиесяДанные: Сущность.Ссылка|СсылкаНаКлючЗаписи|?",
+        "ДатаАктуальности: Момент"
+      ],
+      "conditions": [
+        "system cleanup job populates records"
+      ],
+      "adapter": "unsupported; not all ordinary undeleted objects"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ExchangePlanName_ru/",
+      "fields": [
+        "Declared attributes",
+        "Ссылка: plan.Ссылка",
+        "МеткаВерсии: Ууид",
+        "МоментПометкиУдаления: Момент? (deletion-mark mode)",
+        "ПометкаУдаления: Булево (deletion-mark mode)",
+        "Код: Строка",
+        "НомерОтправленного/НомерПринятого: Число",
+        "ЭтотУзел: Булево",
+        "Представление: Строка"
+      ],
+      "adapter": "unsupported; exchange storage lifecycle pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/ConstantsSetName/",
+      "fields": [
+        "declared constants"
+      ],
+      "adapter": "non-periodic session snapshot; periodic constant history pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/SettingsStorageName/",
+      "fields": [
+        "source-specific storage records/changes require detailed native contract"
+      ],
+      "adapter": "unsupported; rights/settings lifecycle pending"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbql/Std/StandardSettingsStorage/",
+      "fields": [
+        "source-specific standard settings records/changes require detailed native contract"
+      ],
+      "adapter": "unsupported; rights/settings lifecycle pending"
+    }
+  ],
+  "executorVersion": "10.0.2-1",
+  "compatibility": "current",
+  "nativeXBQL": false,
+  "note": "Inventory paraphrases observed reference; no 9.1 template was treated as native 9.3 proof."
+}
