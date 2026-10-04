@@ -1,6 +1,9 @@
 # Задание №41: Вычисляемые проекции и агрегаты
 
-Статус: **следующее после №40**, 4 октября 2026 года. Реализация не выполнена.
+Статус: **реализовано в контракте вычисляемых проекций и агрегатов**, 4 октября 2026 года.
+[Контракт и границы](../projections-and-aggregates.md),
+[измерения](../query-stage-041-measurements.json),
+[baseline](../query-stage-041-baseline.json), [карта](../query-stage-041-coverage.json).
 Основание: [каталог](../query-contract-catalog.md) и
 [общий план](../corpus-verification-plan.md). Выбор записей: nextStage
 `041-projections-and-aggregates`, операции projection, aggregate, group, having, distinct; связанные сочетания включаются явно.
@@ -32,3 +35,16 @@ Review templates из tests/corpus/storage-query-fill/documented-forms треб�
 Полный discovery, 303 формы, 44 прежних корня и четыре validate оставлять nightly.
 Архивы, прежние expected, лимиты и расписание CI не менять ради успешной приёмки.
 Сохранить первичные сбои, отдельные повторы и SHA-256 архивов.
+
+## Результат
+
+Общий AST/renderer исполняет вычисления, CASE/ВЫРАЗИТЬ, DISTINCT, пять агрегатов
+и GROUP/HAVING с JOIN/NULL и именованным ЗАПОЛНИТЬ. Два реальных корня и пять
+точных review templates независимо оценены; в области 39 записей — 8 parsed,
+7 planned/executed/independentlyAssessed. Остаток сохраняет причины и очередь.
+50 различных целевых тестов успешны (15 новых, 35 затронутых прежних),
+семь SBSL FAIL мутаций и альтернативная корректная реализация. Шесть SQL-сценариев
+прошли независимый аудит и cleanup. Публичные test/run: 2/2 и 1/1 PASS;
+два batch — 3/0/3, 48 артефактов прошли схемы. Первичные сбои сохранены,
+четыре архива, прежние assignment expected, лимиты и расписание CI не изменены.
+Следующее — [№42](042-unions-and-nesting.md); полный query-каталог ещё не исполнен.

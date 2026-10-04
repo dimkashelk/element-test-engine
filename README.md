@@ -993,7 +993,13 @@ memory/PostgreSQL, 11 SBSL FAIL мутаций. 51 целевой тест ус�
 [Контракт](docs/joins-and-null.md), [измерения](docs/query-stage-040-measurements.json).
 Используются справка Элемента 9.3 и установленный Script 10.0.2-1;
 `runtimeProfile: "9.3"` выбирает режим executor `current`.
-[Следующее №41](docs/tasks/041-projections-and-aggregates.md) — проекции и агрегаты.
+[№41](docs/tasks/041-projections-and-aggregates.md) реализовано: вычисления,
+CASE/ВЫРАЗИТЬ, DISTINCT, агрегаты и GROUP/HAVING. Два реальных корня и пять
+точных review templates независимо оценены, 50 целевых тестов успешны.
+Семь SBSL FAIL мутаций, шесть SQL-сценариев; test/run по 2/2 и 1/1 PASS,
+два batch — 3/0/3, 48 артефактов прошли схемы.
+[Контракт](docs/projections-and-aggregates.md), [измерения](docs/query-stage-041-measurements.json).
+[Следующее №42](docs/tasks/042-unions-and-nesting.md) — UNION и вложенные запросы.
 
 ```bash
 python3 -m element_test.query_catalog

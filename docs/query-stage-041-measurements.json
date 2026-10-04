@@ -1,0 +1,1143 @@
+{
+  "stage": 41,
+  "date": "2026-10-04",
+  "status": "implemented-within-projections-aggregates-scope",
+  "reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false
+  },
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0",
+    "executionCompatibilityVersion": "current",
+    "elementReferenceVersion": "9.3"
+  },
+  "sourceCompatibilityVersions": [
+    "9.0",
+    "9.3"
+  ],
+  "catalog": {
+    "scopeCount": 39,
+    "familyCounts": {
+      "literal": 8,
+      "xbql-file": 9,
+      "documented-form": 5,
+      "documentation-index": 17
+    },
+    "counts": {
+      "parsed": 8,
+      "planned": 7,
+      "executed": 7,
+      "independentlyAssessed": 7
+    },
+    "archives": [
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "scopeOnly": true,
+    "completeQueryCatalogExecuted": false,
+    "assessedOccurrences": [
+      {
+        "contractId": "query-347d9b932df9e741c45df362",
+        "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "fixture": null,
+        "fixtureHash": null,
+        "file": "Мероприятия/Задачи.xbsl",
+        "range": [
+          1543,
+          1861
+        ],
+        "sourceHash": "90a12c0226692b14aceff458880697b0897cb6b7a661a169fc10c8c1bbaf89c0",
+        "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+        "target": {
+          "namespace": "Мероприятия",
+          "module": "Задачи",
+          "method": "КоличествоОткрытыхЗадачСотрудника",
+          "parameters": [
+            "Сотрудник: Сотрудники.Ссылка"
+          ],
+          "returnType": "ЧитаемоеСоответствие<СтатусМероприятия, Число>",
+          "range": [
+            1408,
+            2256
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "active",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          },
+          {
+            "criterionId": "active",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/public-tasks-test",
+          "result/projections-aggregates/public-tasks-test",
+          "result/projections-aggregates/public-tasks-run",
+          "result/projections-aggregates/public-tasks-run"
+        ]
+      },
+      {
+        "contractId": "query-6a3edfb98db913d1501111ee",
+        "archive": "autocheck-2026-09-24-16-14.xdump",
+        "fixture": null,
+        "fixtureHash": null,
+        "file": "Администрирование/ОписаниеРаботыФормаОбъекта.xbsl",
+        "range": [
+          97,
+          256
+        ],
+        "sourceHash": "59102deac224e7d73c3d13e7f54d68d1856bdc6b557493e335ff8a55ae070d31",
+        "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+        "target": {
+          "namespace": "Администрирование",
+          "module": "ОписаниеРаботыФормаОбъекта",
+          "method": "ПолучитьДоступныйНомер",
+          "parameters": [],
+          "returnType": "Число",
+          "range": [
+            42,
+            416
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "maximum",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          },
+          {
+            "criterionId": "maximum",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/public-max-test",
+          "result/projections-aggregates/public-max-run"
+        ]
+      },
+      {
+        "contractId": "documented-computed-projection",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/computed-projection.xbql",
+        "fixtureHash": "88cfa82fb0cb8e2757c8ae7fdb5722f00c32d6e79f88342a2f4da2635fa75bdb",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "ComputedProjection",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041-transferable",
+            "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+            "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              47,
+              98
+            ],
+            "fixtureHash": "88cfa82fb0cb8e2757c8ae7fdb5722f00c32d6e79f88342a2f4da2635fa75bdb"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/documented-assessment-ComputedProjection.json",
+          "result/projections-aggregates/documented-ComputedProjection.json"
+        ]
+      },
+      {
+        "contractId": "documented-group",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/group.xbql",
+        "fixtureHash": "aa08479776c7298569704c8df55ac72c997ed44c5f3d6c7a0e8217ae571a20a3",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "Group",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041-transferable",
+            "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+            "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              147,
+              220
+            ],
+            "fixtureHash": "aa08479776c7298569704c8df55ac72c997ed44c5f3d6c7a0e8217ae571a20a3"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/documented-assessment-Group.json",
+          "result/projections-aggregates/documented-Group.json"
+        ]
+      },
+      {
+        "contractId": "documented-having",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/having.xbql",
+        "fixtureHash": "3919f6cde3ab68d7b39b10965f53a15dea4c494de037f4abdd97f030632ca564",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "Having",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041-transferable",
+            "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+            "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              270,
+              368
+            ],
+            "fixtureHash": "3919f6cde3ab68d7b39b10965f53a15dea4c494de037f4abdd97f030632ca564"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/documented-assessment-Having.json",
+          "result/projections-aggregates/documented-Having.json"
+        ]
+      },
+      {
+        "contractId": "documented-case",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/case.xbql",
+        "fixtureHash": "7aa1585d5ed12c52bf5876b6360091187ba2c26b80c04b076c9c41b70c9d1482",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "Case",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041-transferable",
+            "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+            "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              416,
+              499
+            ],
+            "fixtureHash": "7aa1585d5ed12c52bf5876b6360091187ba2c26b80c04b076c9c41b70c9d1482"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/documented-assessment-Case.json",
+          "result/projections-aggregates/documented-Case.json"
+        ]
+      },
+      {
+        "contractId": "documented-combined-join-group-null",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/combined-join-group-null.xbql",
+        "fixtureHash": "f881c835ac5ac5f997653a3bd7d5c31ee976a5b7e7b363e4b2cbc5ba3a33309e",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "CombinedJoinGroupNull",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-041-transferable",
+            "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+            "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              564,
+              718
+            ],
+            "fixtureHash": "f881c835ac5ac5f997653a3bd7d5c31ee976a5b7e7b363e4b2cbc5ba3a33309e"
+          }
+        ],
+        "evidence": [
+          "result/projections-aggregates/documented-assessment-CombinedJoinGroupNull.json",
+          "result/projections-aggregates/documented-CombinedJoinGroupNull.json"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "distinctSuccessfulMethods": 50,
+    "newMethods": 15,
+    "affectedLegacyMethods": 35,
+    "scope": "Targeted runs with separate successful repairs; no full regression or full discovery",
+    "latestSuccessfulEvidence": {
+      "test_query_projections.ProjectionDockerTest.test_portable_computed_aggregate_group_distinct_case_cast_fill_and_params": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-attempt-6.log"
+      },
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_empty_global_aggregates_and_empty_groups": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-attempt-2.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_real_direct_roots": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-repeat-9.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-modulus.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-modulus.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-modulus.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_type_rejections_have_ranges_and_unreachable_types_are_lazy": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_visibility_fully_qualified_and_alias_same_nominal_type": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ordinary_readonly_and_literal_strings_comments_nested_parameters": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_null_vs_undefined_precision_and_distinct_limit": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/edge-modulus.log"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_rounding_overflow_null_coalesce_and_dead_case_branch": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/real-edges-attempt-7.log"
+      },
+      "test_body_types.BodyTypesTest.test_body_dependency_is_imported_by_context_module": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_body_type_collision_and_unsupported_cycle": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_local_cast_nested_generic_and_union_use_exact_owner": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_local_project_type_compiles_in_executor": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_reachable_constructor_generates_minimal_contract_and_import": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_receipt_original_body_and_archive_preserved": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_strings_comments_and_interpolation": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_body_types.BodyTypesTest.test_unknown_unsupported_ambiguous_and_short_name_collision": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_mutations_alternative_correct_source_and_recovery": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_invalid_fixture_timeout_unsupported_backend_failure_then_recovery": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      "test_query_projections.ProjectionDocumentedTest.test_exact_review_template_queries_have_executable_teacher_criteria": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-regression.log"
+      },
+      "test_query_projections.ProjectionSqlTest.test_real_roots_independent_sql": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-repeat-9.log"
+      },
+      "test_query_projections.ProjectionSqlTest.test_storage_group_join_state_rollback_independent_sql_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      "test_query_projections.ProjectionPublicTest.test_public_real_test_run_and_control": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-repeat-9.log"
+      },
+      "test_query_projections.ProjectionPublicTest.test_two_fresh_batches_no_student_state_leak_and_schema_packages": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/acceptance-repeat-9.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_ambiguous_and_unsupported_types_are_not_guessed": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_lazy_rows_references_and_invalid_inputs": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_minimal_object_data_reference_and_row_operations_in_executor": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_module_cycles_are_rejected_before_writing_files": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_nested_blocks_preserve_exact_body_and_next_method": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_private_type_in_package_is_visible_within_subsystem": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_runtime_time_argument_compiles_in_9_0": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_time_generated_object_compiles_in_9_0": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_time_input_and_generated_object_field": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_generated_types.GeneratedTypesTest.test_union_variants_dates_and_strict_inputs": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/planning-final.log"
+      },
+      "test_query_joins.JoinDockerTest.test_portable_all_four_bag_joins_null_undefined_truth_tables_and_owner_types": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-regression.log"
+      },
+      "test_query_joins.JoinDockerTest.test_real_direct_root_empty_base_multiple_missing_and_daily_boundaries": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-regression.log"
+      },
+      "test_storage_query_fill.FillDockerTest.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-regression.log"
+      },
+      "test_storage_queries.StorageQueryDockerTest.test_source_transactions_handler_reuse_snapshot_and_wrapper": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/runtime-regression.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root": {
+        "status": "ok",
+        "evidence": "result/projections-aggregates/catalog-evidence-regression.log"
+      }
+    },
+    "initialFailuresRetained": [
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_portable_computed_aggregate_group_distinct_case_cast_fill_and_params",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/first-failures/runtime.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_portable_computed_aggregate_group_distinct_case_cast_fill_and_params",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/runtime-attempt-2.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/runtime-attempt-2.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/real-attempt-3.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/real-attempt-4.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/real-attempt-5.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/runtime-attempt-6.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/real-edges-attempt-7.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionDockerTest.test_real_direct_roots",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionSqlTest.test_real_roots_independent_sql",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionPublicTest.test_public_real_test_run_and_control",
+        "status": "FAIL",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      },
+      {
+        "test": "test_query_projections.ProjectionPublicTest.test_two_fresh_batches_no_student_state_leak_and_schema_packages",
+        "status": "ERROR",
+        "evidence": "result/projections-aggregates/acceptance-attempt-8.log"
+      }
+    ],
+    "logs": [
+      {
+        "file": "result/projections-aggregates/first-failures/runtime.log",
+        "sha256": "a41679455f9a7968dfec6d004c3ea926d3a4dae9ece418379ae9eab0875c06c8",
+        "summary": [
+          "Ran 1 test in 7.903s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/first-failures/plan.log",
+        "sha256": "ff66cb896280901dd396343c371b692ec92f3f904b939f76f747bd76a8d11683",
+        "summary": [
+          "Ran 4 tests in 3.972s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/runtime-attempt-2.log",
+        "sha256": "7ad045ddf1dae9c6e6001cac02e01d1235e9746bc0d7320a8f1e493c5629abc1",
+        "summary": [
+          "Ran 3 tests in 82.603s",
+          "FAILED (failures=2)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/real-attempt-3.log",
+        "sha256": "056b1a5311ddb19ad468b162900c3c6c3454315c40bcfbd5136816021888fdf5",
+        "summary": [
+          "Ran 1 test in 1.078s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/real-attempt-4.log",
+        "sha256": "8ae11475b0d0782db89e8ce1f7eb29de820a982ec44a3e2c9aa445578dc53096",
+        "summary": [
+          "Ran 1 test in 3.798s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/planning-regression.log",
+        "sha256": "97b6f6f63db33f17b96d88682c1e51bc49b0f8d25d61d7089fba3de03db32689",
+        "summary": [
+          "Ran 15 tests in 6.166s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/real-attempt-5.log",
+        "sha256": "22f8e680e0b465861e8e7c34fd673d04884599d4addfc76e5616d449447b6421",
+        "summary": [
+          "Ran 1 test in 3.991s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/planning-repeat.log",
+        "sha256": "8619dc80a62410766643136bd96a4f5d0a72b3188ab9718aa10a5290b46a531a",
+        "summary": [
+          "Ran 4 tests in 1.407s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/runtime-attempt-6.log",
+        "sha256": "f200035fa7f521056d1f20df00cded35faf7495fabe44836f11bacbf7378cb9f",
+        "summary": [
+          "Ran 2 tests in 131.580s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/real-edges-attempt-7.log",
+        "sha256": "35935ba6d4dc3b690eed96686c24cc5b52e309baef886f5b75ce131771db7033",
+        "summary": [
+          "Ran 3 tests in 27.642s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/body-types-regression.log",
+        "sha256": "2fbaa1510fead816b08f54e42f85484d59244fae9b3a4ab4ccf102aa9e05f15e",
+        "summary": [
+          "Ran 8 tests in 1.196s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/acceptance-attempt-8.log",
+        "sha256": "aefa404d5dc6656fb2f9567491467ae6be7876adcc998128f1789407b4b30dde",
+        "summary": [
+          "Ran 8 tests in 93.735s",
+          "FAILED (failures=3, errors=1)"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/planning-final.log",
+        "sha256": "df59787dd7ec6fc84ab6662eedac63777bf96076a3d926413dc1df42bfacf487",
+        "summary": [
+          "Ran 33 tests in 10.775s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/acceptance-repeat-9.log",
+        "sha256": "586b3b3e4ede7e6b4171a5c044ea80a9bc37f28ba87e1ec615d4d4ae41a3769c",
+        "summary": [
+          "Ran 4 tests in 111.303s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/runtime-regression.log",
+        "sha256": "75b586e37b32b20b88eab58f99325842ea4688a8b2f87b3b9d066a01ba63c1b8",
+        "summary": [
+          "Ran 5 tests in 155.902s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/catalog-refresh.log",
+        "sha256": "10e652c88de38e498bece4bc53504d534e5790f18c0ed21e6be7799ef6e9ec51",
+        "summary": []
+      },
+      {
+        "file": "result/projections-aggregates/edge-portability.log",
+        "sha256": "6533caf2a1ec64e602b9d2a982cbd5cd9e8e3dc1e469c3bbcbc244c8f9e0b692",
+        "summary": [
+          "Ran 1 test in 31.848s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/planning-guard.log",
+        "sha256": "2b46976f3ea382e2415a42d292a3330bc27e2758c81c8c6d49994dddc10c3bc6",
+        "summary": [
+          "Ran 3 tests in 1.990s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/planning-modulus.log",
+        "sha256": "5e4da208f05bff9ff028bb483ff735d00c73b4b1d9e527acd952f422abcf36c3",
+        "summary": [
+          "Ran 3 tests in 1.992s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/edge-modulus.log",
+        "sha256": "3f949c094865d9c787ae9511d10bf118440d9848de637d00240f611b5f22580f",
+        "summary": [
+          "Ran 1 test in 33.024s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/catalog-evidence-regression.log",
+        "sha256": "43951246a95ec5e0b3ade17968b2e6d8a7a5b8c4856b12d3b821de7446ecc4be",
+        "summary": [
+          "Ran 1 test in 0.003s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/projections-aggregates/catalog-refresh-final.log",
+        "sha256": "10e652c88de38e498bece4bc53504d534e5790f18c0ed21e6be7799ef6e9ec51",
+        "summary": []
+      }
+    ]
+  },
+  "public": [
+    {
+      "folder": "result/projections-aggregates/public-tasks-test",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/projections-aggregates/public-tasks-run",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/projections-aggregates/public-max-test",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 1,
+      "maxScore": 1,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/projections-aggregates/public-max-run",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 1,
+      "maxScore": 1,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/projections-aggregates/public-control",
+      "sourceHash": "d6e8c42f501dec86c29769dab36f75e51d3dc3e2394c7c86e5f82a484c1f364d",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/projections-aggregates/batch-1",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/projections-aggregates/batch-2",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "schemas": {
+    "status": "PASS",
+    "validatedArtifacts": 48
+  },
+  "sql": [
+    {
+      "file": "result/projections-aggregates/sql-ordinary-JoinGroup.json",
+      "sha256": "54e8b7e44271943f5edfb807bd73ddc5be2cb1c40b17bad3d822155ca01b4927",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/projections-aggregates/sql-ordinary-State.json",
+      "sha256": "d8d856a27892e3e128db3707475078823541367e921fe64a2d155713142c41a5",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/projections-aggregates/sql-real-max.json",
+      "sha256": "47780182e982a351a063947271aac4f9344c0f29e6580925ce8f0e9981153f41",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/projections-aggregates/sql-real-tasks.json",
+      "sha256": "457f309ef1f778d450dba035b4b532d75746f60086c733a07be36c661774b867",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/projections-aggregates/sql-renamed-JoinGroup.json",
+      "sha256": "df940581fa3879d01b207406ab9f5fe310b5b433cb1cb61d1e186ba965f6b89f",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/projections-aggregates/sql-renamed-State.json",
+      "sha256": "639afb0e76646e94a90a6eb9c4c637fc354148cbae135a577baee663524a3841",
+      "status": "EXECUTED",
+      "cleanup": true
+    }
+  ],
+  "mutations": [
+    {
+      "file": "result/projections-aggregates/mutation-multiply.json",
+      "sha256": "240e4db240037b9111239eed2be68e6d75bdadb9f1ef56686ba62db72b45d313",
+      "label": "multiply",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-case.json",
+      "sha256": "bba092ed5c427fc64ee9f0dcd6be5931b15f961fa96a1b069cd12b6a4276038b",
+      "label": "case",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-count.json",
+      "sha256": "1ae62f21c43a6a6730ca3052f8b184eb5d41683630f80d2d34edf1a42e42a301",
+      "label": "count",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-sum.json",
+      "sha256": "8174dfe2586157e6397bf8512299b17582fd9760150a296f2425018a85e33724",
+      "label": "sum",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-having.json",
+      "sha256": "6b88dacfc451e3e7bdf444c11c1b8ae03be78ca5987c4943d4352c30aa0e7481",
+      "label": "having",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-join.json",
+      "sha256": "2f17126c2a3647caa026869ec15fab45744a87250be86ae9a89c71b0cd3372bb",
+      "label": "join",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    },
+    {
+      "file": "result/projections-aggregates/mutation-distinct.json",
+      "sha256": "288d93d7c04e9dbdfa462227e4eebb609e5409c547f10bd952478fda32999a92",
+      "label": "distinct",
+      "assessment": "SBSL FAIL asserted in scoped unittest"
+    }
+  ],
+  "native": {
+    "referenceVersion": "9.3",
+    "executorVersion": "10.0.2-1",
+    "compatibility": "current",
+    "probes": [
+      {
+        "probe": "version",
+        "args": [
+          "--version"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "scalars",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/projections-aggregates/native-probes/Scalars.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "moment",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/projections-aggregates/native-probes/Moment.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "modulus",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/projections-aggregates/native-probes/Modulus.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "unsupported-93",
+        "args": [
+          "-c",
+          "9.3",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/projections-aggregates/native-probes/Scalars.sbsl"
+        ],
+        "exitCode": 255,
+        "expectedSuccess": false
+      },
+      {
+        "probe": "native-query",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/Query.sbsl"
+        ],
+        "exitCode": 255,
+        "expectedSuccess": false
+      }
+    ]
+  },
+  "nativeArtifacts": [
+    {
+      "file": "result/projections-aggregates/native/modulus.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/modulus.stdout",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "file": "result/projections-aggregates/native/moment.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/moment.stdout",
+      "sha256": "1c1a238527910c75bdb0f051f291c401150c7e55d792f0d2607debe782572320"
+    },
+    {
+      "file": "result/projections-aggregates/native/native-query.stderr",
+      "sha256": "7c55f112608b7306943178ca7213f927004f6b097ea5da68995f0a0dd2d8d200"
+    },
+    {
+      "file": "result/projections-aggregates/native/native-query.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/results.json",
+      "sha256": "2bad58953e5c6afeb5729dd4d76944b9e8a20b8d3fa1d9416c5fcec72a1592f1"
+    },
+    {
+      "file": "result/projections-aggregates/native/scalars.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/scalars.stdout",
+      "sha256": "9a5da6c82421a8332c7e8d5486f8ed7a2ed454dc4e883764b76331bb7bdb3d4a"
+    },
+    {
+      "file": "result/projections-aggregates/native/unsupported-93.stderr",
+      "sha256": "4b9fa367b26abe17eb9c9eff82b524597dd3d5818931501d7a8c46ec73ba1792"
+    },
+    {
+      "file": "result/projections-aggregates/native/unsupported-93.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/unsupported-modulus.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/unsupported-modulus.stdout",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "file": "result/projections-aggregates/native/version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/projections-aggregates/native/version.stdout",
+      "sha256": "d7eeb071d66900f6732d5bf46580ff906cce61c226325400cfb2936995bd6531"
+    }
+  ],
+  "initialNativeProbeFilenameFailure": {
+    "file": "result/projections-aggregates/first-failures/native-modulus-file-name.stderr",
+    "sha256": "a1c2775eea08f5c35d7e1de0b5e9f475213be669817d18382c1c85d986bcafe1"
+  },
+  "portableCases": {
+    "core": 32,
+    "edges": 8,
+    "empty": 5,
+    "overflowAndCoalesce": 2,
+    "documentedExactTemplates": 5
+  },
+  "localExclusions": [
+    "full query discovery",
+    "303 forms",
+    "44 previous roots",
+    "four validate",
+    "full regression suite",
+    "nightly execution",
+    "native XBQL/platform compilation",
+    "browser UI"
+  ],
+  "preserved": [
+    "four source archives and SHA-256",
+    "previous assignment expected",
+    "runtime/input limits",
+    "CI schedule",
+    "unrelated workspace output"
+  ],
+  "nextStage": "042-unions-and-nesting"
+}

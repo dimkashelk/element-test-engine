@@ -4,7 +4,7 @@ import json
 import re
 
 from .indexer import IDENT, mask_noncode
-from .query_plan import QueryParameter, parse_storage_query
+from .query_plan import QueryParameter, parse_simple_storage_query
 from .yaml_io import UnsupportedSyntaxError
 
 
@@ -42,6 +42,9 @@ class RelationalQuery:
     fill: dict | None = None
     mode: str = 'storage-relational-joins-null-v1'
     source_kind: str = 'relational'
+    grouping: tuple = ()
+    having: tuple = ()
+    distinct: bool = False
 
     def to_dict(self):
         return asdict(self)
@@ -54,13 +57,13 @@ class Parser:
         self.fields, self.used, self.nullable = [], [], set()
         self.parameters = []
         visible, hidden = mask_noncode(text, strings=False), mask_noncode(text)
-        pattern = re.compile(rf'{IDENT}|\d+(?:\.\d+)?|::|==|!=|<>|<=|>=|[().,=<>-]')
+        pattern = re.compile(rf'{IDENT}|\d+(?:\.\d+)?|::|==|!=|<>|<=|>=|[().,=<>+*/%-]')
         i = 0
         while i < len(text):
             if visible[i].isspace():
                 i += 1
                 continue
-            if visible[i] == '%':
+            if visible[i] == '%' and i+1 < len(text) and (text[i+1] == '{' or re.match(IDENT, text[i+1:])):
                 a = i + 1
                 if a < len(text) and text[a] == '{':
                     b, depth = a + 1, 1
@@ -132,13 +135,16 @@ class Parser:
             first = self.identifier(); path = [first]
             if self.accept('.'):
                 second = self.identifier()
-                if second.upper() == 'ЗАМЕНИТЬNULL':
+                if second.upper() == 'ЗАМЕНИТЬNULL' or (hasattr(self,'method_expression') and self.pos<len(self.tokens) and self.tokens[self.pos][1]=='('):
                     self.pos -= 2
                 else: path.append(second)
             e = Expression('field', name=path[-1], value=tuple(path))
         e = replace(e, range=(start, self.tokens[self.pos-1][3]))
         while self.accept('.'):
             method = self.identifier()
+            if method.upper() != 'ЗАМЕНИТЬNULL' and hasattr(self,'method_expression'):
+                e=self.method_expression(e,method,start)
+                continue
             if method.upper() != 'ЗАМЕНИТЬNULL': self.fail('Метод проекции вне контракта: ' + method, start)
             self.expect('(')
             default = Expression('default') if self.accept(')') else self.expression()
@@ -184,12 +190,12 @@ class Parser:
         alias = owner.split('::')[-1]
         if self.accept('КАК'):
             alias = self.identifier()
-        elif self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'token' and re.fullmatch(IDENT,self.tokens[self.pos][1]) and self.tokens[self.pos][1].upper() not in ('СОЕДИНЕНИЕ','ВНУТРЕННЕЕ','ЛЕВОЕ','ПРАВОЕ','ПОЛНОЕ','ПО','ГДЕ','УПОРЯДОЧИТЬ'):
+        elif self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'token' and re.fullmatch(IDENT,self.tokens[self.pos][1]) and self.tokens[self.pos][1].upper() not in ('СОЕДИНЕНИЕ','ВНУТРЕННЕЕ','ЛЕВОЕ','ПРАВОЕ','ПОЛНОЕ','ПО','ГДЕ','УПОРЯДОЧИТЬ','СГРУППИРОВАТЬ','ИМЕЮЩИЕ'):
             alias = self.identifier()
         if alias in [s.alias for s in self.sources]: self.fail('Повторяющийся псевдоним источника: ' + alias,start)
         raw = self.text[start:end]
         # Reuse the established metadata/type/slice contract; no row evaluation.
-        base = parse_storage_query('ВЫБРАТЬ ' + ('Период' if sliced else 'Ссылка') + ' ИЗ ' + raw + ' КАК ' + alias, self.contracts)
+        base = parse_simple_storage_query('ВЫБРАТЬ ' + ('Период' if sliced else 'Ссылка') + ' ИЗ ' + raw + ' КАК ' + alias, self.contracts)
         raw_start = len('ВЫБРАТЬ ' + ('Период' if sliced else 'Ссылка') + ' ИЗ ')
         parameters = tuple(replace(p,start=p.start-raw_start+start,end=p.end-raw_start+start) for p in base.parameters)
         base = replace(base,source_range=(start,end),source_name=owner,parameters=parameters,
@@ -210,7 +216,7 @@ class Parser:
         if len(matches) != 1: self.fail('Неизвестное или неоднозначное поле: ' + '.'.join(path),e.range[0])
         i = matches[0]
         if e.name not in self.fields[i]:
-            q = parse_storage_query('ВЫБРАТЬ ' + e.name + ' ИЗ ' + self.raw_sources[i],self.contracts)
+            q = parse_simple_storage_query('ВЫБРАТЬ ' + e.name + ' ИЗ ' + self.raw_sources[i],self.contracts)
             self.fields[i][e.name] = q.projections[0][0]
         f = self.fields[i][e.name]; self.used[i][e.name] = f
         nullable = i in self.nullable
@@ -249,7 +255,7 @@ class Parser:
                 a=self.bind(a,visible); b=self.bind(b,visible,a.type.rstrip('?'))
             if a.kind not in ('null','undefined') and b.kind not in ('null','undefined') and a.type.rstrip('?') != b.type.rstrip('?'):
                 self.fail('Несовместимые типы сравнения',e.range[0])
-            if e.value not in ('=','==','!=','<>') and (a.type.endswith('?') or b.type.endswith('?') or a.type not in ('Число','Строка','Дата')):
+            if e.value not in ('=','==','!=','<>') and ((a.type.endswith('?') or b.type.endswith('?')) and not hasattr(self,'validate_groups') or a.type.rstrip('?') not in ('Число','Строка','Дата','ДатаВремя')):
                 self.fail('Упорядоченное сравнение вне контракта',e.range[0])
             return replace(e,type='Булево',children=(a,b),sql_nullable=a.sql_nullable or b.sql_nullable)
         children=tuple(self.bind(c,visible) for c in e.children)
@@ -262,9 +268,10 @@ class Parser:
             t=self.tokens[self.pos]; self.pos+=1
             if not t[1].isdigit() or int(t[1])<=0: self.fail('ПЕРВЫЕ требует положительное целое',t[2])
             limit=int(t[1])
+        distinct=self.accept('РАЗЛИЧНЫЕ')
         projections=[]
         while True:
-            e=self.condition(); label=self.identifier() if self.accept('КАК') else e.name
+            e=self.condition(); label=self.identifier() if self.accept('КАК') else e.name or (e.value[0] if e.kind=='aggregate' else '')
             if not label: self.fail('Вычисляемая проекция требует псевдоним',e.range[0] if e.range else 0)
             if label in [x[1] for x in projections]: self.fail('Повторяющийся псевдоним проекции: '+label)
             projections.append((e,label))
@@ -296,6 +303,16 @@ class Parser:
             e=self.bind(self.condition(),len(self.sources))
             if e.type!='Булево':self.fail('ГДЕ требует Булево')
             where=(e,)
+        grouping=[];having=()
+        if self.accept('СГРУППИРОВАТЬ'):
+            self.expect('ПО')
+            while True:
+                grouping.append(self.bind(self.expression(),len(self.sources)))
+                if not self.accept(','):break
+        if self.accept('ИМЕЮЩИЕ'):
+            e=self.bind(self.condition(),len(self.sources))
+            if e.type!='Булево':self.fail('ИМЕЮЩИЕ требует Булево')
+            having=(e,)
         ordering=[]
         if self.accept('УПОРЯДОЧИТЬ'):
             self.expect('ПО')
@@ -303,12 +320,13 @@ class Parser:
                 e=self.expression()
                 projected=[f for f,label in bound if e.kind=='field' and e.value==(label,)]
                 e=projected[0] if projected else self.bind(e,len(self.sources))
-                if e.sql_nullable or e.type not in ('Число','Строка','Дата'):self.fail('Сортировка требует не-NULL скаляр; используйте ЗаменитьNull')
+                if e.type.rstrip('?') not in ('Число','Строка','Дата','ДатаВремя') or (e.sql_nullable or e.type.endswith('?')) and not hasattr(self,'validate_groups'):self.fail('Сортировка требует не-NULL скаляр; используйте ЗаменитьNull')
                 desc=self.accept('УБЫВ')
                 if not desc:self.accept('ВОЗР')
                 ordering.append((e,desc))
                 if not self.accept(','):break
         if self.pos!=len(self.tokens):self.fail('Достижимый запрос вне relational AST: '+str(self.tokens[self.pos][1]))
+        if hasattr(self,'validate_groups'):self.validate_groups(bound,where,joins,grouping,having,ordering,distinct)
         for s in self.sources:self.parameters.extend(s.parameters)
         slots={};types={};parameters=[]
         for p in sorted(self.parameters,key=lambda p:p.start):
@@ -343,7 +361,7 @@ class Parser:
             for f in fields:
                 if f['constructorRequired'] and f['Имя'] not in dict((label,e) for e,label in bound):self.fail('Отсутствующее обязательное поле ЗАПОЛНИТЬ: '+f['Имя'])
             fill={'owner':qualified(targets[0]),'sourceFile':targets[0]['sourceFile'],'type':canonical,'sourceName':fill_name,'range':fill_span,'typeRange':fill_type_span,'constructor':'automatic-named','fields':tuple(fields),'mapping':tuple(mapping)}
-        return RelationalQuery(sources[0].owner,sources[0].alias,tuple((slot_expr(e),l) for e,l in bound),tuple(slot_expr(e) for e in where),parameters,tuple((slot_expr(e),d) for e,d in ordering),limit,tuple(sources),tuple(replace(j,condition=slot_expr(j.condition)) for j in joins),fill)
+        return RelationalQuery(sources[0].owner,sources[0].alias,tuple((slot_expr(e),l) for e,l in bound),tuple(slot_expr(e) for e in where),parameters,tuple((slot_expr(e),d) for e,d in ordering),limit,tuple(sources),tuple(replace(j,condition=slot_expr(j.condition)) for j in joins),fill,grouping=tuple(slot_expr(e) for e in grouping),having=tuple(slot_expr(e) for e in having),distinct=distinct,mode='storage-projections-aggregates-v1' if hasattr(self,'validate_groups') else 'storage-relational-joins-null-v1')
 
 
 def parse_relational_query(text, contracts):
@@ -368,43 +386,12 @@ def generate_relational_query(query, contracts):
     row_type=query.fill['type'] if query.fill else 'СтрокаРезультата'
     if not query.fill:text+=declaration(row_type,[(label,e.type+('?' if e.sql_nullable and not e.type.endswith('?') else '')) for e,label in query.projections])
 
-    def null(e,row='С'):
-        if e.kind=='field':return row+'.С'+str(e.source)+' == Неопределено'
-        if e.kind=='null':return 'Истина'
-        if e.kind=='coalesce':return '('+null(e.children[0],row)+') и ('+null(e.children[1],row)+')'
-        if e.kind in ('compare','and','or','not'):return tri(e,row)+' == -1'
-        return 'Ложь'
-
-    def value(e,row='С'):
-        if e.kind=='field':return '('+row+'.С'+str(e.source)+' как '+row_types[e.source]+').'+e.name
-        if e.kind in ('null','undefined'):return 'Неопределено'
-        if e.kind=='parameter':return 'П'+str(e.value)
-        if e.kind=='literal':return contracts.literal(e.value,e.type)
-        if e.kind=='coalesce':return '(('+null(e.children[0],row)+') ? '+value(e.children[1],row)+' : '+value(e.children[0],row)+')'
-        if e.kind in ('is-null','is-not-null'):
-            return ('не (' if e.kind=='is-not-null' else '(')+null(e.children[0],row)+')'
-        return '('+tri(e,row)+' == 1)'
-
-    def tri(e,row='С'):
-        if e.kind=='compare':
-            a,b=e.children;op={'=':'==','<>':'!='}.get(e.value,e.value)
-            if a.kind == 'null' or b.kind == 'null': return '-1'
-            av,bv=value(a,row),value(b,row)
-            if a.kind == 'undefined' or b.kind == 'undefined':
-                other = b if a.kind == 'undefined' else a
-                original_type = other.type
-                if other.kind == 'field':
-                    original_type = next(f.type for f,_ in query.sources[other.source].projections if f.name == other.name)
-                if not original_type.endswith('?'):
-                    answer = '1' if op == '!=' else '0'
-                    return '(('+null(a,row)+' или '+null(b,row)+') ? -1 : '+answer+')'
-            return '(('+null(a,row)+' или '+null(b,row)+') ? -1 : ('+av+' '+op+' '+bv+' ? 1 : 0))'
-        if e.kind in ('and','or'):
-            a,b=(tri(c,row) for c in e.children);dominant='0' if e.kind=='and' else '1';other='1' if e.kind=='and' else '0'
-            return '(('+a+' == '+dominant+' или '+b+' == '+dominant+') ? '+dominant+' : (('+a+' == -1 или '+b+' == -1) ? -1 : '+other+'))'
-        if e.kind=='not':
-            v=tri(e.children[0],row);return '('+v+' == -1 ? -1 : ('+v+' == 1 ? 0 : 1))'
-        return '(('+null(e,row)+') ? -1 : ('+value(e,row)+' ? 1 : 0))'
+    from .query_projections import ExpressionRenderer, grouped_tail
+    renderer=ExpressionRenderer(query,contracts,row_types)
+    null,value,tri=renderer.null,renderer.value,renderer.tri
+    computed=query.mode=='storage-projections-aggregates-v1'
+    if computed:
+        text+=declaration('ГруппаДанных',[('С','Комбинация'),('Строки','Массив<Комбинация>')]).replace('знч С:', 'пер С:')
 
     def combination(i,left='Л',right='П',only_right=False):
         return 'новый Комбинация('+', '.join('С'+str(n)+' = '+('Неопределено' if only_right else left+'.С'+str(n)) for n in range(i))+(', ' if i else '')+'С'+str(i)+' = '+right+')'
@@ -427,31 +414,34 @@ def generate_relational_query(query, contracts):
         if j.kind in ('right','full'):
             text+='        пер Индекс'+str(i)+' = 0\n        для П из Т'+str(i)+'\n            если не Совпавшие'+str(i)+'.Содержит(Индекс'+str(i)+')\n                Следующие'+str(i)+'.Добавить('+combination(i,only_right=True)+')\n            ;\n            Индекс'+str(i)+' += 1\n        ;\n'
         text+='        Строки = Следующие'+str(i)+'\n'
-    condition=tri(query.predicates[0])+' == 1' if query.predicates else 'Истина'
-    text+='        знч Отобранные = новый Массив<Комбинация>()\n        для С из Строки\n            если '+condition+'\n'
-    if query.ordering:
-        order_args = ''.join(', П'+str(p.slot) for p in parameters)
-        text+='                пер Позиция = 0\n                пока Позиция < Отобранные.Размер() и не '+name+'.Раньше(С, Отобранные[Позиция]'+order_args+')\n                    Позиция += 1\n                ;\n                Отобранные.Вставить(Позиция, С)\n'
-    else:text+='                Отобранные.Добавить(С)\n'
-    text+='            ;\n        ;\n        знч Результат = новый Массив<'+row_type+'>()\n        для С из Отобранные\n'
-    if query.limit:text+='            если Результат.Размер() >= '+str(query.limit)+'\n                прервать\n            ;\n'
-    def projection(e):
-        v=value(e)
-        # Output NULL uses the adapter's nullable transport; internal flags keep
-        # NULL and an existing row's Undefined separate during relational work.
-        if e.sql_nullable:v='(('+null(e)+') ? Неопределено : '+v+')'
-        if e.type.rstrip('?').endswith('.Ссылка'):
-            typ=e.type.rstrip('?');copy='новый '+typ+'(Идентификатор = ('+v+').Идентификатор)'
-            v='('+v+' == Неопределено ? Неопределено : '+copy+')' if e.type.endswith('?') or e.sql_nullable else copy
-        return v
-    text+='            Результат.Добавить(новый '+row_type+'('+', '.join(label+' = '+projection(e) for e,label in query.projections)+'))\n        ;\n        возврат Результат\n    ;\n;\n'
-    if query.ordering:
-        order_signature = ''.join(', П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
-        text+='@Глобально\nметод Раньше(А: Комбинация, Б: Комбинация'+order_signature+'): Булево\n'
-        for e,descending in query.ordering:
-            a,b=value(e,'А'),value(e,'Б')
-            text+='    если '+a+' != '+b+'\n        возврат '+a+(' > ' if descending else ' < ')+b+'\n    ;\n'
-        text+='    возврат Ложь\n;\n'
+    if computed:
+        text+=grouped_tail(query,name,row_type,renderer,parameters)
+    else:
+        condition=tri(query.predicates[0])+' == 1' if query.predicates else 'Истина'
+        text+='        знч Отобранные = новый Массив<Комбинация>()\n        для С из Строки\n            если '+condition+'\n'
+        if query.ordering:
+            order_args = ''.join(', П'+str(p.slot) for p in parameters)
+            text+='                пер Позиция = 0\n                пока Позиция < Отобранные.Размер() и не '+name+'.Раньше(С, Отобранные[Позиция]'+order_args+')\n                    Позиция += 1\n                ;\n                Отобранные.Вставить(Позиция, С)\n'
+        else:text+='                Отобранные.Добавить(С)\n'
+        text+='            ;\n        ;\n        знч Результат = новый Массив<'+row_type+'>()\n        для С из Отобранные\n'
+        if query.limit:text+='            если Результат.Размер() >= '+str(query.limit)+'\n                прервать\n            ;\n'
+        def projection(e):
+            v=value(e)
+            # Output NULL uses the adapter's nullable transport; internal flags keep
+            # NULL and an existing row's Undefined separate during relational work.
+            if e.sql_nullable:v='(('+null(e)+') ? Неопределено : '+v+')'
+            if e.type.rstrip('?').endswith('.Ссылка'):
+                typ=e.type.rstrip('?');copy='новый '+typ+'(Идентификатор = ('+v+').Идентификатор)'
+                v='('+v+' == Неопределено ? Неопределено : '+copy+')' if e.type.endswith('?') or e.sql_nullable else copy
+            return v
+        text+='            Результат.Добавить(новый '+row_type+'('+', '.join(label+' = '+projection(e) for e,label in query.projections)+'))\n        ;\n        возврат Результат\n    ;\n;\n'
+        if query.ordering:
+            order_signature = ''.join(', П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
+            text+='@Глобально\nметод Раньше(А: Комбинация, Б: Комбинация'+order_signature+'): Булево\n'
+            for e,descending in query.ordering:
+                a,b=value(e,'А'),value(e,'Б')
+                text+='    если '+a+' != '+b+'\n        возврат '+a+(' > ' if descending else ' < ')+b+'\n    ;\n'
+            text+='    возврат Ложь\n;\n'
     signature=', '.join('П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
     def captured(p):
         v='П'+str(p.slot)
@@ -470,6 +460,7 @@ def generate_relational_query(query, contracts):
         text+='    знч Источник'+str(i)+' = '+names[i]+'.Создать('+', '.join(mapped)+')\n'
         args.append('И'+str(i)+' = Источник'+str(i))
     text+='    возврат новый Запрос('+', '.join(args)+')\n;\n'
+    text+=''.join(t for _,t in renderer.helpers.values())
     contracts.definitions[name]=text
     contracts.method_dependencies[name]=[n+'.Запрос' for n in names]+[e.type for e,_ in query.projections]
     if query.fill:contracts.method_dependencies[name].append(row_type)

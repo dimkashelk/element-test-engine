@@ -89,7 +89,7 @@ class ProjectTypes:
                     else:
                         self.local_names[key] = "ТестТип" + sha256((str(key)).encode()).hexdigest()[:16] + ".Значение"
                 return self.local_names[key] + (dot + variant if dot else "")
-            if owner in SCALARS or owner in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие", "ничто"}:
+            if owner in SCALARS or owner in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие", "ЧитаемоеСоответствие", "ничто"}:
                 return token
             matches = self.resolve(owner)
             if len(matches) != 1:
@@ -140,10 +140,10 @@ class ProjectTypes:
             return
         if type_name in {'Исключение', 'ИсключениеНедопустимоеСостояние', 'Объект', 'Тип'}:
             return
-        generic = re.fullmatch(r"(Массив|ЧитаемыйМассив|Обходимое|Соответствие)<(.+)>", type_name)
+        generic = re.fullmatch(r"(Массив|ЧитаемыйМассив|Обходимое|Соответствие|ЧитаемоеСоответствие)<(.+)>", type_name)
         if generic:
             arguments = split_parameters(generic[2])
-            if len(arguments) != (2 if generic[1] == "Соответствие" else 1):
+            if len(arguments) != (2 if generic[1] in {"Соответствие", "ЧитаемоеСоответствие"} else 1):
                 raise InputError(f"Некорректный тип: {type_name}")
             for argument in arguments:
                 self.require(argument.strip(), namespace)
@@ -355,6 +355,14 @@ class ProjectTypes:
                 raise InvalidTestError('Некорректная ДатаВремя') from exc
             return 'новый ДатаВремя(' + ', '.join(str(n) for n in (
                 date.year, date.month, date.day, date.hour, date.minute, date.second)) + ')'
+        if type_name == 'Момент':
+            if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z', value):
+                raise InvalidTestError('Момент требует UTC строку YYYY-MM-DDTHH:MM:SSZ')
+            try:
+                datetime.fromisoformat(value.replace('Z', '+00:00'))
+            except ValueError as exc:
+                raise InvalidTestError('Некорректный Момент') from exc
+            return 'новый Момент(' + sbsl_literal(value, 'Строка') + ')'
         if type_name == 'Дата':
             if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', value):
                 raise InvalidTestError('Дата требует строку YYYY-MM-DD')

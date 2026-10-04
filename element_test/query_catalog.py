@@ -105,7 +105,7 @@ def source_records(root,model,archive,project):
     'archive':archive,'projectIdentity':identity,'libraryIdentity':identity if model['properties'].get('ВидПроекта')=='Библиотека' else None,
     'ownerIdentity':owner,'sourceHash':sha256(path.read_bytes()).hexdigest(),'projectSourceHash':model['sourceHash'],
     'file':relative,'range':[start,end],'bodyStart':body,'line':source.count('\n',0,start)+1,'text':text,'target':target,
-    'dependencies':dependencies,'semantics':(['adapter-storage-relational-040','element-reference-9.3','script-current'] if ast and ast.get('mode')=='storage-relational-joins-null-v1' else ['adapter-storage-31-33-39'] if ast else ['query-reference-9.1']),
+    'dependencies':dependencies,'semantics':(['adapter-storage-projections-aggregates-041','element-reference-9.3','script-current'] if ast and ast.get('mode')=='storage-projections-aggregates-v1' else ['adapter-storage-relational-040','element-reference-9.3','script-current'] if ast and ast.get('mode')=='storage-relational-joins-null-v1' else ['adapter-storage-31-33-39'] if ast else ['query-reference-9.1']),
     'compatibilityVersion':model['compatibilityVersion'],'discovered':True,'parsed':ast is not None,
     'planned':False,'executed':False,'independentlyAssessed':False,'ast':ast,'unsupportedReason':failure,
     'nextStage':next((STAGES[op] for op in STAGES if op in operations),'044-result-and-resources' if family=='api-candidate' else '045-state-rights-and-combinations'),
@@ -134,7 +134,7 @@ def attach_evidence(records,directories):
       direct=direct or (entry.get('declaration')==record['target']['method'] and entry.get('source_file')==record['file'] if record['target'] else False)
       record['executed']|=executed
       record['independentlyAssessed']|=bool(executed and direct and check.get('status') in ('PASS','FAIL'))
-      origin = 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039'
+      origin = ('fresh-041' if query.get('ast', {}).get('mode') == 'storage-projections-aggregates-v1' else 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039')
       record['criteria'].append({'criterionId':criterion,'direct':direct,'status':check.get('status'),'origin':origin})
       record['evidence'].append(str(folder.relative_to(REPO)) if folder.is_relative_to(REPO) else str(folder))
 
@@ -159,11 +159,11 @@ def build_catalog(repo=REPO,evidence=()):
 
 def markdown(catalog):
  stage040=catalog.get('stage040Reference')
- reference=('Для №40 пользователь выбрал справку Элемента **9.3** и установленный Script **10.0.2-1**. Профиль `9.3` использует режим Script `current`: отдельного режима `-c 9.3` в этом executor нет. Исходные версии архивов сохраняются. Исторические свидетельства №39 относятся к справке 9.1 и режиму `-c 9.0`.' if stage040 else
+ reference=('Для №40–41 пользователь выбрал справку Элемента **9.3** и установленный Script **10.0.2-1**. Профиль `9.3` использует режим Script `current`: отдельного режима `-c 9.3` в этом executor нет. Исходные версии архивов сохраняются. Исторические свидетельства №39 относятся к справке 9.1 и режиму `-c 9.0`.' if stage040 else
   'Официальная справка Элемента **9.1** выбрана пользователем для проекта с режимом совместимости **9.0**. Версия источника сохраняется; Script-пробы и runtime выполняются с `-c 9.0`. Раздел 9.0 возвращает 404 и отсутствует в меню архивных версий.')
- lines=['# Каталог контрактов запросов — №39/40' if stage040 else '# Каталог контрактов запросов — №39','',
+ lines=['# Каталог контрактов запросов — №39/40/41' if catalog.get('stage041Reference') else '# Каталог контрактов запросов — №39/40' if stage040 else '# Каталог контрактов запросов — №39','',
   'Воспроизведение: `python3 -m element_test.query_catalog`. Архивы открываются только для чтения.',
-  '',reference+' Каталог содержит семейства документации и очередь исполнения; review-templates ещё не являются исполнимыми критериями.',
+  '',reference+' Каталог сохраняет очередь исполнения; только шаблоны с exact fixtureHash и независимой оценкой являются исполнимыми критериями.',
   '', '213 исходных литералов не сливаются. API-кандидаты сохраняются отдельно: обнаружение имени метода не подтверждает системный receiver.',
   '', '| Проект | Литералы | API-кандидаты | XBQL |', '|---|---:|---:|---:|']
  counts=Counter((str(r['projectIdentity'].get('Поставщик'))+'::'+str(r['projectIdentity'].get('Имя')),r['family']) for r in catalog['contracts'] if r.get('archive'))
@@ -178,7 +178,7 @@ def markdown(catalog):
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,default=REPO/'docs/query-contract-catalog.json');parser.add_argument('--evidence',action='append',default=[]);args=parser.parse_args()
- evidence=args.evidence or [REPO/'result/storage-query-fill/public-test', REPO/'result/joins-null/public-test', REPO/'result/joins-null/public-run', REPO/'result/joins-null/public-cases-test', REPO/'result/joins-null/public-cases-run']
+ evidence=args.evidence or [REPO/'result/storage-query-fill/public-test', REPO/'result/joins-null/public-test', REPO/'result/joins-null/public-run', REPO/'result/joins-null/public-cases-test', REPO/'result/joins-null/public-cases-run', REPO/'result/projections-aggregates/public-tasks-test', REPO/'result/projections-aggregates/public-tasks-run', REPO/'result/projections-aggregates/public-max-test', REPO/'result/projections-aggregates/public-max-run']
  catalog=build_catalog(evidence=evidence);args.output.parent.mkdir(parents=True,exist_ok=True)
  args.output.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n');args.output.with_suffix('.md').write_text(markdown(catalog));print(json.dumps(catalog['counts'],ensure_ascii=False))
 if __name__=='__main__':main()

@@ -861,20 +861,343 @@
       },
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 71",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Мероприятия::Задачи",
+        "alias": "Задачи",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "СтатусМероприятия",
+              "name": "Статус",
+              "source": 0,
+              "value": [
+                "Статус"
+              ],
+              "children": [],
+              "range": [
+                29,
+                35
+              ],
+              "sql_nullable": false
+            },
+            "Статус"
+          ],
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число",
+              "name": "",
+              "source": null,
+              "value": [
+                "КОЛИЧЕСТВО",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "star",
+                  "type": "",
+                  "name": "",
+                  "source": null,
+                  "value": null,
+                  "children": [],
+                  "range": [],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                60,
+                73
+              ],
+              "sql_nullable": false
+            },
+            "КоличествоЗадач"
+          ]
+        ],
+        "predicates": [
+          {
+            "kind": "and",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": null,
+            "children": [
+              {
+                "kind": "compare",
+                "type": "Булево",
+                "name": "",
+                "source": null,
+                "value": "==",
+                "children": [
+                  {
+                    "kind": "field",
+                    "type": "Сотрудники.Ссылка?",
+                    "name": "Ответственный",
+                    "source": 0,
+                    "value": [
+                      "Ответственный"
+                    ],
+                    "children": [],
+                    "range": [
+                      148,
+                      161
+                    ],
+                    "sql_nullable": false
+                  },
+                  {
+                    "kind": "parameter",
+                    "type": "Сотрудники.Ссылка",
+                    "name": "",
+                    "source": null,
+                    "value": 0,
+                    "children": [],
+                    "range": [
+                      166,
+                      175
+                    ],
+                    "sql_nullable": false
+                  }
+                ],
+                "range": [
+                  148,
+                  175
+                ],
+                "sql_nullable": false
+              },
+              {
+                "kind": "in",
+                "type": "Булево",
+                "name": "",
+                "source": null,
+                "value": null,
+                "children": [
+                  {
+                    "kind": "field",
+                    "type": "СтатусМероприятия",
+                    "name": "Статус",
+                    "source": 0,
+                    "value": [
+                      "Статус"
+                    ],
+                    "children": [],
+                    "range": [
+                      190,
+                      196
+                    ],
+                    "sql_nullable": false
+                  },
+                  {
+                    "kind": "enum",
+                    "type": "СтатусМероприятия",
+                    "name": "Запланировано",
+                    "source": null,
+                    "value": "Запланировано",
+                    "children": [],
+                    "range": [
+                      200,
+                      231
+                    ],
+                    "sql_nullable": false
+                  },
+                  {
+                    "kind": "enum",
+                    "type": "СтатусМероприятия",
+                    "name": "ВПроцессе",
+                    "source": null,
+                    "value": "ВПроцессе",
+                    "children": [],
+                    "range": [
+                      233,
+                      260
+                    ],
+                    "sql_nullable": false
+                  }
+                ],
+                "range": [
+                  190,
+                  261
+                ],
+                "sql_nullable": false
+              }
+            ],
+            "range": [],
+            "sql_nullable": false
+          }
+        ],
+        "parameters": [
+          {
+            "expression": "Сотрудник",
+            "start": 166,
+            "end": 175,
+            "type": "Сотрудники.Ссылка",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Мероприятия::Задачи",
+            "alias": "Задачи",
+            "projections": [
+              [
+                {
+                  "owner": "Мероприятия::Задачи",
+                  "name": "Статус",
+                  "type": "СтатусМероприятия",
+                  "system": false
+                },
+                "Статус"
+              ],
+              [
+                {
+                  "owner": "Мероприятия::Задачи",
+                  "name": "Ответственный",
+                  "type": "Сотрудники.Ссылка?",
+                  "system": false
+                },
+                "Ответственный"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              117,
+              123
+            ],
+            "source_name": "Задачи",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [
+          {
+            "kind": "field",
+            "type": "СтатусМероприятия",
+            "name": "Статус",
+            "source": 0,
+            "value": [
+              "Статус"
+            ],
+            "children": [],
+            "range": [
+              299,
+              305
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "having": [],
+        "distinct": false
+      },
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "apiBinding": null
+      "criteria": [
+        {
+          "criterionId": "active",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        },
+        {
+          "criterionId": "active",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/public-tasks-test",
+        "result/projections-aggregates/public-tasks-test",
+        "result/projections-aggregates/public-tasks-run",
+        "result/projections-aggregates/public-tasks-run"
+      ],
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-4b2a8a0e9ee26f07d4cedf4d",
@@ -3570,11 +3893,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Неизвестное или неоднозначное поле: Стадия.Вид (58)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-d724b2b9807becd4b8ab444a",
@@ -4303,20 +4677,243 @@
       "target": null,
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
+      "parsed": true,
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": null,
+      "ast": {
+        "owner": "Пресейл::Сделки",
+        "alias": "Сделки",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "ДатаВремя",
+              "name": "Дата",
+              "source": 0,
+              "value": [
+                "Дата"
+              ],
+              "children": [],
+              "range": [
+                12,
+                16
+              ],
+              "sql_nullable": false
+            },
+            "Дата"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Сотрудники.Ссылка?",
+              "name": "Ответственный",
+              "source": 0,
+              "value": [
+                "Ответственный"
+              ],
+              "children": [],
+              "range": [
+                22,
+                35
+              ],
+              "sql_nullable": false
+            },
+            "Ответственный"
+          ],
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число?",
+              "name": "",
+              "source": null,
+              "value": [
+                "СУММА",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "СуммаВВалютеУчета",
+                  "source": 0,
+                  "value": [
+                    "СуммаВВалютеУчета"
+                  ],
+                  "children": [],
+                  "range": [
+                    47,
+                    64
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                41,
+                65
+              ],
+              "sql_nullable": true
+            },
+            "Сумма"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Пресейл::Сделки",
+            "alias": "Сделки",
+            "projections": [
+              [
+                {
+                  "owner": "Пресейл::Сделки",
+                  "name": "Дата",
+                  "type": "ДатаВремя",
+                  "system": false
+                },
+                "Дата"
+              ],
+              [
+                {
+                  "owner": "Пресейл::Сделки",
+                  "name": "Ответственный",
+                  "type": "Сотрудники.Ссылка?",
+                  "system": false
+                },
+                "Ответственный"
+              ],
+              [
+                {
+                  "owner": "Пресейл::Сделки",
+                  "name": "СуммаВВалютеУчета",
+                  "type": "Число",
+                  "system": false
+                },
+                "СуммаВВалютеУчета"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              83,
+              89
+            ],
+            "source_name": "Сделки",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [
+          {
+            "kind": "field",
+            "type": "Сотрудники.Ссылка?",
+            "name": "Ответственный",
+            "source": 0,
+            "value": [
+              "Ответственный"
+            ],
+            "children": [],
+            "range": [
+              111,
+              124
+            ],
+            "sql_nullable": false
+          },
+          {
+            "kind": "field",
+            "type": "ДатаВремя",
+            "name": "Дата",
+            "source": 0,
+            "value": [
+              "Дата"
+            ],
+            "children": [],
+            "range": [
+              130,
+              134
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "having": [],
+        "distinct": false
+      },
+      "unsupportedReason": "Typed AST parsed; no independently authored direct executable criterion for this exact source/range (external XBQL binding or additional source operations remain queued)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-32459b9fe1a871f641093017",
@@ -4513,11 +5110,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Неизвестное или неоднозначное поле: Стадия.Вид (144)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-ebed4c25ab76b9eaffbe5b45",
@@ -4634,11 +5282,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 60",
+      "unsupportedReason": "Неизвестное или неоднозначное поле: Стадия.Вид (133)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-af95417f1945f82a8c74be33",
@@ -4762,7 +5461,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Код (488)",
+      "unsupportedReason": "Метод вычисления вне контракта: Код (488)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -4784,6 +5483,57 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -6951,11 +7701,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Запрос вне relational AST (110)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-b05009ff4e90ca2966127e7c",
@@ -10209,11 +11010,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Запрос вне relational AST (81)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-b9c377355345ecb3d160c73a",
@@ -15221,11 +16073,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (177)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-97baf361be528a602a5e53fe",
@@ -18097,20 +19000,175 @@
       },
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Администрирование::ОписаниеРаботы",
+        "alias": "ОписаниеРаботы",
+        "projections": [
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число?",
+              "name": "",
+              "source": null,
+              "value": [
+                "МАКСИМУМ",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "ПорядковыйНомер",
+                  "source": 0,
+                  "value": [
+                    "ОписаниеРаботы",
+                    "ПорядковыйНомер"
+                  ],
+                  "children": [],
+                  "range": [
+                    38,
+                    68
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                29,
+                69
+              ],
+              "sql_nullable": true
+            },
+            "ПорядковыйНомер"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Администрирование::ОписаниеРаботы",
+            "alias": "ОписаниеРаботы",
+            "projections": [
+              [
+                {
+                  "owner": "Администрирование::ОписаниеРаботы",
+                  "name": "ПорядковыйНомер",
+                  "type": "Число",
+                  "system": false
+                },
+                "ПорядковыйНомер"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              113,
+              127
+            ],
+            "source_name": "ОписаниеРаботы",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false
+      },
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "apiBinding": null
+      "criteria": [
+        {
+          "criterionId": "maximum",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        },
+        {
+          "criterionId": "maximum",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/public-max-test",
+        "result/projections-aggregates/public-max-run"
+      ],
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-e08230e6d58be69d1a4f6e77",
@@ -19002,11 +20060,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Запрос вне relational AST (225)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-f101b3d4422823d3385becac",
@@ -19253,11 +20362,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Квалифицированный тип отсутствует или неоднозначен: Стд::Пользователи::Пользователи.Ссылка",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-6528e11bf1bc6f9e2fd35c1c",
@@ -27690,11 +28850,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (130)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-bad91ee8549df3933c9190b8",
@@ -29044,11 +30255,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ИсторияИзмененийСтраниц",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-ee7dda79f4f6176f13cd1cea",
@@ -29735,11 +30997,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Запрос вне relational AST (666)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-cd554ad65a5700a76cf3a92f",
@@ -30914,7 +32227,58 @@
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-95646fe3f01e71b6c7dead66",
@@ -34728,11 +36092,62 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Метод вычисления вне контракта: Пространство (38)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-e1b62a95b017836920dcb38f",
@@ -34985,20 +36400,188 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/computed-projection.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "ComputedProjection",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041-transferable",
+          "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+          "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            47,
+            98
+          ],
+          "fixtureHash": "88cfa82fb0cb8e2757c8ae7fdb5722f00c32d6e79f88342a2f4da2635fa75bdb"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/documented-assessment-ComputedProjection.json",
+        "result/projections-aggregates/documented-ComputedProjection.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "binary",
+              "type": "Число",
+              "name": "",
+              "source": null,
+              "value": "*",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Total",
+                  "source": 0,
+                  "value": [
+                    "Total"
+                  ],
+                  "children": [],
+                  "range": [
+                    8,
+                    13
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "literal",
+                  "type": "Число",
+                  "name": "",
+                  "source": null,
+                  "value": 2,
+                  "children": [],
+                  "range": [
+                    16,
+                    17
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                8,
+                17
+              ],
+              "sql_nullable": false
+            },
+            "Double"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              32,
+              42
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false
+      },
+      "fixtureHash": "88cfa82fb0cb8e2757c8ae7fdb5722f00c32d6e79f88342a2f4da2635fa75bdb"
     },
     {
       "contractId": "documented-nullable",
@@ -35215,20 +36798,221 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/group.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "Group",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041-transferable",
+          "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+          "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            147,
+            220
+          ],
+          "fixtureHash": "aa08479776c7298569704c8df55ac72c997ed44c5f3d6c7a0e8217ae571a20a3"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/documented-assessment-Group.json",
+        "result/projections-aggregates/documented-Group.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                13
+              ],
+              "sql_nullable": false
+            },
+            "Label"
+          ],
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число?",
+              "name": "",
+              "source": null,
+              "value": [
+                "СУММА",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Total",
+                  "source": 0,
+                  "value": [
+                    "Total"
+                  ],
+                  "children": [],
+                  "range": [
+                    21,
+                    26
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                15,
+                27
+              ],
+              "sql_nullable": true
+            },
+            "СУММА"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false
+                },
+                "Label"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              31,
+              41
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [
+          {
+            "kind": "field",
+            "type": "Строка",
+            "name": "Label",
+            "source": 0,
+            "value": [
+              "Label"
+            ],
+            "children": [],
+            "range": [
+              59,
+              64
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "having": [],
+        "distinct": false
+      },
+      "fixtureHash": "aa08479776c7298569704c8df55ac72c997ed44c5f3d6c7a0e8217ae571a20a3"
     },
     {
       "contractId": "documented-having",
@@ -35249,20 +37033,281 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/having.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "Having",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041-transferable",
+          "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+          "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            270,
+            368
+          ],
+          "fixtureHash": "3919f6cde3ab68d7b39b10965f53a15dea4c494de037f4abdd97f030632ca564"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/documented-assessment-Having.json",
+        "result/projections-aggregates/documented-Having.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                13
+              ],
+              "sql_nullable": false
+            },
+            "Label"
+          ],
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число?",
+              "name": "",
+              "source": null,
+              "value": [
+                "СУММА",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Total",
+                  "source": 0,
+                  "value": [
+                    "Total"
+                  ],
+                  "children": [],
+                  "range": [
+                    21,
+                    26
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                15,
+                27
+              ],
+              "sql_nullable": true
+            },
+            "СУММА"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false
+                },
+                "Label"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              31,
+              41
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [
+          {
+            "kind": "field",
+            "type": "Строка",
+            "name": "Label",
+            "source": 0,
+            "value": [
+              "Label"
+            ],
+            "children": [],
+            "range": [
+              59,
+              64
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "having": [
+          {
+            "kind": "compare",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": ">",
+            "children": [
+              {
+                "kind": "aggregate",
+                "type": "Число?",
+                "name": "",
+                "source": null,
+                "value": [
+                  "СУММА",
+                  false
+                ],
+                "children": [
+                  {
+                    "kind": "field",
+                    "type": "Число",
+                    "name": "Total",
+                    "source": 0,
+                    "value": [
+                      "Total"
+                    ],
+                    "children": [],
+                    "range": [
+                      79,
+                      84
+                    ],
+                    "sql_nullable": false
+                  }
+                ],
+                "range": [
+                  73,
+                  85
+                ],
+                "sql_nullable": true
+              },
+              {
+                "kind": "literal",
+                "type": "Число",
+                "name": "",
+                "source": null,
+                "value": 0,
+                "children": [],
+                "range": [
+                  88,
+                  89
+                ],
+                "sql_nullable": false
+              }
+            ],
+            "range": [
+              73,
+              89
+            ],
+            "sql_nullable": true
+          }
+        ],
+        "distinct": false
+      },
+      "fixtureHash": "3919f6cde3ab68d7b39b10965f53a15dea4c494de037f4abdd97f030632ca564"
     },
     {
       "contractId": "documented-distinct",
@@ -35766,20 +37811,212 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/case.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "Case",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041-transferable",
+          "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+          "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            416,
+            499
+          ],
+          "fixtureHash": "7aa1585d5ed12c52bf5876b6360091187ba2c26b80c04b076c9c41b70c9d1482"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/documented-assessment-Case.json",
+        "result/projections-aggregates/documented-Case.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "case",
+              "type": "Число",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Булево",
+                  "name": "Flag",
+                  "source": 0,
+                  "value": [
+                    "Flag"
+                  ],
+                  "children": [],
+                  "range": [
+                    20,
+                    24
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Total",
+                  "source": 0,
+                  "value": [
+                    "Total"
+                  ],
+                  "children": [],
+                  "range": [
+                    31,
+                    36
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "literal",
+                  "type": "Число",
+                  "name": "",
+                  "source": null,
+                  "value": 0,
+                  "children": [],
+                  "range": [
+                    43,
+                    44
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                8,
+                50
+              ],
+              "sql_nullable": false
+            },
+            "Value"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Flag",
+                  "type": "Булево",
+                  "system": false
+                },
+                "Flag"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              64,
+              74
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false
+      },
+      "fixtureHash": "7aa1585d5ed12c52bf5876b6360091187ba2c26b80c04b076c9c41b70c9d1482"
     },
     {
       "contractId": "documented-result-resources",
@@ -35999,20 +38236,347 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/combined-join-group-null.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-projections-aggregates-041",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "CombinedJoinGroupNull",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-041-transferable",
+          "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
+          "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            564,
+            718
+          ],
+          "fixtureHash": "f881c835ac5ac5f997653a3bd7d5c31ee976a5b7e7b363e4b2cbc5ba3a33309e"
+        }
+      ],
+      "evidence": [
+        "result/projections-aggregates/documented-assessment-CombinedJoinGroupNull.json",
+        "result/projections-aggregates/documented-CombinedJoinGroupNull.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "A",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "A",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": false
+            },
+            "Label"
+          ],
+          [
+            {
+              "kind": "aggregate",
+              "type": "Число?",
+              "name": "",
+              "source": null,
+              "value": [
+                "СУММА",
+                false
+              ],
+              "children": [
+                {
+                  "kind": "coalesce",
+                  "type": "Число",
+                  "name": "",
+                  "source": null,
+                  "value": null,
+                  "children": [
+                    {
+                      "kind": "field",
+                      "type": "Число?",
+                      "name": "Total",
+                      "source": 1,
+                      "value": [
+                        "B",
+                        "Total"
+                      ],
+                      "children": [],
+                      "range": [
+                        23,
+                        30
+                      ],
+                      "sql_nullable": true
+                    },
+                    {
+                      "kind": "literal",
+                      "type": "Число",
+                      "name": "",
+                      "source": null,
+                      "value": 0,
+                      "children": [],
+                      "range": [
+                        44,
+                        45
+                      ],
+                      "sql_nullable": false
+                    }
+                  ],
+                  "range": [
+                    23,
+                    46
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                17,
+                47
+              ],
+              "sql_nullable": true
+            },
+            "СУММА"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "A",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              51,
+              61
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "B",
+            "projections": [
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Total",
+                  "type": "Число",
+                  "system": false
+                },
+                "Total"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              85,
+              96
+            ],
+            "source_name": "Other::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [
+          {
+            "kind": "left",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 0,
+                  "value": [
+                    "A",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    106,
+                    111
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 1,
+                  "value": [
+                    "B",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    115,
+                    120
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                106,
+                120
+              ],
+              "sql_nullable": false
+            },
+            "range": [
+              68,
+              120
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [
+          {
+            "kind": "field",
+            "type": "Строка",
+            "name": "Label",
+            "source": 0,
+            "value": [
+              "A",
+              "Label"
+            ],
+            "children": [],
+            "range": [
+              138,
+              145
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "having": [],
+        "distinct": false
+      },
+      "fixtureHash": "f881c835ac5ac5f997653a3bd7d5c31ee976a5b7e7b363e4b2cbc5ba3a33309e"
     },
     {
       "contractId": "documentation-convert-to-string-in-query-language",
@@ -36073,12 +38637,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-ends-with-function",
@@ -36106,12 +38721,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-contains",
@@ -36172,12 +38838,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-full-match-function",
@@ -36205,12 +38922,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-first-not-null-function",
@@ -36238,12 +39006,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-replace-null-function",
@@ -36271,12 +39090,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-get-type-function",
@@ -36304,12 +39174,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-uuid-function",
@@ -36337,12 +39258,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-count-function",
@@ -36370,12 +39342,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-maximum-function",
@@ -36403,12 +39426,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-minimum-function",
@@ -36436,12 +39510,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-average-function",
@@ -36469,12 +39594,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-sum-function",
@@ -36502,12 +39678,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-date-and-time-in-query-language",
@@ -36568,12 +39795,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-arithmetic-operations-in-query-language",
@@ -36601,12 +39879,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-logical-and-boolean-operations-in-query-language",
@@ -36667,12 +39996,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-in-expression",
@@ -36799,12 +40179,63 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-is-null-expression",
@@ -38801,5 +42232,56 @@
     ],
     "executorVersion": "10.0.2-1",
     "executionCompatibilityVersion": "current"
+  },
+  "stage041Reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false
   }
 }

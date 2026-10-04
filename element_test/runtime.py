@@ -359,6 +359,11 @@ def body_type_references(method):
     atom = rf'{IDENT}(?:::{IDENT})*(?:\.{IDENT})?'
     for match in re.finditer(rf'<\s*({atom}(?:\s*<[^\n\[\]]+>)?\??)\s*>\s*\[', call_code(method)):
         references.append((match.start(1), match.end(1), re.sub(r'\s+', '', match[1])))
+    # Typed map literals carry both nominal key and value types.
+    map_atom = rf'{atom}(?:\s*<[^{{}}\n]+>)?\??'
+    for match in re.finditer(rf'<\s*({map_atom})\s*,\s*({map_atom})\s*>\s*{{', call_code(method)):
+        for group in (1, 2):
+            references.append((match.start(group), match.end(group), re.sub(r'\s+', '', match[group])))
     return references
 
 
@@ -366,7 +371,7 @@ def _project_body_type(contracts, type_name):
     """Leave platform types to Script; resolve every project-shaped reference."""
     atoms = re.findall(rf"{IDENT}(?:::{IDENT})*(?:\.{IDENT})?", type_name)
     return any("::" in atom or "." in atom or contracts.resolve(atom) or atom in contracts.local_structures
-               for atom in atoms if atom not in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие"})
+               for atom in atoms if atom not in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие", "ЧитаемоеСоответствие"})
 
 
 def prepare_script(root, model, check, sandbox):

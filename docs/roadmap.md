@@ -46,8 +46,13 @@
 51 целевой тест успешен; test/run по 4/4 Demo-SRM и 2/2 autocheck.
 Справка Элемента 9.3, установленный Script 10.0.2-1/current.
 [Контракт](joins-and-null.md), [измерения](query-stage-040-measurements.json).
-[Следующее №41](tasks/041-projections-and-aggregates.md) — проекции/агрегаты;
-остальные группы закреплены №42–45. Полный query-каталог ещё не исполнен.
+[№41](tasks/041-projections-and-aggregates.md) реализовано: проекции/агрегаты,
+CASE/ВЫРАЗИТЬ, DISTINCT и GROUP/HAVING; два реальных корня и пять точных
+review templates независимо оценены. 50 целевых тестов, семь SBSL FAIL мутаций,
+шесть SQL-сценариев; test/run 2/2 и 1/1, два batch 3/0/3.
+[Контракт](projections-and-aggregates.md), [измерения](query-stage-041-measurements.json).
+[Следующее №42](tasks/042-unions-and-nesting.md) — UNION/вложенные запросы;
+остальные группы закреплены №43–45. Полный query-каталог ещё не исполнен.
 Полный discovery/303 формы/44 прежних корня/четыре validate не запускались.
 
 По уточнению пользователя должны быть исполнены все контракты запросов,

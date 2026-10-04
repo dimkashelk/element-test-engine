@@ -3,7 +3,7 @@ import json
 from .indexer import lex, parse_module
 
 
-def instrument(source, identity):
+def instrument(source, identity, enum_map_value_type=None):
     node = parse_module(source)[0][0]
     label = json.dumps(identity, ensure_ascii=False).replace('${', '\\${')
     params = [p.partition(':')[0].strip() for p in node.parameters(source)]
@@ -28,8 +28,15 @@ def instrument(source, identity):
             name += '_'
         indent = source[source.rfind('\n', 0, statement.start) + 1:statement.start]
         original = source[expression.start:expression.end]
+        transported = name
+        transport = ''
+        if enum_map_value_type:
+            transported = name + 'Транспорт'
+            transport = (indent + 'знч ' + transported + ' = новый Соответствие<Строка, ' + enum_map_value_type + '>()\n'
+                         + indent + 'для Элемент из ' + name + '\n' + indent + '    ' + transported + '.Вставить(Элемент.Ключ.ВСтроку(), Элемент.Значение)\n'
+                         + indent + ';\n')
         edits.append((statement.start, statement.end, 'знч ' + name + ' = ' + original + '\n'
-                      + indent + log('exit', name) + '\n' + indent + 'возврат ' + name))
+                      + transport + indent + log('exit', transported) + '\n' + indent + 'возврат ' + name))
     if not node.return_span:
         closing = max(t.start for t in lex(source) if node.header_end <= t.start < node.end and t.value == ';')
         ending = source.rfind('\n', 0, closing) + 1

@@ -267,7 +267,7 @@ def plan_execution(root, source_model, check):
                 elif call.receiver is None and owner.get('moduleType') == 'object':
                     requirement_types.append(owner['name'])
             for requirement in requirement_types:
-                for type_owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Ссылка|Данные)", requirement):
+                for type_owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Данные)", requirement):
                     matches = c.resolve(type_owner)
                     if len(matches) != 1:
                         continue
@@ -343,8 +343,10 @@ def plan_execution(root, source_model, check):
             node = parse_module(symbol.source)[0][0]
             tokens = list(symbol.parameter_types) + [node.return_type(symbol.source) or '']
             tokens += [t for _, _, t in constructor_types(symbol.source) + body_type_references(symbol.source)]
+            # Identity-only references do not require their owner's complete
+            # object schema. Actual loads/writes bind it below.
             for token in tokens:
-                for owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Ссылка|Данные)", token):
+                for owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Данные)", token):
                     for element in c.resolve(owner):
                         if element['elementType'] in {'Справочник', 'Документ'} and element not in requested:
                             requested.append(element)

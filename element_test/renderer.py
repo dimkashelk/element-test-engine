@@ -143,8 +143,15 @@ def render_plan(plan, sandbox):
             from .observations import instrument
             symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == owner['sourceFile']
                           and s.identity.declaration == declaration.name)
+            enum_value = None
+            return_mapping = re.fullmatch(r'(?:Читаемое)?Соответствие<(.+)>', contracts.canonical_type(parse_module(symbol.source)[0][0].return_type(symbol.source) or 'ничто'))
+            if return_mapping:
+                from .indexer import split_parameters
+                key, val = [t.strip() for t in split_parameters(return_mapping[1])]
+                if key in contracts.enums:
+                    enum_value = contracts.sbsl_type(val)
             compiled = instrument(compiled, '::'.join(filter(None, (symbol.identity.project,
-                                  symbol.identity.namespace, symbol.identity.owner, declaration.name))))
+                                  symbol.identity.namespace, symbol.identity.owner, declaration.name))), enum_map_value_type=enum_value)
         if owner["sourceFile"] == module["sourceFile"]:
             adapted.append(compiled)
             root_compiled[declaration.name] = compiled
@@ -276,7 +283,16 @@ def render_plan(plan, sandbox):
         result = 'Результат' + index
         if result_type and result_type != 'ничто':
             invocation = '    знч ' + result + ' = ' + expression + '\n'
-            actual = '{"return": ' + result + ', "context": ' + observed + '}' if is_object else result
+            transported = result
+            mapping = re.fullmatch(r'(?:Читаемое)?Соответствие<(.+)>', contracts.canonical_type(result_type))
+            if mapping:
+                from .indexer import split_parameters
+                key_type, value_type = [t.strip() for t in split_parameters(mapping[1])]
+                if key_type in contracts.enums:
+                    transported = 'ТестСоответствие' + index
+                    invocation += ('    знч ' + transported + ' = новый Соответствие<Строка, ' + contracts.sbsl_type(value_type) + '>()\n'
+                                   + '    для Элемент из ' + result + '\n        ' + transported + '.Вставить(Элемент.Ключ.ВСтроку(), Элемент.Значение)\n    ;\n')
+            actual = '{"return": ' + transported + ', "context": ' + observed + '}' if is_object else transported
         else:
             invocation = '    ' + expression + '\n'
             actual = observed if is_object else 'Неопределено'

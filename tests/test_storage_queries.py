@@ -87,7 +87,7 @@ class StorageQueryPlanTest(unittest.TestCase):
                     'ВЫБРАТЬ Label КАК N, Amount КАК N ИЗ Data::Product',
                     'ВЫБРАТЬ ПЕРВЫЕ 0 Label ИЗ Data::Product',
                     'ВЫБРАТЬ Label ИЗ Data::Product СОЕДИНЕНИЕ Data::Product',
-                    'ВЫБРАТЬ КОЛИЧЕСТВО(Label) ИЗ Data::Product',
+                    'ВЫБРАТЬ СУММА(Label) ИЗ Data::Product',
                     'ВЫБРАТЬ Label ИЗ Data::Product.Остатки']:
             with self.subTest(bad=bad),self.assertRaises(InputError):parse_storage_query(bad,c)
 

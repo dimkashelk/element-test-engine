@@ -141,9 +141,16 @@ def query_literals(source):
 
 def parse_storage_query(text, contracts):
     """Parse typed storage/relational AST without evaluating data."""
+    if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', mask_noncode(text), re.I):
+        from .query_projections import parse_computed_query
+        return parse_computed_query(text, contracts)
     if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', mask_noncode(text), re.I):
         from .query_joins import parse_relational_query
         return parse_relational_query(text, contracts)
+    return parse_simple_storage_query(text, contracts)
+
+
+def parse_simple_storage_query(text, contracts):
     visible = mask_noncode(text, strings=False)
     hidden = mask_noncode(text)
     token_pattern = re.compile(rf'{IDENT}|\d+|::|==|[().,=]|%')
@@ -284,7 +291,7 @@ def parse_storage_query(text, contracts):
         field = fields[name]
         if source_kind == 'slice-last' and '|' in field.type:
             raise UnsupportedSyntaxError('Union-поле среза требует отдельного типизированного контракта')
-        scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата'}
+        scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата', 'ДатаВремя'}
         enum = contracts.canonical_elements.get(field.type.rstrip('?'))
         if field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
             raise UnsupportedSyntaxError('Тип поля запроса вне контракта: ' + field.type)
