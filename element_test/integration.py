@@ -53,7 +53,7 @@ def preflight(check, model, *, enabled=False):
                                                 REPO / 'config/integration.json')).read_text())
         runtimes = json.loads(Path(os.environ.get('ELEMENT_TEST_RUNTIMES',
                                                   REPO / 'config/runtimes.json')).read_text())
-        runtime = runtimes.get(model.get('compatibilityVersion')) if isinstance(runtimes, dict) else None
+        runtime = runtimes.get(check.get('runtimeProfile', model.get('compatibilityVersion'))) if isinstance(runtimes, dict) else None
     except (OSError, ValueError, TypeError):
         raise BackendUnavailable('Некорректная или отсутствующая конфигурация integration/runtime') from None
     if not isinstance(config, dict) or set(config) != {'backend', 'image'} or config['backend'] != 'postgres':
@@ -244,7 +244,7 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                 if path.is_file():
                     path.chmod(0o644)
             resources.append(('container', executor))
-            docker(*executor_command(runtime, home, directory, network, executor, model['compatibilityVersion']))
+            docker(*executor_command(runtime, home, directory, network, executor, runtime.get('executionCompatibilityVersion', model['compatibilityVersion'])))
             phase = 'execute'
             stdout = executor_output(executor, directory)
             state = json.loads(docker('inspect', executor, '--format', '{{json .State}}'))
@@ -253,7 +253,7 @@ ALTER ROLE smoke SET statement_timeout = '3s';
             else:
                 decoded = decode_output(stdout)
                 if (decoded.get('status') == 'EXECUTED' or operation == 'metadata-storage' and 'actual' in decoded) and isinstance(decoded.get('actual'), dict):
-                    result = {'status': 'EXECUTED', 'actual': decoded['actual']}
+                    result = {'status': 'EXECUTED', 'actual': decoded['actual'], 'runtime': {'executorVersion': runtime.get('executorVersion'), 'sourceCompatibilityVersion': model['compatibilityVersion'], 'executionCompatibilityVersion': runtime.get('executionCompatibilityVersion', model['compatibilityVersion'])}}
                     if decoded.get('status') == 'ERROR':
                         result.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
                     if 'trace' in decoded:

@@ -355,6 +355,10 @@ def body_type_references(method):
             raise UnsupportedSyntaxError("Тип в теле метода не указан")
         start, end = tokens[first].start, tokens[ending].end
         references.append((start, end, re.sub(r"\s+", "", method[start:end])))
+    # Typed array literals carry a nominal element type too: <Shape>[...].
+    atom = rf'{IDENT}(?:::{IDENT})*(?:\.{IDENT})?'
+    for match in re.finditer(rf'<\s*({atom}(?:\s*<[^\n\[\]]+>)?\??)\s*>\s*\[', call_code(method)):
+        references.append((match.start(1), match.end(1), re.sub(r'\s+', '', match[1])))
     return references
 
 
@@ -427,7 +431,7 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
     config_path = Path(os.environ.get("ELEMENT_TEST_RUNTIMES", REPO / "config/runtimes.json"))
     try:
         runtimes = json.loads(config_path.read_text(encoding="utf-8"))
-        runtime = runtimes.get(model["compatibilityVersion"])
+        runtime = runtimes.get(check.get("runtimeProfile", model["compatibilityVersion"]))
         if runtime is None:
             return status("UNSUPPORTED", "Для режима совместимости проекта не настроен runtime", "backend_unavailable")
     except (OSError, ValueError) as exc:
@@ -462,7 +466,7 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
                    "-Dfile.encoding=UTF-8", "-Djava.io.tmpdir=/tmp", "-Dlogs.root=/tmp",
                    "-Dlogback.configurationFile=/runtime/config/logback.xml", "-Dexecutor.location=/runtime",
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
-                   "-c", model["compatibilityVersion"], "/generated/test.sbsl"]
+                   "-c", runtime.get("executionCompatibilityVersion", model["compatibilityVersion"]), "/generated/test.sbsl"]
         prepared_plan = json.loads((generated / 'execution-plan.json').read_text(encoding='utf-8'))
         if prepared_plan.get('executorLocale'):
             # Number interpolation is locale-dependent. The bounded form contract
@@ -499,7 +503,7 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             return status("ERROR", "Runtime вернул некорректный результат", "execution_error")
         if decoded.get('status') == 'UNSUPPORTED':
             return status('UNSUPPORTED', 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
-        evidence = {"status": "EXECUTED", "actual": decoded['actual']}
+        evidence = {"status": "EXECUTED", "actual": decoded['actual'], "runtime": {"executorVersion": runtime.get("executorVersion"), "sourceCompatibilityVersion": model["compatibilityVersion"], "executionCompatibilityVersion": runtime.get("executionCompatibilityVersion", model["compatibilityVersion"])}}
         if 'formRequirement' in check:
             evidence['bindings'] = prepared_plan.get('declarativeBindings', [])
         if decoded.get('status') == 'ERROR':

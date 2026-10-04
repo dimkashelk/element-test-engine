@@ -986,7 +986,14 @@ bin/element-test test --project Dvizhok.xdump \
 [именованное ЗАПОЛНИТЬ](docs/storage-query-fill.md) существующую YAML-структуру.
 Два прямых корня ДемоСРМ, memory/PostgreSQL; публичные test/run — по 16/16 PASS.
 Проверены 29 различных целевых тестов; полный набор не запускался.
-[Следующее №40](docs/tasks/040-joins-and-null.md) — соединения и NULL.
+[№40](docs/tasks/040-joins-and-null.md) реализовано: INNER/LEFT/RIGHT/FULL JOIN,
+NULL/ЗаменитьNull и nullable проекции; два реальных корня и переносимые проекты,
+memory/PostgreSQL, 11 SBSL FAIL мутаций. 51 целевой тест успешен.
+Публичные test/run: по 4/4 Demo-SRM и 2/2 autocheck.
+[Контракт](docs/joins-and-null.md), [измерения](docs/query-stage-040-measurements.json).
+Используются справка Элемента 9.3 и установленный Script 10.0.2-1;
+`runtimeProfile: "9.3"` выбирает режим executor `current`.
+[Следующее №41](docs/tasks/041-projections-and-aggregates.md) — проекции и агрегаты.
 
 ```bash
 python3 -m element_test.query_catalog

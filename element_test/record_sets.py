@@ -147,8 +147,8 @@ def attach_register(storage, name):
         # Reference JSON alone cannot disambiguate equal-shaped union members.
         # The typed filter supplies the concrete registrar identity for every
         # row in this full-filter bucket; each row receives a fresh reference.
-        materialize += f'''        знч Сырые = СериализацияJson.ПрочитатьОбъект(JSON) как Массив<Объект?>
-        для Значение из Сырые
+        materialize += f'''        знч Сырые: Объект? = СериализацияJson.ПрочитатьОбъект(JSON)
+        для Значение из (Сырые как Массив<Объект?>)
             знч Снимок = Значение как Соответствие<Строка, Объект?>
             Снимок.Удалить("Регистратор")
             знч СтрокаНабора = СериализацияJson.ПрочитатьОбъект<{row}>(СериализацияJson.ЗаписатьОбъект(Снимок), новый {row}().ПолучитьТип())

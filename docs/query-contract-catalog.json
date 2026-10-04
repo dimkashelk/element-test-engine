@@ -2123,20 +2123,506 @@
       },
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-relational-040",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 442",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Общие::КурсыВалют::Валюты",
+        "alias": "Валюты",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Валюты.Ссылка",
+              "name": "Ссылка",
+              "source": 0,
+              "value": [
+                "Валюты",
+                "Ссылка"
+              ],
+              "children": [],
+              "range": [
+                29,
+                42
+              ],
+              "sql_nullable": false
+            },
+            "Валюта"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Код",
+              "source": 0,
+              "value": [
+                "Валюты",
+                "Код"
+              ],
+              "children": [],
+              "range": [
+                67,
+                77
+              ],
+              "sql_nullable": false
+            },
+            "Код"
+          ],
+          [
+            {
+              "kind": "coalesce",
+              "type": "Дата?",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Дата?",
+                  "name": "Период",
+                  "source": 1,
+                  "value": [
+                    "Курсы",
+                    "Период"
+                  ],
+                  "children": [],
+                  "range": [
+                    99,
+                    111
+                  ],
+                  "sql_nullable": true
+                },
+                {
+                  "kind": "undefined",
+                  "type": "Дата?",
+                  "name": "",
+                  "source": null,
+                  "value": null,
+                  "children": [],
+                  "range": [
+                    125,
+                    137
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                99,
+                138
+              ],
+              "sql_nullable": false
+            },
+            "Период"
+          ],
+          [
+            {
+              "kind": "coalesce",
+              "type": "Число",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число?",
+                  "name": "Курс",
+                  "source": 1,
+                  "value": [
+                    "Курсы",
+                    "Курс"
+                  ],
+                  "children": [],
+                  "range": [
+                    163,
+                    173
+                  ],
+                  "sql_nullable": true
+                },
+                {
+                  "kind": "literal",
+                  "type": "Число",
+                  "name": "",
+                  "source": null,
+                  "value": 0,
+                  "children": [],
+                  "range": [
+                    187,
+                    188
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                163,
+                189
+              ],
+              "sql_nullable": false
+            },
+            "Курс"
+          ],
+          [
+            {
+              "kind": "coalesce",
+              "type": "Число",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число?",
+                  "name": "Кратность",
+                  "source": 1,
+                  "value": [
+                    "Курсы",
+                    "Кратность"
+                  ],
+                  "children": [],
+                  "range": [
+                    212,
+                    227
+                  ],
+                  "sql_nullable": true
+                },
+                {
+                  "kind": "literal",
+                  "type": "Число",
+                  "name": "",
+                  "source": null,
+                  "value": 0,
+                  "children": [],
+                  "range": [
+                    241,
+                    242
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                212,
+                243
+              ],
+              "sql_nullable": false
+            },
+            "Кратность"
+          ]
+        ],
+        "predicates": [
+          {
+            "kind": "compare",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": "!=",
+            "children": [
+              {
+                "kind": "field",
+                "type": "Строка",
+                "name": "Код",
+                "source": 0,
+                "value": [
+                  "Валюты",
+                  "Код"
+                ],
+                "children": [],
+                "range": [
+                  431,
+                  441
+                ],
+                "sql_nullable": false
+              },
+              {
+                "kind": "parameter",
+                "type": "Строка",
+                "name": "",
+                "source": null,
+                "value": 0,
+                "children": [],
+                "range": [
+                  447,
+                  472
+                ],
+                "sql_nullable": false
+              }
+            ],
+            "range": [
+              431,
+              472
+            ],
+            "sql_nullable": false
+          }
+        ],
+        "parameters": [
+          {
+            "expression": "Валюты.КОД_БАЗОВОЙ_ВАЛЮТЫ",
+            "start": 447,
+            "end": 472,
+            "type": "Строка",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Общие::КурсыВалют::Валюты",
+            "alias": "Валюты",
+            "projections": [
+              [
+                {
+                  "owner": "Общие::КурсыВалют::Валюты",
+                  "name": "Ссылка",
+                  "type": "Валюты.Ссылка",
+                  "system": true
+                },
+                "Ссылка"
+              ],
+              [
+                {
+                  "owner": "Общие::КурсыВалют::Валюты",
+                  "name": "Код",
+                  "type": "Строка",
+                  "system": false
+                },
+                "Код"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              282,
+              288
+            ],
+            "source_name": "Валюты",
+            "boundary": null,
+            "fill": null
+          },
+          {
+            "owner": "Общие::КурсыВалют::КурсыВалют",
+            "alias": "Курсы",
+            "projections": [
+              [
+                {
+                  "owner": "Общие::КурсыВалют::КурсыВалют",
+                  "name": "Валюта",
+                  "type": "Валюты.Ссылка?",
+                  "system": false
+                },
+                "Валюта"
+              ],
+              [
+                {
+                  "owner": "Общие::КурсыВалют::КурсыВалют",
+                  "name": "Период",
+                  "type": "Дата",
+                  "system": false
+                },
+                "Период"
+              ],
+              [
+                {
+                  "owner": "Общие::КурсыВалют::КурсыВалют",
+                  "name": "Курс",
+                  "type": "Число",
+                  "system": false
+                },
+                "Курс"
+              ],
+              [
+                {
+                  "owner": "Общие::КурсыВалют::КурсыВалют",
+                  "name": "Кратность",
+                  "type": "Число",
+                  "system": false
+                },
+                "Кратность"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-slice-last-day-v1",
+            "source_kind": "slice-last",
+            "periodicity": "День",
+            "dimensions": [
+              {
+                "owner": "Общие::КурсыВалют::КурсыВалют",
+                "name": "Валюта",
+                "type": "Валюты.Ссылка?",
+                "system": false
+              }
+            ],
+            "period_slot": null,
+            "period_range": [
+              349,
+              351
+            ],
+            "source_range": [
+              325,
+              351
+            ],
+            "source_name": "КурсыВалют",
+            "boundary": "captured-date-or-runtime-UTC-at-creation",
+            "fill": null
+          }
+        ],
+        "joins": [
+          {
+            "kind": "left",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Валюты.Ссылка",
+                  "name": "Ссылка",
+                  "source": 0,
+                  "value": [
+                    "Валюты",
+                    "Ссылка"
+                  ],
+                  "children": [],
+                  "range": [
+                    377,
+                    390
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "field",
+                  "type": "Валюты.Ссылка?",
+                  "name": "Валюта",
+                  "source": 1,
+                  "value": [
+                    "Курсы",
+                    "Валюта"
+                  ],
+                  "children": [],
+                  "range": [
+                    394,
+                    406
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                377,
+                406
+              ],
+              "sql_nullable": false
+            },
+            "range": [
+              308,
+              406
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational"
+      },
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "apiBinding": null
+      "criteria": [
+        {
+          "criterionId": "multiple",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "empty-catalog",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "base-only",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "no-rates",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "multiple",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "empty-catalog",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "base-only",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "no-rates",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        }
+      ],
+      "evidence": [
+        "result/joins-null/public-test",
+        "result/joins-null/public-test",
+        "result/joins-null/public-test",
+        "result/joins-null/public-test",
+        "result/joins-null/public-run",
+        "result/joins-null/public-run",
+        "result/joins-null/public-run",
+        "result/joins-null/public-run"
+      ],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-fda35089ee05663520885bf1",
@@ -2957,11 +3443,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: Пользователи",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-b62ad4e47b22a84098e1d5b3",
@@ -3870,11 +4374,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 40",
+      "unsupportedReason": "Запрос вне relational AST (40)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-1e6e6e723bc070bf2300b35f",
@@ -4240,11 +4762,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Код (488)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-d6c33dc40931354bc21a55b7",
@@ -4581,11 +5121,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Неизвестное или неоднозначное поле: Клиент.Регион (60)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-ccab943c28e93237a3857dc2",
@@ -7256,7 +7814,25 @@
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-756baceb2c9c8aed3e3a6d57",
@@ -7628,11 +8204,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 542",
+      "unsupportedReason": "Объект типа Справочник.Ссылка отсутствует, неоднозначен или не поддерживается",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-989efb4809a7391ff91cb6e9",
@@ -7756,11 +8350,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (251)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-e8615ff29b7a2c5cd60f969a",
@@ -7882,11 +8494,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 632",
+      "unsupportedReason": "Объект типа Справочник.Ссылка отсутствует, неоднозначен или не поддерживается",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-58e6cc58ceac34f8e64b758d",
@@ -9448,11 +10078,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Код (68)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-9b51faa7a8a51edca58b1024",
@@ -9998,11 +10646,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Представление (168)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-45fa0366ceef223455184b74",
@@ -10396,11 +11062,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 1181",
+      "unsupportedReason": "Объект типа ДвоичныйОбъект.Ссылка отсутствует, неоднозначен или не поддерживается",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-60306aefc8b80f5c782f40a1",
@@ -11287,11 +11971,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 100",
+      "unsupportedReason": "Запрос вне relational AST (100)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-9a77ea45cd6e67a69e2a809e",
@@ -11811,11 +12513,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Неизвестный владелец поля запроса: ЗанимаемыеДолжности",
+      "unsupportedReason": "Объект типа ДвоичныйОбъект.Ссылка отсутствует, неоднозначен или не поддерживается",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-68344dc26e1da4a667ea2cb1",
@@ -13353,11 +14073,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Ид (38)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-318f79e46ffdbe1450151028",
@@ -13877,11 +14615,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Ид (38)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-e925f415d98ad7feec6b47a4",
@@ -14589,11 +15345,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Представление (88)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-c1974b7e83bed3f787232007",
@@ -16314,11 +17088,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (684)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-1f195ac954627bf8ad7f604d",
@@ -16567,11 +17359,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Тип поля запроса вне контракта: ДатаВремя",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (476)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-5c388e2e62ee27d106a7acd7",
@@ -16691,11 +17501,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (299)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-15f228aac100fa3b6a02ddb8",
@@ -18960,20 +19788,313 @@
         }
       ],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-relational-040",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Достижимый запрос вне storage AST: ЛЕВОЕ",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Проверка::Кейсы",
+        "alias": "Кейсы",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Кейсы.Ссылка",
+              "name": "Ссылка",
+              "source": 0,
+              "value": [
+                "Кейсы",
+                "Ссылка"
+              ],
+              "children": [],
+              "range": [
+                29,
+                41
+              ],
+              "sql_nullable": false
+            },
+            "Ссылка"
+          ]
+        ],
+        "predicates": [
+          {
+            "kind": "compare",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": "==",
+            "children": [
+              {
+                "kind": "field",
+                "type": "ПеречислениеСтатусыПроверок?",
+                "name": "Статус",
+                "source": 1,
+                "value": [
+                  "ДанныеПроверок",
+                  "Статус"
+                ],
+                "children": [],
+                "range": [
+                  238,
+                  259
+                ],
+                "sql_nullable": true
+              },
+              {
+                "kind": "parameter",
+                "type": "ПеречислениеСтатусыПроверок",
+                "name": "",
+                "source": null,
+                "value": 0,
+                "children": [],
+                "range": [
+                  264,
+                  270
+                ],
+                "sql_nullable": false
+              }
+            ],
+            "range": [
+              238,
+              270
+            ],
+            "sql_nullable": true
+          }
+        ],
+        "parameters": [
+          {
+            "expression": "Статус",
+            "start": 264,
+            "end": 270,
+            "type": "ПеречислениеСтатусыПроверок",
+            "slot": 0
+          }
+        ],
+        "ordering": [
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "Код",
+              "source": 0,
+              "value": [
+                "Кейсы",
+                "Код"
+              ],
+              "children": [],
+              "range": [
+                306,
+                315
+              ],
+              "sql_nullable": false
+            },
+            false
+          ]
+        ],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Проверка::Кейсы",
+            "alias": "Кейсы",
+            "projections": [
+              [
+                {
+                  "owner": "Проверка::Кейсы",
+                  "name": "Ссылка",
+                  "type": "Кейсы.Ссылка",
+                  "system": true
+                },
+                "Ссылка"
+              ],
+              [
+                {
+                  "owner": "Проверка::Кейсы",
+                  "name": "Код",
+                  "type": "Число",
+                  "system": false
+                },
+                "Код"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              76,
+              81
+            ],
+            "source_name": "Кейсы",
+            "boundary": null,
+            "fill": null
+          },
+          {
+            "owner": "Проверка::ДанныеПроверок",
+            "alias": "ДанныеПроверок",
+            "projections": [
+              [
+                {
+                  "owner": "Проверка::ДанныеПроверок",
+                  "name": "Кейс",
+                  "type": "Кейсы.Ссылка?",
+                  "system": false
+                },
+                "Кейс"
+              ],
+              [
+                {
+                  "owner": "Проверка::ДанныеПроверок",
+                  "name": "Статус",
+                  "type": "ПеречислениеСтатусыПроверок",
+                  "system": false
+                },
+                "Статус"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              125,
+              139
+            ],
+            "source_name": "ДанныеПроверок",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [
+          {
+            "kind": "left",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Кейсы.Ссылка",
+                  "name": "Ссылка",
+                  "source": 0,
+                  "value": [
+                    "Кейсы",
+                    "Ссылка"
+                  ],
+                  "children": [],
+                  "range": [
+                    178,
+                    190
+                  ],
+                  "sql_nullable": false
+                },
+                {
+                  "kind": "field",
+                  "type": "Кейсы.Ссылка?",
+                  "name": "Кейс",
+                  "source": 1,
+                  "value": [
+                    "ДанныеПроверок",
+                    "Кейс"
+                  ],
+                  "children": [],
+                  "range": [
+                    194,
+                    213
+                  ],
+                  "sql_nullable": false
+                }
+              ],
+              "range": [
+                178,
+                213
+              ],
+              "sql_nullable": false
+            },
+            "range": [
+              108,
+              213
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational"
+      },
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "apiBinding": null
+      "criteria": [
+        {
+          "criterionId": "active",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "active",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040"
+        }
+      ],
+      "evidence": [
+        "result/joins-null/public-cases-test",
+        "result/joins-null/public-cases-test",
+        "result/joins-null/public-cases-run",
+        "result/joins-null/public-cases-run"
+      ],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-f8dc19b258240d91ef944582",
@@ -19877,11 +20998,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (236)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-22b5ee147b60ab25ca4c39ec",
@@ -20149,11 +21288,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 573",
+      "unsupportedReason": "Запрос вне relational AST (573)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-473c75f1bfa9177996db751a",
@@ -20422,11 +21579,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 479",
+      "unsupportedReason": "Запрос вне relational AST (479)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-6c46d96bf862973991858170",
@@ -21690,11 +22865,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-5825dd2eb35b6092df9b87ef",
@@ -21761,11 +22954,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-5a0f999bcabfd3b15303e0a1",
@@ -21830,11 +23041,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 417",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (153)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-437a9b85c325604684ea5c73",
@@ -21901,11 +23130,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-057eefb54d7828b43c1490f8",
@@ -21972,11 +23219,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-18b4b0c040c21f19f099a587",
@@ -22043,11 +23308,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-2d52b08d4323d3e5e1bfa3c0",
@@ -22114,11 +23397,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-a1151315f09ae5b6f0dfd830",
@@ -22185,11 +23486,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (78)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-451728fcaee3c2867ff07bef",
@@ -22324,11 +23643,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-afd20d6779b6ce20b7db91da",
@@ -22395,11 +23732,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-75418683d4778a510ce17276",
@@ -22466,11 +23821,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-0a71a0e6aee46a1a72b9c952",
@@ -22537,11 +23910,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-c0a8685113cd3cf20a105e16",
@@ -22608,11 +23999,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-bda40e171222ee6cc7a171ec",
@@ -22679,11 +24088,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-f23bbf8f6ca7ef5553d5cc8a",
@@ -22821,11 +24248,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 1771",
+      "unsupportedReason": "Запрос вне relational AST (1771)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-09a6f732554d6ff7316ea7a3",
@@ -22964,11 +24409,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 663",
+      "unsupportedReason": "Запрос вне relational AST (817)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-b2a3d8c96d5374be7fec8ce1",
@@ -23528,11 +24991,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 261",
+      "unsupportedReason": "Запрос вне relational AST (261)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-b0cd9fbee016b4b591ea9bf6",
@@ -23800,11 +25281,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 348",
+      "unsupportedReason": "Запрос вне relational AST (471)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-4c1b2d0ab5cee971d07b0e28",
@@ -23936,11 +25435,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (380)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-c71fa4639264659db3bef2a7",
@@ -24145,11 +25662,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 989",
+      "unsupportedReason": "Запрос вне relational AST (989)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-25c6424f7bc7cb9c378f20c2",
@@ -24420,11 +25955,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (92)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-511557a1d76a3d9487f6b396",
@@ -24556,11 +26109,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается СРЕЗПОСЛЕДНИХ",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (98)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-15d655336db977973237def7",
@@ -25495,7 +27066,25 @@
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-2df467fdafa22c41d1b3d113",
@@ -25630,7 +27219,25 @@
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-6e0163d9947ee15bc3198530",
@@ -26550,11 +28157,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 444",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (166)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-c7efcc601723a40762a77bb7",
@@ -27144,11 +28769,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 468",
+      "unsupportedReason": "Запрос вне relational AST (468)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-e94224cb75f9a7a5c6984580",
@@ -27470,11 +29113,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Фотография (29)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-4edf9c8447b2a4878912a39f",
@@ -27606,11 +29267,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Метод проекции вне контракта: Фотография (29)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-35cfb5e92631d81c2174306b",
@@ -27743,11 +29422,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Неизвестное или неоднозначное поле: ТекущиеЭлементы.Родитель (437)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-f03ab5a167516909b439ef3b",
@@ -28107,11 +29804,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (34)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-526b7ab250bedeb24e7fdb76",
@@ -28311,11 +30026,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 390",
+      "unsupportedReason": "Ожидается ИЗ (229)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-f1a11489c3b8d2c62ee59f15",
@@ -28451,11 +30184,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 798",
+      "unsupportedReason": "Запрос вне relational AST (798)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-09c612653877dd7ed62916c1",
@@ -29329,11 +31080,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Неизвестное поле запроса: СтраницыПространств::СтраницыПространств.Родитель",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: АрхивныеОбъекты",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-f883732f6a48b7b632c77a77",
@@ -29498,11 +31267,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Достижимый запрос вне storage AST: ЛЕВОЕ",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: АрхивныеОбъекты",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-e76289b9e9d877faecc667d7",
@@ -30750,11 +32537,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 298",
+      "unsupportedReason": "Ожидается ИЗ (46)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-60a5c6e546fdbe4fb1937dde",
@@ -31114,11 +32919,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 527",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (320)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-71182f2e512fb7b0a98abd84",
@@ -31416,11 +33239,29 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается ИЗ",
+      "unsupportedReason": "Ожидается ИЗ (202)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
     },
     {
       "contractId": "query-e6684b350434a460957df3c7",
@@ -36938,5 +38779,27 @@
     "xbql-file": 18,
     "documented-form": 35,
     "documentation-index": 83
+  },
+  "documentationReferenceVersions": [
+    "9.1",
+    "9.3"
+  ],
+  "stage040Reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current"
   }
 }

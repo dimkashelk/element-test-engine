@@ -8,6 +8,11 @@ from .local_structures import scalar_structures
 from .platform_mocks import PlatformMocks
 from .yaml_io import InputError, InvalidTestError
 
+
+def global_body(source):
+    # Project visibility is replaced by the generated Script module boundary.
+    return '@Глобально\n' + re.sub(r'^\s*@(ВПроекте|ВПодсистеме|Глобально)\s*\n', '', source, flags=re.M)
+
 def render_plan(plan, sandbox):
     """Copy the original method and generate only its required data contracts."""
     root, model, check = plan.root, plan.model, plan.check
@@ -181,7 +186,7 @@ def render_plan(plan, sandbox):
     contracts.namespace, contracts.imports = module["namespace"], module.get("imports", [])
     contracts.current_source = module["sourceFile"]
     calls = platform.finish()
-    module_declarations = [d['source'] for d in plan.declarations.get(module['sourceFile'], [])]
+    module_declarations = [global_body(d['source']) for d in plan.declarations.get(module['sourceFile'], [])]
     method = "\n".join(module_declarations + list(contracts.required_structures.values()) + adapted)
     from .form_context import form_argument
     def argument(value, typ, index=None):
@@ -346,7 +351,7 @@ def render_plan(plan, sandbox):
     for path, owner in plan.co_located_modules.items():
         bodies = external.pop(owner, [])
         key = owner + '.ИсходныйМодуль'
-        contracts.definitions[key] = '\n'.join('@Глобально\n' + body.rstrip() + '\n' for body in bodies)
+        contracts.definitions[key] = '\n'.join(global_body(body.rstrip()) + '\n' for body in bodies)
         contracts.method_dependencies[key] = module_type_dependencies.get(path, []) + [
             aliases[dep] + '.Вызов' for dep in module_dependencies.get(path, ())]
     imports = contracts.write(sandbox)
@@ -375,7 +380,7 @@ def render_plan(plan, sandbox):
             needed = [f'#требуется {name}.sbsl' for name in sorted(referenced & (generated_owners | set(aliases.values())))
                       if name != alias]
         (sandbox / (alias + ".sbsl")).write_text(
-            "\n".join(needed + ["@Глобально\n" + body for body in bodies]), encoding="utf-8")
+            "\n".join(needed + [global_body(body) for body in bodies]), encoding="utf-8")
     if external:
         imports = "\n".join(f"#требуется {alias}.sbsl" for alias in sorted(external)) + "\n" + imports
     if 'runtimeDateTime' in check and not is_object:

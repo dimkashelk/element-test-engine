@@ -107,9 +107,10 @@ class StorageQueryPlanTest(unittest.TestCase):
             with self.assertRaisesRegex(InputError,'Затенённый'):plan_execution(root,analyze(root),check(schema(),'F',[]))
         c=check(schema());c['mocks']={'queries':[]}
         with self.assertRaises(InvalidTestError):plan_execution(CORPUS/'catalog',analyze(CORPUS/'catalog'),c)
-        # An unsupported sibling does not contaminate the reachable closure.
+        # Task 40 makes this former unavailable self-join executable.
         self.assertTrue(plan_execution(CORPUS/'catalog',analyze(CORPUS/'catalog'),check(schema())).queries)
-        with self.assertRaises(InputError):plan_execution(CORPUS/'catalog',analyze(CORPUS/'catalog'),check(schema(),'Unavailable',[]))
+        joined = plan_execution(CORPUS/'catalog',analyze(CORPUS/'catalog'),check(schema(),'Unavailable',[]))
+        self.assertEqual(joined.queries[0]['ast']['joins'][0]['kind'], 'inner')
 
     def test_reused_parameter_has_one_slot_and_all_source_ranges(self):
         s=schema();q=plan_execution(CORPUS/'catalog',analyze(CORPUS/'catalog'),check(s,'Reuse',[ID])).queries[0]['ast']
@@ -274,7 +275,10 @@ class StorageQueryDockerTest(unittest.TestCase):
                     else:exp=expected
                     self.assertEqual(self.grade(root,base,result['actual'],exp,temp),'FAIL')
             p.write_text(original)
-            bad=run_pure(root,analyze(root),check(s,'Unavailable',[]),temp)
+            joined = self.execute(root,check(s,'Unavailable',[],[row(s)]),temp,'former-unavailable-join')
+            self.assertEqual(joined['actual']['result'], [{'Label':'A'}])
+            p.write_text(original + '\nметод UnsupportedPredicate(): Объект\n    возврат Запрос{ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Amount В (1, 2)}.Выполнить()\n;\n')
+            bad=run_pure(root,analyze(root),check(s,'UnsupportedPredicate',[]),temp)
             self.assertEqual((bad['status'],bad['reasonCode']),('UNSUPPORTED','unsupported_syntax'))
             self.execute(root,check(s),temp,'after-unsupported')
 

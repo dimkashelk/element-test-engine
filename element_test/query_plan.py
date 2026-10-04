@@ -140,7 +140,10 @@ def query_literals(source):
 
 
 def parse_storage_query(text, contracts):
-    """Token parser for one ordinary/daily slice metadata source; no data evaluation."""
+    """Parse typed storage/relational AST without evaluating data."""
+    if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', mask_noncode(text), re.I):
+        from .query_joins import parse_relational_query
+        return parse_relational_query(text, contracts)
     visible = mask_noncode(text, strings=False)
     hidden = mask_noncode(text)
     token_pattern = re.compile(rf'{IDENT}|\d+|::|==|[().,=]|%')

@@ -134,7 +134,8 @@ class ExecutionPlan:
     executor_locale: str = None
 
     def to_dict(self):
-        return {"schemaVersion": 1, "executorProfile": self.model.get("compatibilityVersion", "9.0"),
+        return {"schemaVersion": 1, "executorProfile": self.check.get("runtimeProfile", self.model.get("compatibilityVersion", "9.0")),
+                "sourceCompatibilityVersion": self.model.get("compatibilityVersion", "9.0"),
                 "entry": asdict(self.entry.identity),
                 "symbols": [{"identity": asdict(s.identity), "start": s.start, "end": s.end,
                              "source": s.source, "parameterTypes": s.parameter_types, "annotations": list(s.annotations),

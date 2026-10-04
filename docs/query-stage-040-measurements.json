@@ -1,0 +1,896 @@
+{
+  "stage": 40,
+  "date": "2026-10-04",
+  "status": "implemented-within-relational-joins-null-scope",
+  "documentationReferenceVersion": "9.3",
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0",
+    "executionCompatibilityVersion": "current",
+    "elementReferenceVersion": "9.3"
+  },
+  "sourceCompatibilityVersions": [
+    "9.0",
+    "9.3"
+  ],
+  "runtimeSelection": "check.runtimeProfile = 9.3; installed Script uses current; native -c 9.3 is rejected",
+  "catalog": {
+    "scopeCount": 73,
+    "familyCounts": {
+      "literal": 61,
+      "xbql-file": 3,
+      "documented-form": 6,
+      "documentation-index": 3
+    },
+    "counts": {
+      "parsed": 2,
+      "planned": 2,
+      "executed": 2,
+      "independentlyAssessed": 2
+    },
+    "archives": [
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "scopeOnly": true,
+    "completeQueryCatalogExecuted": false,
+    "assessedOccurrences": [
+      {
+        "contractId": "query-2bf3a71bf712c6c2d77aef88",
+        "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "file": "Общие/КурсыВалют/КурсыВалют.xbsl",
+        "range": [
+          1535,
+          2021
+        ],
+        "sourceHash": "3bd4392b712beb1d0cec32aaadc117553636b4469c41fe15acdd597516072e89",
+        "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+        "target": {
+          "namespace": "Общие::КурсыВалют",
+          "module": "КурсыВалют",
+          "method": "ПолучитьКурсыВалют",
+          "parameters": [],
+          "returnType": "Массив<КурсВалюты>",
+          "range": [
+            1435,
+            2416
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "multiple",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "empty-catalog",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "base-only",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "no-rates",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "multiple",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "empty-catalog",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "base-only",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "no-rates",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          }
+        ],
+        "evidence": [
+          "result/joins-null/public-test",
+          "result/joins-null/public-test",
+          "result/joins-null/public-test",
+          "result/joins-null/public-test",
+          "result/joins-null/public-run",
+          "result/joins-null/public-run",
+          "result/joins-null/public-run",
+          "result/joins-null/public-run"
+        ]
+      },
+      {
+        "contractId": "query-16898690312b95bbbf767b24",
+        "archive": "autocheck-2026-09-24-16-14.xdump",
+        "file": "Проверка/Кейсы.xbsl",
+        "range": [
+          172,
+          500
+        ],
+        "sourceHash": "fa929c43904851dd99730f747da2afbacb2541b18c5377cd2db8d103db828df4",
+        "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+        "target": {
+          "namespace": "Проверка",
+          "module": "Кейсы",
+          "method": "ПолучитьДоступныеКейсы",
+          "parameters": [],
+          "returnType": "Массив<Кейсы.Ссылка>",
+          "range": [
+            40,
+            619
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "active",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "active",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-040"
+          }
+        ],
+        "evidence": [
+          "result/joins-null/public-cases-test",
+          "result/joins-null/public-cases-test",
+          "result/joins-null/public-cases-run",
+          "result/joins-null/public-cases-run"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "distinctSuccessfulMethods": 51,
+    "newMethods": 16,
+    "affectedLegacyMethods": 35,
+    "scope": "Several targeted runs and separate repairs; no full suite or full discovery",
+    "latestSuccessfulEvidence": {
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-catalog-static.log"
+      },
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-catalog-static.log"
+      },
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-catalog-static.log"
+      },
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-catalog-static.log"
+      },
+      "test_query_joins.JoinDockerTest.test_portable_all_four_bag_joins_null_undefined_truth_tables_and_owner_types": {
+        "status": "ok",
+        "evidence": "result/joins-null/acceptance-repeat.log"
+      },
+      "test_query_joins.JoinDockerTest.test_real_direct_root_empty_base_multiple_missing_and_daily_boundaries": {
+        "status": "ok",
+        "evidence": "result/joins-null/acceptance-1.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_generic_ir_owners_aliases_fields_boundary_ranges_and_no_expected": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_invalid_teacher_rows_and_period_and_duplicate_keys": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_information_register_slices.SlicePlanTest.test_unconfirmed_sources_types_periodicity_nullable_and_shadowing": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-static.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_type_rejections_have_ranges_and_unreachable_types_are_lazy": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_visibility_fully_qualified_and_alias_same_nominal_type": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ordinary_readonly_and_literal_strings_comments_nested_parameters": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_body_types.BodyTypesTest.test_reachable_constructor_generates_minimal_contract_and_import": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_body_types.BodyTypesTest.test_strings_comments_and_interpolation": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_body_types.BodyTypesTest.test_local_cast_nested_generic_and_union_use_exact_owner": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_runtime_limits.RuntimeTimeoutTest.test_ci_cpu_budget_reaches_both_docker_executors": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_runtime_limits.RuntimeTimeoutTest.test_explicit_deadline_wins_even_with_invalid_runner_default": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_runtime_limits.RuntimeTimeoutTest.test_fio_assignment_uses_runner_deadline": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_runtime_limits.RuntimeTimeoutTest.test_local_and_runner_defaults": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_runtime_limits.RuntimeTimeoutTest.test_unbounded_or_invalid_deadlines_are_rejected": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_cleanup_failure_is_error_and_never_executed": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_config_driver_secret_and_backend_preflight": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_container_can_read_sql_inputs_with_private_host_parent": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_docker_diagnostics_never_expose_secrets": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_explicit_opt_in_and_no_fallback_to_mocks": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_partial_provision_is_cleaned_without_mocking_a_smoke_pass": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_integration.PreflightTest.test_unsupported_operations_and_student_targets": {
+        "status": "ok",
+        "evidence": "result/joins-null/runtime-profile-static.log"
+      },
+      "test_grading.GradingTest.test_identity_is_separate_from_assessed_facts": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_grading.GradingTest.test_invalid_identity_rejected": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_grading.GradingTest.test_unknown_reason_code_is_not_published": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      "test_query_joins.JoinDockerTest.test_business_mutations_sbsl_fail_and_recovery": {
+        "status": "ok",
+        "evidence": "result/joins-null/acceptance-1.log"
+      },
+      "test_query_joins.JoinDockerTest.test_empty_sides_cross_join_on_vs_where_and_alternative_correct_source": {
+        "status": "ok",
+        "evidence": "result/joins-null/acceptance-1.log"
+      },
+      "test_query_joins.JoinDockerTest.test_fresh_reference_projections_capture_reexecute_write_and_rollback": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-public.log"
+      },
+      "test_query_joins.JoinDockerTest.test_invalid_timeout_unsupported_sticky_infrastructure_error_then_pass": {
+        "status": "ok",
+        "evidence": "result/joins-null/acceptance-1.log"
+      },
+      "test_query_joins.JoinSqlTest.test_real_and_portable_sql_audit_readonly_and_rollback": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime-repeat.log"
+      },
+      "test_query_joins.JoinPublicTest.test_public_test_run_control_two_fresh_batches_and_packages": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-public.log"
+      },
+      "test_query_joins.JoinDockerTest.test_scalar_enum_date_uuid_and_parameterized_ordering": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-order-limit.log"
+      },
+      "test_storage_query_fill.FillDockerTest.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime-repeat.log"
+      },
+      "test_storage_query_fill.FillDockerTest.test_real_both_direct_roots_and_independent_rounding_history": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime-repeat.log"
+      },
+      "test_storage_queries.StorageQueryDockerTest.test_colliding_owners_uuid_and_mutation_grading": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime-repeat.log"
+      },
+      "test_body_types.BodyTypesTest.test_local_project_type_compiles_in_executor": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime.log"
+      },
+      "test_body_types.BodyTypesTest.test_body_dependency_is_imported_by_context_module": {
+        "status": "ok",
+        "evidence": "result/joins-null/affected-runtime.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root": {
+        "status": "ok",
+        "evidence": "result/joins-null/final-catalog-static.log"
+      },
+      "test_query_joins.JoinDockerTest.test_autocheck_direct_root_enum_duplicates_order_and_mutations": {
+        "status": "ok",
+        "evidence": "result/joins-null/cases-acceptance-repeat.log"
+      },
+      "test_query_joins.JoinSqlTest.test_autocheck_enum_order_and_independent_sql_audit": {
+        "status": "ok",
+        "evidence": "result/joins-null/cases-acceptance.log"
+      },
+      "test_query_joins.JoinPublicTest.test_public_autocheck_direct_root_test_run": {
+        "status": "ok",
+        "evidence": "result/joins-null/cases-acceptance.log"
+      }
+    },
+    "initialFailuresRetained": [
+      {
+        "test": "test_query_joins.JoinDockerTest.test_portable_all_four_bag_joins_null_undefined_truth_tables_and_owner_types",
+        "status": "FAIL",
+        "evidence": "result/joins-null/initial-runtime.log"
+      },
+      {
+        "test": "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes",
+        "status": "FAIL",
+        "evidence": "result/joins-null/affected-static.log"
+      },
+      {
+        "test": "test_query_joins.JoinDockerTest.test_portable_all_four_bag_joins_null_undefined_truth_tables_and_owner_types",
+        "status": "FAIL",
+        "evidence": "result/joins-null/acceptance-1.log"
+      },
+      {
+        "test": "test_query_joins.JoinPublicTest.test_public_test_run_control_two_fresh_batches_and_schemas",
+        "status": "ERROR",
+        "evidence": "result/joins-null/acceptance-1.log",
+        "supersededBy": "test_query_joins.JoinPublicTest.test_public_test_run_control_two_fresh_batches_and_packages"
+      },
+      {
+        "test": "test_storage_query_fill.FillDockerTest.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots",
+        "status": "FAIL",
+        "evidence": "result/joins-null/affected-runtime.log"
+      },
+      {
+        "test": "test_storage_query_fill.FillDockerTest.test_real_both_direct_roots_and_independent_rounding_history",
+        "status": "FAIL",
+        "evidence": "result/joins-null/affected-runtime.log"
+      },
+      {
+        "test": "test_storage_queries.StorageQueryDockerTest.test_colliding_owners_uuid_and_mutation_grading",
+        "status": "FAIL",
+        "evidence": "result/joins-null/affected-runtime.log"
+      },
+      {
+        "test": "test_query_joins.JoinDockerTest.test_autocheck_direct_root_enum_duplicates_order_and_mutations",
+        "status": "ERROR",
+        "evidence": "result/joins-null/cases-acceptance.log"
+      }
+    ],
+    "logs": [
+      {
+        "file": "result/joins-null/plan-repeat.log",
+        "sha256": "1a59142446e6726b22725b3baebae29a0113f6b3b981a0ed8ee3d868e301867a",
+        "summary": [
+          "Ran 4 tests in 4.079s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/initial-runtime.log",
+        "sha256": "fb4a9df84579e82760eec59933b601e39a6199d8cdc1acaecbd69b99d8a2ebcb",
+        "summary": [
+          "Ran 2 tests in 51.349s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/joins-null/affected-static.log",
+        "sha256": "1f5559397d83f5cc3cb3a6dc1ff06cf954ec7089875e337bf2ebe5754c11a75e",
+        "summary": [
+          "Ran 29 tests in 1.417s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/joins-null/acceptance-1.log",
+        "sha256": "63635eee0b68a58889b612623b672065c529c5c48e6c6eb48db432dac3cdcb3a",
+        "summary": [
+          "Ran 12 tests in 316.523s",
+          "FAILED (failures=1, errors=1)"
+        ]
+      },
+      {
+        "file": "result/joins-null/affected-static-repeat.log",
+        "sha256": "0db70c9104f460f3d95de0bda3660433ef296705c8fd5ee9a68ed852ba8a5bb0",
+        "summary": [
+          "Ran 1 test in 0.163s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/runtime-profile-static.log",
+        "sha256": "4a505acce24d9b5f8a5a79b018d09d17f4832111204b445ede27498f60e07105",
+        "summary": [
+          "Ran 12 tests in 0.042s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/acceptance-repeat.log",
+        "sha256": "cec45aebcf084770b8753633fe76e7245fac60cdf84e6c08cf006d8e964e146c",
+        "summary": [
+          "Ran 2 tests in 208.345s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/affected-runtime.log",
+        "sha256": "b1b388a4dbead0cd683d3c635921e8474735feaefcd58134871eca9d1bf1c25c",
+        "summary": [
+          "Ran 7 tests in 44.251s",
+          "FAILED (failures=3)"
+        ]
+      },
+      {
+        "file": "result/joins-null/final-static.log",
+        "sha256": "8719228f49cdc8678a00b1a0df47fa3702c5e38e7c43f12b4bc00ea365c57324",
+        "summary": [
+          "Ran 12 tests in 5.076s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/affected-runtime-repeat.log",
+        "sha256": "71b24af2b0a1c384a773c19c8ae910fb8ff893c6c73a6724a0c004d893019ae8",
+        "summary": [
+          "Ran 5 tests in 141.702s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/final-public.log",
+        "sha256": "3d0a9717ba3c07187dbd3261779e31e2fdc446411d3e5785facc65f812bff303",
+        "summary": [
+          "Ran 2 tests in 130.623s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/cases-acceptance.log",
+        "sha256": "c1a56dbfbd4ba8e238bf293f25af2a76ae359b647a69d2e6afbe5a25bef8d8e7",
+        "summary": [
+          "Ran 3 tests in 46.675s",
+          "FAILED (errors=1)"
+        ]
+      },
+      {
+        "file": "result/joins-null/cases-acceptance-repeat.log",
+        "sha256": "1bfe8c7ca9fb1fe82268d8f13df8e52c57a27d35ab5f78158f7ae489f4ea2936",
+        "summary": [
+          "Ran 1 test in 28.417s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/final-catalog-static.log",
+        "sha256": "7484c4b3d6a468425a0c686d6aed6e8e3058c2b14e84c2d593d945763ccf1588",
+        "summary": [
+          "Ran 5 tests in 3.928s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/joins-null/final-order-limit.log",
+        "sha256": "76605eda048a2ab48ffe66dc9f0b5d70b58cee0d91bc908d896915a4e6bfc03a",
+        "summary": [
+          "Ran 1 test in 9.731s",
+          "OK"
+        ]
+      }
+    ]
+  },
+  "public": [
+    {
+      "folder": "result/joins-null/public-test",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 4,
+      "maxScore": 4,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/joins-null/public-run",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 4,
+      "maxScore": 4,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/joins-null/public-cases-test",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/joins-null/public-cases-run",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/joins-null/public-control",
+      "sourceHash": "575c613a49c06017ebc9399c5396b53be47c4c3e1a378747681b3b325f4b6ba9",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/joins-null/batch-1",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        6,
+        3,
+        6
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/joins-null/batch-2",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        6,
+        3,
+        6
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "schemas": {
+    "validatedArtifacts": 66,
+    "status": "PASS"
+  },
+  "sql": [
+    {
+      "file": "result/joins-null/sql-real.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "7916c452726d3bfba7546f0b396b88ff7c614c0bccbb893e8ffe69dc11645574"
+    },
+    {
+      "file": "result/joins-null/sql-ordinary-full.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "7ca285a429198199edecf882500606411eb88941d42a8603c513427a32591630"
+    },
+    {
+      "file": "result/joins-null/sql-ordinary-state.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "f763aa23565bbe8576db8134741908a6e208ebc55aeb901b25629cff4d87074b"
+    },
+    {
+      "file": "result/joins-null/sql-renamed-full.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "91b65305022afa39ce9b6cbc2847907bd68d5dae33a06ed40994f6ce25f0cbda"
+    },
+    {
+      "file": "result/joins-null/sql-renamed-state.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "557eb30710e7e6dcb7da8f3359618695a0ffa8d918e2a47ecb0e22be90ac2346"
+    },
+    {
+      "file": "result/joins-null/sql-cases.json",
+      "status": "EXECUTED",
+      "cleanup": true,
+      "sha256": "606ab7c5ad26511964e94c6d36cd6e8b7dcb49c2325c0ec70d01907fc56cfddc"
+    }
+  ],
+  "mutations": [
+    {
+      "label": "inner",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-inner.json",
+      "sha256": "56c267094aec6dccf414a57c8fa2aa9d2a90282f0690b09f46a1bd34bdce34e7"
+    },
+    {
+      "label": "on",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-on.json",
+      "sha256": "5bd40f0497556168e4885c2bcd68066a6554e840ee32025f3d0a56f193c40592"
+    },
+    {
+      "label": "resource",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-resource.json",
+      "sha256": "3f1b3b604d5f9442d71b65b251ecf9d331560dcd9d9638609b1aec5f276607c9"
+    },
+    {
+      "label": "fallback",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-fallback.json",
+      "sha256": "4b28333370b715d84cd7932d778f13b9b51b9b0d1241edbe0619e66c0113b971"
+    },
+    {
+      "label": "base",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-base.json",
+      "sha256": "0ca0a1d81fcc21c2794dc79fed198466bab276328660d70f9fa06b6b39b250da"
+    },
+    {
+      "label": "boundary",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-boundary.json",
+      "sha256": "8b9adf62f545845a7e76da575d808579e17eaaee612b6779c5f44b95f3f20bde"
+    },
+    {
+      "label": "right-left",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-right-left.json",
+      "sha256": "da91353616bab0d10f5dd9d48cee69b6667b057b6dc579629ab15082d1b24ef1"
+    },
+    {
+      "label": "full-left",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-full-left.json",
+      "sha256": "ae86ff946771a8bc25e1172ca72fdc4f8486b057f3b2c87be7af15da1d5f6db3"
+    },
+    {
+      "label": "null-not-null",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-null-not-null.json",
+      "sha256": "2e137900bd68d9981f9f9f28bcd2c9422e5b91485a5047fd9ab2e9185e50c8a6"
+    },
+    {
+      "label": "cases-status",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-cases-status.json",
+      "sha256": "aaa4bd48793ac1cc53bf738f46b7b55c95cd7fad33a2f57b00e3bed42eda2c29"
+    },
+    {
+      "label": "cases-order",
+      "runtimeStatus": "EXECUTED",
+      "assessment": "SBSL FAIL asserted in scoped unittest",
+      "file": "result/joins-null/mutation-cases-order.json",
+      "sha256": "fe78eae44b6760854e69fb701c68586ffd16473e99e37699497d5ed3ef57d86f"
+    }
+  ],
+  "native": {
+    "elementReferenceVersion": "9.3",
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "probes": [
+      {
+        "probe": "Version",
+        "args": [
+          "--version"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "Unsupported93",
+        "args": [
+          "-c",
+          "9.3",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/Values.sbsl"
+        ],
+        "exitCode": 255,
+        "expectedSuccess": false
+      },
+      {
+        "probe": "Values",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/Values.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "JsonReaderCurrent",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/JsonReader.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "JsonReader90",
+        "args": [
+          "-c",
+          "9.0",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/JsonReader.sbsl"
+        ],
+        "exitCode": 0,
+        "expectedSuccess": true
+      },
+      {
+        "probe": "Query",
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/Query.sbsl"
+        ],
+        "exitCode": 255,
+        "expectedSuccess": false
+      }
+    ]
+  },
+  "reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current"
+  },
+  "localExclusions": [
+    "full query discovery",
+    "303 forms",
+    "44 previous roots",
+    "four validate",
+    "full regression suite",
+    "nightly execution",
+    "native XBQL/platform compilation",
+    "browser UI"
+  ],
+  "preserved": [
+    "four source archives and their SHA-256",
+    "previous assignment expected",
+    "runtime and input limits",
+    "CI schedule",
+    "unrelated workspace output"
+  ],
+  "nextStage": "041-projections-and-aggregates"
+}

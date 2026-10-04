@@ -20,6 +20,9 @@ def query_name(query):
 
 def generate_query(query, contracts):
     """Only metadata/AST become code; no rows, expected values or Python filter."""
+    if query.source_kind == 'relational':
+        from .query_joins import generate_relational_query
+        return generate_relational_query(query, contracts)
     name = query_name(query)
     if name in contracts.definitions:
         return name
@@ -39,7 +42,7 @@ def generate_query(query, contracts):
     if not query.fill:
         text += declaration('СтрокаРезультата', query.projections, readonly=True)
     text += '@Глобально\nструктура Запрос\n'
-    text += ''.join('    знч П' + str(p.slot) + ': ' + p.type + '\n' for p in parameters)
+    text += ''.join('    знч П' + str(p.slot) + ': ' + contracts.sbsl_type(p.type) + '\n' for p in parameters)
     if sliced:
         text += '    знч Граница: Дата\n'
     text += '    @Глобально\n    метод Выполнить(): Массив<' + row_type + '>\n'
@@ -48,7 +51,7 @@ def generate_query(query, contracts):
              '        если Состояние.СодержитКлюч(' + contracts.literal(query.owner,'Строка') + ')\n'
              '            знч Таблица = Состояние[' + contracts.literal(query.owner,'Строка') + ']\n'
              '            для JSON из Таблица.Значения()\n'
-             '                знч Значение = СериализацияJson.ПрочитатьОбъект(JSON)\n')
+             '                знч Значение: Объект? = СериализацияJson.ПрочитатьОбъект(JSON)\n')
     if sliced:
         text += '                для ЗначениеСтроки из (Значение как Массив<Объект?>)\n                    знч Снимок = ЗначениеСтроки как Соответствие<Строка, Объект?>\n'
     else:
@@ -99,7 +102,7 @@ def generate_query(query, contracts):
         for f,descending in query.ordering:
             text += '    если А.' + f.name + ' != Б.' + f.name + '\n        возврат А.' + f.name + (' > ' if descending else ' < ') + 'Б.' + f.name + '\n    ;\n'
         text += '    возврат Ложь\n;\n'
-    signature = ', '.join('П' + str(p.slot) + ': ' + p.type for p in parameters)
+    signature = ', '.join('П' + str(p.slot) + ': ' + contracts.sbsl_type(p.type) for p in parameters)
     def captured(p):
         name = 'П' + str(p.slot)
         return ('новый ' + p.type + '(Идентификатор = ' + name + '.Идентификатор)'
@@ -156,12 +159,13 @@ def bind_queries(plan):
                               or query.fill['sourceName'] in c.local_by_source.get(c.current_source, {})):
                 raise UnsupportedSyntaxError('Затенённый тип ЗАПОЛНИТЬ: ' + query.fill['sourceName'] +
                                              f" ({symbol.start+body+query.fill['typeRange'][0]}-{symbol.start+body+query.fill['typeRange'][1]})")
-            if (query.source_kind == 'slice-last' and
-                    (method_binding_visible(locals_,query.source_name.split('::')[0],body+query.source_range[0])
-                     or query.source_name in c.local_by_source.get(c.current_source, {}))):
-                raise UnsupportedSyntaxError('Затенённый источник СрезПоследних')
-            if query.source_kind == 'slice-last' and query.owner not in plan.storage.register_schemas:
-                raise UnsupportedSyntaxError('СрезПоследних требует явный storage.registers: ' + query.owner)
+            sources = query.sources if query.source_kind == 'relational' else (query,)
+            for source in sources:
+                if (method_binding_visible(locals_,source.source_name.split('::')[0],body+source.source_range[0])
+                        or source.source_name in c.local_by_source.get(c.current_source, {})):
+                    raise UnsupportedSyntaxError('Затенённый источник запроса: ' + source.source_name)
+                if source.source_kind == 'slice-last' and source.owner not in plan.storage.register_schemas:
+                    raise UnsupportedSyntaxError('СрезПоследних требует явный storage.registers: ' + source.owner)
             for p in query.parameters:
                 if re.fullmatch(IDENT,p.expression):
                     inferred = _local_type(symbol.source,node,p.expression,body+p.start,locals_,symbol.owner,plan.model)
@@ -173,10 +177,12 @@ def bind_queries(plan):
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
                 'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else name + '.СтрокаРезультата',
                 'backend': plan.storage.config.get('backend','memory'),
-                'limitations': ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']})
-            element = c.resolve(query.owner)[0]
-            if query.source_kind == 'ordinary' and element not in plan.storage_elements:
-                plan.storage_elements.append(element)
+                'limitations': (['ordinary-and-day-slice-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
+                                if query.source_kind == 'relational' else ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee'])})
+            for source in sources:
+                element = c.resolve(source.owner)[0]
+                if source.source_kind == 'ordinary' and element not in plan.storage_elements:
+                    plan.storage_elements.append(element)
             plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'],[]).append(name + '.Запрос')
             plan.bindings.append(CapabilityBinding('query','Выполнить',query.owner,query.mode,
                 'Выборка в executor по текущему staging; параметры при создании, новые строки при Выполнить',

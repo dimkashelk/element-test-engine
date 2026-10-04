@@ -1,0 +1,400 @@
+name: Соединения и NULL — joins-null-ordinary-sql
+checks:
+- id: Full
+  type: runtime
+  points: 1
+  comparison: query-rows-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Full
+  args: []
+  timeout: 15s
+  trace: true
+  runtimeProfile: '9.3'
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: A
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Label: B
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Label: C
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 1
+        Label: x
+        Amount: 3
+        Note: null
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Label: y
+        Amount: 5
+        Note: note
+        Peer:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 66666666-6666-4666-8666-666666666666
+        Key: 4
+        Label: z
+        Amount: 9
+        Note: null
+        Peer: null
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: p
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 77777777-7777-4777-8777-777777777777
+        Key: 7
+        Label: q
+    backend: postgres
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+    - Left: A
+      Right: x
+      Amount: 3
+      Note: null
+      Ref:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+      Second:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+    - Left: A
+      Right: y
+      Amount: 5
+      Note: note
+      Ref:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+      Second:
+        Идентификатор: 11111111-1111-4111-8111-111111111111
+    - Left: B
+      Right: x
+      Amount: 3
+      Note: null
+      Ref:
+        Идентификатор: 22222222-2222-4222-8222-222222222222
+      Second:
+        Идентификатор: 22222222-2222-4222-8222-222222222222
+    - Left: B
+      Right: y
+      Amount: 5
+      Note: note
+      Ref:
+        Идентификатор: 22222222-2222-4222-8222-222222222222
+      Second:
+        Идентификатор: 22222222-2222-4222-8222-222222222222
+    - Left: C
+      Right: null
+      Amount: null
+      Note: null
+      Ref:
+        Идентификатор: 33333333-3333-4333-8333-333333333333
+      Second:
+        Идентификатор: 33333333-3333-4333-8333-333333333333
+    - Left: null
+      Right: z
+      Amount: 9
+      Note: null
+      Ref: null
+      Second: null
+    storage:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: A
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Label: B
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 22222222-2222-4222-8222-222222222222
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Label: C
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 33333333-3333-4333-8333-333333333333
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 1
+        Label: x
+        Amount: 3
+        Note: null
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+      id: 44444444-4444-4444-8444-444444444444
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Label: y
+        Amount: 5
+        Note: note
+        Peer:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+      id: 55555555-5555-4555-8555-555555555555
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 66666666-6666-4666-8666-666666666666
+        Key: 4
+        Label: z
+        Amount: 9
+        Note: null
+        Peer: null
+      id: 66666666-6666-4666-8666-666666666666
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: p
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 77777777-7777-4777-8777-777777777777
+        Key: 7
+        Label: q
+      id: 77777777-7777-4777-8777-777777777777
+- id: Coalesce
+  type: runtime
+  points: 1
+  comparison: query-rows-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Coalesce
+  args: []
+  timeout: 15s
+  trace: true
+  runtimeProfile: '9.3'
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: A
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Label: B
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Label: C
+        Amount: 0
+        Note: null
+        Peer: null
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 1
+        Label: x
+        Amount: 3
+        Note: null
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Label: y
+        Amount: 5
+        Note: note
+        Peer:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 66666666-6666-4666-8666-666666666666
+        Key: 4
+        Label: z
+        Amount: 9
+        Note: null
+        Peer: null
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: p
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 77777777-7777-4777-8777-777777777777
+        Key: 7
+        Label: q
+    backend: postgres
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+    - Left: A
+      Amount: 3
+      Note: null
+      Absent: false
+    - Left: A
+      Amount: 5
+      Note: note
+      Absent: false
+    - Left: B
+      Amount: 3
+      Note: null
+      Absent: false
+    - Left: B
+      Amount: 5
+      Note: note
+      Absent: false
+    - Left: C
+      Amount: 0
+      Note: missing
+      Absent: true
+    storage:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: A
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Label: B
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 22222222-2222-4222-8222-222222222222
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Label: C
+        Amount: 0
+        Note: null
+        Peer: null
+      id: 33333333-3333-4333-8333-333333333333
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 1
+        Label: x
+        Amount: 3
+        Note: null
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+      id: 44444444-4444-4444-8444-444444444444
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Label: y
+        Amount: 5
+        Note: note
+        Peer:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+      id: 55555555-5555-4555-8555-555555555555
+    - type: Data::Entry
+      value:
+        Ссылка:
+          Идентификатор: 66666666-6666-4666-8666-666666666666
+        Key: 4
+        Label: z
+        Amount: 9
+        Note: null
+        Peer: null
+      id: 66666666-6666-4666-8666-666666666666
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Label: p
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 77777777-7777-4777-8777-777777777777
+        Key: 7
+        Label: q
+      id: 77777777-7777-4777-8777-777777777777
