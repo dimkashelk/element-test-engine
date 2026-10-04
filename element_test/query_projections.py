@@ -221,11 +221,13 @@ class ExpressionRenderer:
         self.helpers={}
 
     def null(self,e,row='С',group='Группа'):
-        if e.kind=='field':return row+'.С'+str(e.source)+' == Неопределено'
+        if e.kind=='field':
+            absent=row+'.С'+str(e.source)+' == Неопределено'
+            return absent+' или ('+row+'.С'+str(e.source)+' как '+self.row_types[e.source]+').'+e.null_field if e.null_field else absent
         if e.kind=='null':return 'Истина'
         if e.kind=='aggregate':return self.value(e,row,group)+' == Неопределено' if e.value[0]!='КОЛИЧЕСТВО' else 'Ложь'
         if e.kind=='coalesce':return '('+self.null(e.children[0],row,group)+') и ('+self.null(e.children[1],row,group)+')'
-        if e.kind in ('compare','and','or','not','in'):return self.tri(e,row,group)+' == -1'
+        if e.kind in ('compare','and','or','not','in','in-query'):return self.tri(e,row,group)+' == -1'
         if e.kind=='case':
             result=self.null(e.children[-1],row,group)
             for i in reversed(range(0,len(e.children)-1,2)):
@@ -278,11 +280,31 @@ class ExpressionRenderer:
             av,bv=self.value(a,row,group),self.value(b,row,group)
             if a.kind=='undefined' or b.kind=='undefined':
                 other=b if a.kind=='undefined' else a;typ=other.type
-                if other.kind=='field':typ=next(f.type for f,_ in self.query.sources[other.source].projections if f.name==other.name)
+                if other.kind=='field':typ=next(f.type for f,label in self.query.sources[other.source].projections if label==other.name)
                 if not typ.endswith('?'):return '(('+self.null(a,row,group)+' или '+self.null(b,row,group)+') ? -1 : '+('1' if op=='!=' else '0')+')'
             if op not in ('==','!='):
                 av='('+av+' как '+a.type.rstrip('?')+')';bv='('+bv+' как '+b.type.rstrip('?')+')'
             return '(('+self.null(a,row,group)+' или '+self.null(b,row,group)+') ? -1 : ('+av+' '+op+' '+bv+' ? 1 : 0))'
+        if e.kind=='in-query':
+            from .storage_queries import generate_query,query_name,unique_parameters
+            from .query_composites import mapped_args,needs_context,internal,null_column
+            q=self.query.subqueries[e.value];n=generate_query(q,self.contracts)
+            key=('in-query',e.value)
+            if key not in self.helpers:
+                method='ВПодзапросе'+str(len(self.helpers));child,label=q.projections[0]
+                sig=''.join(', П'+str(p.slot)+': '+self.contracts.sbsl_type(p.type) for p in unique_parameters(self.query))
+                if needs_context(q):sig+=', Контекст: Соответствие<Строка, Строка>'
+                args=mapped_args(self.query,q)+(['Контекст'] if needs_context(q) else [])
+                call=n+'.Создать('+', '.join(args)+').'+('ВыполнитьВнутренне' if internal(q) else 'Выполнить')+'()'
+                missing='С.'+null_column(q.projections,0) if internal(q) else 'Ложь'
+                body='@Глобально\nметод '+method+'(Значение: '+self.contracts.sbsl_type(e.children[0].type)+', Null: Булево'+sig+'): Число\n    пер Неизвестно = Ложь\n    для С из '+call+'\n        если Null или '+missing+'\n            Неизвестно = Истина\n        иначе если Значение == С.'+label+'\n            возврат 1\n        ;\n    ;\n    возврат Неизвестно ? -1 : 0\n;\n'
+                self.helpers[key]=(method,body)
+                self.contracts.method_dependencies.setdefault(query_name(self.query),[]).append(n+'.Запрос')
+            args=''.join(', П'+str(p.slot) for p in unique_parameters(self.query))
+            if needs_context(q):args+=', Контекст'
+            left=self.value(e.children[0],row,group);missing=self.null(e.children[0],row,group)
+            if e.children[0].sql_nullable:left='(('+missing+') ? Неопределено : '+left+')'
+            return query_name(self.query)+'.'+self.helpers[key][0]+'('+left+', '+missing+args+')'
         if e.kind=='in':
             comparisons=[Expression('compare','Булево',value='=',children=(e.children[0],c)) for c in e.children[1:]]
             result=comparisons[0]
@@ -336,6 +358,7 @@ class ExpressionRenderer:
 
 def grouped_tail(query, name, row_type, renderer, parameters):
     """Filter -> groups -> HAVING -> projection DISTINCT -> ORDER -> LIMIT."""
+    from .query_composites import null_column
     condition=renderer.tri(query.predicates[0])+' == 1' if query.predicates else 'Истина'
     grouped=bool(query.grouping) or any(c.kind=='aggregate' for e in [*(e for e,_ in query.projections),*query.having,*(e for e,_ in query.ordering)] for c in walk(e))
     text='        знч Группы = новый Массив<ГруппаДанных>()\n'
@@ -359,7 +382,7 @@ def grouped_tail(query, name, row_type, renderer, parameters):
     else:text+='            Отобранные.Добавить(Г)\n'
     text+='        ;\n        знч Результат = новый Массив<'+row_type+'>()\n        для Г из Отобранные\n            знч С = Г.С\n            знч Группа = Г.Строки\n'
     if query.limit:text+='            если Результат.Размер() >= '+str(query.limit)+'\n                прервать\n            ;\n'
-    text+='            Результат.Добавить(новый '+row_type+'('+', '.join(label+' = '+renderer.projection(e) for e,label in query.projections)+'))\n        ;\n        возврат Результат\n    ;\n;\n'
+    text+='            Результат.Добавить(новый '+row_type+'('+', '.join(label+' = '+renderer.projection(e)+', '+null_column(query.projections,i)+' = '+renderer.null(e) for i,(e,label) in enumerate(query.projections))+'))\n        ;\n        возврат Результат\n    ;\n;\n'
     if query.ordering:
         sig=''.join(', П'+str(p.slot)+': '+renderer.contracts.sbsl_type(p.type) for p in parameters)
         text+='@Глобально\nметод Раньше(А: ГруппаДанных, Б: ГруппаДанных'+sig+'): Булево\n'

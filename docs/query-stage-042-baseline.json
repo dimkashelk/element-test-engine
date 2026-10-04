@@ -1,0 +1,3368 @@
+{
+  "stage": "042-unions-and-nesting",
+  "archives": [
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97"
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc"
+    },
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04"
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135"
+    }
+  ],
+  "contracts": [
+    {
+      "contractId": "query-fbd9560a31ae5e55482db1b4",
+      "family": "xbql-file",
+      "operations": [
+        "source",
+        "alias",
+        "projection",
+        "join",
+        "aggregate",
+        "group",
+        "nested"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ПанельОтчетов",
+        "module": "ПланФактныйАнализ"
+      },
+      "sourceHash": "2c5aa8ea5cf7fa0661e8f37dc289054ca27ea20f0f92259bc48ca5d9cde0f101",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ПанельОтчетов/ПланФактныйАнализ.xbql",
+      "range": [
+        0,
+        749
+      ],
+      "bodyStart": 0,
+      "line": 1,
+      "text": "ВЫБРАТЬ\n\tПланыПродаж.Категория КАК Категория,\n\tПланыПродаж.Период КАК Период,\n\tПланыПродаж.Сумма КАК СуммаПлан,\n\tПродажи.Сумма КАК СуммаФакт\nИЗ \n\tПланыПродаж КАК ПланыПродаж\n        ЛЕВОЕ СОЕДИНЕНИЕ\n            (ВЫБРАТЬ\n                Номенклатура.Категория КАК Категория,\n                Период.Год КАК Год ,\n                Период.Месяц КАК Месяц,\n                СУММА(Сумма) КАК Сумма\n            ИЗ ПанельОтчетов::Продажи КАК Продажи\n            СГРУППИРОВАТЬ ПО\n                Номенклатура.Категория,\n                Период.Год,\n                Период.Месяц\n            ) Продажи\n        ПО ПланыПродаж.Категория == Продажи.Категория\n            И ПланыПродаж.Период.Год == Продажи.Год\n            И ПланыПродаж.Период.Месяц == Продажи.Месяц",
+      "target": null,
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": null,
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-49ae29137b5059a01d71b476",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "aggregate",
+        "group",
+        "temporary"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "РасходнаяНакладная.Объект"
+      },
+      "sourceHash": "1230d02761f3f32f7accc0e2a4e5dea1d2e6f5cff19b55511653c09f4aac67bb",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОстатков/РасходнаяНакладная.Объект.xbsl",
+      "range": [
+        1535,
+        2005
+      ],
+      "bodyStart": 1542,
+      "line": 45,
+      "text": "\n        ВЫБРАТЬ\n            РасходнаяНакладнаяСписокТоваров.Номенклатура КАК Номенклатура,\n            СУММА(РасходнаяНакладнаяСписокТоваров.Количество) КАК Количество\n        ПОМЕСТИТЬ ВТ_Номенклатура\n        ИЗ\n            РасходнаяНакладная.СписокНоменклатуры КАК РасходнаяНакладнаяСписокТоваров\n        ГДЕ\n            РасходнаяНакладнаяСписокТоваров.Владелец == %Ссылка\n        СГРУППИРОВАТЬ ПО\n            РасходнаяНакладнаяСписокТоваров.Номенклатура\n    ",
+      "target": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "РасходнаяНакладная.Объект",
+        "method": "ВыполнитьПроведение",
+        "parameters": [],
+        "returnType": null,
+        "range": [
+          1158,
+          5260
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Ожидается ИЗ (177)",
+      "nextStage": "041-projections-and-aggregates",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference041": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/count-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/sum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/average-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/maximum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/minimum-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/cast-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/arithmetic-operations-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/concatenation/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/date-and-time-in-query-language/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/case-expression/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
+    },
+    {
+      "contractId": "query-b9cfa91636b29b821de12f89",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "null",
+        "join",
+        "order",
+        "balance",
+        "nested"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "РасходнаяНакладная.Объект"
+      },
+      "sourceHash": "1230d02761f3f32f7accc0e2a4e5dea1d2e6f5cff19b55511653c09f4aac67bb",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "РегистрНакопленияОстатков/РасходнаяНакладная.Объект.xbsl",
+      "range": [
+        2063,
+        3155
+      ],
+      "bodyStart": 2070,
+      "line": 59,
+      "text": "\n        ВЫБРАТЬ\n            ВТ_Номенклатура.Номенклатура КАК Номенклатура,\n            ВТ_Номенклатура.Номенклатура.Представление.ЗаменитьNull() КАК НоменклатураПредставление,\n            ВТ_Номенклатура.Количество КАК КоличествоВДокументе,\n            ОстаткиНоменклатурыОстатки.Склад КАК Склад,\n            ОстаткиНоменклатурыОстатки.КоличествоОстаток.ЗаменитьNull() КАК КоличествоОстаток,\n            ОстаткиНоменклатурыОстатки.СуммаОстаток.ЗаменитьNull() КАК СуммаОстаток\n        ИЗ\n            ВТ_Номенклатура КАК ВТ_Номенклатура\n                ЛЕВОЕ СОЕДИНЕНИЕ ОстаткиНоменклатуры.Остатки(\n                    %Дата, \n                    Номенклатура В (\n                        ВЫБРАТЬ\n                            Фильтр.Номенклатура КАК Номенклатура\n                        ИЗ \n                            ВТ_Номенклатура КАК Фильтр\n                    )\n                ) КАК ОстаткиНоменклатурыОстатки\n                ПО ВТ_Номенклатура.Номенклатура == ОстаткиНоменклатурыОстатки.Номенклатура\n        УПОРЯДОЧИТЬ ПО\n            ОстаткиНоменклатурыОстатки.Номенклатура\n    ",
+      "target": {
+        "namespace": "РегистрНакопленияОстатков",
+        "module": "РасходнаяНакладная.Объект",
+        "method": "ВыполнитьПроведение",
+        "parameters": [],
+        "returnType": null,
+        "range": [
+          1158,
+          5260
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Представление (88)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-1301a8490f692e94fc572870",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "union",
+        "limit"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ХранилищеНастроек",
+        "module": "Подразделения"
+      },
+      "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ХранилищеНастроек/Подразделения.xbsl",
+      "range": [
+        111,
+        521
+      ],
+      "bodyStart": 118,
+      "line": 4,
+      "text": "\n        ВЫБРАТЬ ПЕРВЫЕ 1\n            Сотрудники.Подразделение\n        ИЗ \n            Сотрудники КАК Сотрудники\n        ГДЕ \n            Сотрудники.Пользователь == %{Пользователи.ТекущийПользователь}\n        \n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ ПЕРВЫЕ 1\n            Подразделения.Ссылка\n        ИЗ\n            Подразделения КАК Подразделения\n        ГДЕ\n            Подразделения.Основное\n    ",
+      "target": {
+        "namespace": "ХранилищеНастроек",
+        "module": "Подразделения",
+        "method": "ТекущееПодразделение",
+        "parameters": [],
+        "returnType": "Подразделения.Ссылка?",
+        "range": [
+          42,
+          637
+        ]
+      },
+      "dependencies": [
+        {
+          "namespace": "ХранилищеНастроек",
+          "owner": "Подразделения",
+          "kind": "Справочник",
+          "sourceFile": "ХранилищеНастроек/Подразделения.yaml"
+        },
+        {
+          "namespace": "ХранилищеНастроек",
+          "owner": "Сотрудники",
+          "kind": "Справочник",
+          "sourceFile": "ХранилищеНастроек/Сотрудники.yaml"
+        }
+      ],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Объект типа Пользователи.Ссылка отсутствует, неоднозначен или не поддерживается",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-baf8bca1dcce2f8ab741a66a",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "union",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Избранное",
+        "module": "Избранное"
+      },
+      "sourceHash": "01fa89bf158539668f9859a7f75d7742cdecfae95697f4e243c32d1fc5804deb",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Избранное/Избранное.xbsl",
+      "range": [
+        7641,
+        9582
+      ],
+      "bodyStart": 7648,
+      "line": 179,
+      "text": "\n        ВЫБРАТЬ\n            Пространства.Ссылка КАК Пространство\n        ПОМЕСТИТЬ\n            ВсеПространства\n        ИЗ\n            Пространства КАК Пространства\n        ГДЕ \n            Пространства.Ссылка В (%ПространстваИСтраницы)\n            \n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ\n            СтраницыПространств.Владелец\n        ИЗ\n            СтраницыПространств КАК СтраницыПространств\n        ГДЕ\n            СтраницыПространств.Ссылка В (%ПространстваИСтраницы)\n        \n        \n        //////////////////////////////////////////////////////////\n        ;\n        //////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ПрофилиПользователей.Ссылка КАК Читатель\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВсеПространства КАК ВсеПространства\n                ПО ВсеПространства.Пространство == ПраваНаПространство.Пространство\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n                ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n        ГДЕ\n            ПраваНаПространство.ПросмотрСодержимого\n        \n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            Участники.Участник КАК Читатель\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВсеПространства КАК ВсеПространства\n                ПО ВсеПространства.Пространство == ПраваНаПространство.Пространство\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК Участники\n                ПО Участники.Владелец == ПраваНаПространство.ВладелецПрава\n                 И Участники.Участник != Неопределено\n        ГДЕ\n            ПраваНаПространство.ПросмотрСодержимого\n    ",
+      "target": {
+        "namespace": "Избранное",
+        "module": "Избранное",
+        "method": "ЧитателиПространств",
+        "parameters": [
+          "\n    ПространстваИСтраницы: Обходимое<ЭлементыИзбранного.Ссылка?>\n    "
+        ],
+        "returnType": "ЧитаемоеСоответствие<Пространства.Ссылка, ЧитаемоеМножество<ПрофилиПользователей.Ссылка>>",
+        "range": [
+          7173,
+          9857
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (573)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-d1c8dc137abdefedda3b4dee",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "union",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Комментарии",
+        "module": "Комментарии"
+      },
+      "sourceHash": "a14beb0434b497e9dda9df7a5e45446ebe30843387b7e15f06a330b54c7f8e09",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Комментарии/Комментарии.xbsl",
+      "range": [
+        3518,
+        4728
+      ],
+      "bodyStart": 3525,
+      "line": 88,
+      "text": "\n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ПраваНаПространство.ВладелецПрава КАК Читатель\n        ПОМЕСТИТЬ \n            ЧитателиИсторииСтраниц\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n        ГДЕ\n            ПраваНаПространство.УдалениеЛюбыхКомментариев\n            И ПраваНаПространство.Пространство В (%Пространства)\n        \n        //////////////////////////////////////////////////////////\n        ;\n        //////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ\n            ЧитателиИсторииСтраниц.Пространство КАК Пространство,\n            ЧитателиИсторииСтраниц.Читатель КАК Читатель\n        ИЗ\n            ЧитателиИсторииСтраниц КАК ЧитателиИсторииСтраниц\n        \n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ\n            ЧитателиИстории.Пространство КАК Пространство,\n            Участники.Участник КАК Читатель\n        ИЗ\n            ЧитателиИсторииСтраниц КАК ЧитателиИстории     \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК Участники\n                ПО Участники.Владелец == ЧитателиИстории.Читатель\n        ГДЕ\n            Участники.Участник != Неопределено\n    ",
+      "target": {
+        "namespace": "Комментарии",
+        "module": "Комментарии",
+        "method": "РазрешенияПрофилейИГрупп",
+        "parameters": [
+          "\n    Пространства: Обходимое<Пространства.Ссылка?>\n    "
+        ],
+        "returnType": "ЧитаемоеСоответствие<Пространства.Ссылка, ЧитаемоеМножество<КлючДоступа.Объект>>",
+        "range": [
+          3152,
+          5273
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (479)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-f5bba27fd77a25fae77762ee",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаАдминистратораБиблиотеки"
+      },
+      "sourceHash": "d0e02770d31c4fc6e4daaedd13f3d4e0b4217329d93ebdc41ed29f0e7c276e38",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаАдминистратораБиблиотеки.xbsl",
+      "range": [
+        341,
+        1320
+      ],
+      "bodyStart": 348,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваБиблиотеки КАК ПраваБиблиотеки\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваБиблиотеки.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И ПраваБиблиотеки.АдминистрированиеБиблиотеки\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n   \n      ОБЪЕДИНИТЬ ВСЕ\n\n      ВЫБРАТЬ\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваБиблиотеки КАК ПраваБиблиотеки\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваБиблиотеки.ВладелецПрава            \n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И ПраваБиблиотеки.АдминистрированиеБиблиотеки\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаАдминистратораБиблиотеки",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаАдминистратораБиблиотеки.Объект>",
+          "\n        Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>\n    "
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаАдминистратораБиблиотеки.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          41,
+          1687
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-5825dd2eb35b6092df9b87ef",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаАдминистратораПространства"
+      },
+      "sourceHash": "c2ecd3192d13e0d5adc16f346c7970451ce1ecc115e906d4b598990918a2b46b",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаАдминистратораПространства.xbsl",
+      "range": [
+        420,
+        1660
+      ],
+      "bodyStart": 427,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.УправлениеПространством\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.УправлениеПространством\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаАдминистратораПространства",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаАдминистратораПространства.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаАдминистратораПространства.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2243
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-437a9b85c325604684ea5c73",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаДобавлениеКомментариев"
+      },
+      "sourceHash": "bb6445fd36a297d87f7372287c61f10dd967ae31612f4023bce5a345ab506d67",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаДобавлениеКомментариев.xbsl",
+      "range": [
+        416,
+        1654
+      ],
+      "bodyStart": 423,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.ДобавлениеКомментариев\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.ДобавлениеКомментариев\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаДобавлениеКомментариев",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаДобавлениеКомментариев.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаДобавлениеКомментариев.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2235
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-057eefb54d7828b43c1490f8",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаЗагрузкуФайлов"
+      },
+      "sourceHash": "3058fe05d84c94cfd796bde7c2386131982d8a3ba1f2c89fdde1d174b335f5ae",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаЗагрузкуФайлов.xbsl",
+      "range": [
+        400,
+        1622
+      ],
+      "bodyStart": 407,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.ЗагрузкаФайлов\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.ЗагрузкаФайлов\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаЗагрузкуФайлов",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаЗагрузкуФайлов.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаЗагрузкуФайлов.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2199
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-18b4b0c040c21f19f099a587",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаНастройкуОграниченийСтраниц"
+      },
+      "sourceHash": "f94b78c54fca069cec2a61b1802ded1a492658ad372854cf967bcc579a116993",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаНастройкуОграниченийСтраниц.xbsl",
+      "range": [
+        426,
+        1692
+      ],
+      "bodyStart": 433,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.ДобавлениеУдалениеОграниченийСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.ДобавлениеУдалениеОграниченийСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаНастройкуОграниченийСтраниц",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаНастройкуОграниченийСтраниц.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаНастройкуОграниченийСтраниц.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2276
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-2d52b08d4323d3e5e1bfa3c0",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрИсторииСтраниц"
+      },
+      "sourceHash": "bea0642ea75a5400b6d42e4f8e9f586e3179687d0b1d8e9b1bed5938a243b9ef",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаПросмотрИсторииСтраниц.xbsl",
+      "range": [
+        416,
+        1654
+      ],
+      "bodyStart": 423,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.ПросмотрИсторииСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.ПросмотрИсторииСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрИсторииСтраниц",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаПросмотрИсторииСтраниц.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаПросмотрИсторииСтраниц.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2239
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-a1151315f09ae5b6f0dfd830",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрПрофилейСПравами"
+      },
+      "sourceHash": "cb7c9b2ee33eefbf7b60bdb8a0e925c215a64ea28ced7e59d1feaa9adfb5fe93",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаПросмотрПрофилейСПравами.xbsl",
+      "range": [
+        322,
+        1342
+      ],
+      "bodyStart": 329,
+      "line": 5,
+      "text": "\n        ВЫБРАТЬ\n            УчастникиГрупп.Участник КАК Профиль,\n            УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n        ИЗ\n            ГруппыПрофилей.Участники КАК УчастникиГрупп\n            ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПраваБиблиотеки КАК ПраваБиблиотеки\n            ПО УчастникиГрупп.Владелец == ПраваБиблиотеки.ВладелецПрава\n        ГДЕ\n            НЕ УчастникиГрупп.Участник.ПометкаУдаления\n            И УчастникиГрупп.Участник.Пользователь В(%Пользователи)\n\n        ОБЪЕДИНИТЬ ВСЕ\n\n        ВЫБРАТЬ\n            ПраваБиблиотеки.ВладелецПрава КАК Профиль,\n            ПрофилиПользователей.Пользователь КАК Пользователь\n        ИЗ\n            ПраваБиблиотеки КАК ПраваБиблиотеки\n            ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n            ПО ПрофилиПользователей.Ссылка == ПраваБиблиотеки.ВладелецПрава\n            \n        ГДЕ\n            ПрофилиПользователей.Пользователь В (%Пользователи)\n            И НЕ ПрофилиПользователей.ПометкаУдаления\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрПрофилейСПравами",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаПросмотрПрофилейСПравами.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаПросмотрПрофилейСПравами.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          41,
+          1736
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (78)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-2de80cf471288b8f5febcb8e",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрСодержимого"
+      },
+      "sourceHash": "dc552379366be529c4d9c8275769be2009d55d8a5646ab15ba49e006fe99b014",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаПросмотрСодержимого.xbsl",
+      "range": [
+        410,
+        1642
+      ],
+      "bodyStart": 417,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.ПросмотрСодержимого\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.ПросмотрСодержимого\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаПросмотрСодержимого",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаПросмотрСодержимого.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаПросмотрСодержимого.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2218
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-afd20d6779b6ce20b7db91da",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаРедактированиеСтраниц"
+      },
+      "sourceHash": "cdc70ec2a1525e1bf900ed13050d68d2d38593b048908b6286753f0d74c7f327",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаРедактированиеСтраниц.xbsl",
+      "range": [
+        414,
+        1660
+      ],
+      "bodyStart": 421,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.РедактированиеЛюбыхСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.РедактированиеЛюбыхСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаРедактированиеСтраниц",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаРедактированиеСтраниц.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаРедактированиеСтраниц.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2238
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-75418683d4778a510ce17276",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаСозданиеПространств"
+      },
+      "sourceHash": "4868b28a3f5a7d2af51b61e4419a9dcc1ecd93c2276f52db0375246a53d99493",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаСозданиеПространств.xbsl",
+      "range": [
+        321,
+        1283
+      ],
+      "bodyStart": 328,
+      "line": 5,
+      "text": "\n      ВЫБРАТЬ\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваБиблиотеки КАК ПраваБиблиотеки\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваБиблиотеки.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И ПраваБиблиотеки.СозданиеПространств\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n   \n      ОБЪЕДИНИТЬ ВСЕ\n\n      ВЫБРАТЬ\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваБиблиотеки КАК ПраваБиблиотеки\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваБиблиотеки.ВладелецПрава            \n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И ПраваБиблиотеки.СозданиеПространств\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаСозданиеПространств",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаСозданиеПространств.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаСозданиеПространств.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          41,
+          1635
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-0a71a0e6aee46a1a72b9c952",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаСозданиеСтраниц"
+      },
+      "sourceHash": "36be1f1d7c3358c8313ac4dbda1e72df83e52928b556f858ffac952b7092fd05",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаСозданиеСтраниц.xbsl",
+      "range": [
+        402,
+        1626
+      ],
+      "bodyStart": 409,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.СозданиеСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.СозданиеСтраниц\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаСозданиеСтраниц",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаСозданиеСтраниц.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаСозданиеСтраниц.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2201
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-c0a8685113cd3cf20a105e16",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаУдалениеЛюбыхКомментариев"
+      },
+      "sourceHash": "750a744ef7d8508798cfa4e9c234dcb375673e7efc5b3321c2c24417be16e5c4",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаУдалениеЛюбыхКомментариев.xbsl",
+      "range": [
+        422,
+        1666
+      ],
+      "bodyStart": 429,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.УдалениеЛюбыхКомментариев\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.УдалениеЛюбыхКомментариев\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаУдалениеЛюбыхКомментариев",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаУдалениеЛюбыхКомментариев.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаУдалениеЛюбыхКомментариев.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2252
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-bda40e171222ee6cc7a171ec",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаУдалениеЛюбыхФайлов"
+      },
+      "sourceHash": "899b8e7b7eef8c08fdc4a9de7c8b94ee6beba5795c30f5b808476db9ca950ecd",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/КлючДоступаНаУдалениеЛюбыхФайлов.xbsl",
+      "range": [
+        410,
+        1642
+      ],
+      "bodyStart": 417,
+      "line": 8,
+      "text": "\n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК УчастникиГрупп\n         ПО ПраваНаПространство.ВладелецПрава == УчастникиГрупп.Владелец\n      ГДЕ\n         УчастникиГрупп.Участник.Пользователь В (%Пользователи)\n         И НЕ УчастникиГрупп.Участник.ПометкаУдаления\n         И ПраваНаПространство.УдалениеЛюбыхФайлов\n         И ПраваНаПространство.Пространство В (%Пространства)\n   \n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ПраваНаПространство.Пространство КАК Пространство,\n         ПрофилиПользователей.Пользователь КАК Пользователь\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПрофилиПользователей.Ссылка == ПраваНаПространство.ВладелецПрава\n      ГДЕ\n         ПрофилиПользователей.Пользователь В (%Пользователи)\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n         И ПраваНаПространство.УдалениеЛюбыхФайлов\n         И ПраваНаПространство.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "КлючДоступаНаУдалениеЛюбыхФайлов",
+        "method": "ПроверитьНаличиеКлючейДоступа",
+        "parameters": [
+          "Ключи: ЧитаемыйМассив<КлючДоступаНаУдалениеЛюбыхФайлов.Объект>",
+          " Пользователи: ЧитаемыйМассив<Пользователи.Ссылка>"
+        ],
+        "returnType": "ЧитаемоеСоответствие<КлючДоступаНаУдалениеЛюбыхФайлов.Объект, ЧитаемаяКоллекция<Пользователи.Ссылка>>",
+        "range": [
+          61,
+          2221
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-f8715dc32d5591c8793922e4",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "aggregate",
+        "group",
+        "union",
+        "generate",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства"
+      },
+      "sourceHash": "25d99f995b836927303c19a77c9d1c78191c77f3b0d7d0f4d6264004ed0617d2",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ОграниченияСтраницПространства.xbsl",
+      "range": [
+        2965,
+        7584
+      ],
+      "bodyStart": 2972,
+      "line": 76,
+      "text": "\n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ПрофилиПользователей.Ссылка КАК ВладелецПрава\n        ПОМЕСТИТЬ ВладельцыПравСПравамиНаПространство\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n                ПО ПраваНаПространство.ВладелецПрава == ПрофилиПользователей.Ссылка\n        ГДЕ\n            ПраваНаПространство.Пространство В (%Пространства)\n            И НЕ ПрофилиПользователей.ПометкаУдаления\n\n        ОБЪЕДИНИТЬ\n\n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ПраваНаПространство.ВладелецПрава КАК ВладелецПрава\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей КАК ГруппыПрофилей \n                ПО ПраваНаПространство.ВладелецПрава == ГруппыПрофилей.Ссылка\n        ГДЕ\n            ПраваНаПространство.Пространство В (%Пространства)\n            И НЕ ГруппыПрофилей.ПометкаУдаления\n\n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ГруппыПрофилейУчастники.Участник КАК ВладелецПрава\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК ГруппыПрофилейУчастники\n                ПО ПраваНаПространство.ВладелецПрава == ГруппыПрофилейУчастники.Владелец\n        ГДЕ\n            ПраваНаПространство.Пространство В (%Пространства)\n            И НЕ ГруппыПрофилейУчастники.Участник.ПометкаУдаления\n            И НЕ ГруппыПрофилейУчастники.Владелец.ПометкаУдаления\n\n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n\n        ВЫБРАТЬ \n            ОграниченияСтраницПространства.ВладелецПрава КАК ВладелецПрава,\n\t        СтраницыПространства.Родитель КАК Родитель,\n            СтраницыПространства.Ребенок КАК Страница,\n            ОграниченияСтраницПространства.Чтение КАК Чтение,\n            ОграниченияСтраницПространства.Изменение КАК Изменение,\n            УровниРодителей.Уровень КАК УровеньРодителя\n        ПОМЕСТИТЬ \n            ВсеРодители\n        ИЗ\n            СтраницыПространств.Иерархия КАК СтраницыПространства\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ОграниченияСтраницПространства КАК ОграниченияСтраницПространства\n                ПО ОграниченияСтраницПространства.Страница == СтраницыПространства.Родитель\n                 И ОграниченияСтраницПространства.ВладелецПрава != Неопределено\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВладельцыПравСПравамиНаПространство КАК ВладельцыПравСПравамиНаПространство\n                ПО ОграниченияСтраницПространства.Страница.Владелец == ВладельцыПравСПравамиНаПространство.Пространство\n                 И ОграниченияСтраницПространства.ВладелецПрава == ВладельцыПравСПравамиНаПространство.ВладелецПрава\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ СтраницыПространств.Иерархия КАК УровниРодителей\n                ПО УровниРодителей.Родитель == СтраницыПространства.Родитель\n                 И УровниРодителей.Ребенок == СтраницыПространства.Родитель\n        ГДЕ\n            СтраницыПространства.Ребенок В (%Страницы)        \n\n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n\n        ВЫБРАТЬ\n            ВсеРодители.Страница КАК Страница,\n            МАКСИМУМ(ВсеРодители.УровеньРодителя) КАК УровеньБлижайшегоРодителя\n        ПОМЕСТИТЬ \n            УровниБлижайшихРодителей\n        ИЗ\n            ВсеРодители КАК ВсеРодители\n        СГРУППИРОВАТЬ ПО\n            ВсеРодители.Страница\n\n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ\n            ВсеРодители.ВладелецПрава КАК ВладелецПрава,\n\t        ВсеРодители.Родитель КАК Родитель,\n            ВсеРодители.Страница КАК Страница,\n            ВсеРодители.Чтение КАК Чтение,\n            ВсеРодители.Изменение КАК Изменение\n        ПОРОДИТЬ\n            ОграничениеВладельцаПрав\n        ИЗ\n            ВсеРодители КАК ВсеРодители\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ УровниБлижайшихРодителей КАК УровниБлижайшихРодителей\n                ПО УровниБлижайшихРодителей.Страница == ВсеРодители.Страница\n                 И УровниБлижайшихРодителей.УровеньБлижайшегоРодителя == ВсеРодители.УровеньРодителя\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства",
+        "method": "ПолучитьОграниченияПоСтраницам",
+        "parameters": [
+          "Страницы: Массив<СтраницыПространств.Ссылка>"
+        ],
+        "returnType": "Массив<ОграничениеВладельцаПрав>",
+        "range": [
+          2766,
+          7673
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (1771)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-78b2bdf873dc31acce1d19ad",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "aggregate",
+        "union",
+        "limit",
+        "generate",
+        "compound",
+        "nested",
+        "temporary",
+        "exists"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства"
+      },
+      "sourceHash": "25d99f995b836927303c19a77c9d1c78191c77f3b0d7d0f4d6264004ed0617d2",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ОграниченияСтраницПространства.xbsl",
+      "range": [
+        7923,
+        10748
+      ],
+      "bodyStart": 7930,
+      "line": 187,
+      "text": "\n        // Подбираем ближайшую родительскую страницу, для \n        // которой заданы ограничения (если такая имеется)\n        ВЫБРАТЬ\n            Родители.Родитель КАК Родитель,\n            УровниРодителей.Уровень КАК Уровень\n        ПОМЕСТИТЬ\n            ВсеРодителиТекущейСтраницы\n        ИЗ\n            СтраницыПространств.Иерархия КАК Родители\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ СтраницыПространств.Иерархия КАК УровниРодителей\n                ПО УровниРодителей.Родитель == Родители.Родитель\n                 И УровниРодителей.Ребенок == Родители.Родитель            \n        ГДЕ\n            Родители.Ребенок == %Страница\n            И Родители.Родитель != %Страница\n            И Родители.Родитель.ДоступОграничен\n        \n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n\n        ВЫБРАТЬ\n            МАКСИМУМ(ВсеРодителиТекущейСтраницы.Уровень) КАК Уровень\n        ПОМЕСТИТЬ \n            УровеньБлажайшегоРодителя\n        ИЗ\n            ВсеРодителиТекущейСтраницы КАК ВсеРодителиТекущейСтраницы\n        \n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n        \n        // Подбираем владельцев прав из ближайшей родительской страницы,\n        // для которой заданы ограничения. Если такая страница имеется\n        ВЫБРАТЬ\n            ОграниченияСтраницПространства.ВладелецПрава КАК ВладелецПрава\n        ПОРОДИТЬ\n            ВладелецПрав\n        ИЗ\n            ОграниченияСтраницПространства КАК ОграниченияСтраницПространства\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВсеРодителиТекущейСтраницы КАК ВсеРодителиТекущейСтраницы\n                ПО ОграниченияСтраницПространства.Страница == ВсеРодителиТекущейСтраницы.Родитель\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ УровеньБлажайшегоРодителя КАК УровеньБлажайшегоРодителя\n                ПО УровеньБлажайшегоРодителя.Уровень == ВсеРодителиТекущейСтраницы.Уровень\n                 \n        ОБЪЕДИНИТЬ\n        \n        // Подбираем владельцев прав из пространства, если первая выборка пустая.\n        // То есть если отсутствует родительская страница с ограничениями доступа\n        ВЫБРАТЬ\n            ПраваНаПространство.ВладелецПрава\n        ИЗ\n            СтраницыПространств КАК СтраницыПространств\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПраваНаПространство КАК ПраваНаПространство\n                ПО ПраваНаПространство.Пространство == СтраницыПространств.Владелец\n        ГДЕ\n            СтраницыПространств.Ссылка == %Страница\n            \n            И НЕ СУЩЕСТВУЕТ(\n                ВЫБРАТЬ ПЕРВЫЕ 1\n                    ИСТИНА\n                ИЗ \n                    ВсеРодителиТекущейСтраницы\n            )\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства",
+        "method": "ВладельцыПравСтраницыПространств",
+        "parameters": [
+          "Страница: СтраницыПространств.Ссылка"
+        ],
+        "returnType": "ЧитаемыйМассив<ВладелецПрав>",
+        "range": [
+          7713,
+          10841
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (817)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-f827890b83b558e5901b73e0",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства.НаборЗаписей"
+      },
+      "sourceHash": "7bf3e805f87415bf7d0e5340c0a8ec71239840bdcceb50b0341443d316f557c1",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ОграниченияСтраницПространства.НаборЗаписей.xbsl",
+      "range": [
+        3188,
+        5747
+      ],
+      "bodyStart": 3195,
+      "line": 82,
+      "text": "\n        ВЫБРАТЬ\n            Т.ВладелецПрава КАК ВладелецПрава\n        ПОМЕСТИТЬ \n            ВладельцыПравРодителя\n        ИЗ\n            %ВладельцыПравРодителя КАК Т\n        \n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ\n            Т.ВладелецПрава КАК ВладелецПрава\n        ПОМЕСТИТЬ\n            ВладельцыПравТекущие\n        ИЗ\n            %ЗаписываемыеВладельцыПрав КАК Т\n        \n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n        \n        // Профили и группы совпадают с родительской страницей\n        ВЫБРАТЬ \n            ВладельцыПравТекущие.ВладелецПрава КАК ВладелецПрава\n        ПОМЕСТИТЬ\n            ВладельцыПравДолжныОстаться\n        ИЗ\n            ВладельцыПравТекущие КАК ВладельцыПравТекущие\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВладельцыПравРодителя КАК ВладельцыПравРодителя\n                ПО ВладельцыПравРодителя.ВладелецПрава == ВладельцыПравТекущие.ВладелецПрава\n                \n        ОБЪЕДИНИТЬ\n        \n        // Профили входят в состав групп родительской страницы\n        ВЫБРАТЬ\n            ВладельцыПравТекущие.ВладелецПрава КАК ВладелецПрава\n        ИЗ\n            ВладельцыПравРодителя КАК ВладельцыПравРодителя\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПользователей.Участники КАК УчастникиГруппы\n                ПО УчастникиГруппы.Владелец == ВладельцыПравРодителя.ВладелецПрава\n                \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ВладельцыПравТекущие КАК ВладельцыПравТекущие\n                ПО УчастникиГруппы.Участник == ВладельцыПравТекущие.ВладелецПрава\n        \n        ///////////////////////////////////////////////////////////////////\n        ;\n        ///////////////////////////////////////////////////////////////////\n        \n        // Выбираем лишних владельцев прав, отстутствующих в ближайшей родительской странице с ограничениями\n        // или пространстве (если ближайшей родительской страницы не нашлось)\n        ВЫБРАТЬ\n            ВладельцыПравТекущие.ВладелецПрава КАК ВладелецПрава\n        ИЗ\n            ВладельцыПравТекущие КАК ВладельцыПравТекущие\n                ЛЕВОЕ СОЕДИНЕНИЕ ВладельцыПравДолжныОстаться КАК ВладельцыПравДолжныОстаться\n                ПО ВладельцыПравДолжныОстаться.ВладелецПрава == ВладельцыПравТекущие.ВладелецПрава\n        ГДЕ\n            ВладельцыПравДолжныОстаться.ВладелецПрава ЕСТЬ NULL\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства.НаборЗаписей",
+        "method": "ЛишниеВладельцыПравТекущегоНабора",
+        "parameters": [],
+        "returnType": "ЧитаемоеМножество<ГруппыПрофилей.Ссылка|ПрофилиПользователей.Ссылка>",
+        "range": [
+          2682,
+          5929
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (261)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-c08ce0482addf8ce6a2acf50",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "distinct",
+        "generate",
+        "compound",
+        "nested",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства.НаборЗаписей"
+      },
+      "sourceHash": "7bf3e805f87415bf7d0e5340c0a8ec71239840bdcceb50b0341443d316f557c1",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ОграниченияСтраницПространства.НаборЗаписей.xbsl",
+      "range": [
+        8751,
+        10748
+      ],
+      "bodyStart": 8758,
+      "line": 207,
+      "text": "\n        ВЫБРАТЬ\n            Иерархия.Ребенок КАК Страница,\n            Иерархия.Ребенок.ДоступОграничен.ЗаменитьNull() КАК ДоступОграничен\n        ПОМЕСТИТЬ\n            ВсеДочерниеСтраницы\n        ИЗ\n            СтраницыПространств.Иерархия КАК Иерархия\n        ГДЕ\n            Иерархия.Родитель == %ТекущаяСтраница\n            И Иерархия.Ребенок != %ТекущаяСтраница\n        \n        /////////////////////////////////////////////////////////////////////////////\n        ;\n        /////////////////////////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ РАЗЛИЧНЫЕ\n            Иерархия.Ребенок КАК Страница\n        ПОМЕСТИТЬ\n            ДочерниеДочерних\n        ИЗ\n            ВсеДочерниеСтраницы КАК ВсеДочерниеСОграничениями\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ СтраницыПространств.Иерархия КАК Иерархия\n                ПО Иерархия.Родитель == ВсеДочерниеСОграничениями.Страница\n                 И Иерархия.Ребенок != ВсеДочерниеСОграничениями.Страница\n        ГДЕ\n            ВсеДочерниеСОграничениями.ДоступОграничен\n        \n        /////////////////////////////////////////////////////////////////////////////\n        ;\n        /////////////////////////////////////////////////////////////////////////////\n        \n        // В выборку попадают ближайшие дочерние страницы, имеющие собственные ограничения.\n        // А также ближайшие дочерние страницы, не имеющие собственных ограничений.\n        // Отбрасываются те страницы, которые являются дочерними к страницам с собственными ограничениями\n        ВЫБРАТЬ\n            ВсеДочерниеСтраницы.Страница КАК Ссылка,\n            ВсеДочерниеСтраницы.ДоступОграничен\n        ПОРОДИТЬ\n            ДочерняяСтраница\n        ИЗ\n            ВсеДочерниеСтраницы КАК ВсеДочерниеСтраницы\n        ГДЕ\n            НЕ ВсеДочерниеСтраницы.Страница В (\n                ВЫБРАТЬ\n                    ДочерниеДочерних.Страница\n                ИЗ\n                    ДочерниеДочерних КАК ДочерниеДочерних\n            )\n\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ОграниченияСтраницПространства.НаборЗаписей",
+        "method": "БлижайшиеДочерниеСтраницы",
+        "parameters": [],
+        "returnType": "ЧитаемыйМассив<ДочерняяСтраница>",
+        "range": [
+          7846,
+          10836
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (471)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-a43f789da326ec78a861f875",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "aggregate",
+        "group",
+        "union",
+        "generate",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваБиблиотеки"
+      },
+      "sourceHash": "2f0586ec29bd18ae3510ade97e87e5882d492da32967806c438964cca7857b96",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ПраваБиблиотеки.xbsl",
+      "range": [
+        1877,
+        3703
+      ],
+      "bodyStart": 1884,
+      "line": 63,
+      "text": "\n        ВЫБРАТЬ\n            УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь,\n            ПраваБиблиотеки.АдминистрированиеБиблиотеки.ЗаменитьNull() КАК АдминистрированиеБиблиотеки,\n            ПраваБиблиотеки.СозданиеПространств.ЗаменитьNull() КАК СозданиеПространств\n        ПОМЕСТИТЬ ПользователиСПравами\n        ИЗ\n            ГруппыПрофилей.Участники КАК УчастникиГрупп\n            ЛЕВОЕ СОЕДИНЕНИЕ ПраваБиблиотеки КАК ПраваБиблиотеки\n            ПО УчастникиГрупп.Владелец == ПраваБиблиотеки.ВладелецПрава\n        ГДЕ\n            УчастникиГрупп.Участник.Пользователь == %Пользователь\n        \n        ОБЪЕДИНИТЬ ВСЕ\n\n        ВЫБРАТЬ\n            ПраваБиблиотеки.ВладелецПрава.Пользователь КАК Пользователь,\n            ПраваБиблиотеки.АдминистрированиеБиблиотеки,\n            ПраваБиблиотеки.СозданиеПространств\n        ИЗ\n            ПраваБиблиотеки КАК ПраваБиблиотеки\n        ГДЕ\n            ПраваБиблиотеки.ВладелецПрава.Пользователь == %Пользователь\n        ;\n\n        ВЫБРАТЬ\n            Пользователи.Ссылка КАК Пользователь,\n            МАКСИМУМ(Пользователи.Администратор) КАК АдминистраторПриложения,\n            МАКСИМУМ(Пользователи.Администратор\n                ИЛИ Настройки.АдминистрированиеБиблиотеки.ЗаменитьNull()) КАК Администратор,\n            МАКСИМУМ(Пользователи.Администратор\n                ИЛИ Настройки.АдминистрированиеБиблиотеки.ЗаменитьNull()\n                ИЛИ Настройки.СозданиеПространств.ЗаменитьNull()) КАК СозданиеПространств\n        ПОРОДИТЬ ЗначенияПрав\n        ИЗ\n            Пользователи КАК Пользователи\n            ЛЕВОЕ СОЕДИНЕНИЕ ПользователиСПравами КАК Настройки\n            ПО Настройки.Пользователь == Пользователи.Ссылка\n        ГДЕ\n            Пользователи.Ссылка == %Пользователь\n        СГРУППИРОВАТЬ ПО\n            Пользователи.Ссылка\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваБиблиотеки",
+        "method": "ПолучитьПрава",
+        "parameters": [
+          "Пользователь: Пользователи.Ссылка"
+        ],
+        "returnType": "ЗначенияПрав",
+        "range": [
+          1791,
+          4010
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (989)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-972f54624900b27400a12f0e",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "aggregate",
+        "group",
+        "union",
+        "limit",
+        "fill",
+        "nested"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваНаПространство"
+      },
+      "sourceHash": "a722401bc64bae61f47895d4172a8d4ea096a3633df9ab6655284110c3217787",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ПраваНаПространство.xbsl",
+      "range": [
+        5555,
+        9189
+      ],
+      "bodyStart": 5562,
+      "line": 147,
+      "text": "\n        ВЫБРАТЬ \n            Пользователь, \n            Пространство, \n            МАКСИМУМ(УправлениеПространством)  КАК УправлениеПространством,\n            МАКСИМУМ(СозданиеСтраниц)  КАК СозданиеСтраниц,\n            МАКСИМУМ(ПросмотрСодержимого)  КАК ПросмотрСодержимого,\n            МАКСИМУМ(РедактированиеЛюбыхСтраниц) КАК РедактированиеЛюбыхСтраниц,\n            МАКСИМУМ(ПросмотрИсторииСтраниц)  КАК ПросмотрИсторииСтраниц,\n            МАКСИМУМ(ДобавлениеКомментариев)  КАК ДобавлениеКомментариев,\n            МАКСИМУМ(УдалениеЛюбыхКомментариев)  КАК УдалениеЛюбыхКомментариев,\n            МАКСИМУМ(ЗагрузкаФайлов)  КАК ЗагрузкаФайлов,\n            МАКСИМУМ(УдалениеЛюбыхФайлов)  КАК УдалениеЛюбыхФайлов,\n            МАКСИМУМ(ДобавлениеУдалениеОграниченийСтраниц) КАК ДобавлениеУдалениеОграниченийСтраниц\n        ЗАПОЛНИТЬ ЗначенияПрав\n        ИЗ\n            (ВЫБРАТЬ ПЕРВЫЕ 1\n                УчастникиГрупп.Участник.Пользователь.ЗаменитьNull() КАК Пользователь,\n                ПраваНаПространство.Пространство.ЗаменитьNull() КАК Пространство,\n                ПраваНаПространство.УправлениеПространством.ЗаменитьNull() КАК УправлениеПространством,\n                ПраваНаПространство.СозданиеСтраниц.ЗаменитьNull() КАК СозданиеСтраниц,\n                ПраваНаПространство.ПросмотрСодержимого.ЗаменитьNull() КАК ПросмотрСодержимого,\n                ПраваНаПространство.РедактированиеЛюбыхСтраниц.ЗаменитьNull() КАК РедактированиеЛюбыхСтраниц,\n                ПраваНаПространство.ПросмотрИсторииСтраниц.ЗаменитьNull() КАК ПросмотрИсторииСтраниц,\n                ПраваНаПространство.ДобавлениеКомментариев.ЗаменитьNull() КАК ДобавлениеКомментариев,\n                ПраваНаПространство.УдалениеЛюбыхКомментариев.ЗаменитьNull() КАК УдалениеЛюбыхКомментариев,\n                ПраваНаПространство.ЗагрузкаФайлов.ЗаменитьNull() КАК ЗагрузкаФайлов,\n                ПраваНаПространство.УдалениеЛюбыхФайлов.ЗаменитьNull() КАК УдалениеЛюбыхФайлов,\n                ПраваНаПространство.ДобавлениеУдалениеОграниченийСтраниц.ЗаменитьNull() КАК ДобавлениеУдалениеОграниченийСтраниц\n            ИЗ\n                ГруппыПрофилей.Участники КАК УчастникиГрупп\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПраваНаПространство КАК ПраваНаПространство\n                ПО УчастникиГрупп.Владелец == ПраваНаПространство.ВладелецПрава\n                И ПраваНаПространство.Пространство == %Пространство\n            ГДЕ\n                УчастникиГрупп.Участник.Пользователь == %Пользователь\n            \n            ОБЪЕДИНИТЬ ВСЕ\n\n            ВЫБРАТЬ ПЕРВЫЕ 1\n                ПраваНаПространство.ВладелецПрава.Пользователь.ЗаменитьNull() КАК Пользователь,\n                ПраваНаПространство.Пространство КАК Пространство,\n                ПраваНаПространство.УправлениеПространством,\n                ПраваНаПространство.СозданиеСтраниц,\n                ПраваНаПространство.ПросмотрСодержимого,\n                ПраваНаПространство.РедактированиеЛюбыхСтраниц,\n                ПраваНаПространство.ПросмотрИсторииСтраниц,\n                ПраваНаПространство.ДобавлениеКомментариев,\n                ПраваНаПространство.УдалениеЛюбыхКомментариев,\n                ПраваНаПространство.ЗагрузкаФайлов,\n                ПраваНаПространство.УдалениеЛюбыхФайлов,\n                ПраваНаПространство.ДобавлениеУдалениеОграниченийСтраниц\n            ИЗ\n                ПраваНаПространство КАК ПраваНаПространство\n            ГДЕ\n                ПраваНаПространство.ВладелецПрава.Пользователь == %Пользователь\n                И ПраваНаПространство.Пространство == %Пространство) КАК Права\n        СГРУППИРОВАТЬ ПО\n            Пользователь,\n            Пространство\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваНаПространство",
+        "method": "ПолучитьПрава",
+        "parameters": [
+          "Пространство: Пространства.Ссылка"
+        ],
+        "returnType": "ПраваНаПространство.ЗначенияПрав",
+        "range": [
+          4749,
+          9993
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Ожидается ИЗ (92)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-5609241ada647929e168b3a1",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "union",
+        "limit",
+        "exists"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваНаПространство"
+      },
+      "sourceHash": "a722401bc64bae61f47895d4172a8d4ea096a3633df9ab6655284110c3217787",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "ПраваДоступа/ПраваНаПространство.xbsl",
+      "range": [
+        11546,
+        12300
+      ],
+      "bodyStart": 11553,
+      "line": 266,
+      "text": "\n        ВЫБРАТЬ ПЕРВЫЕ 1\n            ИСТИНА КАК Существует\n        ИЗ\n            ГруппыПрофилей.Участники КАК УчастникиГрупп\n            ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПраваНаПространство КАК ПраваНаПространство\n            ПО УчастникиГрупп.Владелец == ПраваНаПространство.ВладелецПрава\n        ГДЕ\n            УчастникиГрупп.Участник.Пользователь == %Пользователь\n            И ПраваНаПространство.УправлениеПространством == Истина\n        \n        ОБЪЕДИНИТЬ ВСЕ\n\n        ВЫБРАТЬ ПЕРВЫЕ 1\n            ИСТИНА КАК Существует\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n        ГДЕ\n            ПраваНаПространство.ВладелецПрава.Пользователь == %Пользователь\n            И ПраваНаПространство.УправлениеПространством == Истина\n    ",
+      "target": {
+        "namespace": "ПраваДоступа",
+        "module": "ПраваНаПространство",
+        "method": "ЕстьПравоАдминистрированияПростанства",
+        "parameters": [],
+        "returnType": "Булево",
+        "range": [
+          11330,
+          12345
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (98)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-c1ab50cc1c909ec812f3245e",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "union",
+        "compound",
+        "nested",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Пространства",
+        "module": "Пространства"
+      },
+      "sourceHash": "ed4e423077eaf6b28614d46d1e0e4537eb0e662174bcb4c958ee3b9a1b4983dd",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Пространства/Пространства.xbsl",
+      "range": [
+        3109,
+        4289
+      ],
+      "bodyStart": 3116,
+      "line": 77,
+      "text": "\n      ВЫБРАТЬ\n         Пространство\n      ПОМЕСТИТЬ ДоступныеПространства\n      \n      ИЗ\n         ПраваНаПространство\n      ГДЕ\n         (НЕ %ПрофилиЗаполнены ИЛИ (%ПрофилиЗаполнены И ВладелецПрава В(%Профили)))\n         ИЛИ (НЕ %ГруппыЗаполнены ИЛИ (%ГруппыЗаполнены И ВладелецПрава В(%Группы)))\n      ;\n\n      ВЫБРАТЬ\n         СтраницыПространств.Ссылка КАК Страница,\n         СтраницыПространств.Владелец КАК Пространство\n      ИЗ\n         СтраницыПространств КАК СтраницыПространств\n      ГДЕ\n         СтраницыПространств.Владелец В (\n            ВЫБРАТЬ\n               ДоступныеПространства.Пространство\n            ИЗ\n               ДоступныеПространства КАК ДоступныеПространства\n         )\n\n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ЧерновикиСтраницПространств.Ссылка КАК Страница,\n         ЧерновикиСтраницПространств.Пространство КАК Пространство\n      ИЗ\n         ЧерновикиСтраницПространств КАК ЧерновикиСтраницПространств\n      ГДЕ\n         ЧерновикиСтраницПространств.Пространство В (\n            ВЫБРАТЬ\n               ДоступныеПространства.Пространство\n            ИЗ\n               ДоступныеПространства КАК ДоступныеПространства\n         )\n   ",
+      "target": {
+        "namespace": "Пространства",
+        "module": "Пространства",
+        "method": "ПространстваСоСтраницами",
+        "parameters": [
+          "Профили: Обходимое<ПрофилиПользователей.Ссылка>",
+          " \n   Группы: Обходимое<ГруппыПрофилей.Ссылка>"
+        ],
+        "returnType": "Соответствие<Пространства.Ссылка, Массив<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка>>",
+        "range": [
+          2764,
+          4775
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне storage AST: позиция 305",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-42575fb8ae30faed58cf6d37",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Пространства",
+        "module": "Пространства"
+      },
+      "sourceHash": "ed4e423077eaf6b28614d46d1e0e4537eb0e662174bcb4c958ee3b9a1b4983dd",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Пространства/Пространства.xbsl",
+      "range": [
+        4985,
+        5567
+      ],
+      "bodyStart": 4992,
+      "line": 131,
+      "text": "\n      ВЫБРАТЬ\n         СтраницыПространств.Ссылка КАК Страница,\n         СтраницыПространств.Владелец КАК Пространство\n      ИЗ\n         СтраницыПространств КАК СтраницыПространств\n      ГДЕ\n         СтраницыПространств.Владелец В (%Пространства)\n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ЧерновикиСтраницПространств.Ссылка КАК Страница,\n         ЧерновикиСтраницПространств.Пространство КАК Пространство\n      ИЗ\n         ЧерновикиСтраницПространств КАК ЧерновикиСтраницПространств\n      ГДЕ\n         ЧерновикиСтраницПространств.Пространство В (%Пространства)\n   ",
+      "target": {
+        "namespace": "Пространства",
+        "module": "Пространства",
+        "method": "ПространстваСоСтраницами",
+        "parameters": [
+          "Пространства: Обходимое<Пространства.Ссылка>"
+        ],
+        "returnType": "Соответствие<Пространства.Ссылка, Массив<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка>>",
+        "range": [
+          4786,
+          6053
+        ]
+      },
+      "dependencies": [
+        {
+          "namespace": "Пространства",
+          "owner": "Пространства",
+          "kind": "Справочник",
+          "sourceFile": "Пространства/Пространства.yaml"
+        },
+        {
+          "namespace": "СтраницыПространств",
+          "owner": "ФайлыСтраницы",
+          "kind": "Справочник",
+          "sourceFile": "СтраницыПространств/ФайлыСтраницы.yaml"
+        },
+        {
+          "namespace": "ПрофилиПользователей",
+          "owner": "ПрофилиПользователей",
+          "kind": "КонтрактСущности",
+          "sourceFile": "ПрофилиПользователей/ПрофилиПользователей.yaml"
+        },
+        {
+          "namespace": "Теги",
+          "owner": "Теги",
+          "kind": "Справочник",
+          "sourceFile": "Теги/Теги.yaml"
+        },
+        {
+          "namespace": "СтраницыПространств",
+          "owner": "СтраницыПространств",
+          "kind": "Справочник",
+          "sourceFile": "СтраницыПространств/СтраницыПространств.yaml"
+        }
+      ],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне storage AST: ожидается =",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-09407d64bd61720ca6c8fc1b",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Пространства",
+        "module": "Пространства"
+      },
+      "sourceHash": "ed4e423077eaf6b28614d46d1e0e4537eb0e662174bcb4c958ee3b9a1b4983dd",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Пространства/Пространства.xbsl",
+      "range": [
+        6301,
+        6868
+      ],
+      "bodyStart": 6308,
+      "line": 163,
+      "text": "\n      ВЫБРАТЬ\n         СтраницыПространств.Ссылка КАК Страница,\n         СтраницыПространств.Владелец КАК Пространство\n      ИЗ\n         СтраницыПространств КАК СтраницыПространств\n      ГДЕ\n         СтраницыПространств.Ссылка В (%Страницы)\n\n      ОБЪЕДИНИТЬ ВСЕ\n      \n      ВЫБРАТЬ\n         ЧерновикиСтраницПространств.Ссылка КАК Страница,\n         ЧерновикиСтраницПространств.Пространство КАК Пространство\n      ИЗ\n         ЧерновикиСтраницПространств КАК ЧерновикиСтраницПространств\n      ГДЕ\n         ЧерновикиСтраницПространств.Ссылка В (%Страницы)\n   ",
+      "target": {
+        "namespace": "Пространства",
+        "module": "Пространства",
+        "method": "ПространстваСоСтраницами",
+        "parameters": [
+          "Страницы: Обходимое<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка>"
+        ],
+        "returnType": "Соответствие<Пространства.Ссылка, Массив<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка>>",
+        "range": [
+          6064,
+          7354
+        ]
+      },
+      "dependencies": [
+        {
+          "namespace": "Пространства",
+          "owner": "Пространства",
+          "kind": "Справочник",
+          "sourceFile": "Пространства/Пространства.yaml"
+        },
+        {
+          "namespace": "СтраницыПространств",
+          "owner": "ФайлыСтраницы",
+          "kind": "Справочник",
+          "sourceFile": "СтраницыПространств/ФайлыСтраницы.yaml"
+        },
+        {
+          "namespace": "ПрофилиПользователей",
+          "owner": "ПрофилиПользователей",
+          "kind": "КонтрактСущности",
+          "sourceFile": "ПрофилиПользователей/ПрофилиПользователей.yaml"
+        },
+        {
+          "namespace": "Теги",
+          "owner": "Теги",
+          "kind": "Справочник",
+          "sourceFile": "Теги/Теги.yaml"
+        },
+        {
+          "namespace": "СтраницыПространств",
+          "owner": "СтраницыПространств",
+          "kind": "Справочник",
+          "sourceFile": "СтраницыПространств/СтраницыПространств.yaml"
+        }
+      ],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне storage AST: ожидается =",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null
+    },
+    {
+      "contractId": "query-9918af392998dc569f33e3a4",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "union"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "Пространства",
+        "module": "Пространства"
+      },
+      "sourceHash": "ed4e423077eaf6b28614d46d1e0e4537eb0e662174bcb4c958ee3b9a1b4983dd",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "Пространства/Пространства.xbsl",
+      "range": [
+        7593,
+        8521
+      ],
+      "bodyStart": 7600,
+      "line": 199,
+      "text": "\n      ВЫБРАТЬ\n         ПрофилиПользователей.Ссылка КАК Профиль\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ПрофилиПользователей КАК ПрофилиПользователей\n         ПО ПраваНаПространство.ВладелецПрава == ПрофилиПользователей.Ссылка\n      ГДЕ\n         ПраваНаПространство.Пространство == %Пространство\n         И НЕ ПрофилиПользователей.ПометкаУдаления\n\n      ОБЪЕДИНИТЬ \n      \n      ВЫБРАТЬ\n         ГруппыПрофилейУчастники.Участник КАК Профиль\n      ИЗ\n         ПраваНаПространство КАК ПраваНаПространство\n         ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК ГруппыПрофилейУчастники\n         ПО ПраваНаПространство.ВладелецПрава == ГруппыПрофилейУчастники.Владелец\n      ГДЕ\n         ПраваНаПространство.Пространство == %Пространство\n         И НЕ ГруппыПрофилейУчастники.Участник.ПометкаУдаления\n         И НЕ ГруппыПрофилейУчастники.Владелец.ПометкаУдаления\n   ",
+      "target": {
+        "namespace": "Пространства",
+        "module": "Пространства",
+        "method": "ПрофилиПространства",
+        "parameters": [
+          "Пространство: Пространства.Ссылка"
+        ],
+        "returnType": "Массив<ПрофилиПользователей.Ссылка>",
+        "range": [
+          7394,
+          8644
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПраваНаПространство",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-15be056b44430c2be433ece6",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "join",
+        "union",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "СтраницыПространств::Версионирование",
+        "module": "ИсторияИзмененийСтраниц"
+      },
+      "sourceHash": "84be16c493605a8b4f3e28cf799a521ff167bf71d6de7bf312560838868040fc",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "СтраницыПространств/Версионирование/ИсторияИзмененийСтраниц.xbsl",
+      "range": [
+        3963,
+        5162
+      ],
+      "bodyStart": 3970,
+      "line": 97,
+      "text": "\n        ВЫБРАТЬ\n            ПраваНаПространство.Пространство КАК Пространство,\n            ПраваНаПространство.ВладелецПрава КАК Читатель\n        ПОМЕСТИТЬ \n            ЧитателиИсторииСтраниц\n        ИЗ\n            ПраваНаПространство КАК ПраваНаПространство\n        ГДЕ\n            ПраваНаПространство.ПросмотрИсторииСтраниц\n            И ПраваНаПространство.Пространство В (%Пространства)\n\n        //////////////////////////////////////////////////////////\n        ;\n        //////////////////////////////////////////////////////////\n        \n        ВЫБРАТЬ\n            ЧитателиИсторииСтраниц.Пространство КАК Пространство,\n            ЧитателиИсторииСтраниц.Читатель КАК Читатель\n        ИЗ\n            ЧитателиИсторииСтраниц КАК ЧитателиИсторииСтраниц\n        \n        ОБЪЕДИНИТЬ\n        \n        ВЫБРАТЬ\n            ЧитателиИстории.Пространство КАК Пространство,\n            Участники.Участник КАК Читатель\n        ИЗ\n            ЧитателиИсторииСтраниц КАК ЧитателиИстории     \n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ ГруппыПрофилей.Участники КАК Участники\n                ПО Участники.Владелец == ЧитателиИстории.Читатель\n        ГДЕ\n            Участники.Участник != Неопределено\n    ",
+      "target": {
+        "namespace": "СтраницыПространств::Версионирование",
+        "module": "ИсторияИзмененийСтраниц",
+        "method": "РазрешенияПрофилейИГрупп",
+        "parameters": [
+          "\n    Пространства: Обходимое<Пространства.Ссылка?>\n    "
+        ],
+        "returnType": "ЧитаемоеСоответствие<Пространства.Ссылка, ЧитаемоеМножество<КлючДоступа.Объект>>",
+        "range": [
+          3597,
+          5707
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (468)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-72e0ed97e79dbcb4297f39c6",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "aggregate",
+        "group",
+        "compound",
+        "temporary"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "СтраницыПространств",
+        "module": "СтраницыПространств"
+      },
+      "sourceHash": "909cfb9144fc77a35edd774287df9dda09a2c95ead95c179b1c8836f6668db25",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "СтраницыПространств/СтраницыПространств.xbsl",
+      "range": [
+        6091,
+        7232
+      ],
+      "bodyStart": 6098,
+      "line": 137,
+      "text": "\n        ВЫБРАТЬ\n            СтраницыПространства.Родитель КАК Родитель,\n            СтраницыПространства.Родитель.ДоступОграничен.ЗаменитьNull() КАК ДоступОграничен,\n            СтраницыПространства.Ребенок КАК Страница,\n            УровниРодителей.Уровень КАК УровеньРодителя\n        ПОМЕСТИТЬ\n            ВсеРодители\n        ИЗ\n            СтраницыПространств.Иерархия КАК СтраницыПространства\n                ВНУТРЕННЕЕ СОЕДИНЕНИЕ СтраницыПространств.Иерархия КАК УровниРодителей\n                ПО УровниРодителей.Родитель == СтраницыПространства.Родитель\n                И УровниРодителей.Ребенок == СтраницыПространства.Родитель\n        ГДЕ\n            СтраницыПространства.Ребенок В (%Страницы)\n\n        /////////////////////////////////////////////////////////////////////////////\n        ;\n        /////////////////////////////////////////////////////////////////////////////\n\n        ВЫБРАТЬ\n            ВсеРодители.Страница КАК Страница,\n            МАКСИМУМ(ВсеРодители.ДоступОграничен) КАК ДоступОграничен\n        ИЗ\n            ВсеРодители КАК ВсеРодители\n        СГРУППИРОВАТЬ ПО\n            ВсеРодители.Страница\n    ",
+      "target": {
+        "namespace": "СтраницыПространств",
+        "module": "СтраницыПространств",
+        "method": "ПризнакиОграниченияДоступа",
+        "parameters": [
+          "Страницы: Массив<СтраницыПространств.Ссылка>"
+        ],
+        "returnType": "Соответствие<СтраницыПространств.Ссылка, Булево>",
+        "range": [
+          5945,
+          7512
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Запрос вне relational AST (798)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "query-b7b96f909ec40441321c2fee",
+      "family": "literal",
+      "operations": [
+        "source",
+        "alias",
+        "parameter",
+        "projection",
+        "predicate",
+        "null",
+        "join",
+        "union",
+        "generate"
+      ],
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "libraryIdentity": {
+        "Поставщик": "e1c",
+        "Имя": "БазаЗнаний",
+        "Версия": "1.1.1",
+        "ВидПроекта": "Библиотека"
+      },
+      "ownerIdentity": {
+        "namespace": "СтраницыПространств",
+        "module": "ФайлыСтраницы"
+      },
+      "sourceHash": "9e59e535aa174fdb6bab6a2cd08ced66262442515e90a9748a7ea0133b5ec271",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "file": "СтраницыПространств/ФайлыСтраницы.xbsl",
+      "range": [
+        2109,
+        4061
+      ],
+      "bodyStart": 2116,
+      "line": 52,
+      "text": "\n        ВЫБРАТЬ\n            СтраницыПространств.Ссылка КАК ВладелецФайла,\n            СтраницыПространств.Владелец КАК Пространство,\n            НЕ АрхивныеОбъекты.Объект ЕСТЬ NULL КАК ВАрхиве\n        ПОРОДИТЬ\n            СведенияВладельцаФайла\n        ИЗ\n            СтраницыПространств КАК СтраницыПространств\n                ЛЕВОЕ СОЕДИНЕНИЕ АрхивныеОбъекты КАК АрхивныеОбъекты\n                ПО АрхивныеОбъекты.Объект В (СтраницыПространств.Ссылка, СтраницыПространств.Владелец)\n        ГДЕ\n            СтраницыПространств.Ссылка В (%ВладельцыФайлов)\n        \n        ОБЪЕДИНИТЬ \n        \n        ВЫБРАТЬ\n            ЧерновикиСтраницПространств.Ссылка КАК ВладелецФайла,\n            ВЫБОР\n                КОГДА НЕ СтраницыПространств.Ссылка ЕСТЬ NULL\n                    ТОГДА СтраницыПространств.Владелец.ЗаменитьNull(Неопределено)\n                КОГДА НЕ Пространства.Ссылка ЕСТЬ NULL\n                    ТОГДА Пространства.Ссылка.ЗаменитьNull(Неопределено)\n                ИНАЧЕ \n                    Неопределено\n            КОНЕЦ КАК Пространство,\n            НЕ АрхивныеОбъекты.Объект ЕСТЬ NULL КАК ВАрхиве\n        ИЗ\n            ЧерновикиСтраницПространств КАК ЧерновикиСтраницПространств\n                ЛЕВОЕ СОЕДИНЕНИЕ АрхивныеОбъекты КАК АрхивныеОбъекты\n                ПО АрхивныеОбъекты.Объект В (\n                    ЧерновикиСтраницПространств.Владелец, \n                    ЧерновикиСтраницПространств.Пространство,\n                    ЧерновикиСтраницПространств.СтраницаРодитель\n                )\n                \n                ЛЕВОЕ СОЕДИНЕНИЕ СтраницыПространств КАК СтраницыПространств\n                ПО СтраницыПространств.Ссылка == ЧерновикиСтраницПространств.Владелец\n                \n                ЛЕВОЕ СОЕДИНЕНИЕ Пространства КАК Пространства\n                ПО Пространства.Ссылка == ЧерновикиСтраницПространств.Владелец\n        ГДЕ\n            ЧерновикиСтраницПространств.Ссылка В (%ВладельцыФайлов)\n    ",
+      "target": {
+        "namespace": "СтраницыПространств",
+        "module": "ФайлыСтраницы",
+        "method": "СведенияВладельцевФайлов",
+        "parameters": [
+          "ВладельцыФайлов: ЧитаемаяКоллекция<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка|?>\n    "
+        ],
+        "returnType": "ЧитаемоеСоответствие<СтраницыПространств.Ссылка|ЧерновикиСтраницПространств.Ссылка, СведенияВладельцаФайла>",
+        "range": [
+          1603,
+          4266
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "ast": null,
+      "unsupportedReason": "Ожидается ИЗ (202)",
+      "nextStage": "040-joins-and-null",
+      "criteria": [],
+      "evidence": [],
+      "apiBinding": null,
+      "reference040": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/replace-null-function/"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-null-expression/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current"
+      }
+    },
+    {
+      "contractId": "documented-distinct",
+      "family": "documented-form",
+      "operations": [
+        "distinct"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ РАЗЛИЧНЫЕ Label ИЗ Data::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/distinct.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-union",
+      "family": "documented-form",
+      "operations": [
+        "union"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Label ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Label ИЗ Other::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/union.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-union-all",
+      "family": "documented-form",
+      "operations": [
+        "union"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Label ИЗ Data::Item ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Label ИЗ Other::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/union-all.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-nested",
+      "family": "documented-form",
+      "operations": [
+        "nested"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Q.Label ИЗ (ВЫБРАТЬ Label ИЗ Data::Item) КАК Q",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/nested.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documented-compound",
+      "family": "documented-form",
+      "operations": [
+        "compound"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Label ИЗ Data::Item; ВЫБРАТЬ Label ИЗ Other::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/compound.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-index-by",
+      "family": "documentation-index",
+      "operations": [
+        "index-by"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/index-by.md",
+      "semantics": [
+        "sidebar-9.1-index-by",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-union",
+      "family": "documentation-index",
+      "operations": [
+        "union"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/union.md",
+      "semantics": [
+        "sidebar-9.1-union",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-select-into",
+      "family": "documentation-index",
+      "operations": [
+        "select-into"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/select-into.md",
+      "semantics": [
+        "sidebar-9.1-select-into",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-truncate-statement",
+      "family": "documentation-index",
+      "operations": [
+        "truncate-statement"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/truncate-statement.md",
+      "semantics": [
+        "sidebar-9.1-truncate-statement",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-create-temporary-table-statement",
+      "family": "documentation-index",
+      "operations": [
+        "create-temporary-table-statement"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/create-temporary-table-statement.md",
+      "semantics": [
+        "sidebar-9.1-create-temporary-table-statement",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-create-index-statement",
+      "family": "documentation-index",
+      "operations": [
+        "create-index-statement"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/create-index-statement.md",
+      "semantics": [
+        "sidebar-9.1-create-index-statement",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-drop-statement",
+      "family": "documentation-index",
+      "operations": [
+        "drop-statement"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/drop-statement.md",
+      "semantics": [
+        "sidebar-9.1-drop-statement",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    },
+    {
+      "contractId": "documentation-batch-of-statements",
+      "family": "documentation-index",
+      "operations": [
+        "batch-of-statements"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": null,
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/batch-of-statements.md",
+      "semantics": [
+        "sidebar-9.1-batch-of-statements",
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": false,
+      "planned": false,
+      "executed": false,
+      "independentlyAssessed": false,
+      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "nextStage": "042-unions-and-nesting",
+      "criteria": [],
+      "evidence": [],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "review-template-execution-pending"
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+name: FAIL UNSUPPORTED PASS
+checks:
+- id: '0'
+  type: runtime
+  points: 1
+  comparison: query-rows-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Union
+  args: []
+  runtimeProfile: '9.3'
+  timeout: 15s
+  trace: true
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Amount: 1
+        Label: a
+        Flag: true
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Amount: 3
+        Label: b
+        Flag: false
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Amount: 3
+        Label: c
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 3
+        Amount: 0
+        Label: d
+        Flag: false
+        Day: '2024-02-28'
+        Peer: null
+        Kind: Two
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Amount: 2
+        Label: x
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+  expected:
+    result: []
+    storage:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Amount: 1
+        Label: a
+        Flag: true
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Amount: 3
+        Label: b
+        Flag: false
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+      id: 22222222-2222-4222-8222-222222222222
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Amount: 3
+        Label: c
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+      id: 33333333-3333-4333-8333-333333333333
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 3
+        Amount: 0
+        Label: d
+        Flag: false
+        Day: '2024-02-28'
+        Peer: null
+        Kind: Two
+      id: 44444444-4444-4444-8444-444444444444
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Amount: 2
+        Label: x
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+      id: 55555555-5555-4555-8555-555555555555
+- id: '1'
+  type: runtime
+  points: 1
+  comparison: query-rows-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Unsupported
+  args: []
+  runtimeProfile: '9.3'
+  timeout: 15s
+  trace: true
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Amount: 1
+        Label: a
+        Flag: true
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Amount: 3
+        Label: b
+        Flag: false
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Amount: 3
+        Label: c
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 3
+        Amount: 0
+        Label: d
+        Flag: false
+        Day: '2024-02-28'
+        Peer: null
+        Kind: Two
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Amount: 2
+        Label: x
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+  expected: null
+- id: '2'
+  type: runtime
+  points: 1
+  comparison: query-rows-unordered
+  target:
+    namespace: Entry
+    module: Main
+    method: Union
+  args: []
+  runtimeProfile: '9.3'
+  timeout: 15s
+  trace: true
+  storage:
+    idType: Ууид
+    initial:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Amount: 1
+        Label: a
+        Flag: true
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Amount: 3
+        Label: b
+        Flag: false
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Amount: 3
+        Label: c
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 3
+        Amount: 0
+        Label: d
+        Flag: false
+        Day: '2024-02-28'
+        Peer: null
+        Kind: Two
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Amount: 2
+        Label: x
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+  expected:
+    result:
+    - Value: 1
+    - Value: 2
+    - Value: 3
+    storage:
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Key: 1
+        Amount: 1
+        Label: a
+        Flag: true
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+      id: 11111111-1111-4111-8111-111111111111
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 22222222-2222-4222-8222-222222222222
+        Key: 1
+        Amount: 3
+        Label: b
+        Flag: false
+        Day: '2024-02-28'
+        Peer:
+          Идентификатор: 11111111-1111-4111-8111-111111111111
+        Kind: One
+      id: 22222222-2222-4222-8222-222222222222
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 33333333-3333-4333-8333-333333333333
+        Key: 2
+        Amount: 3
+        Label: c
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+      id: 33333333-3333-4333-8333-333333333333
+    - type: Data::Item
+      value:
+        Ссылка:
+          Идентификатор: 44444444-4444-4444-8444-444444444444
+        Key: 3
+        Amount: 0
+        Label: d
+        Flag: false
+        Day: '2024-02-28'
+        Peer: null
+        Kind: Two
+      id: 44444444-4444-4444-8444-444444444444
+    - type: Other::Item
+      value:
+        Ссылка:
+          Идентификатор: 55555555-5555-4555-8555-555555555555
+        Key: 1
+        Amount: 2
+        Label: x
+        Flag: true
+        Day: '2024-02-28'
+        Peer: null
+        Kind: One
+      id: 55555555-5555-4555-8555-555555555555

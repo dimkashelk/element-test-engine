@@ -141,6 +141,9 @@ def query_literals(source):
 
 def parse_storage_query(text, contracts):
     """Parse typed storage/relational AST without evaluating data."""
+    if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ)\b|;|\(\s*ВЫБРАТЬ', mask_noncode(text), re.I):
+        from .query_composites import parse_composite_query
+        return parse_composite_query(text, contracts)
     if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', mask_noncode(text), re.I):
         from .query_projections import parse_computed_query
         return parse_computed_query(text, contracts)

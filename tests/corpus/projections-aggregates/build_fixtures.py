@@ -22,7 +22,7 @@ QUERIES={
  'CountUndefined':'ВЫБРАТЬ КОЛИЧЕСТВО(Peer) КАК DefinedRows, КОЛИЧЕСТВО(NULL) КАК NullRows ИЗ Data::Item',
  'Precision':'ВЫБРАТЬ ПЕРВЫЕ 1 ВЫРАЗИТЬ(1.005 КАК Число(1, 2)) КАК Positive, ВЫРАЗИТЬ(-1.005 КАК Число(1, 2)) КАК Negative, 0.1000000000000000000001 + 0.2000000000000000000002 КАК Exact, 5 % 2 КАК Remainder ИЗ Data::Item',
  'DistinctLimit':'ВЫБРАТЬ ПЕРВЫЕ 2 РАЗЛИЧНЫЕ Amount КАК Value ИЗ Data::Item УПОРЯДОЧИТЬ ПО Value УБЫВ',
- 'Unsupported':'ВЫБРАТЬ СУММА(Amount) КАК Sum ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Amount ИЗ Data::Item',
+ 'Unsupported':'ВЫБРАТЬ СУММА(Amount) КАК Sum ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Label ИЗ Data::Item',
 }
 
 def main():

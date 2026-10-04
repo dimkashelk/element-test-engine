@@ -12093,11 +12093,58 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": null,
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПланыПродаж",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-7762042e47fe39372e535b6a",
@@ -16073,7 +16120,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Ожидается ИЗ (177)",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (245)",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -16123,6 +16170,53 @@
           {
             "version": "9.3",
             "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
           }
         ],
         "executorVersion": "10.0.2-1",
@@ -16248,7 +16342,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Представление (88)",
+      "unsupportedReason": "Метод вычисления вне контракта: Представление (88)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -16270,6 +16364,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -18688,20 +18829,417 @@
         }
       ],
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Объект типа Пользователи.Ссылка отсутствует, неоднозначен или не поддерживается",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "ХранилищеНастроек::Сотрудники",
+        "alias": "Сотрудники",
+        "projections": [
+          [
+            {
+              "kind": "column",
+              "type": "ТестТип89e60c9be1119bf2.Ссылка?",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [],
+              "range": [],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Подразделение"
+          ]
+        ],
+        "parameters": [
+          {
+            "expression": "Пользователи.ТекущийПользователь",
+            "start": 167,
+            "end": 199,
+            "type": "ТестТекущийПользователь.Ссылка",
+            "slot": 0
+          }
+        ],
+        "sources": [
+          {
+            "owner": "ХранилищеНастроек::Сотрудники",
+            "alias": "Сотрудники",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "ТестТип89e60c9be1119bf2.Ссылка?",
+                  "name": "Подразделение",
+                  "source": 0,
+                  "value": [
+                    "Сотрудники",
+                    "Подразделение"
+                  ],
+                  "children": [],
+                  "range": [
+                    38,
+                    62
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Подразделение"
+              ]
+            ],
+            "predicates": [
+              {
+                "kind": "compare",
+                "type": "Булево",
+                "name": "",
+                "source": null,
+                "value": "==",
+                "children": [
+                  {
+                    "kind": "field",
+                    "type": "ТестТекущийПользователь.Ссылка?",
+                    "name": "Пользователь",
+                    "source": 0,
+                    "value": [
+                      "Сотрудники",
+                      "Пользователь"
+                    ],
+                    "children": [],
+                    "range": [
+                      138,
+                      161
+                    ],
+                    "sql_nullable": false,
+                    "null_field": ""
+                  },
+                  {
+                    "kind": "parameter",
+                    "type": "ТестТекущийПользователь.Ссылка",
+                    "name": "",
+                    "source": null,
+                    "value": 0,
+                    "children": [],
+                    "range": [
+                      167,
+                      199
+                    ],
+                    "sql_nullable": false,
+                    "null_field": ""
+                  }
+                ],
+                "range": [
+                  138,
+                  199
+                ],
+                "sql_nullable": false,
+                "null_field": ""
+              }
+            ],
+            "parameters": [
+              {
+                "expression": "Пользователи.ТекущийПользователь",
+                "start": 167,
+                "end": 199,
+                "type": "ТестТекущийПользователь.Ссылка",
+                "slot": 0
+              }
+            ],
+            "ordering": [],
+            "limit": 1,
+            "sources": [
+              {
+                "owner": "ХранилищеНастроек::Сотрудники",
+                "alias": "Сотрудники",
+                "projections": [
+                  [
+                    {
+                      "owner": "ХранилищеНастроек::Сотрудники",
+                      "name": "Подразделение",
+                      "type": "ТестТип89e60c9be1119bf2.Ссылка?",
+                      "system": false
+                    },
+                    "Подразделение"
+                  ],
+                  [
+                    {
+                      "owner": "ХранилищеНастроек::Сотрудники",
+                      "name": "Пользователь",
+                      "type": "ТестТекущийПользователь.Ссылка?",
+                      "system": false
+                    },
+                    "Пользователь"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  87,
+                  97
+                ],
+                "source_name": "Сотрудники",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          },
+          {
+            "owner": "ХранилищеНастроек::Подразделения",
+            "alias": "Подразделения",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "ТестТип89e60c9be1119bf2.Ссылка",
+                  "name": "Ссылка",
+                  "source": 0,
+                  "value": [
+                    "Подразделения",
+                    "Ссылка"
+                  ],
+                  "children": [],
+                  "range": [
+                    275,
+                    295
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Ссылка"
+              ]
+            ],
+            "predicates": [
+              {
+                "kind": "field",
+                "type": "Булево",
+                "name": "Основное",
+                "source": 0,
+                "value": [
+                  "Подразделения",
+                  "Основное"
+                ],
+                "children": [],
+                "range": [
+                  375,
+                  397
+                ],
+                "sql_nullable": false,
+                "null_field": ""
+              }
+            ],
+            "parameters": [],
+            "ordering": [],
+            "limit": 1,
+            "sources": [
+              {
+                "owner": "ХранилищеНастроек::Подразделения",
+                "alias": "Подразделения",
+                "projections": [
+                  [
+                    {
+                      "owner": "ХранилищеНастроек::Подразделения",
+                      "name": "Ссылка",
+                      "type": "ТестТип89e60c9be1119bf2.Ссылка",
+                      "system": true
+                    },
+                    "Ссылка"
+                  ],
+                  [
+                    {
+                      "owner": "ХранилищеНастроек::Подразделения",
+                      "name": "Основное",
+                      "type": "Булево",
+                      "system": false
+                    },
+                    "Основное"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  319,
+                  332
+                ],
+                "source_name": "Подразделения",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          }
+        ],
+        "operators": [
+          "distinct"
+        ],
+        "statements": [],
+        "ordering": [],
+        "limit": null,
+        "fill": null,
+        "source_kind": "union",
+        "mode": "storage-unions-nesting-v1",
+        "source_name": "",
+        "source_range": null
+      },
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "apiBinding": null
+      "criteria": [
+        {
+          "criterionId": "employee",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "fallback",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "duplicate",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "undefined",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "employee",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "fallback",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "duplicate",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "empty",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        },
+        {
+          "criterionId": "undefined",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/public-real-test",
+        "result/unions-nesting/public-real-test",
+        "result/unions-nesting/public-real-test",
+        "result/unions-nesting/public-real-test",
+        "result/unions-nesting/public-real-test",
+        "result/unions-nesting/public-real-run",
+        "result/unions-nesting/public-real-run",
+        "result/unions-nesting/public-real-run",
+        "result/unions-nesting/public-real-run",
+        "result/unions-nesting/public-real-run"
+      ],
+      "apiBinding": null,
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-2b750d3dc035c20b08360559",
@@ -22448,7 +22986,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (573)",
+      "unsupportedReason": "Несовместимые типы общего captured параметра",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -22470,6 +23008,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -22739,7 +23324,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (479)",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПраваНаПространство",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -22761,6 +23346,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24025,7 +24657,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (24)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24047,6 +24679,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24114,7 +24793,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24136,6 +24815,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24290,7 +25016,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24312,6 +25038,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24379,7 +25152,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24401,6 +25174,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24468,7 +25288,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24490,6 +25310,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24557,7 +25424,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24579,6 +25446,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24646,7 +25560,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (78)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (78)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24668,6 +25582,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24803,7 +25764,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24825,6 +25786,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24892,7 +25900,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -24914,6 +25922,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -24981,7 +26036,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (24)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (24)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25003,6 +26058,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -25070,7 +26172,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25092,6 +26194,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -25159,7 +26308,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25181,6 +26330,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -25248,7 +26444,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Метод проекции вне контракта: Пользователь (84)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (84)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25270,6 +26466,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -25408,7 +26651,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (1771)",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПраваНаПространство",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25430,6 +26673,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -25569,7 +26859,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (817)",
+      "unsupportedReason": "Ожидается СРЕЗПОСЛЕДНИХ (327)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -25591,6 +26881,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -26151,7 +27488,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (261)",
+      "unsupportedReason": "Требуется идентификатор (140)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -26173,6 +27510,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -26441,7 +27825,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (471)",
+      "unsupportedReason": "Метод вычисления вне контракта: ДоступОграничен (72)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -26463,6 +27847,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -26822,7 +28253,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (989)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (29)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -26844,6 +28275,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -27115,7 +28593,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Ожидается ИЗ (92)",
+      "unsupportedReason": "Метод вычисления вне контракта: Пользователь (33)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -27137,6 +28615,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -27291,6 +28816,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -27753,11 +29325,58 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: позиция 305",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПраваНаПространство",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-a4b00c2f42decbcb9d1b0691",
@@ -27920,11 +29539,58 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается =",
+      "unsupportedReason": "Несовместимые номинальные типы UNION: СтраницыПространств.Ссылка, ЧерновикиСтраницПространств.Ссылка",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-dd646cf2982ab397bacf0a84",
@@ -28086,11 +29752,58 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне storage AST: ожидается =",
+      "unsupportedReason": "Несовместимые номинальные типы UNION: СтраницыПространств.Ссылка, ЧерновикиСтраницПространств.Ссылка",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
-      "apiBinding": null
+      "apiBinding": null,
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "query-d17134062ed9463982a0cc46",
@@ -28244,6 +29957,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -29980,7 +31740,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (468)",
+      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ПраваНаПространство",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -30002,6 +31762,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -31497,7 +33304,7 @@
       "executed": false,
       "independentlyAssessed": false,
       "ast": null,
-      "unsupportedReason": "Запрос вне relational AST (798)",
+      "unsupportedReason": "Метод вычисления вне контракта: ДоступОграничен (85)",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -31519,6 +33326,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -34625,6 +36479,53 @@
         ],
         "executorVersion": "10.0.2-1",
         "executionCompatibilityVersion": "current"
+      },
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
       }
     },
     {
@@ -37326,20 +39227,159 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/distinct.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "distinct",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042-transferable",
+          "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+          "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            37,
+            82
+          ],
+          "fixtureHash": "a61711286682e1f04235daf54c15c311c279c38f8942fc56975a8667770068ed"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/documented-assessment-distinct.json",
+        "result/unions-nesting/documented-distinct.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                18,
+                23
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              27,
+              37
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": true,
+        "subqueries": []
+      },
+      "fixtureHash": "a61711286682e1f04235daf54c15c311c279c38f8942fc56975a8667770068ed"
     },
     {
       "contractId": "documented-union",
@@ -37358,20 +39398,264 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/union.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "union",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042-transferable",
+          "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+          "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            131,
+            206
+          ],
+          "fixtureHash": "859bb087150e9c5830abd6e632ed941439fa71a32457842f2168766642873c1e"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/documented-assessment-union.json",
+        "result/unions-nesting/documented-union.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "column",
+              "type": "Строка",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [],
+              "range": [],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "parameters": [],
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "Строка",
+                  "name": "Label",
+                  "source": 0,
+                  "value": [
+                    "Label"
+                  ],
+                  "children": [],
+                  "range": [
+                    8,
+                    13
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "sources": [
+              {
+                "owner": "Data::Item",
+                "alias": "Item",
+                "projections": [
+                  [
+                    {
+                      "owner": "Data::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false
+                    },
+                    "Label"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  17,
+                  27
+                ],
+                "source_name": "Data::Item",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "Строка",
+                  "name": "Label",
+                  "source": 0,
+                  "value": [
+                    "Label"
+                  ],
+                  "children": [],
+                  "range": [
+                    47,
+                    52
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "sources": [
+              {
+                "owner": "Other::Item",
+                "alias": "Item",
+                "projections": [
+                  [
+                    {
+                      "owner": "Other::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false
+                    },
+                    "Label"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  56,
+                  67
+                ],
+                "source_name": "Other::Item",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          }
+        ],
+        "operators": [
+          "distinct"
+        ],
+        "statements": [],
+        "ordering": [],
+        "limit": null,
+        "fill": null,
+        "source_kind": "union",
+        "mode": "storage-unions-nesting-v1",
+        "source_name": "",
+        "source_range": null
+      },
+      "fixtureHash": "859bb087150e9c5830abd6e632ed941439fa71a32457842f2168766642873c1e"
     },
     {
       "contractId": "documented-union-all",
@@ -37390,20 +39674,264 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/union-all.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "union_all",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042-transferable",
+          "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+          "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            259,
+            338
+          ],
+          "fixtureHash": "5b2f228f4721f369ee2956d85458af06b7a657e0762b72429d8dce48d6ccf581"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/documented-assessment-union_all.json",
+        "result/unions-nesting/documented-union_all.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "column",
+              "type": "Строка",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [],
+              "range": [],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "parameters": [],
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "Строка",
+                  "name": "Label",
+                  "source": 0,
+                  "value": [
+                    "Label"
+                  ],
+                  "children": [],
+                  "range": [
+                    8,
+                    13
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "sources": [
+              {
+                "owner": "Data::Item",
+                "alias": "Item",
+                "projections": [
+                  [
+                    {
+                      "owner": "Data::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false
+                    },
+                    "Label"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  17,
+                  27
+                ],
+                "source_name": "Data::Item",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "Строка",
+                  "name": "Label",
+                  "source": 0,
+                  "value": [
+                    "Label"
+                  ],
+                  "children": [],
+                  "range": [
+                    51,
+                    56
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "sources": [
+              {
+                "owner": "Other::Item",
+                "alias": "Item",
+                "projections": [
+                  [
+                    {
+                      "owner": "Other::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false
+                    },
+                    "Label"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  60,
+                  71
+                ],
+                "source_name": "Other::Item",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          }
+        ],
+        "operators": [
+          "all"
+        ],
+        "statements": [],
+        "ordering": [],
+        "limit": null,
+        "fill": null,
+        "source_kind": "union",
+        "mode": "storage-unions-nesting-v1",
+        "source_name": "",
+        "source_range": null
+      },
+      "fixtureHash": "5b2f228f4721f369ee2956d85458af06b7a657e0762b72429d8dce48d6ccf581"
     },
     {
       "contractId": "documented-nested",
@@ -37422,20 +39950,199 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/nested.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "nested",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042-transferable",
+          "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+          "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            388,
+            450
+          ],
+          "fixtureHash": "ea9edb97fe159772653e4d1ff861d092fd2f43383f69b2d149f3b91674454df3"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/documented-assessment-nested.json",
+        "result/unions-nesting/documented-nested.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Q",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "Q",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": false,
+              "null_field": "Н0"
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Q",
+            "projections": [
+              [
+                {
+                  "kind": "field",
+                  "type": "Строка",
+                  "name": "Label",
+                  "source": 0,
+                  "value": [
+                    "Label"
+                  ],
+                  "children": [],
+                  "range": [
+                    28,
+                    33
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "sources": [
+              {
+                "owner": "Data::Item",
+                "alias": "Item",
+                "projections": [
+                  [
+                    {
+                      "owner": "Data::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false
+                    },
+                    "Label"
+                  ]
+                ],
+                "predicates": [],
+                "parameters": [],
+                "ordering": [],
+                "limit": null,
+                "mode": "storage-staged-executor-v1",
+                "source_kind": "ordinary",
+                "periodicity": null,
+                "dimensions": [],
+                "period_slot": null,
+                "period_range": null,
+                "source_range": [
+                  37,
+                  47
+                ],
+                "source_name": "Data::Item",
+                "boundary": null,
+                "fill": null
+              }
+            ],
+            "joins": [],
+            "fill": null,
+            "mode": "storage-projections-aggregates-v1",
+            "source_kind": "relational",
+            "grouping": [],
+            "having": [],
+            "distinct": false,
+            "subqueries": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-unions-nesting-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": []
+      },
+      "fixtureHash": "ea9edb97fe159772653e4d1ff861d092fd2f43383f69b2d149f3b91674454df3"
     },
     {
       "contractId": "documented-order-limit",
@@ -37682,20 +40389,287 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/compound.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "adapter-storage-unions-nesting-042",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "042-unions-and-nesting",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "compound",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-042-transferable",
+          "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+          "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            502,
+            567
+          ],
+          "fixtureHash": "06d8defbd7d0d9f2a11809b528860f6cbfc54644966af28123a98cb9a57e8181"
+        }
+      ],
+      "evidence": [
+        "result/unions-nesting/documented-assessment-compound.json",
+        "result/unions-nesting/documented-compound.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      },
+      "ast": {
+        "owner": "",
+        "alias": "",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                37,
+                42
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "parameters": [],
+        "sources": [],
+        "operators": [],
+        "statements": [
+          {
+            "operation": "select",
+            "table": "",
+            "query": {
+              "owner": "Data::Item",
+              "alias": "Item",
+              "projections": [
+                [
+                  {
+                    "kind": "field",
+                    "type": "Строка",
+                    "name": "Label",
+                    "source": 0,
+                    "value": [
+                      "Label"
+                    ],
+                    "children": [],
+                    "range": [
+                      8,
+                      13
+                    ],
+                    "sql_nullable": false,
+                    "null_field": ""
+                  },
+                  "Label"
+                ]
+              ],
+              "predicates": [],
+              "parameters": [],
+              "ordering": [],
+              "limit": null,
+              "sources": [
+                {
+                  "owner": "Data::Item",
+                  "alias": "Item",
+                  "projections": [
+                    [
+                      {
+                        "owner": "Data::Item",
+                        "name": "Label",
+                        "type": "Строка",
+                        "system": false
+                      },
+                      "Label"
+                    ]
+                  ],
+                  "predicates": [],
+                  "parameters": [],
+                  "ordering": [],
+                  "limit": null,
+                  "mode": "storage-staged-executor-v1",
+                  "source_kind": "ordinary",
+                  "periodicity": null,
+                  "dimensions": [],
+                  "period_slot": null,
+                  "period_range": null,
+                  "source_range": [
+                    17,
+                    27
+                  ],
+                  "source_name": "Data::Item",
+                  "boundary": null,
+                  "fill": null
+                }
+              ],
+              "joins": [],
+              "fill": null,
+              "mode": "storage-projections-aggregates-v1",
+              "source_kind": "relational",
+              "grouping": [],
+              "having": [],
+              "distinct": false,
+              "subqueries": []
+            },
+            "columns": [],
+            "index": [],
+            "range": [
+              0,
+              27
+            ]
+          },
+          {
+            "operation": "select",
+            "table": "",
+            "query": {
+              "owner": "Other::Item",
+              "alias": "Item",
+              "projections": [
+                [
+                  {
+                    "kind": "field",
+                    "type": "Строка",
+                    "name": "Label",
+                    "source": 0,
+                    "value": [
+                      "Label"
+                    ],
+                    "children": [],
+                    "range": [
+                      37,
+                      42
+                    ],
+                    "sql_nullable": false,
+                    "null_field": ""
+                  },
+                  "Label"
+                ]
+              ],
+              "predicates": [],
+              "parameters": [],
+              "ordering": [],
+              "limit": null,
+              "sources": [
+                {
+                  "owner": "Other::Item",
+                  "alias": "Item",
+                  "projections": [
+                    [
+                      {
+                        "owner": "Other::Item",
+                        "name": "Label",
+                        "type": "Строка",
+                        "system": false
+                      },
+                      "Label"
+                    ]
+                  ],
+                  "predicates": [],
+                  "parameters": [],
+                  "ordering": [],
+                  "limit": null,
+                  "mode": "storage-staged-executor-v1",
+                  "source_kind": "ordinary",
+                  "periodicity": null,
+                  "dimensions": [],
+                  "period_slot": null,
+                  "period_range": null,
+                  "source_range": [
+                    46,
+                    57
+                  ],
+                  "source_name": "Other::Item",
+                  "boundary": null,
+                  "fill": null
+                }
+              ],
+              "joins": [],
+              "fill": null,
+              "mode": "storage-projections-aggregates-v1",
+              "source_kind": "relational",
+              "grouping": [],
+              "having": [],
+              "distinct": false,
+              "subqueries": []
+            },
+            "columns": [],
+            "index": [],
+            "range": [
+              28,
+              57
+            ]
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "fill": null,
+        "source_kind": "batch",
+        "mode": "storage-unions-nesting-v1",
+        "source_name": "",
+        "source_range": null
+      },
+      "fixtureHash": "06d8defbd7d0d9f2a11809b528860f6cbfc54644966af28123a98cb9a57e8181"
     },
     {
       "contractId": "documented-in",
@@ -40659,12 +43633,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-union",
@@ -40692,12 +43713,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-fetch",
@@ -40758,12 +43826,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-produce",
@@ -40956,12 +44071,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-create-temporary-table-statement",
@@ -40989,12 +44151,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-create-index-statement",
@@ -41022,12 +44231,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-delete-statement",
@@ -41088,12 +44344,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-query-language",
@@ -41418,12 +44721,59 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "fixtureStatus": "review-template-execution-pending",
+      "reference042": {
+        "sources": [
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+            "access": "read in authenticated in-app browser"
+          },
+          {
+            "version": "9.3",
+            "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+            "access": "read in authenticated in-app browser"
+          }
+        ],
+        "executorVersion": "10.0.2-1",
+        "executionCompatibilityVersion": "current",
+        "nativeXBQL": false
+      }
     },
     {
       "contractId": "documentation-custom-data-source-in-query",
@@ -42278,6 +45628,53 @@
       {
         "version": "9.3",
         "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/substring-function/"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false
+  },
+  "stage042Reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+        "access": "read in authenticated in-app browser"
       }
     ],
     "executorVersion": "10.0.2-1",

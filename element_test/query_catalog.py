@@ -134,7 +134,7 @@ def attach_evidence(records,directories):
       direct=direct or (entry.get('declaration')==record['target']['method'] and entry.get('source_file')==record['file'] if record['target'] else False)
       record['executed']|=executed
       record['independentlyAssessed']|=bool(executed and direct and check.get('status') in ('PASS','FAIL'))
-      origin = ('fresh-041' if query.get('ast', {}).get('mode') == 'storage-projections-aggregates-v1' else 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039')
+      origin = ('fresh-042' if query.get('ast',{}).get('mode')=='storage-unions-nesting-v1' else 'fresh-041' if query.get('ast', {}).get('mode') == 'storage-projections-aggregates-v1' else 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039')
       record['criteria'].append({'criterionId':criterion,'direct':direct,'status':check.get('status'),'origin':origin})
       record['evidence'].append(str(folder.relative_to(REPO)) if folder.is_relative_to(REPO) else str(folder))
 
@@ -159,9 +159,9 @@ def build_catalog(repo=REPO,evidence=()):
 
 def markdown(catalog):
  stage040=catalog.get('stage040Reference')
- reference=('Для №40–41 пользователь выбрал справку Элемента **9.3** и установленный Script **10.0.2-1**. Профиль `9.3` использует режим Script `current`: отдельного режима `-c 9.3` в этом executor нет. Исходные версии архивов сохраняются. Исторические свидетельства №39 относятся к справке 9.1 и режиму `-c 9.0`.' if stage040 else
+ reference=('Для №40–42 пользователь выбрал справку Элемента **9.3** и установленный Script **10.0.2-1**. Профиль `9.3` использует режим Script `current`: отдельного режима `-c 9.3` в этом executor нет. Исходные версии архивов сохраняются. Исторические свидетельства №39 относятся к справке 9.1 и режиму `-c 9.0`.' if stage040 else
   'Официальная справка Элемента **9.1** выбрана пользователем для проекта с режимом совместимости **9.0**. Версия источника сохраняется; Script-пробы и runtime выполняются с `-c 9.0`. Раздел 9.0 возвращает 404 и отсутствует в меню архивных версий.')
- lines=['# Каталог контрактов запросов — №39/40/41' if catalog.get('stage041Reference') else '# Каталог контрактов запросов — №39/40' if stage040 else '# Каталог контрактов запросов — №39','',
+ lines=['# Каталог контрактов запросов — №39/40/41/42' if catalog.get('stage042Reference') else '# Каталог контрактов запросов — №39/40/41' if catalog.get('stage041Reference') else '# Каталог контрактов запросов — №39/40' if stage040 else '# Каталог контрактов запросов — №39','',
   'Воспроизведение: `python3 -m element_test.query_catalog`. Архивы открываются только для чтения.',
   '',reference+' Каталог сохраняет очередь исполнения; только шаблоны с exact fixtureHash и независимой оценкой являются исполнимыми критериями.',
   '', '213 исходных литералов не сливаются. API-кандидаты сохраняются отдельно: обнаружение имени метода не подтверждает системный receiver.',

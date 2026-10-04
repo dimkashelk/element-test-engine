@@ -20,6 +20,9 @@ def query_name(query):
 
 def generate_query(query, contracts):
     """Only metadata/AST become code; no rows, expected values or Python filter."""
+    if query.source_kind in ('union','batch','temporary'):
+        from .query_composites import generate_composite_query
+        return generate_composite_query(query, contracts)
     if query.source_kind == 'relational':
         from .query_joins import generate_relational_query
         return generate_relational_query(query, contracts)
@@ -129,7 +132,7 @@ def adapt_storage_queries(source, contracts):
     for start,end,body,text in query_literals(source):
         query = parse_storage_query(text, contracts)
         name = generate_query(query, contracts)
-        replacements.append((start,end,name + '.Создать(' + ', '.join(p.expression for p in unique_parameters(query)) + ')'))
+        replacements.append((start,end,name + '.Создать(' + ', '.join(getattr(contracts,'query_context_expressions',{}).get(p.expression,p.expression) for p in unique_parameters(query)) + ')'))
     for a,b,value in reversed(replacements):
         source = source[:a] + value + source[b:]
     return source
@@ -155,11 +158,14 @@ def bind_queries(plan):
                     or 'Запрос' in c.local_by_source.get(c.current_source, {}) or c.resolve('Запрос')):
                 raise UnsupportedSyntaxError('Затенённый владелец литерала Запрос')
             query = parse_storage_query(text,c)
-            if query.fill and (method_binding_visible(locals_,query.fill['sourceName'].split('::')[0],body+query.fill['typeRange'][0])
-                              or query.fill['sourceName'] in c.local_by_source.get(c.current_source, {})):
-                raise UnsupportedSyntaxError('Затенённый тип ЗАПОЛНИТЬ: ' + query.fill['sourceName'] +
-                                             f" ({symbol.start+body+query.fill['typeRange'][0]}-{symbol.start+body+query.fill['typeRange'][1]})")
-            sources = query.sources if query.source_kind == 'relational' else (query,)
+            from .query_composites import leaves, nodes
+            for nested in nodes(query):
+                fill = nested.fill
+                if fill and (method_binding_visible(locals_,fill['sourceName'].split('::')[0],body+fill['typeRange'][0])
+                             or fill['sourceName'] in c.local_by_source.get(c.current_source, {})):
+                    raise UnsupportedSyntaxError('Затенённый тип ЗАПОЛНИТЬ: ' + fill['sourceName'] +
+                                                 f" ({symbol.start+body+fill['typeRange'][0]}-{symbol.start+body+fill['typeRange'][1]})")
+            sources = tuple(leaves(query))
             for source in sources:
                 if (method_binding_visible(locals_,source.source_name.split('::')[0],body+source.source_range[0])
                         or source.source_name in c.local_by_source.get(c.current_source, {})):
@@ -167,6 +173,10 @@ def bind_queries(plan):
                 if source.source_kind == 'slice-last' and source.owner not in plan.storage.register_schemas:
                     raise UnsupportedSyntaxError('СрезПоследних требует явный storage.registers: ' + source.owner)
             for p in query.parameters:
+                if p.expression in getattr(c,'query_context_expressions',{}):
+                    owner=p.expression.split('.')[0]
+                    if method_binding_visible(locals_,owner,body+p.start) or c.resolve(owner) or owner in c.local_by_source.get(c.current_source,{}):
+                        raise UnsupportedSyntaxError('Затенённый системный captured параметр: '+p.expression)
                 if re.fullmatch(IDENT,p.expression):
                     inferred = _local_type(symbol.source,node,p.expression,body+p.start,locals_,symbol.owner,plan.model)
                     compatible = {p.type, 'Дата'} if p.type == 'Дата?' else {p.type}
@@ -177,13 +187,16 @@ def bind_queries(plan):
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
                 'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else name + '.СтрокаРезультата',
                 'backend': plan.storage.config.get('backend','memory'),
-                'limitations': (['ordinary-and-day-slice-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
+                'limitations': (['implicit-execute-local-temporary-scope', 'last-statement-result', 'validated-index-hints', 'native-XBQL-unavailable'] if query.mode == 'storage-unions-nesting-v1' or query.source_kind in ('union','batch') else ['ordinary-and-day-slice-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
                                 if query.source_kind == 'relational' else ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee'])})
             for source in sources:
                 element = c.resolve(source.owner)[0]
                 if source.source_kind == 'ordinary' and element not in plan.storage_elements:
                     plan.storage_elements.append(element)
             plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'],[]).append(name + '.Запрос')
+            if any(p.expression in getattr(c,'query_context_expressions',{}) for p in query.parameters):
+                from .query_context import OWNER
+                plan.module_type_dependencies[symbol.owner['sourceFile']].append(OWNER+'.Ссылка')
             plan.bindings.append(CapabilityBinding('query','Выполнить',query.owner,query.mode,
                 'Выборка в executor по текущему staging; параметры при создании, новые строки при Выполнить',
                 symbol.identity.source_file,symbol.start+start,symbol.start+end))

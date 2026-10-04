@@ -999,7 +999,12 @@ CASE/ВЫРАЗИТЬ, DISTINCT, агрегаты и GROUP/HAVING. Два реа
 Семь SBSL FAIL мутаций, шесть SQL-сценариев; test/run по 2/2 и 1/1 PASS,
 два batch — 3/0/3, 48 артефактов прошли схемы.
 [Контракт](docs/projections-and-aggregates.md), [измерения](docs/query-stage-041-measurements.json).
-[Следующее №42](docs/tasks/042-unions-and-nesting.md) — UNION и вложенные запросы.
+[№42](docs/tasks/042-unions-and-nesting.md) реализовано: UNION/ALL, вложенные
+источники, IN/NOT IN, пакеты и временные таблицы. Один точный реальный литерал
+и пять review templates независимо оценены. 49 различных тестов успешны,
+семь SBSL FAIL мутаций, восемь SQL-сценариев; test/run по 5/5, batch 3/0/3.
+[Контракт и остаток](docs/unions-and-nesting.md), [измерения](docs/query-stage-042-measurements.json).
+[Следующее №43](docs/tasks/043-virtual-tables.md) — виртуальные таблицы и прочие источники.
 
 ```bash
 python3 -m element_test.query_catalog

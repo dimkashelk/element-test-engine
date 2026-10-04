@@ -1,0 +1,110 @@
+метод Union(): Объект
+    возврат Запрос{ВЫБРАТЬ Key КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Key КАК Ignored ИЗ Other::Item}.Выполнить()
+;
+метод All(): Объект
+    возврат Запрос{ВЫБРАТЬ Key КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Key КАК Ignored ИЗ Other::Item}.Выполнить()
+;
+метод Mixed(): Объект
+    возврат Запрос{ВЫБРАТЬ Key КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Key ИЗ Other::Item ОБЪЕДИНИТЬ РАЗЛИЧНЫЕ ВЫБРАТЬ Key ИЗ Other::Item}.Выполнить()
+;
+метод Sorted(): Объект
+    возврат Запрос{ВЫБРАТЬ Key КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Key ИЗ Other::Item УПОРЯДОЧИТЬ ПО Value УБЫВ}.Выполнить()
+;
+метод Nested(): Объект
+    возврат Запрос{ВЫБРАТЬ Q.Value * 2 КАК Total ИЗ (ВЫБРАТЬ Key КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Key ИЗ Other::Item) КАК Q ГДЕ Q.Value >= 2 УПОРЯДОЧИТЬ ПО Total}.Выполнить()
+;
+метод Deep(): Объект
+    возврат Запрос{ВЫБРАТЬ Q.Value ИЗ (ВЫБРАТЬ R.Value ИЗ (ВЫБРАТЬ Amount КАК Value ИЗ Data::Item) КАК R ГДЕ R.Value > 1) КАК Q}.Выполнить()
+;
+метод NestedJoin(): Объект
+    возврат Запрос{ВЫБРАТЬ Q.Key, B.Amount КАК Value ИЗ (ВЫБРАТЬ Key ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Key ИЗ Other::Item) КАК Q ЛЕВОЕ СОЕДИНЕНИЕ Other::Item КАК B ПО Q.Key == B.Key}.Выполнить()
+;
+метод NestedNull(): Объект
+    возврат Запрос{ВЫБРАТЬ КОЛИЧЕСТВО(Q.Value) КАК Count, СУММА(Q.Value.ЗаменитьNull(10)) КАК Sum ИЗ (ВЫБРАТЬ B.Amount КАК Value ИЗ Data::Item КАК A ЛЕВОЕ СОЕДИНЕНИЕ Other::Item КАК B ПО A.Key == B.Key) КАК Q}.Выполнить()
+;
+метод NullUnion(): Объект
+    возврат Запрос{ВЫБРАТЬ КОЛИЧЕСТВО(Q.Value) КАК Count ИЗ (ВЫБРАТЬ ВЫБОР КОГДА Key == 1 ТОГДА NULL ИНАЧЕ Peer КОНЕЦ КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Peer КАК Value ИЗ Data::Item ГДЕ Key > 1) КАК Q}.Выполнить()
+;
+метод NullNumber(): Объект
+    возврат Запрос{ВЫБРАТЬ ПЕРВЫЕ 1 NULL КАК Value ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Amount КАК Value ИЗ Other::Item}.Выполнить()
+;
+метод In(): Объект
+    возврат Запрос{ВЫБРАТЬ Amount КАК Value ИЗ Data::Item ГДЕ Key В (ВЫБРАТЬ Key ИЗ Other::Item)}.Выполнить()
+;
+метод NotIn(): Объект
+    возврат Запрос{ВЫБРАТЬ Amount КАК Value ИЗ Data::Item ГДЕ Key НЕ В (ВЫБРАТЬ Key ИЗ Other::Item)}.Выполнить()
+;
+метод EmptyIn(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ИЗ Data::Item ГДЕ Key НЕ В (ВЫБРАТЬ Key ИЗ Other::Item ГДЕ Key < 0)}.Выполнить()
+;
+метод UnknownIn(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ИЗ Data::Item ГДЕ Key НЕ В (ВЫБРАТЬ NULL КАК Key ИЗ Other::Item)}.Выполнить()
+;
+метод Compound(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ИЗ Data::Item; ВЫБРАТЬ Label ИЗ Other::Item}.Выполнить()
+;
+метод Temp(): Объект
+    возврат Запрос{ВЫБРАТЬ Key КАК Value ПОМЕСТИТЬ T ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Key ИЗ Other::Item ИНДЕКСИРОВАТЬ ПО Value; ВЫБРАТЬ Value ИЗ T ГДЕ Value > 1}.Выполнить()
+;
+метод TempJoin(): Объект
+    возврат Запрос{ВЫБРАТЬ Key, Amount ПОМЕСТИТЬ T ИЗ Data::Item; СОЗДАТЬ ИНДЕКС Idx ДЛЯ T (Key) ДОПОЛНИТЕЛЬНО ПО (Amount); ВЫБРАТЬ T.Key, СУММА(T.Amount) КАК Sum ИЗ T ВНУТРЕННЕЕ СОЕДИНЕНИЕ Other::Item КАК B ПО T.Key == B.Key СГРУППИРОВАТЬ ПО T.Key}.Выполнить()
+;
+метод TempIn(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ПОМЕСТИТЬ T ИЗ Other::Item; ВЫБРАТЬ Amount КАК Value ИЗ Data::Item ГДЕ Key В (ВЫБРАТЬ Key ИЗ T)}.Выполнить()
+;
+метод TempNull(): Объект
+    возврат Запрос{ВЫБРАТЬ B.Amount КАК Value ПОМЕСТИТЬ T ИЗ Data::Item КАК A ЛЕВОЕ СОЕДИНЕНИЕ Other::Item КАК B ПО A.Key == B.Key; ВЫБРАТЬ КОЛИЧЕСТВО(Value) КАК Count, СУММА(Value.ЗаменитьNull(10)) КАК Sum ИЗ T}.Выполнить()
+;
+метод Create(): Объект
+    возврат Запрос{СОЗДАТЬ ВРЕМЕННУЮ ТАБЛИЦУ T (Key: Число, Label: Строка); СОЗДАТЬ ИНДЕКС Idx ДЛЯ T (Key); ВЫБРАТЬ Key, Label ИЗ T}.Выполнить()
+;
+метод Drop(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ПОМЕСТИТЬ T ИЗ Data::Item; УНИЧТОЖИТЬ T}.Выполнить()
+;
+метод Recreate(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ПОМЕСТИТЬ T ИЗ Data::Item; УНИЧТОЖИТЬ T; СОЗДАТЬ ВРЕМЕННУЮ ТАБЛИЦУ T (Label: Строка); ВЫБРАТЬ Label ИЗ T}.Выполнить()
+;
+метод Truncate(): Объект
+    возврат Запрос{ВЫБРАТЬ Key ПОМЕСТИТЬ T ИЗ Data::Item; ОБРЕЗАТЬ T; ВЫБРАТЬ Key ИЗ T}.Выполнить()
+;
+метод Fill(): Объект
+    возврат Запрос{ВЫБРАТЬ Q.Key, СУММА(Q.Amount) КАК Sum ЗАПОЛНИТЬ Data::Card ИЗ (ВЫБРАТЬ Key, Amount ИЗ Data::Item ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Key, Amount ИЗ Other::Item) КАК Q СГРУППИРОВАТЬ ПО Q.Key}.Выполнить()
+;
+метод Params(): Объект
+    знч Calls = новый Массив<Число>()
+    знч Q = Запрос{ВЫБРАТЬ Amount + %{Capture(Calls, 1)} КАК Value ПОМЕСТИТЬ T ИЗ Data::Item ГДЕ Key == %{Capture(Calls, 2)}; ВЫБРАТЬ Value + %{Capture(Calls, 3)} КАК Value ИЗ T ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Amount + %{Capture(Calls, 4)} КАК Value ИЗ Other::Item}
+    возврат {"rows": Q.Выполнить(), "calls": Calls}
+;
+метод Shared(Bonus: Число): Объект
+    возврат Запрос{ВЫБРАТЬ Key + %Bonus КАК Value ИЗ Data::Item ГДЕ Key == %Bonus ОБЪЕДИНИТЬ ВСЕ ВЫБРАТЬ Key + %Bonus КАК Value ИЗ Other::Item}.Выполнить()
+;
+метод Quoted(): Объект
+    возврат Запрос{ВЫБРАТЬ "a; ОБЪЕДИНИТЬ (ВЫБРАТЬ" КАК Value ИЗ Other::Item; // ; ОБЪЕДИНИТЬ
+ ВЫБРАТЬ Key ИЗ Other::Item}.Выполнить()
+;
+метод Unsupported(): Объект
+    возврат Запрос{ВЫБРАТЬ Label ИЗ Missing::Table}.Выполнить()
+;
+метод Capture(Calls: Массив<Число>, N: Число): Число
+    Calls.Добавить(N)
+    возврат N
+;
+метод CaptureState(Calls: Массив<Строка>, N: Число): Число
+    Calls.Добавить("capture")
+    возврат N
+;
+метод State(): Объект
+    знч Calls = новый Массив<Строка>()
+    знч Q = Запрос{ВЫБРАТЬ СУММА(Amount + %{CaptureState(Calls, 1)}) КАК Sum ПОМЕСТИТЬ T ИЗ Data::Item; ВЫБРАТЬ Sum ИЗ T}
+    знч Old = Q.Выполнить()
+    пер Seen: Объект = новый Массив<Объект>()
+    попытка
+        исп Транзакции.Начать()
+        знч V = новый Data::Item.Объект(Ссылка = Data::Item.ПолучитьСсылку(новый Ууид("11111111-1111-4111-8111-111111111111")), Key = 1, Amount = 20, Label = "a", Day = новый Дата(2024, 2, 28))
+        V.Записать()
+        Seen = Q.Выполнить()
+        выбросить новый ИсключениеВалидации("rollback")
+    поймать E: ИсключениеВалидации
+        возврат {"old": Old, "seen": Seen, "after": Q.Выполнить(), "calls": Calls}
+    ;
+;

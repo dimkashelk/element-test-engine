@@ -18,6 +18,7 @@ class Expression:
     children: tuple = ()
     range: tuple = ()
     sql_nullable: bool = False
+    null_field: str = ''
 
 
 @dataclass(frozen=True)
@@ -45,6 +46,7 @@ class RelationalQuery:
     grouping: tuple = ()
     having: tuple = ()
     distinct: bool = False
+    subqueries: tuple = ()
 
     def to_dict(self):
         return asdict(self)
@@ -57,7 +59,7 @@ class Parser:
         self.fields, self.used, self.nullable = [], [], set()
         self.parameters = []
         visible, hidden = mask_noncode(text, strings=False), mask_noncode(text)
-        pattern = re.compile(rf'{IDENT}|\d+(?:\.\d+)?|::|==|!=|<>|<=|>=|[().,=<>+*/%-]')
+        pattern = re.compile(rf'{IDENT}|\d+(?:\.\d+)?|::|==|!=|<>|<=|>=|[().,=<>+*/%:;?|\-]')
         i = 0
         while i < len(text):
             if visible[i].isspace():
@@ -222,6 +224,10 @@ class Parser:
         nullable = i in self.nullable
         return replace(e,source=i,type=f.type if not nullable or f.type.endswith('?') else f.type+'?',sql_nullable=nullable)
 
+    def prune_source(self, i, s):
+        fields = tuple((f, f.name) for f in self.used[i].values()) or s.projections
+        return replace(s, projections=fields)
+
     def bind(self, e, visible, expected=None):
         if e.kind == 'field': return self.field(e,visible)
         if e.kind == 'parameter':
@@ -344,8 +350,7 @@ class Parser:
         sources=[]
         for i,s in enumerate(self.sources):
             # At least one native column is needed for cardinality-only joins.
-            fields=tuple((f,f.name) for f in self.used[i].values()) or s.projections
-            sources.append(replace(s,projections=fields))
+            sources.append(self.prune_source(i,s))
         fill=None
         if fill_name:
             targets=self.contracts.resolve(fill_name)
@@ -379,19 +384,20 @@ def generate_relational_query(query, contracts):
     if name in contracts.definitions:return name
     parameters=unique_parameters(query)
     names=[generate_query(s,contracts) for s in query.sources]
-    row_types=[n+'.СтрокаРезультата' for n in names]
+    from .query_composites import internal, row_type as child_row_type, needs_context, public_result, null_column
+    row_types=[child_row_type(s,n,private=True) for s,n in zip(query.sources,names)]
     def declaration(structure,fields):
         return '@Глобально\nструктура '+structure+'\n'+''.join('    знч '+label+': '+contracts.sbsl_type(typ)+'\n' for label,typ in fields)+';\n'
     text=declaration('Комбинация',[('С'+str(i),typ+'?') for i,typ in enumerate(row_types)])
-    row_type=query.fill['type'] if query.fill else 'СтрокаРезультата'
-    if not query.fill:text+=declaration(row_type,[(label,e.type+('?' if e.sql_nullable and not e.type.endswith('?') else '')) for e,label in query.projections])
+    row_type='СтрокаДанных'
+    text+=declaration(row_type,[(label,e.type+('?' if e.sql_nullable and not e.type.endswith('?') else '')) for e,label in query.projections]+[(null_column(query.projections,i),'Булево') for i in range(len(query.projections))])
+    public=public_result(query,contracts);decl_end=public.index('    @Глобально')
+    text+=public[:decl_end]
 
     from .query_projections import ExpressionRenderer, grouped_tail
     renderer=ExpressionRenderer(query,contracts,row_types)
     null,value,tri=renderer.null,renderer.value,renderer.tri
-    computed=query.mode=='storage-projections-aggregates-v1'
-    if computed:
-        text+=declaration('ГруппаДанных',[('С','Комбинация'),('Строки','Массив<Комбинация>')]).replace('знч С:', 'пер С:')
+    text+=declaration('ГруппаДанных',[('С','Комбинация'),('Строки','Массив<Комбинация>')]).replace('знч С:', 'пер С:')
 
     def combination(i,left='Л',right='П',only_right=False):
         return 'новый Комбинация('+', '.join('С'+str(n)+' = '+('Неопределено' if only_right else left+'.С'+str(n)) for n in range(i))+(', ' if i else '')+'С'+str(i)+' = '+right+')'
@@ -399,8 +405,10 @@ def generate_relational_query(query, contracts):
     text+='@Глобально\nструктура Запрос\n'
     text+=''.join('    знч П'+str(p.slot)+': '+contracts.sbsl_type(p.type)+'\n' for p in parameters)
     text+=''.join('    знч И'+str(i)+': '+n+'.Запрос\n' for i,n in enumerate(names))
-    text+='    @Глобально\n    метод Выполнить(): Массив<'+row_type+'>\n'
-    for i in range(len(names)):text+='        знч Т'+str(i)+' = И'+str(i)+'.Выполнить()\n'
+    if needs_context(query):text+='    знч Контекст: Соответствие<Строка, Строка>\n'
+    text+=public[decl_end:]
+    text+='    @Глобально\n    метод ВыполнитьВнутренне(): Массив<'+row_type+'>\n'
+    for i in range(len(names)):text+='        знч Т'+str(i)+' = И'+str(i)+('.ВыполнитьВнутренне()\n' if internal(query.sources[i]) else '.Выполнить()\n')
     text+='        пер Строки = новый Массив<Комбинация>()\n        для Исходная из Т0\n            Строки.Добавить(новый Комбинация(С0 = Исходная))\n        ;\n'
     for j in query.joins:
         i=j.source
@@ -414,34 +422,7 @@ def generate_relational_query(query, contracts):
         if j.kind in ('right','full'):
             text+='        пер Индекс'+str(i)+' = 0\n        для П из Т'+str(i)+'\n            если не Совпавшие'+str(i)+'.Содержит(Индекс'+str(i)+')\n                Следующие'+str(i)+'.Добавить('+combination(i,only_right=True)+')\n            ;\n            Индекс'+str(i)+' += 1\n        ;\n'
         text+='        Строки = Следующие'+str(i)+'\n'
-    if computed:
-        text+=grouped_tail(query,name,row_type,renderer,parameters)
-    else:
-        condition=tri(query.predicates[0])+' == 1' if query.predicates else 'Истина'
-        text+='        знч Отобранные = новый Массив<Комбинация>()\n        для С из Строки\n            если '+condition+'\n'
-        if query.ordering:
-            order_args = ''.join(', П'+str(p.slot) for p in parameters)
-            text+='                пер Позиция = 0\n                пока Позиция < Отобранные.Размер() и не '+name+'.Раньше(С, Отобранные[Позиция]'+order_args+')\n                    Позиция += 1\n                ;\n                Отобранные.Вставить(Позиция, С)\n'
-        else:text+='                Отобранные.Добавить(С)\n'
-        text+='            ;\n        ;\n        знч Результат = новый Массив<'+row_type+'>()\n        для С из Отобранные\n'
-        if query.limit:text+='            если Результат.Размер() >= '+str(query.limit)+'\n                прервать\n            ;\n'
-        def projection(e):
-            v=value(e)
-            # Output NULL uses the adapter's nullable transport; internal flags keep
-            # NULL and an existing row's Undefined separate during relational work.
-            if e.sql_nullable:v='(('+null(e)+') ? Неопределено : '+v+')'
-            if e.type.rstrip('?').endswith('.Ссылка'):
-                typ=e.type.rstrip('?');copy='новый '+typ+'(Идентификатор = ('+v+').Идентификатор)'
-                v='('+v+' == Неопределено ? Неопределено : '+copy+')' if e.type.endswith('?') or e.sql_nullable else copy
-            return v
-        text+='            Результат.Добавить(новый '+row_type+'('+', '.join(label+' = '+projection(e) for e,label in query.projections)+'))\n        ;\n        возврат Результат\n    ;\n;\n'
-        if query.ordering:
-            order_signature = ''.join(', П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
-            text+='@Глобально\nметод Раньше(А: Комбинация, Б: Комбинация'+order_signature+'): Булево\n'
-            for e,descending in query.ordering:
-                a,b=value(e,'А'),value(e,'Б')
-                text+='    если '+a+' != '+b+'\n        возврат '+a+(' > ' if descending else ' < ')+b+'\n    ;\n'
-            text+='    возврат Ложь\n;\n'
+    text+=grouped_tail(query,name,row_type,renderer,parameters)
     signature=', '.join('П'+str(p.slot)+': '+contracts.sbsl_type(p.type) for p in parameters)
     def captured(p):
         v='П'+str(p.slot)
@@ -449,19 +430,22 @@ def generate_relational_query(query, contracts):
             clone='новый '+p.type.rstrip('?')+'(Идентификатор = '+v+'.Идентификатор)'
             return '('+v+' == Неопределено ? Неопределено : '+clone+')' if p.type.endswith('?') else clone
         return v
+    if needs_context(query):signature+=(', ' if signature else '')+'Контекст: Соответствие<Строка, Строка>'
     text+='@Глобально\nметод Создать('+signature+'): Запрос\n'
     args=['П'+str(p.slot)+' = '+captured(p) for p in parameters]
+    if needs_context(query):args.append('Контекст = Контекст')
     for i,s in enumerate(query.sources):
         source_parameters=unique_parameters(s)
         mapped=[]
         for p in source_parameters:
             original=next(x for x in query.parameters if (x.start,x.end)==(p.start,p.end))
             mapped.append(captured(original))
+        if needs_context(s):mapped.append('Контекст')
         text+='    знч Источник'+str(i)+' = '+names[i]+'.Создать('+', '.join(mapped)+')\n'
         args.append('И'+str(i)+' = Источник'+str(i))
     text+='    возврат новый Запрос('+', '.join(args)+')\n;\n'
     text+=''.join(t for _,t in renderer.helpers.values())
     contracts.definitions[name]=text
-    contracts.method_dependencies[name]=[n+'.Запрос' for n in names]+[e.type for e,_ in query.projections]
-    if query.fill:contracts.method_dependencies[name].append(row_type)
+    contracts.method_dependencies[name]=[n+'.Запрос' for n in names]+[e.type for e,_ in query.projections]+[generate_query(s,contracts)+'.Запрос' for s in query.subqueries]
+    if query.fill:contracts.method_dependencies[name].append(query.fill['type'])
     return name

@@ -1,0 +1,1233 @@
+{
+  "stage": 42,
+  "date": "2026-10-04",
+  "status": "implemented-within-unions-nesting-scope",
+  "reference": {
+    "sources": [
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/union/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-from/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/select-into/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-index-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/drop-statement/",
+        "access": "read in authenticated in-app browser"
+      },
+      {
+        "version": "9.3",
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/batch-of-statements/",
+        "access": "read in authenticated in-app browser"
+      }
+    ],
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false
+  },
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0",
+    "executionCompatibilityVersion": "current",
+    "elementReferenceVersion": "9.3"
+  },
+  "sourceCompatibilityVersions": [
+    "9.0",
+    "9.3"
+  ],
+  "catalog": {
+    "scopeCount": 46,
+    "counts": {
+      "parsed": 6,
+      "planned": 6,
+      "executed": 6,
+      "independentlyAssessed": 6
+    },
+    "familyCounts": {
+      "xbql-file": 1,
+      "literal": 32,
+      "documented-form": 5,
+      "documentation-index": 8
+    },
+    "archives": [
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "scopeOnlyRefresh": true,
+    "completeQueryCatalogExecuted": false,
+    "assessedOccurrences": [
+      {
+        "contractId": "query-1301a8490f692e94fc572870",
+        "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "fixture": null,
+        "fixtureHash": null,
+        "file": "ХранилищеНастроек/Подразделения.xbsl",
+        "range": [
+          111,
+          521
+        ],
+        "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+        "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+        "target": {
+          "namespace": "ХранилищеНастроек",
+          "module": "Подразделения",
+          "method": "ТекущееПодразделение",
+          "parameters": [],
+          "returnType": "Подразделения.Ссылка?",
+          "range": [
+            42,
+            637
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "employee",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "fallback",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "duplicate",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "undefined",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "employee",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "fallback",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "duplicate",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "empty",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          },
+          {
+            "criterionId": "undefined",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/public-real-test",
+          "result/unions-nesting/public-real-test",
+          "result/unions-nesting/public-real-test",
+          "result/unions-nesting/public-real-test",
+          "result/unions-nesting/public-real-test",
+          "result/unions-nesting/public-real-run",
+          "result/unions-nesting/public-real-run",
+          "result/unions-nesting/public-real-run",
+          "result/unions-nesting/public-real-run",
+          "result/unions-nesting/public-real-run"
+        ]
+      },
+      {
+        "contractId": "documented-distinct",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/distinct.xbql",
+        "fixtureHash": "a61711286682e1f04235daf54c15c311c279c38f8942fc56975a8667770068ed",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "distinct",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042-transferable",
+            "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+            "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              37,
+              82
+            ],
+            "fixtureHash": "a61711286682e1f04235daf54c15c311c279c38f8942fc56975a8667770068ed"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/documented-assessment-distinct.json",
+          "result/unions-nesting/documented-distinct.json"
+        ]
+      },
+      {
+        "contractId": "documented-union",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/union.xbql",
+        "fixtureHash": "859bb087150e9c5830abd6e632ed941439fa71a32457842f2168766642873c1e",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "union",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042-transferable",
+            "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+            "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              131,
+              206
+            ],
+            "fixtureHash": "859bb087150e9c5830abd6e632ed941439fa71a32457842f2168766642873c1e"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/documented-assessment-union.json",
+          "result/unions-nesting/documented-union.json"
+        ]
+      },
+      {
+        "contractId": "documented-union-all",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/union-all.xbql",
+        "fixtureHash": "5b2f228f4721f369ee2956d85458af06b7a657e0762b72429d8dce48d6ccf581",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "union_all",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042-transferable",
+            "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+            "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              259,
+              338
+            ],
+            "fixtureHash": "5b2f228f4721f369ee2956d85458af06b7a657e0762b72429d8dce48d6ccf581"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/documented-assessment-union_all.json",
+          "result/unions-nesting/documented-union_all.json"
+        ]
+      },
+      {
+        "contractId": "documented-nested",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/nested.xbql",
+        "fixtureHash": "ea9edb97fe159772653e4d1ff861d092fd2f43383f69b2d149f3b91674454df3",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "nested",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042-transferable",
+            "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+            "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              388,
+              450
+            ],
+            "fixtureHash": "ea9edb97fe159772653e4d1ff861d092fd2f43383f69b2d149f3b91674454df3"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/documented-assessment-nested.json",
+          "result/unions-nesting/documented-nested.json"
+        ]
+      },
+      {
+        "contractId": "documented-compound",
+        "archive": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/compound.xbql",
+        "fixtureHash": "06d8defbd7d0d9f2a11809b528860f6cbfc54644966af28123a98cb9a57e8181",
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "compound",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-042-transferable",
+            "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
+            "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              502,
+              567
+            ],
+            "fixtureHash": "06d8defbd7d0d9f2a11809b528860f6cbfc54644966af28123a98cb9a57e8181"
+          }
+        ],
+        "evidence": [
+          "result/unions-nesting/documented-assessment-compound.json",
+          "result/unions-nesting/documented-compound.json"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "distinctSuccessfulMethods": 49,
+    "newMethods": 16,
+    "affectedLegacyMethods": 33,
+    "latestSuccessfulEvidence": {
+      "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_query_composites.CompositeRealTest.test_direct_unchanged_current_department_root": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/edges-first.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_empty_sources_union_aggregate_in_and_temporary": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/acceptance-first.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_exact_documented_templates_independently_assessed": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/documented-repeat.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_mutations_alternative_and_recovery": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/acceptance-first.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_invalid_timeout_backend_failure_then_recovery": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/acceptance-first.log"
+      },
+      "test_query_composites.CompositeSqlTest.test_temporary_nested_join_snapshot_rollback_sql_audit_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/acceptance-first.log"
+      },
+      "test_query_composites.CompositePublicTest.test_public_real_test_run_and_fail_unsupported_pass": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/public-repeat.log"
+      },
+      "test_query_composites.CompositePublicTest.test_two_fresh_isolated_batches": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/batch-fresh-repeat.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_named_fill_dependencies_after_repair": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/edges-first.log"
+      },
+      "test_query_composites.CompositeRealSqlTest.test_real_employee_and_fallback_sql_audit_cleanup": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/public-repeat.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_type_rejections_have_ranges_and_unreachable_types_are_lazy": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_visibility_fully_qualified_and_alias_same_nominal_type": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_ordinary_readonly_and_literal_strings_comments_nested_parameters": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final-repeat.log"
+      },
+      "test_query_composites.CompositeEdgeTest.test_hidden_null_column_collision_and_nullable_alias_comparison": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/edges-first.log"
+      },
+      "test_query_composites.CompositeEdgeTest.test_union_and_batch_reference_captures_are_detached": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/edges-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_scalar_enum_date_uuid_and_parameterized_ordering": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_autocheck_direct_root_enum_duplicates_order_and_mutations": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_business_mutations_sbsl_fail_and_recovery": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_empty_sides_cross_join_on_vs_where_and_alternative_correct_source": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_fresh_reference_projections_capture_reexecute_write_and_rollback": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_invalid_timeout_unsupported_sticky_infrastructure_error_then_pass": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_portable_all_four_bag_joins_null_undefined_truth_tables_and_owner_types": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinDockerTest.test_real_direct_root_empty_base_multiple_missing_and_daily_boundaries": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPublicTest.test_public_autocheck_direct_root_test_run": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinPublicTest.test_public_test_run_control_two_fresh_batches_and_packages": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinSqlTest.test_autocheck_enum_order_and_independent_sql_audit": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_joins.JoinSqlTest.test_real_and_portable_sql_audit_readonly_and_rollback": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_portable_computed_aggregate_group_distinct_case_cast_fill_and_params": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionDockerTest.test_invalid_fixture_timeout_unsupported_backend_failure_then_recovery": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_null_vs_undefined_precision_and_distinct_limit": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_rounding_overflow_null_coalesce_and_dead_case_branch": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/affected-first.log"
+      },
+      "test_query_composites.CompositeMembershipEdgeTest.test_missing_join_side_membership_and_optional_derived_alias": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/batch-fresh-repeat.log"
+      },
+      "test_query_composites.CompositeDockerTest.test_portable_semantics_and_independent_sbsl_answers": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/runtime-final-repeat.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_catalog_all_projects_stable_ids_and_visible_malformed_candidates": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final.log"
+      },
+      "test_storage_query_fill.FillPlanTest.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root": {
+        "status": "ok",
+        "evidence": "result/unions-nesting/binding-final.log"
+      }
+    },
+    "initialFailuresRetained": [
+      {
+        "file": "result/unions-nesting/plan-first.log",
+        "sha256": "8c13be335e9c377f205a4093751a7f38a663595b7bbbf8a17150840e225118ec",
+        "failures": [
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='ordinary', method='NestedNull')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='ordinary', method='UnknownIn')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='ordinary', method='TempNull')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='renamed', method='NestedNull')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='renamed', method='UnknownIn')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='renamed', method='TempNull')",
+          "ERROR: test_nested_capture_ranges_and_teacher_data_excluded (test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded) (variant='renamed', method='Fill')"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/runtime-first.log",
+        "sha256": "856d66088c34df9a4001788c21241b0797e3921dae4626e7b911847e55cfc4e4",
+        "failures": [
+          "FAIL: test_portable_semantics_and_independent_sbsl_answers (test_query_composites.CompositeDockerTest.test_portable_semantics_and_independent_sbsl_answers) (variant='ordinary', method='Fill')",
+          "FAIL: test_portable_semantics_and_independent_sbsl_answers (test_query_composites.CompositeDockerTest.test_portable_semantics_and_independent_sbsl_answers) (variant='renamed', method='Fill')"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/acceptance-first.log",
+        "sha256": "d9c7a2bfc1935b054950b58af9c0418fae5f543e1d279d0e6507f1b141efd29d",
+        "failures": [
+          "ERROR: test_two_fresh_isolated_batches (test_query_composites.CompositePublicTest.test_two_fresh_isolated_batches)",
+          "FAIL: test_public_real_test_run_and_fail_unsupported_pass (test_query_composites.CompositePublicTest.test_public_real_test_run_and_fail_unsupported_pass)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/public-repeat.log",
+        "sha256": "4a85489d4bfdc4a07cbe192a6521013d4d347bccc9c5a0c28c9f56f4db26b1a6",
+        "failures": [
+          "FAIL: test_two_fresh_isolated_batches (test_query_composites.CompositePublicTest.test_two_fresh_isolated_batches)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/batch-repeat.log",
+        "sha256": "6434fbd8c121520d1407cf1b40107999b21946185ab64a77e4f7ae5ab9d4a126",
+        "failures": [
+          "ERROR: test_two_fresh_isolated_batches (test_query_composites.CompositePublicTest.test_two_fresh_isolated_batches)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/affected-first.log",
+        "sha256": "e1be99b93adeb3c36bd58872f0a0f9627acd13f20640353e165a087c62544631",
+        "failures": [
+          "ERROR: TypedFillPlanTest (unittest.loader._FailedTest.TypedFillPlanTest)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/binding-final.log",
+        "sha256": "ccb7b37a18c4ce2365d6a0daa8d014a6728e419b98453ac6dc5cb3b9e8bd9164",
+        "failures": [
+          "FAIL: test_invalid_columns_scopes_correlations_and_indices (test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices) (text='ВЫБРАТЬ Key, Amount КАК Sum ЗАПОЛНИТЬ Data::Card ИЗ Data::Item ОБЪЕДИНИТЬ ВЫБРАТЬ Key, NULL КАК Sum ИЗ Other::Item')"
+        ]
+      }
+    ],
+    "logs": [
+      {
+        "file": "result/unions-nesting/plan-first.log",
+        "sha256": "8c13be335e9c377f205a4093751a7f38a663595b7bbbf8a17150840e225118ec",
+        "summary": [
+          "Ran 2 tests in 3.356s",
+          "FAILED (errors=7)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/plan-repeat.log",
+        "sha256": "37e3dc052ed662d0248f2aed432939761f663dd5ab75bce74b925e9f3cb52c65",
+        "summary": [
+          "Ran 2 tests in 3.375s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/real-first.log",
+        "sha256": "083ade98805040a726196fe13aac742713b25e1c45c27a41a58e4cd870e5cd48",
+        "summary": [
+          "Ran 1 test in 36.156s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/runtime-first.log",
+        "sha256": "856d66088c34df9a4001788c21241b0797e3921dae4626e7b911847e55cfc4e4",
+        "summary": [
+          "Ran 1 test in 225.013s",
+          "FAILED (failures=2)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/fill-repeat.log",
+        "sha256": "09b6cd8441468ef329ff7f7ad420073a2034bc4d3ae84cc4106d21f65bd311aa",
+        "summary": []
+      },
+      {
+        "file": "result/unions-nesting/acceptance-first.log",
+        "sha256": "d9c7a2bfc1935b054950b58af9c0418fae5f543e1d279d0e6507f1b141efd29d",
+        "summary": [
+          "Ran 7 tests in 125.345s",
+          "FAILED (failures=1, errors=1)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/native-first.log",
+        "sha256": "0f3996a4cf650caa4d73ca63ab7ce15248b2ce00dce22bf6eee6ac1bd14e8e5c",
+        "summary": []
+      },
+      {
+        "file": "result/unions-nesting/documented-repeat.log",
+        "sha256": "b4c90521f5fa0f99982a5e9ee065b8d7d7126added3b3407d077c518c6ab631c",
+        "summary": [
+          "Ran 2 tests in 30.313s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/public-repeat.log",
+        "sha256": "4a85489d4bfdc4a07cbe192a6521013d4d347bccc9c5a0c28c9f56f4db26b1a6",
+        "summary": [
+          "Ran 11 tests in 100.619s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/native-repeat.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": []
+      },
+      {
+        "file": "result/unions-nesting/batch-repeat.log",
+        "sha256": "6434fbd8c121520d1407cf1b40107999b21946185ab64a77e4f7ae5ab9d4a126",
+        "summary": [
+          "Ran 1 test in 0.029s",
+          "FAILED (errors=1)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/edges-first.log",
+        "sha256": "5dc75f2525efceeedce462da9f0ef5ff5dd7436ea571eec36423b1dca505de10",
+        "summary": [
+          "Ran 7 tests in 70.317s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/affected-first.log",
+        "sha256": "e1be99b93adeb3c36bd58872f0a0f9627acd13f20640353e165a087c62544631",
+        "summary": [
+          "Ran 24 tests in 610.109s",
+          "FAILED (errors=1)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/batch-fresh-repeat.log",
+        "sha256": "9d48b5d6a9d9c5c81cdc1cb4049ca51e3d00b3fa8d40b5e139b2fbfc59636c9d",
+        "summary": [
+          "Ran 2 tests in 54.549s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/schema-repeat.log",
+        "sha256": "c05ba99ac29cbae14d53f51319ae05222a1d9a9780e31120fe7c5bb2dc0c2509",
+        "summary": []
+      },
+      {
+        "file": "result/unions-nesting/schema-final.log",
+        "sha256": "a5331f18877e9e1543361e44b4cb0a1f5f0ed5f8297d850bf1fcc68bd7a3ab5f",
+        "summary": []
+      },
+      {
+        "file": "result/unions-nesting/plan-final.log",
+        "sha256": "f60e13ece8284c81cc5106af90ac26f2bea7783c707d4f3f87706bde7ad2efe6",
+        "summary": [
+          "Ran 2 tests in 3.863s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/runtime-final-repeat.log",
+        "sha256": "93b8693c22f09eab9eb8048637172249043c7a5da4c7196665f79869a493e351",
+        "summary": [
+          "Ran 3 tests in 234.650s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/binding-final.log",
+        "sha256": "ccb7b37a18c4ce2365d6a0daa8d014a6728e419b98453ac6dc5cb3b9e8bd9164",
+        "summary": [
+          "Ran 12 tests in 13.984s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/unions-nesting/binding-final-repeat.log",
+        "sha256": "afe7819b6a3f371e89550da4b639b48858df125eb9aa8e64347392a6fc3f6234",
+        "summary": [
+          "Ran 10 tests in 4.482s",
+          "OK"
+        ]
+      }
+    ],
+    "scopeDeviation": {
+      "evidence": "result/unions-nesting/binding-final.log",
+      "reason": "An overbroad FillPlanTest class selector also ran two inventory/evidence tests, including one complete read-only build_catalog. No repeat or full suite was run; the committed catalog refresh still uses only the saved 46-record scope."
+    }
+  },
+  "public": [
+    {
+      "folder": "result/unions-nesting/public-real-test",
+      "sourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "score": 5,
+      "maxScore": 5,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/unions-nesting/public-real-run",
+      "sourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "score": 5,
+      "maxScore": 5,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/unions-nesting/public-control",
+      "sourceHash": "00e00b7c09dc061de54b051ac2908bc9d562e1cc439b45e029e5c869e9f1f4c0",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/unions-nesting/batch-1-repeat-1",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/unions-nesting/batch-2",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "schemas": {
+    "status": "PASS",
+    "validatedArtifacts": 46
+  },
+  "sql": [
+    {
+      "file": "result/unions-nesting/sql-ordinary-State.json",
+      "sha256": "a0f7b1801f04d525c51ee3ae2acef6a0ff124c6e4140a5d603620d28d7deb679",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-ordinary-TempIn.json",
+      "sha256": "ac457885ec1751534eb71c9d7faf4b0dca995871210379231fb612e1b2428821",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-ordinary-TempJoin.json",
+      "sha256": "eccf83c63fe95f41bef761af93c120659d0b255d6a3a2596b5f234439d77745e",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-real-employee.json",
+      "sha256": "e68f33cc31e908d282f09ad86ba27113e33a2b48b2297d2b77668b777e889446",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-real-fallback.json",
+      "sha256": "c5085b41f59152e119660ebcce81b32c71a729d15b3eac49f685bfee9022cd1c",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-renamed-State.json",
+      "sha256": "23c7f600dc4fff4ccff652750318b416b02a50c08c12d4a7d4c0c5fba30aa8b6",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-renamed-TempIn.json",
+      "sha256": "8c05d9dc8568f6c9e243b41cad14616756c687f4965a2bdccecb8cbb9c9de960",
+      "status": "EXECUTED",
+      "cleanup": true
+    },
+    {
+      "file": "result/unions-nesting/sql-renamed-TempJoin.json",
+      "sha256": "30cfe3771fd7f090e4361e3b025df6907d6a89ee7ee9585cf9b1c8b1699bd1ff",
+      "status": "EXECUTED",
+      "cleanup": true
+    }
+  ],
+  "mutations": [
+    {
+      "label": "Union",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-Union.json",
+        "sha256": "97dea0ad7472da6ce28a830e45c569b977ffaface1bb8f2fd0f187bd16ba8800"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-Union.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "All",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-All.json",
+        "sha256": "71dcef61e86d9198e215a0100db53b9d848a590ebf7a0e9354b6c9c6832bfd19"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-All.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Nested",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-Nested.json",
+        "sha256": "84bc75d0ef3112c2ab2a42b0c0d9475e6c08424c34fd8027fcb8f25df9a63c53"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-Nested.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "NestedNull",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-NestedNull.json",
+        "sha256": "d921b4f06df38fecd965d96c3104f866ed45020297884d33bd17353807eaf9d7"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-NestedNull.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Temp",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-Temp.json",
+        "sha256": "716363c62335736cc35218d8998ec366a9c239617398c839cd1ec4b2219407c6"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-Temp.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "Compound",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-Compound.json",
+        "sha256": "d2ac7ac0bded7da3985b32fffc94161840d9243142c475b4a5180ca5f67cf2c1"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-Compound.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    },
+    {
+      "label": "TempJoin",
+      "runtime": {
+        "file": "result/unions-nesting/mutation-TempJoin.json",
+        "sha256": "653343b0276945018910d366d693b45d6c073e1d6397d1578a03adcad0ab2ac8"
+      },
+      "assessment": {
+        "file": "result/unions-nesting/mutation-assessment-TempJoin.json",
+        "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+      }
+    }
+  ],
+  "native": {
+    "executorVersion": "10.0.2-1",
+    "elementReferenceVersion": "9.3",
+    "compatibility": "current",
+    "nativeXBQL": false,
+    "probes": [
+      {
+        "probe": "version",
+        "exitCode": 0,
+        "args": [
+          "--version"
+        ],
+        "expectedSuccess": true
+      },
+      {
+        "probe": "arrays",
+        "exitCode": 0,
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/unions-nesting/native-probes/Arrays.sbsl"
+        ],
+        "expectedSuccess": true
+      },
+      {
+        "probe": "native-query",
+        "exitCode": 255,
+        "args": [
+          "-c",
+          "current",
+          "/Users/dimkashelk/Documents/ChatGPT/Тестирование элемента/tests/corpus/joins-null/native-probes/Query.sbsl"
+        ],
+        "expectedSuccess": false
+      }
+    ]
+  },
+  "nativeArtifacts": [
+    {
+      "file": "result/unions-nesting/native/arrays.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/unions-nesting/native/arrays.stdout",
+      "sha256": "d8ab57126501232aa7f379fe1db60cf8782544fee4f5aead5427e9197cd041ec"
+    },
+    {
+      "file": "result/unions-nesting/native/native-query.stderr",
+      "sha256": "7c55f112608b7306943178ca7213f927004f6b097ea5da68995f0a0dd2d8d200"
+    },
+    {
+      "file": "result/unions-nesting/native/native-query.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/unions-nesting/native/results.json",
+      "sha256": "61e345ee43c205915336b81ab41063f0473ecc74ecccf006950490147bd17292"
+    },
+    {
+      "file": "result/unions-nesting/native/version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/unions-nesting/native/version.stdout",
+      "sha256": "d7eeb071d66900f6732d5bf46580ff906cce61c226325400cfb2936995bd6531"
+    }
+  ],
+  "preservedFailureArtifacts": [
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/batch-result.json",
+      "sha256": "6153036b81efcd4da73328a5e0bb961c414e30ce5335303e9260477dc842425a"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/events.jsonl",
+      "sha256": "0ead97bcbfeddc093193d05aaf19235e09e9becb959991ba2957585dea810cb9"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000001/execution-plans.json",
+      "sha256": "c3e78a15416cd357041fa595830323ca21497b8d23531885e2c5a4be8ccf9975"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000001/grading.json",
+      "sha256": "b3b50b8cbb8cc689c263cfdeefe5f0a4d64e5613e82c5865a8b42ee6ec9312c7"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000001/report.html",
+      "sha256": "c8c56b59707f0d3ea185b9a70b9c746d122025ef7b0a40bf321ac75a434d758b"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000001/result.json",
+      "sha256": "c19dc8b82557741fd00f1849fd291fac77a09bbe313d4abe636e3c4dff57dc00"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000001/runtime-evidence.json",
+      "sha256": "163d08468bbf5f7d58c075d4f1b429016332d1f986a4d3f0c65abc175a3deb88"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000002/execution-plans.json",
+      "sha256": "776b36a671cc018a3eb07495b4ab3fdfc5aa820924a5a92c3aa638ad33bd76a9"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000002/grading.json",
+      "sha256": "8c81888d54dd5a7718e08eee947912c4215a714d9be49a79d6529c8f3679d692"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000002/report.html",
+      "sha256": "85346778e4e03e3785dc4599e8bdd8d0a46fb916280452fd072a030962a8bbd7"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000002/result.json",
+      "sha256": "e980f5ffe312760029aba786c0d74d60d2d499170155fed006b902bd31b1697d"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000002/runtime-evidence.json",
+      "sha256": "73662ad477b1859a8b55e280ebd24f1c01f6b1d65df0c1dee3983744ea7c4ebe"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000003/execution-plans.json",
+      "sha256": "c3e78a15416cd357041fa595830323ca21497b8d23531885e2c5a4be8ccf9975"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000003/grading.json",
+      "sha256": "297710a1b34dcefd819a25a93c3807663f4f80d6cfe7b6bfdfd17fa382495071"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000003/report.html",
+      "sha256": "8be74b3600f21ca925e12a5d690d86d979ef8f587b9c3468001f6a2f87b2b0b3"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000003/result.json",
+      "sha256": "c19dc8b82557741fd00f1849fd291fac77a09bbe313d4abe636e3c4dff57dc00"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-1/submissions/000003/runtime-evidence.json",
+      "sha256": "163d08468bbf5f7d58c075d4f1b429016332d1f986a4d3f0c65abc175a3deb88"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Data/Card.yaml",
+      "sha256": "9bbf5bfa9375a1593d023433e4f38f08b528768ef0aecdbcd2546b6ce821aeec"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Data/Category.yaml",
+      "sha256": "b4515dfd22264f89a2155416bb474e717e25729c195ebaa77e33a3555e5d14c2"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Data/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Entry/Main.xbsl",
+      "sha256": "1439aab39528c12b457d5b33f90c3dad4c7fd691cad9addb6890bc23f0247c20"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Other/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/correct/Проект.yaml",
+      "sha256": "ad9a8c68b0bed774db603645ba8647cbd021e1bb691beb7752dbad62f1850bed"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Data/Card.yaml",
+      "sha256": "9bbf5bfa9375a1593d023433e4f38f08b528768ef0aecdbcd2546b6ce821aeec"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Data/Category.yaml",
+      "sha256": "b4515dfd22264f89a2155416bb474e717e25729c195ebaa77e33a3555e5d14c2"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Data/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Entry/Main.xbsl",
+      "sha256": "86fa6c5a97415295a41f2538eda6a1e5862c0345daf12a671ea88b4d86e3431f"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Other/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/mutated/Проект.yaml",
+      "sha256": "ad9a8c68b0bed774db603645ba8647cbd021e1bb691beb7752dbad62f1850bed"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Data/Card.yaml",
+      "sha256": "9bbf5bfa9375a1593d023433e4f38f08b528768ef0aecdbcd2546b6ce821aeec"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Data/Category.yaml",
+      "sha256": "b4515dfd22264f89a2155416bb474e717e25729c195ebaa77e33a3555e5d14c2"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Data/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Entry/Main.xbsl",
+      "sha256": "1439aab39528c12b457d5b33f90c3dad4c7fd691cad9addb6890bc23f0247c20"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Other/Item.yaml",
+      "sha256": "9ad2ac486261d9cf124bf0be3abb7fa77268c8e06c39e0c7dd9c5c78d5af2f56"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/batch-inputs/neighbor/Проект.yaml",
+      "sha256": "ad9a8c68b0bed774db603645ba8647cbd021e1bb691beb7752dbad62f1850bed"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/native-arrays.stderr",
+      "sha256": "3b8ab82b4069ade43090c31e7f51d094b03ebe88472288f273a61eff1f8ce475"
+    },
+    {
+      "file": "result/unions-nesting/first-failures/public-real-test.stderr",
+      "sha256": "c9b680574c765ceade135ad7be25d36b496d52aedcacb14e1a6d4232e46ed76c"
+    }
+  ],
+  "portableCases": {
+    "core": 56,
+    "empty": 7,
+    "edges": 6,
+    "documentedExactTemplates": 5,
+    "directRealRoot": 1,
+    "directRealCriteria": 5
+  },
+  "limits": [
+    "indices are validated logical hints, no physical index performance proof",
+    "current-user context is an explicit identity fixture, not authentication/rights",
+    "correlated/EXISTS subqueries and extended temporary field definitions unsupported",
+    "mixed virtual table/table-part/rights/library sources remain queued"
+  ],
+  "localExclusions": [
+    "303 forms",
+    "44 previous roots as a complete set",
+    "four validate",
+    "full regression suite",
+    "nightly execution",
+    "native XBQL/platform compilation",
+    "browser UI"
+  ],
+  "preserved": [
+    "four source archives and SHA-256",
+    "previous assignment expected",
+    "runtime/input limits",
+    "CI schedule",
+    "unrelated workspace output"
+  ],
+  "legacyFixtureAdjustment": "Only the Unsupported method in the task-41 fixture builder and two generated copies changed: its previously unsupported UNION is now valid, so the negative probe uses incompatible numeric/string types. Previous expected values remain unchanged.",
+  "nextStage": "043-virtual-tables"
+}
