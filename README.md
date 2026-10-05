@@ -1018,7 +1018,14 @@ SQL-сценариев. Public test/run по 2/2, два batch 3/0/3 без cach
 public test/run 2/2, два batch 3/0/3, 46 проверенных по схемам артефактов.
 [Контракт и ограничения](docs/result-and-resources.md),
 [измерения](docs/query-stage-044-measurements.json).
-[Следующее №45](docs/tasks/045-state-rights-and-combinations.md) — состояние, права и сочетания.
+[№45](docs/tasks/045-state-rights-and-combinations.md) реализовало предикаты,
+коррелированный EXISTS, объявленную иерархию, DML временных таблиц и явную
+executor-модель доступа. 34 целевых теста успешны, шесть SQL-сценариев;
+девять точных записей получили независимую оценку;
+public test/run — 2/2, два batch — 3/0/3, шесть SBSL FAIL мутаций,
+46 артефактов по схемам. Полный каталог и native ACL/RLS ещё не закрыты.
+[Контракт и границы](docs/state-rights-and-combinations.md),
+[измерения](docs/query-stage-045-measurements.json).
 
 ```bash
 python3 -m element_test.query_catalog

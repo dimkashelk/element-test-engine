@@ -62,6 +62,8 @@ def source_schema(c, name, member=''):
             declarations += [{'Имя':'Владелец','Тип':identity+'.Ссылка'}, {'Имя':'Индекс','Тип':'Число'}]
         else:
             declarations += [{'Имя':'Ссылка','Тип':identity+'.Ссылка'}]
+            if props.get('Иерархический') is True and not any(f['Имя']=='Родитель' for f in declarations):
+                declarations.append({'Имя':'Родитель','Тип':identity+'.Ссылка?'})
     elif kind in {'РегистрСведений','РегистрНакопления'}:
         source_kind='register'; dimensions=list(props.get('Измерения',[])); resources=list(props.get('Ресурсы',[]))
         if kind=='РегистрСведений':

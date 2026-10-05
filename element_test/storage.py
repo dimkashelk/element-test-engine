@@ -17,9 +17,12 @@ class StorageSchema:
         if element['elementType'] not in {'Справочник', 'Документ'}:
             raise InputError('Хранение поддерживает справочники и документы')
         props = element['properties']
+        declarations=list(props.get('Реквизиты',[]))
+        if element['elementType']=='Справочник' and props.get('Иерархический') is True and not any(f['Имя']=='Родитель' for f in declarations):
+            declarations.append({'Имя':'Родитель','Тип':qualified(element)+'.Ссылка?'})
         return cls(qualified(element), element['elementType'],
                    tuple((f['Имя'], f.get('Тип', 'Строка') if f['Имя'] == 'Наименование' else f.get('Тип'))
-                         for f in props.get('Реквизиты', [])),
+                         for f in declarations),
                    tuple((t['Имя'], tuple((f['Имя'], f.get('Тип')) for f in t.get('Реквизиты', [])))
                          for t in props.get('ТабличныеЧасти', [])))
 

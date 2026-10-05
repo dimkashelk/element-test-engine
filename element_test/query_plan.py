@@ -166,7 +166,7 @@ def parse_storage_query(text, contracts):
         else:
             i += 1
     routing = ''.join(routing)
-    if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ)\b|;|\(\s*ВЫБРАТЬ|\bВ\s*\(', routing, re.I):
+    if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ|ВСТАВИТЬ|ИЗМЕНИТЬ|УДАЛИТЬ|СУЩЕСТВУЕТ|МЕЖДУ|ПОДОБНО|ОТЛИЧАЕТСЯ|ИЕРАРХИИ)\b|;|\(\s*ВЫБРАТЬ|\bВ\s*\(', routing, re.I):
         from .query_composites import parse_composite_query
         return parse_composite_query(text, contracts)
     if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', routing, re.I):
@@ -175,7 +175,13 @@ def parse_storage_query(text, contracts):
     if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', routing, re.I):
         from .query_joins import parse_relational_query
         return parse_relational_query(text, contracts)
-    return parse_simple_storage_query(text, contracts)
+    try:
+        return parse_simple_storage_query(text, contracts)
+    except UnsupportedSyntaxError:
+        # General typed expressions also cover nullable equality and scalar
+        # literal comparisons. Source/type ambiguity is still rejected there.
+        from .query_projections import parse_computed_query
+        return parse_computed_query(text, contracts)
 
 
 def parse_simple_storage_query(text, contracts):

@@ -29,6 +29,7 @@ class CompositeQuery:
     mode: str = MODE
     source_name: str = ''
     source_range: tuple | None = None
+    outer_parameters: tuple = ()
 
     def to_dict(self):
         return asdict(self)
@@ -135,8 +136,10 @@ def row_type(query,name,private=False):
 
 
 class NestedParser(ComputedParser):
-    def __init__(self,text,contracts,tables):
+    def __init__(self,text,contracts,tables,outer=None,cardinality_only=False):
         super().__init__(text,contracts);self.tables=tables;self.subqueries=[]
+        self.outer=outer;self.outer_parameters=[]
+        self.cardinality_only=cardinality_only
 
     def source(self):
         if self.pos >= len(self.tokens): self.fail('Ожидается источник')
@@ -174,6 +177,21 @@ class NestedParser(ComputedParser):
                 names={f.name for f in s.fields}
             else:names={label for _,label in s.projections}
             if e.name in names:matching.append(i)
+        if (not matching and self.outer and len(e.value)==2 and e.value[0] not in [s.alias for s in self.sources]
+                and e.value[0] in [s.alias for s in self.outer.sources]):
+            bound=self.outer.field(e,len(self.outer.sources))
+            if bound.kind!='field':self.fail('Многоуровневая корреляция требует отдельный контракт',e.range[0])
+            if bound.sql_nullable or bound.type.endswith('?'):
+                self.fail('Корреляция nullable-внешнего поля требует отдельный NULL-контракт',e.range[0])
+            existing=next((x[0] for x in self.outer_parameters if x[2:4]==(bound.source,bound.name)),None)
+            key=existing or '__Outer45_'+str(bound.source)+'_'+bound.name
+            if not existing:
+                names={t[1] for t in self.tokens if t[0]=='parameter'}|{x[0] for x in self.outer_parameters}
+                while key in names:key+='_'
+                self.outer_parameters.append((key,bound.type,bound.source,bound.name,bound.null_field))
+            from .query_plan import QueryParameter
+            self.parameters.append(QueryParameter(key,e.range[0],e.range[1],bound.type,-1))
+            return replace(e,kind='parameter',value=('parameter',key,*e.range),name='',source=None,type=bound.type)
         if len(matching)!=1:self.fail('Неизвестное или неоднозначное поле: '+'.'.join(e.value),e.range[0])
         i=matching[0];s=self.sources[i]
         if s.source_kind in LEAF_KINDS:return super().field(e,visible)
@@ -187,8 +205,25 @@ class NestedParser(ComputedParser):
     def comparison(self):
         # The parent comparison parser binds scalars and list IN separately.
         from .query_joins import Parser
+        if self.accept('СУЩЕСТВУЕТ'):
+            start=self.tokens[self.pos-1][2]
+            self.expect('(')
+            begin=self.tokens[self.pos][2];depth=1
+            while self.pos<len(self.tokens) and depth:
+                t=self.tokens[self.pos]
+                if t[0]=='token':depth+=(t[1]=='(')-(t[1]==')')
+                self.pos+=1
+            if depth:self.fail('Незакрытый СУЩЕСТВУЕТ',start)
+            end=self.tokens[self.pos-1][2]
+            q=shift(parse_composite_query(self.text[begin:end],self.contracts,self.tables,outer=self,cardinality_only=True),begin)
+            if q.source_kind=='batch':self.fail('СУЩЕСТВУЕТ требует SELECT',start)
+            index=len(self.subqueries);self.subqueries.append(q)
+            return Expression('exists-query','Булево',value=index,range=(start,self.tokens[self.pos-1][3]))
         e=Parser.comparison(self)
         negative=self.accept('НЕ')
+        from .query_predicates import comparison_suffix
+        extended=comparison_suffix(self,e,negative)
+        if extended is not None:return extended
         if not self.accept('В'):
             if negative:self.fail('НЕ после выражения требует В')
             return e
@@ -201,7 +236,7 @@ class NestedParser(ComputedParser):
                 self.pos+=1
             if depth:self.fail('Незакрытый подзапрос В')
             end=self.tokens[self.pos-1][2]
-            q=shift(parse_composite_query(self.text[begin:end],self.contracts,self.tables),begin)
+            q=shift(parse_composite_query(self.text[begin:end],self.contracts,self.tables,outer=self),begin)
             if len(q.projections)!=1 or q.source_kind=='batch':self.fail('Подзапрос В требует одну колонку')
             index=len(self.subqueries);self.subqueries.append(q)
             e=Expression('in-query','Булево',value=index,children=(e,),range=(e.range[0],self.tokens[self.pos-1][3]))
@@ -216,6 +251,11 @@ class NestedParser(ComputedParser):
         return Expression('not','Булево',children=(e,),range=e.range) if negative else e
 
     def bind(self,e,visible,expected=None):
+        if e.kind=='exists-query':
+            q=self.subqueries[e.value]
+            outer={x[0] for x in q.outer_parameters}
+            self.parameters.extend(p for p in q.parameters if p.expression not in outer)
+            return e
         if e.kind=='in-capture':
             capture=e.children[1]
             inferred=getattr(self.contracts,'query_parameter_type',lambda *args:None)(capture.value[1],capture.range[0])
@@ -227,15 +267,17 @@ class NestedParser(ComputedParser):
             return replace(e,kind='in-array',children=(first,array),sql_nullable=first.sql_nullable)
         if e.kind=='in-query':
             q=self.subqueries[e.value];typ=q.projections[0][0].type
+            if q.outer_parameters:self.fail('Коррелированный В требует отдельный контракт',e.range[0])
             left=self.bind(e.children[0],visible,typ.rstrip('?'))
             if typ!='Объект?' and left.type.rstrip('?')!=typ.rstrip('?'):self.fail('Несовместимые типы подзапроса В',e.range[0])
-            self.parameters.extend(q.parameters)
+            outer={x[0] for x in q.outer_parameters}
+            self.parameters.extend(p for p in q.parameters if p.expression not in outer)
             return replace(e,children=(left,),sql_nullable=left.sql_nullable or getattr(q.projections[0][0],'sql_nullable',False))
         return super().bind(e,visible,expected)
 
     def parse(self):
         q=super().parse()
-        return replace(q,subqueries=tuple(self.subqueries))
+        return replace(q,subqueries=tuple(self.subqueries),outer_parameters=tuple(self.outer_parameters))
 
     def prune_source(self,i,s):
         from .query_sources import LEAF_KINDS
@@ -243,20 +285,22 @@ class NestedParser(ComputedParser):
         return super().prune_source(i,s)
 
 
-def parse_select(text,contracts,tables):
+def parse_select(text,contracts,tables,outer=None,cardinality_only=False):
     try:
-        q=NestedParser(text,contracts,tables).parse()
+        q=NestedParser(text,contracts,tables,outer,cardinality_only).parse()
         return replace(q,mode=MODE) if q.subqueries or any(s.source_kind not in ('ordinary','slice-last') for s in q.sources) else q
     except IndexError as e:raise UnsupportedSyntaxError('Незавершённый вложенный запрос') from e
 
 
-def parse_composite_query(text,contracts,tables=None):
+def parse_composite_query(text,contracts,tables=None,outer=None,cardinality_only=False):
     tables={} if tables is None else tables
     top=list(top_tokens(text));separators=[t for t in top if t[1]==';']
-    structural=any(t[1].upper() in ('ПОМЕСТИТЬ','СОЗДАТЬ','УНИЧТОЖИТЬ','ОБРЕЗАТЬ') for t in top)
-    if separators or structural:return parse_batch(text,contracts,tables,separators)
+    structural=any(t[1].upper() in ('ПОМЕСТИТЬ','СОЗДАТЬ','УНИЧТОЖИТЬ','ОБРЕЗАТЬ','ВСТАВИТЬ','ИЗМЕНИТЬ','УДАЛИТЬ') for t in top)
+    if separators or structural:
+        if outer:raise UnsupportedSyntaxError('Пакет не допускается в предикатном подзапросе')
+        return parse_batch(text,contracts,tables,separators)
     unions=[t for t in top if t[1].upper()=='ОБЪЕДИНИТЬ']
-    if not unions:return parse_select(text,contracts,tables)
+    if not unions:return parse_select(text,contracts,tables,outer,cardinality_only)
     order_token=next((t for t in top if t[1].upper()=='УПОРЯДОЧИТЬ'),None)
     order_text=''
     if order_token:
@@ -264,12 +308,12 @@ def parse_composite_query(text,contracts,tables=None):
         order_text=text[order_token[2]:];text=text[:order_token[2]]
     branches=[];ops=[];begin=0
     for t in unions:
-        branches.append(shift(parse_select(text[begin:t[2]],contracts,tables),begin))
+        branches.append(shift(parse_select(text[begin:t[2]],contracts,tables,outer,cardinality_only),begin))
         begin=t[3]
         m=re.match(r'\s*(ВСЕ|РАЗЛИЧНЫЕ)\b',text[begin:],re.I)
         ops.append('all' if m and m[1].upper()=='ВСЕ' else 'distinct')
         if m:begin+=m.end()
-    branches.append(shift(parse_select(text[begin:],contracts,tables),begin))
+    branches.append(shift(parse_select(text[begin:],contracts,tables,outer,cardinality_only),begin))
     width=len(branches[0].projections)
     if any(len(b.projections)!=width for b in branches):raise UnsupportedSyntaxError('UNION требует одинаковое число колонок')
     if any(b.fill for b in branches[1:]):raise UnsupportedSyntaxError('ЗАПОЛНИТЬ задаётся только в первой ветви UNION')
@@ -295,7 +339,8 @@ def parse_composite_query(text,contracts,tables=None):
             i=next(i for i,(_,l) in enumerate(projections) if l==m[1])
             if projections[i][0].type.rstrip('?') not in ('Число','Строка','Дата','ДатаВремя'):raise UnsupportedSyntaxError('Сортировка UNION требует скаляр')
             ordering.append((i,m[2] and m[2].upper()=='УБЫВ'))
-    return CompositeQuery(branches[0].owner,branches[0].alias,tuple(projections),capture(branches),tuple(branches),tuple(ops),ordering=tuple(ordering),fill=branches[0].fill)
+    outer_parameters=tuple(dict.fromkeys(x for branch in branches for x in branch.outer_parameters))
+    return CompositeQuery(branches[0].owner,branches[0].alias,tuple(projections),capture(branches),tuple(branches),tuple(ops),ordering=tuple(ordering),fill=branches[0].fill,outer_parameters=outer_parameters)
 
 
 def parse_batch(text,contracts,outer,separators):
@@ -308,6 +353,10 @@ def parse_batch(text,contracts,outer,separators):
             if b==len(text):continue
             raise UnsupportedSyntaxError('Пустой оператор пакета')
         span=(a,b)
+        from .query_state import parse_mutation
+        mutation=parse_mutation(raw,contracts,tables,a)
+        if mutation:
+            steps.append(mutation);queries.append(mutation.query);continue
         create=re.fullmatch(rf'\s*СОЗДАТЬ\s+ВРЕМЕННУЮ\s+ТАБЛИЦУ\s+({IDENT})\s*\((.*)\)\s*',raw,re.I|re.S)
         index=re.fullmatch(rf'\s*СОЗДАТЬ\s+ИНДЕКС\s+({IDENT})\s+ДЛЯ\s+({IDENT})\s*\((.*?)\)\s*(?:ДОПОЛНИТЕЛЬНО\s+ПО\s*\((.*?)\))?\s*',raw,re.I|re.S)
         drop=re.fullmatch(rf'\s*(УНИЧТОЖИТЬ|ОБРЕЗАТЬ)\s+({IDENT})\s*',raw,re.I)
@@ -362,7 +411,8 @@ def parse_batch(text,contracts,outer,separators):
         elif index_fields:raise UnsupportedSyntaxError('ИНДЕКСИРОВАТЬ ПО требует ПОМЕСТИТЬ')
         steps.append(Statement('into' if name else 'select',name,q,index=index_fields,range=span))
     if not steps:raise UnsupportedSyntaxError('Пустой пакет')
-    last=steps[-1];projections=last.query.projections if last.operation=='select' else ()
+    from .query_state import COUNT
+    last=steps[-1];projections=last.query.projections if last.operation=='select' else COUNT if last.operation in ('insert','update','delete') else ()
     return CompositeQuery('', '', projections,capture(queries),statements=tuple(steps),source_kind='batch',fill=last.query.fill if last.operation=='select' else None)
 
 
@@ -453,11 +503,18 @@ def generate_composite_query(query,contracts):
         for i,step in enumerate(query.statements):
             key=contracts.literal(step.table,'Строка')
             if step.query:
+                if step.operation=='insert':
+                    from .query_state import SINGLETON
+                    text+='        Контекст.Вставить('+contracts.literal(SINGLETON,'Строка')+', '+contracts.literal('[{"Marker":0,"Н0":false}]','Строка')+')\n'
                 n=generate_query(step.query,contracts);children.append(n)
                 values=mapped_args(query,step.query)+(['Контекст'] if needs_context(step.query) else [])
                 call='ВыполнитьВнутренне' if internal(step.query) else 'Выполнить'
                 text+='        знч Шаг'+str(i)+' = '+n+'.Создать('+', '.join(values)+').'+call+'()\n'
                 if step.operation=='into':text+='        Контекст.Вставить('+key+', СериализацияJson.ЗаписатьОбъект(Шаг'+str(i)+'))\n'
+                if step.operation in ('insert','update','delete'):
+                    from .query_state import render_mutation
+                    declaration_,body=render_mutation(step,i,step.query,contracts)
+                    text=declaration_+text+body
             elif step.operation=='create' or step.operation=='truncate':text+='        Контекст.Вставить('+key+', "[]")\n'
             elif step.operation=='drop':text+='        Контекст.Удалить('+key+')\n'
             # An index is a validated performance hint: no bag/order semantics.
@@ -466,6 +523,8 @@ def generate_composite_query(query,contracts):
         if last.operation=='select':
             s=last.query
             text+='        для С из Шаг'+str(len(query.statements)-1)+'\n            Результат.Добавить(новый СтрокаДанных('+', '.join(label+' = С.'+label+', '+null_column(query.projections,i)+' = '+('С.'+null_column(s.projections,i) if internal(s) else 'Ложь') for i,(_,label) in enumerate(query.projections))+'))\n        ;\n'
+        elif last.operation in ('insert','update','delete'):
+            text+='        Результат.Добавить(новый СтрокаДанных(КоличествоЗаписей = Количество'+str(len(query.statements)-1)+', Н0 = Ложь))\n'
         text+='        возврат Результат\n    ;\n;\n'
     construction=locals().get('construction','')
     text+='@Глобально\nметод Создать('+sig+'): Запрос\n'+construction+'    возврат новый Запрос('+', '.join(args)+')\n;\n'

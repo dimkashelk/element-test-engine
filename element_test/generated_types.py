@@ -252,7 +252,7 @@ class ProjectTypes:
             fields = []
         elif variant in {"Объект", "Данные"}:
             fields = [dict(f) for f in element["properties"].get("Реквизиты", [])]
-            if (self.declarative_read and element['elementType'] == 'Справочник'
+            if (element['elementType'] == 'Справочник'
                     and element['properties'].get('Иерархический') is True
                     and not any(f['Имя'] == 'Родитель' for f in fields)):
                 fields.append({'Имя':'Родитель','Тип':owner+'.Ссылка?'})

@@ -1,0 +1,2169 @@
+{
+  "stage": 45,
+  "date": "2026-10-05",
+  "status": "implemented-within-explicit-executor-scope; full-catalog-contract-remains-open",
+  "reference": {
+    "version": "9.3",
+    "readDate": "2026-10-05",
+    "access": "authenticated in-app browser, read only",
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "sourceVersions": [
+      "9.0"
+    ],
+    "sources": [
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/between-expression/",
+        "contract": "inclusive bounds, equivalent to >= AND <="
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/like-expression/",
+        "contract": "case-insensitive; %, _, nonempty [] and [^]; escape defaults to backslash; pattern/escape are constants or parameters; invalid masks fail"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/exists-expression/",
+        "contract": "true iff a SELECT returns at least one row; correlated example"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-distinct-from-expression/",
+        "contract": "two-valued comparison including NULL and heterogeneous literals"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/in-hierarchy-expression/",
+        "contract": "self or any ancestor matches; NULL propagates; default hierarchy determined by reference metadata"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/hierarchical-catalog/",
+        "contract": "Иерархический supplies Родитель: Catalog.Ссылка?; hierarchy query tables readable by all"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/insert-statement/",
+        "contract": "temporary tables only; values/SELECT; positional columns; single affected-count row"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/update-statement/",
+        "contract": "temporary tables only; unique assignments; WHERE; affected-count row"
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/delete-statement/",
+        "contract": "temporary tables only; WHERE; affected-count row"
+      }
+    ],
+    "adapter": "typed executor AST; native XBQL unavailable; queryAccess is explicit executor-fixture read policy, not native ACL/RLS",
+    "unavailable": [
+      "additional hierarchy tables",
+      "nullable correlated outer fields",
+      "correlated IN",
+      "DML joins/using and default declarations",
+      "native permissions and ACL handlers",
+      "custom data sources"
+    ]
+  },
+  "executor": {
+    "directory": "script_u_10.0.2_1",
+    "executorVersion": "10.0.2-1",
+    "image": "eclipse-temurin:17-jre@sha256:34d6aaf0fa4ef553c470234ec23c32c7d5c0f370c2bd4b0bf8a16838052d85f0",
+    "executionCompatibilityVersion": "current",
+    "elementReferenceVersion": "9.3"
+  },
+  "sourceCompatibilityVersions": [
+    "9.0"
+  ],
+  "catalog": {
+    "scopeCount": 161,
+    "familyCounts": {
+      "literal": 124,
+      "xbql-file": 4,
+      "api-candidate": 1,
+      "documented-form": 10,
+      "documentation-index": 22
+    },
+    "counts": {
+      "parsed": 66,
+      "planned": 9,
+      "executed": 9,
+      "independentlyAssessed": 9
+    },
+    "archives": [
+      {
+        "file": "Dvizhok.xdump",
+        "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+        "unchanged": true
+      },
+      {
+        "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+        "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+        "unchanged": true
+      },
+      {
+        "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+        "unchanged": true
+      },
+      {
+        "file": "autocheck-2026-09-24-16-14.xdump",
+        "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+        "unchanged": true
+      }
+    ],
+    "scopeOnly": true,
+    "completeQueryCatalogExecuted": false,
+    "unselectedRecordsPreserved": true,
+    "assessedOccurrences": [
+      {
+        "contractId": "query-7e19226299b3ad4d84851ea7",
+        "family": "literal",
+        "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "file": "Общие/КурсыВалют/Валюты.xbsl",
+        "range": [
+          447,
+          578
+        ],
+        "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+        "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+        "fixture": null,
+        "fixtureHash": null,
+        "target": {
+          "namespace": "Общие::КурсыВалют",
+          "module": "Валюты",
+          "method": "ПолучитьВсе",
+          "parameters": [],
+          "returnType": "ЧитаемыйМассив<Валюты.Ссылка>",
+          "range": [
+            379,
+            656
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "ПолучитьВсе",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045",
+            "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+            "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+            "sourceFile": "Общие/КурсыВалют/Валюты.xbsl",
+            "range": [
+              447,
+              578
+            ]
+          },
+          {
+            "criterionId": "ПолучитьВсе",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045",
+            "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+            "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+            "sourceFile": "Общие/КурсыВалют/Валюты.xbsl",
+            "range": [
+              447,
+              578
+            ]
+          }
+        ],
+        "evidence": [
+          "result/state-rights/public-real-test",
+          "result/state-rights/public-real-run"
+        ]
+      },
+      {
+        "contractId": "query-62bff2089cb9dacee5c06f9b",
+        "family": "literal",
+        "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+        "file": "Общие/КурсыВалют/Валюты.xbsl",
+        "range": [
+          730,
+          861
+        ],
+        "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+        "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+        "fixture": null,
+        "fixtureHash": null,
+        "target": {
+          "namespace": "Общие::КурсыВалют",
+          "module": "Валюты",
+          "method": "ПолучитьБазовуюВалюту",
+          "parameters": [],
+          "returnType": "Валюты.Ссылка?",
+          "range": [
+            667,
+            938
+          ]
+        },
+        "criteria": [
+          {
+            "criterionId": "ПолучитьБазовуюВалюту",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045",
+            "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+            "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+            "sourceFile": "Общие/КурсыВалют/Валюты.xbsl",
+            "range": [
+              730,
+              861
+            ]
+          },
+          {
+            "criterionId": "ПолучитьБазовуюВалюту",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045",
+            "sourceHash": "05df8fe7057672ba73cc1dac68171c2e7bd997b08c4a456ebbdf23445eb95404",
+            "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+            "sourceFile": "Общие/КурсыВалют/Валюты.xbsl",
+            "range": [
+              730,
+              861
+            ]
+          }
+        ],
+        "evidence": [
+          "result/state-rights/public-real-test",
+          "result/state-rights/public-real-run"
+        ]
+      },
+      {
+        "contractId": "documented-ordinary",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/ordinary.xbql",
+        "fixtureHash": "0f01224968aa7f79396c0b2751fe8eef183ffff63f34f3d55efad47b4111ca6b",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "ordinary",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              44,
+              88
+            ],
+            "queryRange": [
+              37,
+              89
+            ],
+            "fixtureHash": "0f01224968aa7f79396c0b2751fe8eef183ffff63f34f3d55efad47b4111ca6b"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-ordinary.json",
+          "result/state-rights/documented-ordinary.json"
+        ]
+      },
+      {
+        "contractId": "documented-parameters",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/parameters.xbql",
+        "fixtureHash": "27be9227df2d3bff21bb49b8c196a69c32e908f55402fed867784e0f427fae6d",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "parameters",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              172,
+              218
+            ],
+            "queryRange": [
+              165,
+              219
+            ],
+            "fixtureHash": "27be9227df2d3bff21bb49b8c196a69c32e908f55402fed867784e0f427fae6d"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-parameters.json",
+          "result/state-rights/documented-parameters.json"
+        ]
+      },
+      {
+        "contractId": "documented-captured-expression",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/captured-expression.xbql",
+        "fixtureHash": "d4371e7c077eee8a8e850abb8a1d1046c5c957b6bbf8200974a630cb2bdc3a02",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "captured_expression",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              311,
+              382
+            ],
+            "queryRange": [
+              304,
+              383
+            ],
+            "fixtureHash": "d4371e7c077eee8a8e850abb8a1d1046c5c957b6bbf8200974a630cb2bdc3a02"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-captured_expression.json",
+          "result/state-rights/documented-captured_expression.json"
+        ]
+      },
+      {
+        "contractId": "documented-order-limit",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/order-limit.xbql",
+        "fixtureHash": "7b196e3c29160d67285428f727a8b185492b039b44daec8d589e35f318f88d7e",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "order_limit",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              455,
+              517
+            ],
+            "queryRange": [
+              448,
+              518
+            ],
+            "fixtureHash": "7b196e3c29160d67285428f727a8b185492b039b44daec8d589e35f318f88d7e"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-order_limit.json",
+          "result/state-rights/documented-order_limit.json"
+        ]
+      },
+      {
+        "contractId": "documented-in",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/in.xbql",
+        "fixtureHash": "9bcbe61ea2958d0cb72a012ce6fa22a3190b3ffc76fc6d51ffbbc0ab7e4f9a7e",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "in",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              602,
+              651
+            ],
+            "queryRange": [
+              595,
+              652
+            ],
+            "fixtureHash": "9bcbe61ea2958d0cb72a012ce6fa22a3190b3ffc76fc6d51ffbbc0ab7e4f9a7e"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-in.json",
+          "result/state-rights/documented-in.json"
+        ]
+      },
+      {
+        "contractId": "documented-between",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/between.xbql",
+        "fixtureHash": "6bbf3781ee264de099a4eaf1a12ca95c2ff3b469fb2b548666e285d1a4b761c4",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "between",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              743,
+              799
+            ],
+            "queryRange": [
+              736,
+              800
+            ],
+            "fixtureHash": "6bbf3781ee264de099a4eaf1a12ca95c2ff3b469fb2b548666e285d1a4b761c4"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-between.json",
+          "result/state-rights/documented-between.json"
+        ]
+      },
+      {
+        "contractId": "documented-like",
+        "family": "documented-form",
+        "archive": null,
+        "file": null,
+        "range": null,
+        "sourceHash": null,
+        "projectSourceHash": null,
+        "fixture": "tests/corpus/storage-query-fill/documented-forms/like.xbql",
+        "fixtureHash": "427c5ccfbd98acaa21dcdf0828bc4fe21d432bebadb52ac1b90b1e8b79d049bb",
+        "target": null,
+        "criteria": [
+          {
+            "criterionId": "like",
+            "direct": true,
+            "status": "PASS",
+            "origin": "fresh-045-transferable",
+            "sourceHash": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a",
+            "projectSourceHash": "d5dce20fb3df799115d97f5480d441fe7cc7ad3fd132b01b60e837a32ae1a312",
+            "sourceFile": "Entry/Main.xbsl",
+            "range": [
+              880,
+              934
+            ],
+            "queryRange": [
+              873,
+              935
+            ],
+            "fixtureHash": "427c5ccfbd98acaa21dcdf0828bc4fe21d432bebadb52ac1b90b1e8b79d049bb"
+          }
+        ],
+        "evidence": [
+          "result/state-rights/assessment-documented-like.json",
+          "result/state-rights/documented-like.json"
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "distinctSuccessfulScopedMethods": 34,
+    "newMethods": 20,
+    "affectedLegacyMethods": 14,
+    "latestSuccessfulEvidence": {
+      "test_query_state.StatePlanTest.test_dml_duplicate_missing_type_and_unknown_tables": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-guard-plan-2.stderr"
+      },
+      "test_query_state.StatePlanTest.test_two_projects_queries_ranges_and_no_answers": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-guard-plan-2.stderr"
+      },
+      "test_query_state.StatePlanTest.test_unconfirmed_hierarchy_correlation_platform_writes_fail_closed": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-guard-plan-2.stderr"
+      },
+      "test_query_state.StateDockerTest.test_access_deny_empty_neighbor_and_union": {
+        "status": "ok",
+        "evidence": "result/state-rights/repeat-docker-2.stderr"
+      },
+      "test_query_state.StateDockerTest.test_between_boundaries_reversed_negative_null_and_empty": {
+        "status": "ok",
+        "evidence": "result/state-rights/repeat-docker-2.stderr"
+      },
+      "test_query_state.StateDockerTest.test_like_case_wildcards_classes_escapes_and_bad_patterns": {
+        "status": "ok",
+        "evidence": "result/state-rights/targeted-new-runtime.stderr"
+      },
+      "test_query_state.StateDockerTest.test_mutations_correct_alternative_and_infrastructure_recovery": {
+        "status": "ok",
+        "evidence": "result/state-rights/targeted-new-runtime.stderr"
+      },
+      "test_query_state.StateDockerTest.test_state_repeated_snapshots_and_rollback": {
+        "status": "ok",
+        "evidence": "result/state-rights/repeat-docker-2.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_dynamic_original_text_and_deferred_bindings": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_local_project_constructor_spelling_is_excluded": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_produced_nominal_rows_constructor_mapping_ranges_no_answers": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_shadowing_reassignment_visibility_generated_public_constructor": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_unrelated_project_execute_and_parameter_methods_are_not_query_api": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-plan-2.stderr"
+      },
+      "test_query_state.StatePlanTest.test_access_policy_rejects_ambiguous_owner_or_invalid_id": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-guard-plan-2.stderr"
+      },
+      "test_query_state.StateDockerTest.test_two_projects_independent_answers": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-affected-runtime.stderr"
+      },
+      "test_query_state.StateSqlTest.test_sql_data_queries_access_snapshots_rollback_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-sql.stderr"
+      },
+      "test_query_state.StateDockerTest.test_hierarchy_transitive_self_missing_cycle_and_correlated_exists": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-edge-runtime.stderr"
+      },
+      "test_query_state.StateSourceTest.test_direct_real_roots": {
+        "status": "ok",
+        "evidence": "result/state-rights/targeted-new-runtime.stderr"
+      },
+      "test_query_state.StateSourceTest.test_exact_review_templates": {
+        "status": "ok",
+        "evidence": "result/state-rights/targeted-new-runtime.stderr"
+      },
+      "test_query_state.StatePublicTest.test_public_real_test_run_and_control": {
+        "status": "ok",
+        "evidence": "result/state-rights/first-public.stderr"
+      },
+      "test_query_state.StatePublicTest.test_two_isolated_batches": {
+        "status": "ok",
+        "evidence": "result/state-rights/first-public.stderr"
+      },
+      "test_query_composites.CompositeMembershipEdgeTest.test_missing_join_side_membership_and_optional_derived_alias": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-affected-runtime.stderr"
+      },
+      "test_query_composites.CompositeEdgeTest.test_hidden_null_column_collision_and_nullable_alias_comparison": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-affected-runtime.stderr"
+      },
+      "test_query_composites.CompositeEdgeTest.test_union_and_batch_reference_captures_are_detached": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-affected-runtime.stderr"
+      },
+      "test_query_results.ResultDockerTest.test_state_memory_snapshot_rollback": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-affected-runtime.stderr"
+      },
+      "test_query_state.StateEdgeTest.test_conditional_assignments_counts_duplicate_rows_and_exists_union": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-edge-runtime.stderr"
+      },
+      "test_query_state.StateEdgeTest.test_invalid_pattern_on_empty_source_and_custom_escape": {
+        "status": "ok",
+        "evidence": "result/state-rights/first-edge.stderr"
+      },
+      "test_query_state.CorrelationGuardTest.test_outer_capture_names_ranges_and_shadowed_alias": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-guard-plan-2.stderr"
+      },
+      "test_query_state.StateRealSqlTest.test_direct_real_root_sql_audit_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/state-rights/final-sql.stderr"
+      }
+    },
+    "logs": [
+      {
+        "file": "result/state-rights/initial-plan.stderr",
+        "sha256": "ff2ac18ffdab1f8d11a01d894a6383f7be295e406c90e7eaee20defcb5cb1a7f",
+        "summary": [
+          "Ran 4 tests in 1.599s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/state-rights/first-docker.stderr",
+        "sha256": "bbdfee2a0f43201f54a71d398ffe7554a3d57e543bedbf30d081f72398b38fe5",
+        "summary": [
+          "Ran 6 tests in 2.610s",
+          "FAILED (failures=30)"
+        ]
+      },
+      {
+        "file": "result/state-rights/targeted-plan.stderr",
+        "sha256": "38399ede451c3d2e5472785616c1313db0252403dbaf1502e7c384d56de08eea",
+        "summary": [
+          "Ran 14 tests in 9.714s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/state-rights/repeat-plan.stderr",
+        "sha256": "e8219932091d06c61f0cdd1d07e914912e015a2a624af2158bed0fda1fefb811",
+        "summary": [
+          "Ran 4 tests in 1.625s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/repeat-docker.stderr",
+        "sha256": "1f8a302bad154e8b12115dec1f0ff7d7d6978f1b08214a61148f75d4e0f9b46a",
+        "summary": [
+          "Ran 6 tests in 144.130s",
+          "FAILED (failures=14)"
+        ]
+      },
+      {
+        "file": "result/state-rights/repeat-plan-2.stderr",
+        "sha256": "1d57971e2adbc74fb4c5f3b84796f6568e185b84651d1a825f3c27466c037e88",
+        "summary": [
+          "Ran 4 tests in 1.736s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/repeat-docker-2.stderr",
+        "sha256": "9b3dea40e1a1ab738b81011cda03cb42ca62d36260eafaa6cbb29c9442accee7",
+        "summary": [
+          "Ran 6 tests in 213.820s",
+          "FAILED (failures=2)"
+        ]
+      },
+      {
+        "file": "result/state-rights/first-sql.stderr",
+        "sha256": "6ad4276530322ab56f44994062bb6442df607a0d45e7122cec154a568216675a",
+        "summary": [
+          "Ran 1 test in 1.457s",
+          "FAILED (failures=1)"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-plan.stderr",
+        "sha256": "84fa4eb23e613248953d24cd33302419568708987c4aadac95430454b83854ef",
+        "summary": [
+          "Ran 14 tests in 10.412s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/repeat-sql.stderr",
+        "sha256": "05886c310c1057d61ede2e7f9a7fbc91616086eb52dfe9cf00422e35b08aa6c8",
+        "summary": [
+          "Ran 1 test in 22.782s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/targeted-new-runtime.stderr",
+        "sha256": "d577232cfc64beef8d647d48799f2f3193fceb9b306536bb1064d511897e82dc",
+        "summary": [
+          "Ran 5 tests in 143.048s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/first-public.stderr",
+        "sha256": "3b148f49383049a2dc8abf6466f309d855be8ca2901c4b2f0edb73870bdfb960",
+        "summary": [
+          "Ran 2 tests in 67.782s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-affected-runtime.stderr",
+        "sha256": "d6165626bcb93f279162b728b39049a349bbf6d9bbb36239650808ae31e32ac3",
+        "summary": [
+          "Ran 5 tests in 149.592s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-plan-2.stderr",
+        "sha256": "8fd034f4f0efd5e18d904588abc3ff28e619ea0e855d63fd710748ac422b5a97",
+        "summary": [
+          "Ran 14 tests in 9.890s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/first-edge.stderr",
+        "sha256": "6ec04f6f4ea287df0788c0ec052cd7f0fb469c3142029abe272b854cb1b81ea6",
+        "summary": [
+          "Ran 2 tests in 33.456s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-guard-plan.stderr",
+        "sha256": "12c96ec702cb1dfd05e265a3788a6e59421f5209a8df1073ff32b0ff670a731d",
+        "summary": [
+          "Ran 5 tests in 1.784s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-guard-plan-2.stderr",
+        "sha256": "cc28473f3fbeb1e448a66a8c51c940ff843f55580651f89c9fb96f0aef2088bd",
+        "summary": [
+          "Ran 5 tests in 1.809s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-edge-runtime.stderr",
+        "sha256": "3e46cd9bbd4ae15486430bd067ec57b752b9ae95704cec2b7a29bc9c1b6710c5",
+        "summary": [
+          "Ran 2 tests in 47.233s",
+          "OK"
+        ]
+      },
+      {
+        "file": "result/state-rights/final-sql.stderr",
+        "sha256": "dd948cb64586ff953833bac4b6c5d5dac489422b618585f054a141fc7650b626",
+        "summary": [
+          "Ran 2 tests in 37.134s",
+          "OK"
+        ]
+      }
+    ],
+    "initialFailuresRetained": [
+      {
+        "test": "test_query_state.StateDockerTest.test_access_deny_empty_neighbor_and_union",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_between_boundaries_reversed_negative_null_and_empty",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_like_case_wildcards_classes_escapes_and_bad_patterns",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_mutations_correct_alternative_and_infrastructure_recovery",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_state_repeated_snapshots_and_rollback",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_access_deny_empty_neighbor_and_union",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_like_case_wildcards_classes_escapes_and_bad_patterns",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_mutations_correct_alternative_and_infrastructure_recovery",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_state_repeated_snapshots_and_rollback",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_like_case_wildcards_classes_escapes_and_bad_patterns",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker-2.stderr"
+      },
+      {
+        "test": "test_query_state.StateDockerTest.test_mutations_correct_alternative_and_infrastructure_recovery",
+        "status": "FAIL",
+        "evidence": "result/state-rights/repeat-docker-2.stderr"
+      },
+      {
+        "test": "test_query_state.StateSqlTest.test_sql_data_queries_access_snapshots_rollback_and_cleanup",
+        "status": "FAIL",
+        "evidence": "result/state-rights/first-sql.stderr"
+      }
+    ]
+  },
+  "public": [
+    {
+      "folder": "result/state-rights/public-real-test",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/state-rights/public-real-run",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/state-rights/public-control",
+      "sourceHash": "95bf49920314384098bf0eaa0bdc19215724aa64f28f6ee86e2dc432f93ce033",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/state-rights/batch-1",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/state-rights/batch-2",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "incomplete": 0,
+        "inputError": 0
+      },
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "schemas": {
+    "status": "PASS",
+    "validatedArtifacts": 46
+  },
+  "metadataValidation": {
+    "files": 28,
+    "errors": 0,
+    "warnings": 4
+  },
+  "sql": [
+    {
+      "file": "result/state-rights/sql-ordinary-State.json",
+      "sha256": "550c1cc67e2c1b1ad8748086ee367fd311c76a5416ec6488daa3c864051ef36d",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "180f23dfd70b48a2ad84d7670133f03e",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    },
+    {
+      "file": "result/state-rights/sql-ordinary-Mutate.json",
+      "sha256": "7d6d8031c5fcad9cf12e09c3e5710d87b07e52f1a6f36e3155e5859eff35b9a6",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "65457888dd7c4fe9839769d07ae2afb3",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    },
+    {
+      "file": "result/state-rights/sql-ordinary-Access.json",
+      "sha256": "42881edbbdc135c8c0f13624772776bf7a57eb82790f183928680bb2bba12f4a",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "ddc578502b90443185710cbe0347ff22",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    },
+    {
+      "file": "result/state-rights/sql-daily-Combined.json",
+      "sha256": "a00a7d82935f58eb92a70f26a0e4df36fdde1e2f932b3209745ff4e04be3cd7f",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "7ffcba8ca03a4e0faa99a82f90d3eed7",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    },
+    {
+      "file": "result/state-rights/sql-hierarchy-Hierarchy.json",
+      "sha256": "a4ec6a6e4addb7aeb4670c8de7cc79a09b13df54dfc3f1f48dbdb699ea05ab04",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "532520c5418d4c9091b9959ac408e1eb",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    },
+    {
+      "file": "result/state-rights/sql-real.json",
+      "sha256": "5a3745f56bad40a22b6bc98fc484d843237b8c7bc34c1351b505622cb7bbf72e",
+      "status": "EXECUTED",
+      "integration": {
+        "backend": "postgres",
+        "operation": "metadata-storage",
+        "runId": "37f9a840e5a24be482338c4942040ff3",
+        "cleanup": true
+      },
+      "storageDiagnostics": {
+        "active": false,
+        "locks": 0
+      }
+    }
+  ],
+  "mutations": [
+    {
+      "file": "result/state-rights/mutation-assessment-Between.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Like.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Mutate.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-DeleteCount.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Exists.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Distinct.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967",
+      "status": "FAIL",
+      "engine": "SBSL"
+    }
+  ],
+  "alternative": {
+    "file": "result/state-rights/alternative.json",
+    "sha256": "0a2f2c739589e9a9606d82825763a834bb9bc2e9dfa502132ecd67b30211c1a7"
+  },
+  "recovery": {
+    "failed": {
+      "file": "result/state-rights/infrastructure-failure.json",
+      "sha256": "661499c881ae1bafad37ac47ba8f73c90c08d5170b2486fe3f92f90607595b7c"
+    },
+    "restored": {
+      "file": "result/state-rights/assessment-infrastructure-recovery.json",
+      "sha256": "9123c9f891b023525089bb27fccc2380a94a7dba6cf11803f10d60609e0548b0"
+    }
+  },
+  "native": {
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false,
+    "probes": [
+      {
+        "name": "Patterns",
+        "exitCode": 0,
+        "sha256": "0a50b117730b179df8686f77c44dc6f4b8acaae38ba6b17b7d2b7ddcaf29baee",
+        "expectedSuccess": true
+      },
+      {
+        "name": "Query",
+        "exitCode": 255,
+        "sha256": "f3ff63dba5e0f2099d9b4fbb2cc958b5f99008503feb76b8714c9969c0664601",
+        "expectedSuccess": false
+      }
+    ]
+  },
+  "sourceArtifacts": [
+    {
+      "file": "element_test/query_predicates.py",
+      "sha256": "0bfaac50d611d5d9c6a51f03d5608d6c6f5b5acebedf8271717b783139a3bf0c"
+    },
+    {
+      "file": "element_test/query_state.py",
+      "sha256": "258884e7de8b27a0a39ea9b71a324ba99bd78f933666f2382aff1d96dbb4cb65"
+    },
+    {
+      "file": "element_test/query_access.py",
+      "sha256": "35e972855a74b4dbd2c6c5146e9c369729035afa5475da8d4ebc943e05186388"
+    },
+    {
+      "file": "element_test/execution_plan.py",
+      "sha256": "63ac54f447619441e9a57033c461933b2a85b2880ab3034b99cf1466715f9b7a"
+    },
+    {
+      "file": "element_test/generated_types.py",
+      "sha256": "6fceb651d117b772695f439925bda2b0b82fa8147b3a0112cfd137903a805632"
+    },
+    {
+      "file": "element_test/storage.py",
+      "sha256": "bd1189885cf9a28b2212e15c09962e96cb196aedad9c074420202b12d7654288"
+    },
+    {
+      "file": "element_test/query_plan.py",
+      "sha256": "2a827e539901f10ea3ca3b7e94d6e29385954ba6fe09e0d0d0d66bf7c243da50"
+    },
+    {
+      "file": "element_test/query_joins.py",
+      "sha256": "a5ae097acc76f88728d3a7a5d93babfa361aa1685cdfd8c8da60638e4706dfdf"
+    },
+    {
+      "file": "element_test/query_composites.py",
+      "sha256": "75449405eae71c03b26737bc2c79557e06be734a8b404fd2d2cf073aca69e490"
+    },
+    {
+      "file": "element_test/query_projections.py",
+      "sha256": "8ade47fc7366f6819bef8d9431cd84ae8c2a6bcd0150277ede9ac96d1d39c165"
+    },
+    {
+      "file": "element_test/query_sources.py",
+      "sha256": "795ecfba315fe7235da844e9e5cd55e3dac6b13e9c49b444b67994f863141cbc"
+    },
+    {
+      "file": "element_test/storage_queries.py",
+      "sha256": "d529317fc3ddf77d5b07c817fb8cb05cc6a6d5f4a1a01bfb24d1bcc6c665e0fd"
+    },
+    {
+      "file": "tests/state_fixtures.py",
+      "sha256": "349a2f9ff0948e896499a91127ce948a209dc7577088f885644f6daf284b1f26"
+    },
+    {
+      "file": "tests/test_query_state.py",
+      "sha256": "e3579ce9b6df76fb12f75f3425c6386d5f824e29b9b24e32827a0758f9608342"
+    },
+    {
+      "file": "tests/corpus/state-rights/README.md",
+      "sha256": "5056181b55445069a183810c225ea0796cf714194f6d553ae0805554fd7694ea"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Data/Book.yaml",
+      "sha256": "c0c06e606560f5bcc05dc556b27850d9989d2429ffa6d262a2516ae6dfd9ba3c"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Data/Card.yaml",
+      "sha256": "9b09bb0d7f8c65d44f91ee7e656c5394c6b6764fcc0c931bbba86ecdf9dc5321"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Data/Category.yaml",
+      "sha256": "327322d2c3cc9296a9208438cc67fdab46f4b2ae7ba048c7e61dd7c9760ce15e"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Data/Item.yaml",
+      "sha256": "73356238d3fd91b935f703ca7d0be75b2ebbae4ddeab14ff8ecc8b557dca167b"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Entry/Main.xbsl",
+      "sha256": "3159843d9d2132fb144ce4008e813992db23c088b0273cfbaa4087223cbd2e26"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Other/Card.yaml",
+      "sha256": "bbc43db4eef7a3f82087276180670769c4034cfd2d11f0bdfd79c62283345398"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Other/Item.yaml",
+      "sha256": "7706d8c4560d46d977d9e9b25fe155501675491c04ebc8d6e0de935b458046e9"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Service/Helper.xbsl",
+      "sha256": "4639e089fd961b106aa96fd03215b255f052dab776d6fe5461d0583b7c2bb35f"
+    },
+    {
+      "file": "tests/corpus/state-rights/daily/Проект.yaml",
+      "sha256": "88f8995bd63ebdaa358fed13e6573e8185a4095ad72a37bfc456fc47ab9678c8"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Data/Book.yaml",
+      "sha256": "4f94d2218830eae75ff408f49cd787fc54004de6c4781379c3378de901cda853"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Data/Card.yaml",
+      "sha256": "6812c6d07b41aacb8ba7b7dc319e68ffd0d689f4d2aa9f1d35bbc744c816c86c"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Data/Category.yaml",
+      "sha256": "fb81b40db6ef02a3d3b0b5e3654a54d9f1fd86a857fb7b1574dfab6c62a56f3f"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Data/Item.yaml",
+      "sha256": "6595a6c69f9298be50aa261d7b7baa60e85e45a2e2c8460868cbf4da0b241d6d"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Entry/Main.xbsl",
+      "sha256": "558fb21e7f050fff8d46d614023aa44aa37c8f665f10ed5437a626051e0b206a"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Other/Card.yaml",
+      "sha256": "66a3af29a83dec0dae5cefb57094848ddd55978a0ce7520fb324688a7d2f9f7c"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Other/Item.yaml",
+      "sha256": "ac4dc55a46cc3e4baaed346f060e16a22341108e808a63ffee4e5937b054689f"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Service/Helper.xbsl",
+      "sha256": "4639e089fd961b106aa96fd03215b255f052dab776d6fe5461d0583b7c2bb35f"
+    },
+    {
+      "file": "tests/corpus/state-rights/documented/Проект.yaml",
+      "sha256": "e5e0477eef66e450e98744626709875c904853c66772574aefde5cd295f74879"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Data/Book.yaml",
+      "sha256": "4f94d2218830eae75ff408f49cd787fc54004de6c4781379c3378de901cda853"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Data/Card.yaml",
+      "sha256": "6812c6d07b41aacb8ba7b7dc319e68ffd0d689f4d2aa9f1d35bbc744c816c86c"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Data/Category.yaml",
+      "sha256": "fb81b40db6ef02a3d3b0b5e3654a54d9f1fd86a857fb7b1574dfab6c62a56f3f"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Data/Item.yaml",
+      "sha256": "1c3b0c12a44f684375f875659287c50477bb9daa4597271672fdc12986930b92"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Entry/Main.xbsl",
+      "sha256": "28eaaf5133217821ed5b5730c326612bedf8515f2bedcaed3435fc5129b305a3"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Other/Card.yaml",
+      "sha256": "66a3af29a83dec0dae5cefb57094848ddd55978a0ce7520fb324688a7d2f9f7c"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Other/Item.yaml",
+      "sha256": "ac4dc55a46cc3e4baaed346f060e16a22341108e808a63ffee4e5937b054689f"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Service/Helper.xbsl",
+      "sha256": "4639e089fd961b106aa96fd03215b255f052dab776d6fe5461d0583b7c2bb35f"
+    },
+    {
+      "file": "tests/corpus/state-rights/hierarchy/Проект.yaml",
+      "sha256": "e5e0477eef66e450e98744626709875c904853c66772574aefde5cd295f74879"
+    },
+    {
+      "file": "tests/corpus/state-rights/native-probes/Patterns.sbsl",
+      "sha256": "0a50b117730b179df8686f77c44dc6f4b8acaae38ba6b17b7d2b7ddcaf29baee"
+    },
+    {
+      "file": "tests/corpus/state-rights/native-probes/Query.sbsl",
+      "sha256": "f3ff63dba5e0f2099d9b4fbb2cc958b5f99008503feb76b8714c9969c0664601"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Data/Book.yaml",
+      "sha256": "4f94d2218830eae75ff408f49cd787fc54004de6c4781379c3378de901cda853"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Data/Card.yaml",
+      "sha256": "6812c6d07b41aacb8ba7b7dc319e68ffd0d689f4d2aa9f1d35bbc744c816c86c"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Data/Category.yaml",
+      "sha256": "fb81b40db6ef02a3d3b0b5e3654a54d9f1fd86a857fb7b1574dfab6c62a56f3f"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Data/Item.yaml",
+      "sha256": "6595a6c69f9298be50aa261d7b7baa60e85e45a2e2c8460868cbf4da0b241d6d"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Entry/Main.xbsl",
+      "sha256": "28eaaf5133217821ed5b5730c326612bedf8515f2bedcaed3435fc5129b305a3"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Other/Card.yaml",
+      "sha256": "66a3af29a83dec0dae5cefb57094848ddd55978a0ce7520fb324688a7d2f9f7c"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Other/Item.yaml",
+      "sha256": "ac4dc55a46cc3e4baaed346f060e16a22341108e808a63ffee4e5937b054689f"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Service/Helper.xbsl",
+      "sha256": "4639e089fd961b106aa96fd03215b255f052dab776d6fe5461d0583b7c2bb35f"
+    },
+    {
+      "file": "tests/corpus/state-rights/ordinary/Проект.yaml",
+      "sha256": "e5e0477eef66e450e98744626709875c904853c66772574aefde5cd295f74879"
+    },
+    {
+      "file": "tests/corpus/state-rights/record_measurements.py",
+      "sha256": "fd833864540ddca100e753721e6256985271828e4e135aedaf08140063cfa62b"
+    },
+    {
+      "file": "tests/corpus/state-rights/reference-9.3.json",
+      "sha256": "53ef9675d30ed35f08545f7e0e1a5541e44ff752215854eeddd09a9b7f6ea2a9"
+    },
+    {
+      "file": "tests/corpus/state-rights/refresh_catalog.py",
+      "sha256": "267bff92278eb266075e2b801aacbbc607078f2b62caeb22a3301d6a659e0016"
+    },
+    {
+      "file": "tests/corpus/state-rights/run_native.py",
+      "sha256": "ea1cdc2ce8f05538eea0a3c19314c87ffbfb1732f92c5740f58c36134e0b671e"
+    },
+    {
+      "file": "tests/corpus/state-rights/verify_public.py",
+      "sha256": "b74182f7dcf6080ce0ab5d2d1d972035fae778453a2c0db4b0acde1e0751a8eb"
+    }
+  ],
+  "savedEvidence": [
+    {
+      "file": "result/state-rights/access-combined.json",
+      "sha256": "e39ef908e8a1592188a2f5809461d9200e093d492f2d34e77dd53e07a7a51dc8"
+    },
+    {
+      "file": "result/state-rights/access-denied.json",
+      "sha256": "4fce3c1b1125e4935f97dfe178b91442e2a6e6e69fd43ef7b1dc91827a0932c8"
+    },
+    {
+      "file": "result/state-rights/access-none.json",
+      "sha256": "6977fe498c0cf79b2a812cedb2c02acdf930327431646ee948834ad01a460e86"
+    },
+    {
+      "file": "result/state-rights/alternative.json",
+      "sha256": "0a2f2c739589e9a9606d82825763a834bb9bc2e9dfa502132ecd67b30211c1a7"
+    },
+    {
+      "file": "result/state-rights/assessment-access-combined.json",
+      "sha256": "88f31338a7966e6b987a6c560eef3bc361453fd5a720f7630a3f5bb3be95a458"
+    },
+    {
+      "file": "result/state-rights/assessment-access-none.json",
+      "sha256": "282b9cd4f995b07a7d3804dcea4f6c6ddc75e7cc41520c09d0faa18b2b8e3121"
+    },
+    {
+      "file": "result/state-rights/assessment-boundary--3-0.json",
+      "sha256": "551056cdf12a5ec1b708c3647297dbb7ec4f7abeb6f3eee4a76297ad9ef865a6"
+    },
+    {
+      "file": "result/state-rights/assessment-boundary-1-1.json",
+      "sha256": "0253370ac58cdc20f91f151eaab304908fa22be610c8355c56664f2ac93e510b"
+    },
+    {
+      "file": "result/state-rights/assessment-boundary-2-2.json",
+      "sha256": "eac50b219ce07d69be16d1e7531e967abcab5782c609b8cb94ee6a7bcfa57ff9"
+    },
+    {
+      "file": "result/state-rights/assessment-boundary-3-1.json",
+      "sha256": "f03d9123a4c5eb1685af3cab12a40ae7d15db4b3c667daf9db97b8ec3b56d960"
+    },
+    {
+      "file": "result/state-rights/assessment-boundary-3-3.json",
+      "sha256": "a0e524b6cb7d5861b31e1f1690c02e35d788ad6bb374003867325667459115bb"
+    },
+    {
+      "file": "result/state-rights/assessment-correlated-match.json",
+      "sha256": "391f960fc5a78eecbf9ff3b75855600d6f0d50999ee7cd425b0ba66a437dab4a"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Between.json",
+      "sha256": "1999c8f03db77d2bc075b7ee0db4af5fb966bf4cf201f4baf4fd828bf7f1fd4f"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Combined.json",
+      "sha256": "1e65df7911c2290d7b5070f52e86036d6e4241ae5e61042da0f658e34859eb8b"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Correlated.json",
+      "sha256": "452c9f4ccc8cb86e2bba25e7e418195a2458285be8a690c025e08bd30adea703"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-DeleteCount.json",
+      "sha256": "46d13c37b2a1a725775f0636c24b9519fc62be997d2185914a8b4af3a30093a2"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Distinct.json",
+      "sha256": "6f8578fe5325a4feab2bf95c3c2991f71d6edb1abfce93fe9275c45aeb6d04aa"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Exists.json",
+      "sha256": "7a8ea28f7ebba1fbb49188945ab181108470296681bbb05acf4125f7ab8c82a2"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-InsertSelect.json",
+      "sha256": "d67e68f73545ff89af322ec71ec1f25aa30bebb2e731bf2d1a390985cc8610a5"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Like.json",
+      "sha256": "515a10df0a77e75b0843710c0d15337e787df11d8afdb89a5cd1912435e61310"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Mutate.json",
+      "sha256": "d2f4ab012df958a568a852b20edfef4be42338c9b0c7371c7901e9721fed025d"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-NotExists.json",
+      "sha256": "7a2247712d7659dd46163218aeaffe2dfb903dc16fe50432d4b75e1604081eb3"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-NullInsert.json",
+      "sha256": "1811ea6adf04a9783e89831969ccf7d79cce3aa268f71074f1ac8bf310472921"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-Repeat.json",
+      "sha256": "c21f78ae3638df2838d32652ca644c6549dd7443cd32cd9aa420d12468523dc8"
+    },
+    {
+      "file": "result/state-rights/assessment-daily-UpdateCount.json",
+      "sha256": "feda05282403d70972ef12a2a44fa8aa83947d2b66702fd031a3b1d7700771e3"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-between.json",
+      "sha256": "1f6d7f950c8094a51e98e39048c744b573caf7a5a88c944a7bc55c5dc397c8ed"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-captured_expression.json",
+      "sha256": "c01f971e42df56d990f512db189f72ab2f2b81381f5f16c53877c69f0cb5a5d3"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-in.json",
+      "sha256": "fb474e1bd92ee228ac91f0e38221892c5509faadb5fe3643b9c0b4b2e11fdcf1"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-like.json",
+      "sha256": "753411f1a1da37bfe2682d60a2d13fe45e7e556058bc48f5596eae03b23d7132"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-order_limit.json",
+      "sha256": "1f213912a4c3b5ad0e0c98c1c9561cc0ec90a73b993e3f3b6cc765275de27f8f"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-ordinary.json",
+      "sha256": "37612711802fda9177c2a824c10ebe20871d6513ac31541046dcdc294fc31c0a"
+    },
+    {
+      "file": "result/state-rights/assessment-documented-parameters.json",
+      "sha256": "b09936fc403a8cbd3b8232e883963bee75613eabc03b40cfbdd2a68ec8afc94d"
+    },
+    {
+      "file": "result/state-rights/assessment-empty.json",
+      "sha256": "1f9ff388768100087fd92b2e0b971d7403f9800c6e7be8aab9ddeeac8d8f98cb"
+    },
+    {
+      "file": "result/state-rights/assessment-hierarchy-cycle.json",
+      "sha256": "c817a8e8643010353e498b5a35406fc9373046b46ac415dd799cf64f2a96e95e"
+    },
+    {
+      "file": "result/state-rights/assessment-hierarchy-missing.json",
+      "sha256": "ed116ef6b6a2c6bb5432ae2663e01e05b7486d98bd52473c8b4f76adf99be226"
+    },
+    {
+      "file": "result/state-rights/assessment-hierarchy-self.json",
+      "sha256": "84fd9642b71ee27f9e54c6e798d360fb07da24b22893793595e17a7871efc1c9"
+    },
+    {
+      "file": "result/state-rights/assessment-hierarchy-transitive.json",
+      "sha256": "2dbd727a76d6fcb8ab6e6fda559da3966816f583c92d52705eaa85c17593bea8"
+    },
+    {
+      "file": "result/state-rights/assessment-infrastructure-recovery.json",
+      "sha256": "9123c9f891b023525089bb27fccc2380a94a7dba6cf11803f10d60609e0548b0"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Access.json",
+      "sha256": "13191c1a0681127f520475b2baaad7d5d4fd2f5f6cd65e8a6e23313865756f04"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Between.json",
+      "sha256": "695b2b66a443ac4b810f50f1df0279122ec050c226cacf579444c154d4ea4584"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Combined.json",
+      "sha256": "4febe105a09f0b49f7e49a21cb3b6126f13eff3141caf628a3d0487b17f78408"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Correlated.json",
+      "sha256": "f2eb8ff365ce97fc27c877cd2fa2253a0370ad1385a23d4a26a9c1ab88dfbdb7"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-DeleteCount.json",
+      "sha256": "1019955aa8d5ebc77c0ffa61845db36c4c75c828f11732ed402cc45ce879d80b"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Distinct.json",
+      "sha256": "3f53c32fdf6525347a0db1b20c6735e1e796af28051db9c4e9580dcb90923239"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Exists.json",
+      "sha256": "48678f5fc55f5f2b7489b495bfdcace03dfcff57748b8609404ea728379bbbc9"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Hierarchy.json",
+      "sha256": "50d48068897339ac4a685017761aa0cad7f51ed4d81497ef75c50f1cae353537"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-InsertSelect.json",
+      "sha256": "9bc7c8d10fd4016bde37e227e5aa257067c1830a5f27e9c6b5420b81b85b6bf2"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Like.json",
+      "sha256": "0ec93554aedeae68289ddad551ac652879daeb366c8c3fc6dd77cd4a851eab95"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Mutate.json",
+      "sha256": "0fe2aa555e243e602d0564bc36b154dbd0f726f1981c4530ff51f5e4bebe954d"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-NotExists.json",
+      "sha256": "71092458eaa682a0c176c5f13852ae921cb1b67f2d397f04cf184bc0e56176cb"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-NullInsert.json",
+      "sha256": "2ee93dba678eceaf0f8b28b624b0a4cf3f06a95f793b4ae61201ee7093fde57f"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-Repeat.json",
+      "sha256": "97ef3e5fa449e0ba4fcdc45799f8221a7bbd23f406e5080b8d4465a0755e4ceb"
+    },
+    {
+      "file": "result/state-rights/assessment-ordinary-UpdateCount.json",
+      "sha256": "3ae3fa2e7c6f12ffa4a84dfc240671b7c7f1aa3e9464cfbc91c01ee9829494a1"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-10.json",
+      "sha256": "1870b4e825a56ba5935ec2ee276e87df1e59434e7a3d7919fb0fc2886e8116f2"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-11.json",
+      "sha256": "9171b6a62cbf79f358c18ecc5bbadef26f79a3bf36eacfdbea607069000b4dc4"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-12.json",
+      "sha256": "7837095316bfd496fefcc79d9f58700e0ada491000025c35cb9593bee289bd5b"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-13.json",
+      "sha256": "dc15b3ee653ea6c655e7dec88dd7f0e7e1354d163b3a46d0c4e85be737485af7"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-2.json",
+      "sha256": "8fae2710dd8e6809cbd6df817e863cda80d07bfc6020fae86efa2b3fe4d32fbe"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-3.json",
+      "sha256": "919ce54d8cd8961f469de51daf7a58b36250acf412ffeee58af1cedf406613e4"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-4.json",
+      "sha256": "e65a3ccba4fb262a363bb3c1586c51659dcd8a829573576dac4b06538f92a97c"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-6.json",
+      "sha256": "d8b5451cac644c9d6d8681362575292ee16714d406dad9472f02df1f880f5b45"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-7.json",
+      "sha256": "3ad3548066225037a81938a81d020138a002d358252c54c00d89433fee4e00f0"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-8.json",
+      "sha256": "b903835bc5ec5e30425a9271332d6189d36fd2ee9f1430f8d99303aa3041bfae"
+    },
+    {
+      "file": "result/state-rights/assessment-pattern-9.json",
+      "sha256": "4f35f2941912ecd38c92893c96e92b20b43ad297ee282829a0fddc2b7b84879a"
+    },
+    {
+      "file": "result/state-rights/assessment-state-memory.json",
+      "sha256": "add643aac6cf117eba083f7f2656c63effe69f860e3effbd8209f96c13b02168"
+    },
+    {
+      "file": "result/state-rights/bad-pattern-0.json",
+      "sha256": "aceab1e7c41c97b6414206d126fdc3929d42a78e1f2a9e10ca5d94ca94699014"
+    },
+    {
+      "file": "result/state-rights/bad-pattern-2.json",
+      "sha256": "d8c99c381bec85ab267452b96a10481dadab3720ed276ac70ff6c2bf4ef8a3f7"
+    },
+    {
+      "file": "result/state-rights/bad-pattern-empty.json",
+      "sha256": "f2fa5255c19cee94d1366b038a13b6d09bc19c82c2c0301376ced079b39ddfce"
+    },
+    {
+      "file": "result/state-rights/batch-latest.json",
+      "sha256": "40d82930a1d83d2646e7414e44a1774286daeb3a3210c743613ca680886b4565"
+    },
+    {
+      "file": "result/state-rights/batch-manifest.json",
+      "sha256": "f6dc6110a5a943b1e05543c0a19ba83fa098c6cb1ed48a8f3f1f5eb613061f2c"
+    },
+    {
+      "file": "result/state-rights/boundary--3-0.json",
+      "sha256": "b4ec3ce94acbc6f36f4ec291381a71f0165dbdde200e9f24a73770bf2c5daccb"
+    },
+    {
+      "file": "result/state-rights/boundary-1-1.json",
+      "sha256": "8ec0bdf4cf293527ba09fa38c2eba12d5788804fe73af23cbc573474fd46c9eb"
+    },
+    {
+      "file": "result/state-rights/boundary-2-2.json",
+      "sha256": "fb3e567d73b85c1a16c11383b8b9e5c0e37bddb4a83745c2066b9093a5ca7747"
+    },
+    {
+      "file": "result/state-rights/boundary-3-1.json",
+      "sha256": "fe281841a879cb05d083e395c1b48a2d43eead79a2360660f84174d5b379d796"
+    },
+    {
+      "file": "result/state-rights/boundary-3-3.json",
+      "sha256": "49aab46f8199278194b64b44a32cb87235bfb244b9b3b0243f23120a4b535129"
+    },
+    {
+      "file": "result/state-rights/catalog-stage-045.json",
+      "sha256": "f7441fb592e19534677dc9f79e2ea09d203bffb092b3d632039a3f8ff74a1d88"
+    },
+    {
+      "file": "result/state-rights/correlated-match.json",
+      "sha256": "50b01a9952880a01733fa95283f659d938f10baf253e139bf4263ce52528a455"
+    },
+    {
+      "file": "result/state-rights/custom-escape.json",
+      "sha256": "4b449211a60ab8bceb0da57f387381a778c2f31fdabc9acfd327a37d6e450ba6"
+    },
+    {
+      "file": "result/state-rights/daily-Between.json",
+      "sha256": "1f3f7cef133eb6ecd03b9cb781e04633ffe8cebdb7dc2f71e5503c42930bb88c"
+    },
+    {
+      "file": "result/state-rights/daily-Combined.json",
+      "sha256": "a50f1d4ef01ae0adb35be3404f1d9dadae1c81df64469d042119926200c38c2a"
+    },
+    {
+      "file": "result/state-rights/daily-Correlated.json",
+      "sha256": "1f730917ca0bc978bca004ce7c0fd285c46675ec1ca2b229942b3a8826f8575d"
+    },
+    {
+      "file": "result/state-rights/daily-DeleteCount.json",
+      "sha256": "d592b10de65f8894e95fe37dc95c80fd8a5ebae0e383ce58f5a0f4fd03c39bda"
+    },
+    {
+      "file": "result/state-rights/daily-Distinct.json",
+      "sha256": "8b0c8a999d135a7c539e631a2da464c147795df0c332c0e739eeba3cca3ae706"
+    },
+    {
+      "file": "result/state-rights/daily-Exists.json",
+      "sha256": "e333492afdebb758baf35e11fa52707da7e4a50e90ae045b581f159ce5eb6315"
+    },
+    {
+      "file": "result/state-rights/daily-InsertSelect.json",
+      "sha256": "b3eae385e2435895c7232a25a501ebd834347f9b274666c836fdae8d09128908"
+    },
+    {
+      "file": "result/state-rights/daily-Like.json",
+      "sha256": "9edac32289f3c8be18785b0c5cb050653facd47ed3f2283c9f52d81bc3f8f311"
+    },
+    {
+      "file": "result/state-rights/daily-Mutate.json",
+      "sha256": "b5df8edfe44b76b873316ed71ce714a13149b1bfd8ad031369c82009bf0226e2"
+    },
+    {
+      "file": "result/state-rights/daily-NotExists.json",
+      "sha256": "601e1a04f9afd9665972c42a4a6cb7cee56dba31315c130924c4e2274b9cc16f"
+    },
+    {
+      "file": "result/state-rights/daily-NullInsert.json",
+      "sha256": "abc625c50f3e1ca40d1063017b5df656225582737ca9b4610642dd85f99b62ca"
+    },
+    {
+      "file": "result/state-rights/daily-Repeat.json",
+      "sha256": "a8f8239f7f6464b1065a65c2ec7d89398a303ac0865b8454fd4aca76a5a4f9e3"
+    },
+    {
+      "file": "result/state-rights/daily-UpdateCount.json",
+      "sha256": "c1c7f792dee70d639ff30ff506048d534fa5158efdab55eb531bca0872966269"
+    },
+    {
+      "file": "result/state-rights/documented-between.json",
+      "sha256": "671993627e6f565df09640900675fd47532ca6c554b84b853eca30de9bceb7c3"
+    },
+    {
+      "file": "result/state-rights/documented-captured_expression.json",
+      "sha256": "2661a417475d8e0000780ad62eb1e401a630abd190ed7fd082b5b566aad9d26e"
+    },
+    {
+      "file": "result/state-rights/documented-in.json",
+      "sha256": "9e3c9b637d9f2044350e2e858daf339915deba9178ebc0cb5881be854504322a"
+    },
+    {
+      "file": "result/state-rights/documented-like.json",
+      "sha256": "b87cb475381afc42cdacdcad5bb3f23b333b563c9f44afd0065d22e06ed72150"
+    },
+    {
+      "file": "result/state-rights/documented-order_limit.json",
+      "sha256": "7215f34cc9be0bb8f0893805092e54ccc0a18a70905c1952ee677b226d0f3197"
+    },
+    {
+      "file": "result/state-rights/documented-ordinary.json",
+      "sha256": "296c7fb2ca3adf390a7a912e2a5ac902a0e83c5070db5d7dbc6718c45c80ec87"
+    },
+    {
+      "file": "result/state-rights/documented-parameters.json",
+      "sha256": "8a60ed2aff4330107ce6e08911362385d1034ded70ccc8a98c41f9275bc81dea"
+    },
+    {
+      "file": "result/state-rights/edge-Duplicate.json",
+      "sha256": "9912542bee27e50d6e4af8f8fd8200b70a5997d029115358adc47ae1aa48f86e"
+    },
+    {
+      "file": "result/state-rights/edge-ExistsUnion.json",
+      "sha256": "4e20118ac3dd6f63f4ac98193aa4763255d6f2d6c2428ec168228129daa44291"
+    },
+    {
+      "file": "result/state-rights/edge-InUnion.json",
+      "sha256": "e203ac980c8fbffd35ef7ec71b11738dfb935ae17a1b392463e47028f489e2fd"
+    },
+    {
+      "file": "result/state-rights/edge-Lazy.json",
+      "sha256": "86cd8d123fb4d6321a52ab3ca366072e6846ef3ae081b62dfe0eb7265eab63e8"
+    },
+    {
+      "file": "result/state-rights/edge-MixedDistinct.json",
+      "sha256": "e5b76afe1bf553fcf1e369c15bf322b37c02234df42ac16ee417a79bf6347f60"
+    },
+    {
+      "file": "result/state-rights/edge-NullBounds.json",
+      "sha256": "29e7469b830194de0acb6717c8adbfe8bcd89c65de72e9512a9d90cd025d32a2"
+    },
+    {
+      "file": "result/state-rights/empty.json",
+      "sha256": "335d1044543eaa269795d35d56bb755bf4acbf1073835b60ad23dfff1528dd53"
+    },
+    {
+      "file": "result/state-rights/hierarchy-cycle.json",
+      "sha256": "899ea8391e8ef454b5d8953db14c89bc9ba9700b169977ec939779a994d80a76"
+    },
+    {
+      "file": "result/state-rights/hierarchy-missing.json",
+      "sha256": "0c3c6a1fc41dde316a4b1b30ba3b41948ae89ee2f3dc960950b2543da8125850"
+    },
+    {
+      "file": "result/state-rights/hierarchy-self.json",
+      "sha256": "55c58a583cddb6a0d80c32c106194290471496ae8433d2bd65a7b63666b2533c"
+    },
+    {
+      "file": "result/state-rights/hierarchy-transitive.json",
+      "sha256": "60b788eded9cb484f47853885aa0666fed53dd9e94e46d91826a4d2775c62609"
+    },
+    {
+      "file": "result/state-rights/infrastructure-failure.json",
+      "sha256": "661499c881ae1bafad37ac47ba8f73c90c08d5170b2486fe3f92f90607595b7c"
+    },
+    {
+      "file": "result/state-rights/infrastructure-recovery.json",
+      "sha256": "0a2f2c739589e9a9606d82825763a834bb9bc2e9dfa502132ecd67b30211c1a7"
+    },
+    {
+      "file": "result/state-rights/initial-Access.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Between.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Combined.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-DeleteCount.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Distinct.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Exists.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-InsertSelect.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Like.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Mutate.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-NotExists.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-NullInsert.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-Repeat.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/initial-UpdateCount.json",
+      "sha256": "d30caf43009b213acfe759eab094ca37c175781869a12b5c5b36aaffa5883256"
+    },
+    {
+      "file": "result/state-rights/mutation-Between.json",
+      "sha256": "1b36b7a7a87c121887672702d0adb159253562c621795ea5abf201280cda80bc"
+    },
+    {
+      "file": "result/state-rights/mutation-DeleteCount.json",
+      "sha256": "0001a0d4e689e9dbeca9699303b99c7f458b724e14d055901b4137dab9552979"
+    },
+    {
+      "file": "result/state-rights/mutation-Distinct.json",
+      "sha256": "ac3b53cecba4bc3d3adb58c6ebbfc645341199397643607d6f0acab19edfd6b7"
+    },
+    {
+      "file": "result/state-rights/mutation-Exists.json",
+      "sha256": "2a3a0f124d7c9303d55b48fa3e0207cfc813c998dc649b78e55530ab3caf8a5c"
+    },
+    {
+      "file": "result/state-rights/mutation-Like.json",
+      "sha256": "2950c5f9cade2873ce755b7fe0b1f47fc8494f9b776a7c1c5444e883effb1856"
+    },
+    {
+      "file": "result/state-rights/mutation-Mutate.json",
+      "sha256": "69673abc252ea4785e3be92241d75a61713a87a5123b4bf5bcda5609759114ed"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Between.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-DeleteCount.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Distinct.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Exists.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Like.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/mutation-assessment-Mutate.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/state-rights/ordinary-Access.json",
+      "sha256": "1a77a856060f6062063e4905eb73c90bae43787c8d38656f16a5e8cc6d7574f8"
+    },
+    {
+      "file": "result/state-rights/ordinary-Between.json",
+      "sha256": "0a2f2c739589e9a9606d82825763a834bb9bc2e9dfa502132ecd67b30211c1a7"
+    },
+    {
+      "file": "result/state-rights/ordinary-Combined.json",
+      "sha256": "e39ef908e8a1592188a2f5809461d9200e093d492f2d34e77dd53e07a7a51dc8"
+    },
+    {
+      "file": "result/state-rights/ordinary-Correlated.json",
+      "sha256": "4ab021c094fabe76547d632e7a4c475d301cc1492a01622f4e125366c7d343db"
+    },
+    {
+      "file": "result/state-rights/ordinary-DeleteCount.json",
+      "sha256": "40d3d010e9a7b87a5b0dabfed51e412897c9de9f294621bda2971f9af5d1b40b"
+    },
+    {
+      "file": "result/state-rights/ordinary-Distinct.json",
+      "sha256": "19f4b59637ae61baa7dc4bb64d01a6b49e61a6fc84ad7f2107ef8755ac262035"
+    },
+    {
+      "file": "result/state-rights/ordinary-Exists.json",
+      "sha256": "0a62fe26de3363db8bafd44967a43176aa4040b77e513de44fc8fec3dcce9847"
+    },
+    {
+      "file": "result/state-rights/ordinary-Hierarchy.json",
+      "sha256": "b76df4db292dc1205b4ccde2d1600687a73e8c3b208d4d428923d34ff72831ef"
+    },
+    {
+      "file": "result/state-rights/ordinary-InsertSelect.json",
+      "sha256": "8b0fe9cc92ecdcde83adee71533e46eb29a251b140962db66a3129dba2176b89"
+    },
+    {
+      "file": "result/state-rights/ordinary-Like.json",
+      "sha256": "d9672c311b4a8f94dfb9e31873172ea2356f5339aa43f34a618b30b259126b4e"
+    },
+    {
+      "file": "result/state-rights/ordinary-Mutate.json",
+      "sha256": "8cf56bd08a13a5e527fafa6ebc4f46dc07238618fc1ee6a9603fffd6aa47d4d3"
+    },
+    {
+      "file": "result/state-rights/ordinary-NotExists.json",
+      "sha256": "f27f14075f3c6a6b6cc6715f8d1f94fe9c3ed306d79f89cf7e162e11cd35280f"
+    },
+    {
+      "file": "result/state-rights/ordinary-NullInsert.json",
+      "sha256": "fdd1cfde4d9f9c28974a617d1d474f8566c6ccd63af5d4ffe0f7f43eeebd25fc"
+    },
+    {
+      "file": "result/state-rights/ordinary-Repeat.json",
+      "sha256": "0b369d3afde78c837ef2f46ab5af37a71971b50797592ad4aa81c61366be2f9b"
+    },
+    {
+      "file": "result/state-rights/ordinary-UpdateCount.json",
+      "sha256": "4808da751a5292855812204b8517758cdf36ccd2cfc9efa47f250070e1e2b7bf"
+    },
+    {
+      "file": "result/state-rights/pattern-0.json",
+      "sha256": "b6af220cd36cbfc62dbe8d838326878b2c462547a34fd4237224cb5e22935434"
+    },
+    {
+      "file": "result/state-rights/pattern-1.json",
+      "sha256": "92b57443a34e54501c8e4bdea503c34f211f2c1e21c208a9a48cab1a0158e4a3"
+    },
+    {
+      "file": "result/state-rights/pattern-10.json",
+      "sha256": "6acc118196f29751d7de59c89d19008a0901cb38be19bcfdada7f7ce814c9680"
+    },
+    {
+      "file": "result/state-rights/pattern-11.json",
+      "sha256": "afa06ebec52495be78d1a2733410dc323aac794349cd8d2e5cae21af31b45c2b"
+    },
+    {
+      "file": "result/state-rights/pattern-12.json",
+      "sha256": "60d80c2777a8d50255700025dd78384e17ffd80081a3ac11d8292a48a0f98d15"
+    },
+    {
+      "file": "result/state-rights/pattern-13.json",
+      "sha256": "b4b88c71236b7b2e5254a40984e4e22ae2fedeb73805ad060815dd1eb291adfa"
+    },
+    {
+      "file": "result/state-rights/pattern-2.json",
+      "sha256": "506adca48c841ef8beb2ef58c5920d54a4c1997e572478fbbec939fd9ec67dbd"
+    },
+    {
+      "file": "result/state-rights/pattern-3.json",
+      "sha256": "327ee5c9e3e7754bf1455285b4c31e949f3a4c89ec7f90e064decf7a6483a974"
+    },
+    {
+      "file": "result/state-rights/pattern-4.json",
+      "sha256": "6da9314d1fd81273fe19b6cd6a7dae7c5662a92d47a239e563bf6cae46372203"
+    },
+    {
+      "file": "result/state-rights/pattern-5.json",
+      "sha256": "cde4f6875874d6eb20d700872a357824e1a1974d4afb1a85821c5930b719b0f7"
+    },
+    {
+      "file": "result/state-rights/pattern-6.json",
+      "sha256": "506adca48c841ef8beb2ef58c5920d54a4c1997e572478fbbec939fd9ec67dbd"
+    },
+    {
+      "file": "result/state-rights/pattern-7.json",
+      "sha256": "327ee5c9e3e7754bf1455285b4c31e949f3a4c89ec7f90e064decf7a6483a974"
+    },
+    {
+      "file": "result/state-rights/pattern-8.json",
+      "sha256": "6da9314d1fd81273fe19b6cd6a7dae7c5662a92d47a239e563bf6cae46372203"
+    },
+    {
+      "file": "result/state-rights/pattern-9.json",
+      "sha256": "aef6443c44ccd9918bb260e86707a2256071684db3f16ee935d78301bcc6b595"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Between.json",
+      "sha256": "3317376006f040768e90e1a4ac8f3e0111d5cc573e42ae1a466231e789de1ddf"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Combined.json",
+      "sha256": "50d3f446535bd222a5c2690b2c59c71555dc9488a836f1644bf13766cb58dce2"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Correlated.json",
+      "sha256": "3d81a7524d79771652ef75fd3c6b2102abe7e3b8074e7f591d0dacb84b974a4b"
+    },
+    {
+      "file": "result/state-rights/plan-daily-DeleteCount.json",
+      "sha256": "ca193e371ee7b64c123113aedf1ebf76e3bc411d19b99866f1c2e805222d269a"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Distinct.json",
+      "sha256": "cc2dc10559f5edff1b97d998c8c7645f5323a1c8f33cf3d0bb88c620766dd7eb"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Exists.json",
+      "sha256": "797653f0087d6e435a555edee659626d9fe2f944a6517a5096e2988150f0d1b3"
+    },
+    {
+      "file": "result/state-rights/plan-daily-InsertSelect.json",
+      "sha256": "4ad4dc2f6201613b61876ded9bbdba2a962e90be02f4530d251787006e503890"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Like.json",
+      "sha256": "86377b97200cfddf047715f0cb9d793a9e4d45b729d0fa5658b4c6b6f0a0401c"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Mutate.json",
+      "sha256": "de61c94cf375951ac0ea0dacaa3e2a6c036d605d9fddb9b7c6f395750203a37b"
+    },
+    {
+      "file": "result/state-rights/plan-daily-NotExists.json",
+      "sha256": "996768882cdb457e7c51614681a11c2b6637f28b0b0102d23eb6175577adb1b3"
+    },
+    {
+      "file": "result/state-rights/plan-daily-NullInsert.json",
+      "sha256": "eb3b764ca8134b739e27597d264c6ff4d0f1a890ea0bc6feeb4ae878b9f5b7b7"
+    },
+    {
+      "file": "result/state-rights/plan-daily-Repeat.json",
+      "sha256": "c0d6e9b916f9b007ba9f4ace573211f75ff47795b84a514a0065f2c864136ca7"
+    },
+    {
+      "file": "result/state-rights/plan-daily-UpdateCount.json",
+      "sha256": "c072197d4370893a4ca0419f24fb9720c0c02654aaf93adf805b8c09cda7feb5"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Access.json",
+      "sha256": "85c0fecdd6fa0cc7f4acaaef89d866a6e1b0e487eb4b6b79bd3f1cb4f7ea8194"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Between.json",
+      "sha256": "26748072878a852ad6ffc257325e35261a6817857069a5f25ad028a5668644cc"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Combined.json",
+      "sha256": "58e739bef19280560b27808d8aaa3cdf496ed1c803ed6471bf71f772ced80e1e"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Correlated.json",
+      "sha256": "f6ce59d873263f2b5f852121239781616c9f46600c7955c6e24f31ff8ac4620b"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-DeleteCount.json",
+      "sha256": "8efe9f4d050e72a245f35b809042f7b6b5d0885f6f4c7747d141a88830b7c8a5"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Distinct.json",
+      "sha256": "56c3ec355432882eb13ab5ff8ba89f8d699d61f869e901d4f941357f2269330a"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Exists.json",
+      "sha256": "9822b83a462ca9a371689c79e9079d2677804df796d823b497489f5f9016a865"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Hierarchy.json",
+      "sha256": "7a348560f214a0ac9b987558d1482c504ca8e884c6699f556e6c55da20ad1a2c"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-InsertSelect.json",
+      "sha256": "e0ac8012d58fc00b93032048b9cf845cb4514212124d36c54f0ed708b5acf484"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Like.json",
+      "sha256": "000f29a97cfec55b5d959e33ac3dbca06dfba556970f838c46626b438470afe7"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Mutate.json",
+      "sha256": "a765258c1ce2c2132fd1a4f95c6882ad81454e77d1e518f85dea50dbc393ecd9"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-NotExists.json",
+      "sha256": "50429c7cea5efa66f7df89c419bd8d335e5406fda78a5a85195bb37f01910537"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-NullInsert.json",
+      "sha256": "bb6f952bedf5adc5171c1023ae0e1a9d5a756246cce943a2f1aa12be67272843"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-Repeat.json",
+      "sha256": "25fc4bf39c6658ca261b01d6a7d4c2dba7dbfa020c24169c3ebc6dcac958aae9"
+    },
+    {
+      "file": "result/state-rights/plan-ordinary-UpdateCount.json",
+      "sha256": "ab775ac5b9dd82b586ccfefb5e2daa6c32e7f7dc213859013a4de1f78ccfa55c"
+    },
+    {
+      "file": "result/state-rights/real-ПолучитьБазовуюВалюту.json",
+      "sha256": "e0d00222a2df90ee7acb37395077a4d2afe87231af26b60b7c164270fe8a15dc"
+    },
+    {
+      "file": "result/state-rights/real-ПолучитьВсе.json",
+      "sha256": "24d8c7f25ab1bd49268614304fbfe24fda330a17ec1a8cb891301f55a58fc366"
+    },
+    {
+      "file": "result/state-rights/repeat-temp.json",
+      "sha256": "46f8d7e1c4a378fe338adc4eb77ecd1a65e831cb20d146f18a0fabdf66a7df99"
+    },
+    {
+      "file": "result/state-rights/schemas.json",
+      "sha256": "8e52d150df0b026844520947021db60e067b13ea12f75a285d7bb6d1d9ea5c99"
+    },
+    {
+      "file": "result/state-rights/sql-daily-Combined.json",
+      "sha256": "a00a7d82935f58eb92a70f26a0e4df36fdde1e2f932b3209745ff4e04be3cd7f"
+    },
+    {
+      "file": "result/state-rights/sql-hierarchy-Hierarchy.json",
+      "sha256": "a4ec6a6e4addb7aeb4670c8de7cc79a09b13df54dfc3f1f48dbdb699ea05ab04"
+    },
+    {
+      "file": "result/state-rights/sql-ordinary-Access.json",
+      "sha256": "42881edbbdc135c8c0f13624772776bf7a57eb82790f183928680bb2bba12f4a"
+    },
+    {
+      "file": "result/state-rights/sql-ordinary-Mutate.json",
+      "sha256": "7d6d8031c5fcad9cf12e09c3e5710d87b07e52f1a6f36e3155e5859eff35b9a6"
+    },
+    {
+      "file": "result/state-rights/sql-ordinary-State.json",
+      "sha256": "550c1cc67e2c1b1ad8748086ee367fd311c76a5416ec6488daa3c864051ef36d"
+    },
+    {
+      "file": "result/state-rights/sql-real.json",
+      "sha256": "5a3745f56bad40a22b6bc98fc484d843237b8c7bc34c1351b505622cb7bbf72e"
+    },
+    {
+      "file": "result/state-rights/state-memory.json",
+      "sha256": "8165c46c258408505e236c378e797e93efea0f7ee76887029bbf5a51d4639e22"
+    },
+    {
+      "file": "result/state-rights/yaml-validation-final.json",
+      "sha256": "26e26f29a92aad17ecfe0891d3180ad7e6fb25a24da556c19dbbbeac02c771e8"
+    },
+    {
+      "file": "result/state-rights/yaml-validation.json",
+      "sha256": "2f5e7180f997227da6438e587580ad0b16dcc4b6e79c6026ac91d401d35acec1"
+    }
+  ],
+  "localExclusions": [
+    "full discovery",
+    "303 forms",
+    "44 previous roots",
+    "four archive validation passes",
+    "full regression suite",
+    "nightly execution",
+    "native platform XBQL compilation",
+    "native authentication/ACL/RLS",
+    "additional hierarchy tables",
+    "nullable or multi-level correlated captures",
+    "correlated IN",
+    "DML with joined sources/default declarations",
+    "custom data-source providers"
+  ],
+  "preserved": [
+    "four archives and SHA-256",
+    "previous assignment expected",
+    "runtime/input limits",
+    "CI schedule"
+  ]
+}

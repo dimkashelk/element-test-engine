@@ -1,0 +1,57 @@
+{
+  "version": "9.3",
+  "readDate": "2026-10-05",
+  "access": "authenticated in-app browser, read only",
+  "executorVersion": "10.0.2-1",
+  "executionCompatibilityVersion": "current",
+  "sourceVersions": [
+    "9.0"
+  ],
+  "sources": [
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/between-expression/",
+      "contract": "inclusive bounds, equivalent to >= AND <="
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/like-expression/",
+      "contract": "case-insensitive; %, _, nonempty [] and [^]; escape defaults to backslash; pattern/escape are constants or parameters; invalid masks fail"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/exists-expression/",
+      "contract": "true iff a SELECT returns at least one row; correlated example"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/is-distinct-from-expression/",
+      "contract": "two-valued comparison including NULL and heterogeneous literals"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/in-hierarchy-expression/",
+      "contract": "self or any ancestor matches; NULL propagates; default hierarchy determined by reference metadata"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/hierarchical-catalog/",
+      "contract": "Иерархический supplies Родитель: Catalog.Ссылка?; hierarchy query tables readable by all"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/insert-statement/",
+      "contract": "temporary tables only; values/SELECT; positional columns; single affected-count row"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/update-statement/",
+      "contract": "temporary tables only; unique assignments; WHERE; affected-count row"
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/delete-statement/",
+      "contract": "temporary tables only; WHERE; affected-count row"
+    }
+  ],
+  "adapter": "typed executor AST; native XBQL unavailable; queryAccess is explicit executor-fixture read policy, not native ACL/RLS",
+  "unavailable": [
+    "additional hierarchy tables",
+    "nullable correlated outer fields",
+    "correlated IN",
+    "DML joins/using and default declarations",
+    "native permissions and ACL handlers",
+    "custom data sources"
+  ]
+}

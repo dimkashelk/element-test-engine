@@ -47,6 +47,7 @@ class RelationalQuery:
     having: tuple = ()
     distinct: bool = False
     subqueries: tuple = ()
+    outer_parameters: tuple = ()
 
     def to_dict(self):
         return asdict(self)
@@ -281,6 +282,7 @@ class Parser:
         projections=[]
         while True:
             e=self.condition(); label=self.identifier() if self.accept('КАК') else e.name or (e.value[0] if e.kind=='aggregate' else '')
+            if not label and getattr(self,'cardinality_only',False):label='Колонка'+str(len(projections)+1)
             if not label: self.fail('Вычисляемая проекция требует псевдоним',e.range[0] if e.range else 0)
             if label in [x[1] for x in projections]: self.fail('Повторяющийся псевдоним проекции: '+label)
             projections.append((e,label))
@@ -400,6 +402,14 @@ def generate_relational_query(query, contracts):
     if needs_context(query):text+='    знч Контекст: Соответствие<Строка, Строка>\n'
     text+=public[decl_end:]
     text+='    @Глобально\n    метод ВыполнитьВнутренне(): Массив<'+row_type+'>\n'
+    from .query_projections import walk
+    expressions=[*(e for e,_ in query.projections),*query.predicates,*query.having,*(j.condition for j in query.joins)]
+    patterns=[node for e in expressions for node in walk(e) if node.kind=='like']
+    if patterns:
+        from .query_predicates import LIKE_MODULE
+        contracts.definitions.setdefault('ТестШаблоны',LIKE_MODULE)
+        for i,node in enumerate(patterns):
+            text+='        знч ПроверкаШаблона'+str(i)+' = ТестШаблоны.Совпадает("", '+', '.join(renderer.value(c) for c in node.children[1:])+')\n'
     for i in range(len(names)):text+='        знч Т'+str(i)+' = И'+str(i)+('.ВыполнитьВнутренне()\n' if internal(query.sources[i]) else '.Выполнить()\n')
     text+='        пер Строки = новый Массив<Комбинация>()\n        для Исходная из Т0\n            Строки.Добавить(новый Комбинация(С0 = Исходная))\n        ;\n'
     for j in query.joins:
@@ -441,5 +451,7 @@ def generate_relational_query(query, contracts):
     text+=''.join(t for _,t in renderer.helpers.values())
     contracts.definitions[name]=text
     contracts.method_dependencies[name]=[n+'.Запрос' for n in names]+[e.type for e,_ in query.projections]+[generate_query(s,contracts)+'.Запрос' for s in query.subqueries]
+    if 'ТестШаблоны.' in text:
+        contracts.method_dependencies[name].append('ТестШаблоны.Совпадает')
     if query.fill:contracts.method_dependencies[name].append(query.fill['type'])
     return name

@@ -61,6 +61,8 @@ def generate_query(query, contracts):
     if sliced:
         text += '    знч Граница: '+period_type+'\n'
     text += '    @Глобально\n    метод Выполнить(): Массив<' + row_type + '>\n'
+    from .query_access import access_guard, row_guard
+    text += access_guard(query,contracts)
     text += ('        знч Строки = новый Массив<Данные>()\n'
              '        знч Состояние = ТестСессия.ЧитатьВсе()\n'
              '        если Состояние.СодержитКлюч(' + contracts.literal(query.owner,'Строка') + ')\n'
@@ -71,6 +73,7 @@ def generate_query(query, contracts):
         text += '                для ЗначениеСтроки из (Значение как Массив<Объект?>)\n                    знч Снимок = ЗначениеСтроки как Соответствие<Строка, Объект?>\n'
     else:
         text += '                знч Снимок = Значение как Соответствие<Строка, Объект?>\n'
+    text += row_guard(query,contracts)
     projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': Снимок[' + contracts.literal(f.name,'Строка') + ']'
                               for f in required.values()) + '}'
     text += ('                знч Проекция = СериализацияJson.ЗаписатьОбъект(' + projected + ')\n'
@@ -137,6 +140,8 @@ def generate_query(query, contracts):
     text += '@Глобально\nметод Создать(' + signature + '): Запрос\n' + prelude + '    возврат новый Запрос(' + ', '.join(args) + ')\n;\n'
     contracts.definitions[name] = text
     contracts.method_dependencies[name] = ['ТестСессия.Записи'] + [f.type for f in required.values()]
+    if 'ТестДоступ.' in text:
+        contracts.method_dependencies[name].append('ТестДоступ.Проверить')
     if query.fill:
         contracts.method_dependencies[name].append(row_type)
     return name
@@ -229,6 +234,7 @@ def bind_queries(plan):
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
                 'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else query_name(query) + '.СтрокаРезультата',
                 'resultContract': 'single-pass-044' if c.query_results else 'materialized-array',
+                'accessContract': 'executor-fixture-045' if hasattr(c,'query_access') else 'unrestricted-executor-no-native-ACL',
                 'backend': plan.storage.config.get('backend','memory'),
                 'limitations': (['implicit-execute-local-temporary-scope', 'last-statement-result', 'validated-index-hints', 'native-XBQL-unavailable'] if query.mode == 'storage-unions-nesting-v1' or query.source_kind in ('union','batch') else ['metadata-derived-virtual-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
                                 if query.source_kind == 'relational' else ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']) + ['native-XBQL-and-access-rights-unavailable', 'no-exchange-change-lifecycle', 'no-virtual-source-filter-or-period-expansion']})

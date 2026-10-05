@@ -506,6 +506,8 @@ def bind_types(plan):
                     c.fields[alias] = []
     from .query_context import prepare_query_context
     prepare_query_context(plan, c)
+    from .query_access import prepare_query_access
+    prepare_query_access(plan, c)
     mocks = plan.check.get('mocks', {})
     if set(mocks) - {'objects', 'registers', 'queries'}:
         raise InvalidTestError('Поддерживаются mocks.objects, mocks.registers, mocks.queries')

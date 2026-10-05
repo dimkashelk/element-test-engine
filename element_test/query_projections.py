@@ -119,6 +119,9 @@ class ComputedParser(Parser):
         # IN lists are needed by real grouped task queries; no subquery rewrite.
         e = super().comparison()
         negative = self.accept('НЕ')
+        from .query_predicates import comparison_suffix
+        extended = comparison_suffix(self, e, negative)
+        if extended is not None: return extended
         if self.accept('В'):
             self.expect('('); items = []
             while True:
@@ -131,6 +134,9 @@ class ComputedParser(Parser):
         return e
 
     def bind(self, e, visible, expected=None):
+        from .query_predicates import bind_predicate
+        extended = bind_predicate(self, e, visible, expected)
+        if extended is not None: return extended
         if e.kind=='method':
             owner,args,result=METHODS[e.name];base=self.bind(e.children[0],visible,owner)
             if base.type.rstrip('?')!=owner or (len(args)!=len(e.children)-1 and not (e.name=='Подстрока' and len(e.children)==2)):self.fail('Несовместимая сигнатура '+e.name,e.range[0])
@@ -227,7 +233,7 @@ class ExpressionRenderer:
         if e.kind=='null':return 'Истина'
         if e.kind=='aggregate':return self.value(e,row,group)+' == Неопределено' if e.value[0]!='КОЛИЧЕСТВО' else 'Ложь'
         if e.kind=='coalesce':return '('+self.null(e.children[0],row,group)+') и ('+self.null(e.children[1],row,group)+')'
-        if e.kind in ('compare','and','or','not','in','in-query','in-array'):return self.tri(e,row,group)+' == -1'
+        if e.kind in ('compare','and','or','not','in','in-query','in-array','like','distinct','exists-query','hierarchy'):return self.tri(e,row,group)+' == -1'
         if e.kind=='case':
             result=self.null(e.children[-1],row,group)
             for i in reversed(range(0,len(e.children)-1,2)):
@@ -274,6 +280,9 @@ class ExpressionRenderer:
         return '('+self.tri(e,row,group)+' == 1)'
 
     def tri(self,e,row='С',group='Группа'):
+        from .query_predicates import render_predicate
+        extended = render_predicate(self,e,row,group)
+        if extended is not None: return extended
         if e.kind=='in-array':
             left,array=e.children
             return '('+self.null(left,row,group)+' ? -1 : ('+self.value(array,row,group)+'.Содержит('+self.value(left,row,group)+') ? 1 : 0))'
