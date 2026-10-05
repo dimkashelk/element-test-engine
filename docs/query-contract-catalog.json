@@ -6023,19 +6023,318 @@
       "target": null,
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "exact-external-query-through-api",
+        "element-reference-9.3",
+        "script-current",
+        "native-report-lifecycle-unavailable"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: Продажи",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "Пресейл::Продажи",
+        "alias": "Продажи",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Направления.Ссылка?",
+              "name": "Направление",
+              "source": 0,
+              "value": [
+                "Направление"
+              ],
+              "children": [],
+              "range": [
+                12,
+                23
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Направление"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Услуги.Ссылка?",
+              "name": "Услуга",
+              "source": 0,
+              "value": [
+                "Услуга"
+              ],
+              "children": [],
+              "range": [
+                45,
+                51
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Услуга"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "СуммаОборот",
+              "source": 0,
+              "value": [
+                "СуммаОборот"
+              ],
+              "children": [],
+              "range": [
+                68,
+                79
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Сумма"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "НачалоПериода",
+            "start": 114,
+            "end": 127,
+            "type": "ДатаВремя?",
+            "slot": 0
+          },
+          {
+            "expression": "КонецПериода",
+            "start": 130,
+            "end": 142,
+            "type": "ДатаВремя?",
+            "slot": 1
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Пресейл::Продажи",
+            "alias": "Продажи",
+            "projections": [
+              [
+                {
+                  "owner": "Пресейл::Продажи",
+                  "name": "Направление",
+                  "type": "Направления.Ссылка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Направление"
+              ],
+              [
+                {
+                  "owner": "Пресейл::Продажи",
+                  "name": "Услуга",
+                  "type": "Услуги.Ссылка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Услуга"
+              ],
+              [
+                {
+                  "owner": "Пресейл::Продажи",
+                  "name": "СуммаОборот",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "СуммаОборот"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [
+              {
+                "expression": "НачалоПериода",
+                "start": 114,
+                "end": 127,
+                "type": "ДатаВремя?",
+                "slot": 0
+              },
+              {
+                "expression": "КонецПериода",
+                "start": 130,
+                "end": 142,
+                "type": "ДатаВремя?",
+                "slot": 1
+              }
+            ],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-virtual-sources-v1",
+            "source_kind": "turnover",
+            "periodicity": null,
+            "dimensions": [
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Направление",
+                "type": "Направления.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Услуга",
+                "type": "Услуги.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Клиент",
+                "type": "Клиенты.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Регион",
+                "type": "Регионы.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Менеджер",
+                "type": "Сотрудники.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "period_slot": 0,
+            "period_range": [
+              112,
+              143
+            ],
+            "source_range": [
+              97,
+              143
+            ],
+            "source_name": "Продажи",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Направление",
+                "type": "Направления.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Услуга",
+                "type": "Услуги.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Клиент",
+                "type": "Клиенты.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Регион",
+                "type": "Регионы.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Менеджер",
+                "type": "Сотрудники.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "КоличествоОборот",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "СуммаОборот",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "member": "Обороты",
+            "resources": [
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Количество",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Продажи",
+                "name": "Сумма",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "register_kind": "Обороты",
+            "end_slot": 1,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "unsupportedReason": null,
       "nextStage": "043-virtual-tables",
-      "criteria": [],
-      "evidence": [],
+      "criteria": [
+        {
+          "criterionId": "external-0",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-043-completion-query-api",
+          "sourceHash": "6e96eb039aa3d61f419f2b494bbff9f584ccf2028319df5c8657086a1f004a42",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "range": [
+            0,
+            143
+          ],
+          "executionProjectSourceHash": "55127e2860ea4f0f32f614e2fb295a85dcdf9471353d82438c4bdfd5a1ca9270",
+          "wrapperSourceHash": "464992b10633f0b5b35c5b1b56acb818de598f0eefbe778c92a6894cbdc8b535",
+          "mode": "exact-external-query-through-api",
+          "nativeReportLifecycle": false,
+          "sourceFile": "Пресейл/ОтчетОПродажах.xbql"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables-completion/assessment-external-0.json",
+        "result/virtual-tables-completion/external-0.json"
+      ],
       "apiBinding": null,
       "reference043": {
         "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
@@ -20800,19 +21099,233 @@
       "target": null,
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "exact-external-query-through-api",
+        "element-reference-9.3",
+        "script-current",
+        "native-report-lifecycle-unavailable"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: Продажи",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "РегистрНакопленияОборотов::Продажи",
+        "alias": "Продажи",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "ТестТип0c30ce3b5b8a73cf.Ссылка?",
+              "name": "Организация",
+              "source": 0,
+              "value": [
+                "Организация"
+              ],
+              "children": [],
+              "range": [
+                12,
+                23
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Организация"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "СуммаОборот",
+              "source": 0,
+              "value": [
+                "СуммаОборот"
+              ],
+              "children": [],
+              "range": [
+                29,
+                40
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "СуммаОборот"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "НачалоПериода",
+            "start": 65,
+            "end": 78,
+            "type": "ДатаВремя?",
+            "slot": 0
+          },
+          {
+            "expression": "КонецПериода",
+            "start": 81,
+            "end": 93,
+            "type": "ДатаВремя?",
+            "slot": 1
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "РегистрНакопленияОборотов::Продажи",
+            "alias": "Продажи",
+            "projections": [
+              [
+                {
+                  "owner": "РегистрНакопленияОборотов::Продажи",
+                  "name": "Организация",
+                  "type": "ТестТип0c30ce3b5b8a73cf.Ссылка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Организация"
+              ],
+              [
+                {
+                  "owner": "РегистрНакопленияОборотов::Продажи",
+                  "name": "СуммаОборот",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "СуммаОборот"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [
+              {
+                "expression": "НачалоПериода",
+                "start": 65,
+                "end": 78,
+                "type": "ДатаВремя?",
+                "slot": 0
+              },
+              {
+                "expression": "КонецПериода",
+                "start": 81,
+                "end": 93,
+                "type": "ДатаВремя?",
+                "slot": 1
+              }
+            ],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-virtual-sources-v1",
+            "source_kind": "turnover",
+            "periodicity": null,
+            "dimensions": [
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "Номенклатура",
+                "type": "ТестТип20312e5b840e0a7f.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "Организация",
+                "type": "ТестТип0c30ce3b5b8a73cf.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "period_slot": 0,
+            "period_range": [
+              63,
+              94
+            ],
+            "source_range": [
+              48,
+              94
+            ],
+            "source_name": "Продажи",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "Номенклатура",
+                "type": "ТестТип20312e5b840e0a7f.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "Организация",
+                "type": "ТестТип0c30ce3b5b8a73cf.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "СуммаОборот",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "member": "Обороты",
+            "resources": [
+              {
+                "owner": "РегистрНакопленияОборотов::Продажи",
+                "name": "Сумма",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "register_kind": "Обороты",
+            "end_slot": 1,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "unsupportedReason": null,
       "nextStage": "043-virtual-tables",
-      "criteria": [],
-      "evidence": [],
+      "criteria": [
+        {
+          "criterionId": "external-1",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-043-completion-query-api",
+          "sourceHash": "9504c89c2a1db5ff881fd8a603ea87ecf4f21d0efd21288a412d0a82dcfa9008",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "range": [
+            0,
+            99
+          ],
+          "executionProjectSourceHash": "6ed1bf2842029048518e06f5659800d9ad8fd38d9ea7319bfd32a1cce67a56fe",
+          "wrapperSourceHash": "cbaa3d9dc276d15142cf782f088eac85890d33411f8ebd2e863b6ed1c4a1abb5",
+          "mode": "exact-external-query-through-api",
+          "nativeReportLifecycle": false,
+          "sourceFile": "РегистрНакопленияОборотов/ПродажиПоОрганизациям.xbql"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables-completion/assessment-external-1.json",
+        "result/virtual-tables-completion/external-1.json"
+      ],
       "apiBinding": null,
       "reference043": {
         "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
@@ -20916,19 +21429,323 @@
       "target": null,
       "dependencies": [],
       "semantics": [
-        "query-reference-9.1"
+        "exact-external-query-through-api",
+        "element-reference-9.3",
+        "script-current",
+        "native-report-lifecycle-unavailable"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "ast": null,
-      "unsupportedReason": "Источник запроса отсутствует, неоднозначен или вне контракта: ОстаткиНоменклатуры",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+        "alias": "ОстаткиНоменклатурыОстатки",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "ТестТипcfdd0739acb6408a.Ссылка?",
+              "name": "Номенклатура",
+              "source": 0,
+              "value": [
+                "ОстаткиНоменклатурыОстатки",
+                "Номенклатура"
+              ],
+              "children": [],
+              "range": [
+                12,
+                51
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Номенклатура"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "ТестТип593d704a3f771729.Ссылка?",
+              "name": "Склад",
+              "source": 0,
+              "value": [
+                "ОстаткиНоменклатурыОстатки",
+                "Склад"
+              ],
+              "children": [],
+              "range": [
+                74,
+                106
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Склад"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "КоличествоОстаток",
+              "source": 0,
+              "value": [
+                "ОстаткиНоменклатурыОстатки",
+                "КоличествоОстаток"
+              ],
+              "children": [],
+              "range": [
+                122,
+                166
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "КоличествоОстаток"
+          ],
+          [
+            {
+              "kind": "field",
+              "type": "Число",
+              "name": "СуммаОстаток",
+              "source": 0,
+              "value": [
+                "ОстаткиНоменклатурыОстатки",
+                "СуммаОстаток"
+              ],
+              "children": [],
+              "range": [
+                194,
+                233
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "СуммаОстаток"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "ДатаОстатков",
+            "start": 287,
+            "end": 299,
+            "type": "ДатаВремя?",
+            "slot": 0
+          }
+        ],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+            "alias": "ОстаткиНоменклатурыОстатки",
+            "projections": [
+              [
+                {
+                  "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                  "name": "Номенклатура",
+                  "type": "ТестТипcfdd0739acb6408a.Ссылка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Номенклатура"
+              ],
+              [
+                {
+                  "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                  "name": "Склад",
+                  "type": "ТестТип593d704a3f771729.Ссылка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Склад"
+              ],
+              [
+                {
+                  "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                  "name": "КоличествоОстаток",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "КоличествоОстаток"
+              ],
+              [
+                {
+                  "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                  "name": "СуммаОстаток",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "СуммаОстаток"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [
+              {
+                "expression": "ДатаОстатков",
+                "start": 287,
+                "end": 299,
+                "type": "ДатаВремя?",
+                "slot": 0
+              }
+            ],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-virtual-sources-v1",
+            "source_kind": "balance",
+            "periodicity": null,
+            "dimensions": [
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Номенклатура",
+                "type": "ТестТипcfdd0739acb6408a.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Склад",
+                "type": "ТестТип593d704a3f771729.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "period_slot": 0,
+            "period_range": [
+              285,
+              300
+            ],
+            "source_range": [
+              258,
+              300
+            ],
+            "source_name": "ОстаткиНоменклатуры",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Номенклатура",
+                "type": "ТестТипcfdd0739acb6408a.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Склад",
+                "type": "ТестТип593d704a3f771729.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "КоличествоОстаток",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "КоличествоОстатокПоложительный",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "КоличествоОстатокОтрицательный",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "СуммаОстаток",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "СуммаОстатокПоложительный",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "СуммаОстатокОтрицательный",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "member": "Остатки",
+            "resources": [
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Количество",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "РегистрНакопленияОстатков::ОстаткиНоменклатуры",
+                "name": "Сумма",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              }
+            ],
+            "register_kind": "Остатки",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-projections-aggregates-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "unsupportedReason": null,
       "nextStage": "043-virtual-tables",
-      "criteria": [],
-      "evidence": [],
+      "criteria": [
+        {
+          "criterionId": "external-2",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-043-completion-query-api",
+          "sourceHash": "1d898f484db178bd06b6859aa7a18b8895361ae38331b6ce5b806a8c19ba21e4",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "range": [
+            0,
+            331
+          ],
+          "executionProjectSourceHash": "80591a64fedf5379e13d732e37192ed7061f2fadf2ed00eb55667e05ad386da9",
+          "wrapperSourceHash": "d25b9cb672c2f022bae5d9b9d2db0a746fd258b42aa72f7046ccc46a7b798645",
+          "mode": "exact-external-query-through-api",
+          "nativeReportLifecycle": false,
+          "sourceFile": "РегистрНакопленияОстатков/ОстаткиТоваровНаСкладах.xbql"
+        }
+      ],
+      "evidence": [
+        "result/virtual-tables-completion/assessment-external-2.json",
+        "result/virtual-tables-completion/external-2.json"
+      ],
       "apiBinding": null,
       "reference043": {
         "inventory": "tests/corpus/virtual-tables/reference-9.3.json",
@@ -60263,7 +61080,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence; only no-parameter non-null saved definitions are supported",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; portable family tests do not assess this inventory occurrence",
       "nextStage": "043-virtual-tables",
       "criteria": [],
       "evidence": [],

@@ -31,8 +31,8 @@ class SourcePlanTest(unittest.TestCase):
  def test_invalid_sources_fields_periods_shadowing_and_saved_cycles(self):
   c=ProjectTypes(analyze(CORPUS/'ordinary'),'Entry');c.rename_collisions=True;c.query_root=CORPUS/'ordinary'
   bad=['ВЫБРАТЬ TotalОстаток ИЗ Data::Sales.Остатки','ВЫБРАТЬ TotalПриход ИЗ Data::Sales.Обороты','ВЫБРАТЬ Период ИЗ Data::Plain.СрезПервых()',
-       'ВЫБРАТЬ Элемент ИЗ Data::Item.Key','ВЫБРАТЬ Ссылка ИЗ Data::Item.Rows','ВЫБРАТЬ Total ИЗ Data::Ledger.Остатки','ВЫБРАТЬ TotalОстаток ИЗ Data::Ledger.Остатки(%D, Key == %K)',
-       'ВЫБРАТЬ Период ИЗ Data::Ledger.Обороты(%S, %E, ПериодичностьИтоговРегистраНакопления.Месяц)','ВЫБРАТЬ Администратор ИЗ Пользователи',
+       'ВЫБРАТЬ Элемент ИЗ Data::Item.Key','ВЫБРАТЬ Ссылка ИЗ Data::Item.Rows','ВЫБРАТЬ Total ИЗ Data::Ledger.Остатки','ВЫБРАТЬ TotalОстаток ИЗ Data::Ledger.Остатки(%D, Total == %K)',
+       'ВЫБРАТЬ Период ИЗ Data::Ledger.Обороты(%S, %E, ПериодичностьИтоговРегистраНакопления.Период)','ВЫБРАТЬ Администратор ИЗ Пользователи',
        'ВЫБРАТЬ Ключ ИЗ НеудаленныеОбъекты']
   for query in bad:
    with self.subTest(query=query),self.assertRaises(InputError):parse_storage_query(query,c)

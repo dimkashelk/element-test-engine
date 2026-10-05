@@ -1,0 +1,730 @@
+{
+  "stage": "043-completion",
+  "date": "2026-10-05",
+  "status": "executor-expanded-native-acceptance-unavailable",
+  "referenceVersion": "9.3",
+  "executorVersion": "10.0.2-1",
+  "compatibility": "current",
+  "targetedTests": {
+    "count": 44,
+    "status": "PASS",
+    "methods": [
+      "test_query_composites.CompositeEdgeTest.test_hidden_null_column_collision_and_nullable_alias_comparison",
+      "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices",
+      "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded",
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots",
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit",
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage",
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers",
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order",
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable",
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers",
+      "test_query_results.ResultPlanTest.test_dynamic_original_text_and_deferred_bindings",
+      "test_query_results.ResultPlanTest.test_local_project_constructor_spelling_is_excluded",
+      "test_query_results.ResultPlanTest.test_produced_nominal_rows_constructor_mapping_ranges_no_answers",
+      "test_query_results.ResultPlanTest.test_shadowing_reassignment_visibility_generated_public_constructor",
+      "test_query_results.ResultPlanTest.test_unrelated_project_execute_and_parameter_methods_are_not_query_api",
+      "test_query_sources.SourceDockerTest.test_empty_sources_boundaries_and_post_selection_filter",
+      "test_query_sources.SourceDockerTest.test_exact_review_templates_independent_assessment",
+      "test_query_sources.SourceDockerTest.test_multiple_dimensions_resources_and_raw_inactive_rows",
+      "test_query_sources.SourceDockerTest.test_mutations_alternative_infrastructure_failure_and_recovery",
+      "test_query_sources.SourceDockerTest.test_real_direct_root_in_unchanged_archive",
+      "test_query_sources.SourceDockerTest.test_scalar_and_array_in_capture_detached_at_creation",
+      "test_query_sources.SourceDockerTest.test_two_portable_projects_semantics_in_script",
+      "test_query_sources.SourcePlanTest.test_invalid_sources_fields_periods_shadowing_and_saved_cycles",
+      "test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded",
+      "test_query_sources.SourcePlanTest.test_system_fixture_validation_and_nominal_refs",
+      "test_query_sources.SourcePublicTest.test_public_real_test_run_and_fail_unsupported_pass",
+      "test_query_sources.SourcePublicTest.test_two_fresh_isolated_batches",
+      "test_query_sources.SourceRealSqlTest.test_real_direct_root_independent_sql_audit_and_cleanup",
+      "test_query_sources.SourceSqlTest.test_sources_repeat_snapshots_rollback_sql_audit_and_cleanup",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_auto_period_intersection_and_default_period_records_only",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_calendar_leap_day_boundaries_and_all_periods",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_combined_boundaries_records_only_and_hidden_filter_dimension",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_empty_histories_and_reversed_interval",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_moment_history_and_next_period_maximum",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_mutations_are_sbsl_fail_and_alternative_pass",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_portable_arguments_filters_periods_and_saved_bindings",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_public_test_run_two_isolated_batches_and_unavailable_points",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_saved_null_flags_and_undefined_remain_distinct",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_source_array_capture_and_like",
+      "test_virtual_extensions.VirtualArgumentsDockerTest.test_three_exact_external_archive_queries_with_api_bindings",
+      "test_virtual_extensions.VirtualArgumentsPlanTest.test_ast_types_ranges_and_independent_oracle",
+      "test_virtual_extensions.VirtualArgumentsPlanTest.test_invalid_filter_fields_argument_counts_and_enums",
+      "test_virtual_extensions.VirtualArgumentsPlanTest.test_saved_missing_wrong_declarations_and_cycles",
+      "test_virtual_extensions.VirtualArgumentsSqlTest.test_filter_calendar_and_parameterized_source_sql_audit"
+    ],
+    "logs": [
+      {
+        "file": "result/virtual-tables-completion/affected-regression.log",
+        "sha256": "92768249423fb6d64a02e75d8a71a781e4b05abd3a55a4758fc46d74af6a38bb"
+      },
+      {
+        "file": "result/virtual-tables-completion/plan-regression.log",
+        "sha256": "48d5219399d283dbf19b3f70d6e1b967a55ab299cb87b6b282b1a4d7d1202bcf"
+      },
+      {
+        "file": "result/virtual-tables-completion/final-runtime.log",
+        "sha256": "8714c4103e6729b4a61ee62b6d6e62cc3ae523b6ce9282861bb35b798ff106ad"
+      },
+      {
+        "file": "result/virtual-tables-completion/final-repeat.log",
+        "sha256": "afcd04b96b0cd49e23a491fa5138aa9defbf8d8d216a38f96d2e8b54ade4c46d"
+      }
+    ]
+  },
+  "catalogCounts": {
+    "parsed": 8,
+    "planned": 8,
+    "executed": 8,
+    "independentlyAssessed": 8
+  },
+  "freshExactExternalQueryIds": [
+    "query-a7d986aa3a553c1ee0983d93",
+    "query-a92a4816e7813359a23de063",
+    "query-d95db0d96373e442ed86bd7b"
+  ],
+  "batches": [
+    {
+      "folder": "result/virtual-tables-completion/new-batch-1",
+      "scores": [
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "folder": "result/virtual-tables-completion/new-batch-2",
+      "scores": [
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "folder": "result/virtual-tables-completion/previous-contracts/batch-1-repeat-1",
+      "scores": [
+        3,
+        0,
+        3
+      ]
+    },
+    {
+      "folder": "result/virtual-tables-completion/previous-contracts/batch-2",
+      "scores": [
+        3,
+        0,
+        3
+      ]
+    }
+  ],
+  "schemaValidation": {
+    "status": "PASS",
+    "validatedArtifacts": 91
+  },
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true
+    }
+  ],
+  "nativeHistoryLimits": {
+    "momentMaximum": "4000-01-01T17:59:59.999Z",
+    "dateMaximum": "9999-12-31",
+    "dateTimeMaximum": "9999-12-31T23:59:59.999"
+  },
+  "evidence": [
+    {
+      "file": "result/virtual-tables-completion/assessment-alternative.json",
+      "sha256": "c6b2ac3ad3be63e5515492f91f6cd8a0bca30c8e07a88dc828bb3abbcc53bfb3"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-auto-intersection.json",
+      "sha256": "d30309c3f851249460ad298315dd3b276f11a13994e53c0f970119647c981ac8"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-boundary-periods.json",
+      "sha256": "5b171e674908fc1a56e8c1a0e1bc3d1c2e41cec8d23e2954ffad81c66adbccef"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-default-combined-reversed.json",
+      "sha256": "d30309c3f851249460ad298315dd3b276f11a13994e53c0f970119647c981ac8"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-empty-BoundSaved.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-empty-Days.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-empty-Filter.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-empty-Monthly.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-external-0.json",
+      "sha256": "4952202f38a65c39dbc44e69ba8b718e19aa3f4f5f25e0b679ca242ba1154417"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-external-1.json",
+      "sha256": "9fa4d4a0650846afe81b1745bb23d0971d17ac5deed2ee2360cbdd398dc53815"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-external-2.json",
+      "sha256": "873d131bd7a782bab9794146dca58d7ddb17ccf04b9ea810835ae70a17001000"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-hidden-filter.json",
+      "sha256": "5b171e674908fc1a56e8c1a0e1bc3d1c2e41cec8d23e2954ffad81c66adbccef"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-leap-calendar.json",
+      "sha256": "dd57ebdf0f128e4bcb9dbd50d8f9d8be2824284d0ecb2698abae794a6792a31e"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-moment-next-maximum.json",
+      "sha256": "5ec7b8196773d833d795fd13abddcbfdcc821acf2c06e546d52287e7f2fda0a5"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Auto.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-BoundSaved.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Calendar.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Days.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Filter.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Joined.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Monthly.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-NextPeriod.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-ordinary-Records.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-records-only.json",
+      "sha256": "5b171e674908fc1a56e8c1a0e1bc3d1c2e41cec8d23e2954ffad81c66adbccef"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Auto.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-BoundSaved.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Calendar.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Days.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Filter.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Joined.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Monthly.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-NextPeriod.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-renamed-Records.json",
+      "sha256": "1898ca62d3b330830aad18ee4303fd08cb45447d51598092770a1bd4064ee279"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-reversed.json",
+      "sha256": "e69e38c1aaa8e335bf5db77b67a1e92b15909d9c925b16626f5a57f7232aabf2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-saved-null.json",
+      "sha256": "ce2073a33ea1fb71bd35dabd94242875fe18bb5397a83df0c706f0a023bd96bc"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-saved-undefined.json",
+      "sha256": "ce2073a33ea1fb71bd35dabd94242875fe18bb5397a83df0c706f0a023bd96bc"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-source-array-capture.json",
+      "sha256": "f39b43b4c79863829bc41404f90e6bff7836179794b9c92c2296dba0d0d911d2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-source-like.json",
+      "sha256": "f39b43b4c79863829bc41404f90e6bff7836179794b9c92c2296dba0d0d911d2"
+    },
+    {
+      "file": "result/virtual-tables-completion/assessment-whole-period-records-only.json",
+      "sha256": "d30309c3f851249460ad298315dd3b276f11a13994e53c0f970119647c981ac8"
+    },
+    {
+      "file": "result/virtual-tables-completion/mutation-assessment-Days.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/mutation-assessment-Filter.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/native-history-limits.json",
+      "sha256": "e96b19f1b6be185b28b1199de254c2b4b57ba8c23ac6d2cb370c5e0073572975"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-alternative.json",
+      "sha256": "07d0e9fce1f3805b96de7cb9c025ffce51553f1df9ecd425ad64564a71f05337"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-0.json",
+      "sha256": "84718f5d2f0b0b1cf0b41e2d813ca4285fde173677d06fd72a2518ee8444885b"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-1.json",
+      "sha256": "712b67d3d5012dc8826119653063f665cd678ef215f9b5a03caa7373b02ecddd"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-2.json",
+      "sha256": "8f9fb2a97e0b3bc50e375577a06ebb44893f2e7beff53e0fdcac8aa9e00629dc"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-3.json",
+      "sha256": "1d6d4ed5888f059a8a9b123c3733f98f5fae5580d2a3953f674112644a296406"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-4.json",
+      "sha256": "d61e15841ce73af850a671f498f7d881870a4e787857fea75b71b32137387bbe"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-boundary-5.json",
+      "sha256": "1494db639c3258bfb55d0230e623adcde60dcafd07faa3ffc485f2ac36a80c36"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-captured-array.json",
+      "sha256": "0d02d308eb8d4e4daa217389e2852fc1d8eef90c8ebc8084cb0700c704c98c51"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-documented-balances.json",
+      "sha256": "72f7a40c4c8ec48bf800c84b52bb1c9f9b41c13e18aa51a343f9e688f3b98647"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-documented-slice_first.json",
+      "sha256": "d3635820bc8180cb09d2ba7f4dbfe2dce050abdf9907822be95cf541336b164d"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-documented-slice_last.json",
+      "sha256": "d2310ce0637b434c2fec9e96a97efd932babb0c106960653f1d1cfaf7613889f"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-documented-turnovers.json",
+      "sha256": "c4e9572850e5d1e2b25cad0619a541e6365688571a384db53bda6ce856c32249"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Balance.json",
+      "sha256": "33e2b3b9c328fbdc80fee6c387c510ec535da6178a7c14003f83e92e435f68b6"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Combined.json",
+      "sha256": "3e970d93d82b018f49f2e9b9c893fb78ba56ed475c70f19b8323381c49725ec8"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-First.json",
+      "sha256": "d4362366311b3044adb3a7bde915b4f339f8c10239c9f2bda350a5052f41a29e"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Last.json",
+      "sha256": "4a35a93355ec4a06339627593f034740388c902ea0749a6cd98ab74bf94c1600"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Phones.json",
+      "sha256": "c47925ff89c05bacbc08251af2b40a36feadebd088d66daf2772726a4435dc5c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Plain.json",
+      "sha256": "0bd75327422f0552381deecf3ee684a268b2b47ac8e81b84db5efdbe309670c7"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Rows.json",
+      "sha256": "3edd378fa3edc15143f6dcfc9397c81049168a43daf4a5db00b3a1b595cdec67"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Sales.json",
+      "sha256": "851ef90d227a7fa5f8f4415cbd8dade99e3f03fd484d02a509220640bc1a00f7"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-empty-Turnover.json",
+      "sha256": "de446db7cbabeac49ccfed786113e957eed3df9a35cb488aa6742006deaa32da"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-infrastructure-recovery.json",
+      "sha256": "ce4f2607488b4a8d6da3a3eac7113573bf3c9677b1ad2fa5a186f7f890ae8712"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-mixed-capture-types.json",
+      "sha256": "89fd8f2108cb24e1c81f019f36f889067a08b255630402b27fb7af48f11f7fc6"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-multiple-dimensions-resources.json",
+      "sha256": "fbe0c1e4bb6c1adc6edee0fc5f01219283e437c14e96661b40105297d5d5d17f"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Balance.json",
+      "sha256": "8550d2bdca5e64ae162364e2dab685d0c4101ca035d8b2dcb0999ee9a2c375a4"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-BalanceAll.json",
+      "sha256": "f18bd19186174248635ab1476e3066e391620b16eb31e4ca0b0e13737d4b5f66"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Combined.json",
+      "sha256": "4280731be1b3c51936034212ffcece8477ce2aa3198786d41918e24d8daf1c84"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Constants.json",
+      "sha256": "70f8a18c94b745a6395d9dff0da650bc83c593198f78a56d1cb38a8c6ecfff8e"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-First.json",
+      "sha256": "146ecee497bc62b37f055f7ad04d6ab27e6101a06bf8f8e9bc6083ef78a849e8"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-FirstAll.json",
+      "sha256": "2b58f5f06ae89dfb290d45eaffab44b5717842e6862df559bce713bcca2fdb6c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Info.json",
+      "sha256": "2b4df55676131bf0a3abec4962f3ad17ae2212f74e2f9b9de37fe62ff6d4d349"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Join.json",
+      "sha256": "0e15c038915fd7f584923c5b16b4db7a99a6cc38eadabbf60f986e853d4cb15c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Last.json",
+      "sha256": "db19fe96a55467f22c0a51b0d94583694302a4c28ebedbc1de95422758d3ec80"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Nested.json",
+      "sha256": "5757a742343c238715e013036c2b9c9e4303ee29fdbb9653cbe6eec3bf6ea102"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Phones.json",
+      "sha256": "73284a1885e616583c53835a6d6f97835f0927165a5fd6c67b82cb562670d8e6"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Plain.json",
+      "sha256": "ae48137307ed5e5b8cf77158d7aef0c5b14f6a0bc25efd11730d2fb850bd04bb"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-PostFilter.json",
+      "sha256": "2688ef953aa064a0d5bb7e83efc89f0df342655cd73fe7b9dd3a5ad13684c45c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Rows.json",
+      "sha256": "469627db447495abaf48886ae634e6a2a3a43810830d8585efccd47fe499ae89"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Sales.json",
+      "sha256": "5cd211bba6cd80f5e55738b2032fa30f63fe67d07f29462efc2cfa5fd8336504"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Saved.json",
+      "sha256": "48275cece3da72a17566059ede279e0870f67151ad95afc64b1bdec1b4f7a837"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Seconds.json",
+      "sha256": "c343a99ac855abf67c050676bbb714c52885710d65c415c3a4a3a4c7f0ffee0b"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-SecondsFirst.json",
+      "sha256": "25f84694e69cf4c8e02143d1d0db4188c15853080b5c43d8212529f876933271"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-State.json",
+      "sha256": "78b423081f89d269bd39ab05d143ff98adb4ea6a3bc83f13419295463c3c6546"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Turnover.json",
+      "sha256": "c308d46efb576b232c2d22081e971aa3863684e72aea1f4ba5e7acca1172ac5d"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-TurnoverAll.json",
+      "sha256": "3d69d71f881e16d52ac900c67339e3308d6dad92b9496acbe118ea819163dd54"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Union.json",
+      "sha256": "305a2caa026a4eb54b94fbec52accb4105eef945e23a0506e72a3b1e300b89ce"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-ordinary-Users.json",
+      "sha256": "1a4c058569f78ab24c94492563e496d14cbad26eb33fbe8ec2b282e3db5de681"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-raw-inactive.json",
+      "sha256": "bbe3017b8ffc100f298f2ef325b5a8346d9baa127d25878249acdabc0cf1ddca"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Balance.json",
+      "sha256": "e8d9922a3ed31335a91ec3ced79e879db13a1950d9cd2db0a2f421e0d41d9095"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-BalanceAll.json",
+      "sha256": "e29147f5bc05af318c1db2724c149522335a38c3b93ca59bb271df1f889e0be0"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Combined.json",
+      "sha256": "a64eb68f17ed2be257b2230ae2e4247e44093a01d05a16b09ac9a66961bdd02f"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Constants.json",
+      "sha256": "2aeb880c0c488d4b5d5a3cd4d9e5b08fb94d311ee2e885dbcdc1e69dfc75fa40"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-First.json",
+      "sha256": "3331457ac72ccdf696f71d6a2d44d8ab10ad7a543de1b95c3184935013ee15d1"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-FirstAll.json",
+      "sha256": "e679a9a406baa849e10e103de39253f7a67c133b4cbabc76c9aeb8882663470c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Info.json",
+      "sha256": "b71457a36d9c4a7d8f04dae07a23f2212f6847eea965d348f86d50aaa5f1c8ef"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Join.json",
+      "sha256": "95efd1a4dbdc7a8d4fd4b8b3a6a1189688df162f29a6083d97d87e2c8a33c080"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Last.json",
+      "sha256": "68d759f4287bbb40d01d04ffab9f8c298722a2e37470e48f295928a3bf595e64"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Nested.json",
+      "sha256": "e029704c7742033b61984d9bf30adf7e2982e3f4896eda6d0ee1ae1cdd1ea5ec"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Phones.json",
+      "sha256": "666f64c1e26d399cc1fe4c8a0be85163c878f020235fa461d37699e3c6ef8031"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Plain.json",
+      "sha256": "fc8bb75f17c658f4d9d356e7850b1bc74cdfa537ff0d4ab2af6b9f62877b8650"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-PostFilter.json",
+      "sha256": "76929a07776ae4708730da1779ab1211d282a8baec2ce800cc915ca10eeae0db"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Rows.json",
+      "sha256": "ad0377e5c564ce10cfe948af1bd05c38c972c997ab83033e982bf23f1a128bae"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Sales.json",
+      "sha256": "1dc5263506930343f95d8230988d0fa3899f178df9fe1f478d73027ee42500a4"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Saved.json",
+      "sha256": "daf59ed5d17166750f1445526dc0ba50c92e02c8e3c80149740530db503113d0"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Seconds.json",
+      "sha256": "2b34a4ff8cf4de92402d3eb8fdf0d82c23f41e781e40646e1c6affd4e8236ac4"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-SecondsFirst.json",
+      "sha256": "a75031ee064bed431a349c189ff3e418d3561377e5848c65879e4ad324d04fbb"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-State.json",
+      "sha256": "1f2874a3750230bf71b949a59d90601450ad91ae90c6a6b304385e332f6ee0f7"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Turnover.json",
+      "sha256": "cb6acade26a07fe14d34761ccca64ac3fe6c1dc595aa153cc8526b383bde4f2d"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-TurnoverAll.json",
+      "sha256": "6403547b30712b5bdc6f8298a6a2c1883bcd203ac2119606e7a9a9f69fcf0a9e"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Union.json",
+      "sha256": "a2ac85db1eb2ff8a28c1240acea6b6eb61031281186a324ead246a482b56a00b"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-renamed-Users.json",
+      "sha256": "4f1126b272cc2c8c863f6ece8fddb1c98e8070becb9e9b1e609978dca67d78d3"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-scalar-expression-in.json",
+      "sha256": "4b9401dbf867ffac6c3376dd288a28c0091f3b99c8016794d640b1c62995b712"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-scalar-in.json",
+      "sha256": "344eeb5cf2d44cd67f8b89dd4f3b49767ce2a3cab9e19fbaa1a55b8e9f8eb6fc"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/assessment-scalar-literal-in.json",
+      "sha256": "73e55bd0231311a1c0b1e2fd3f2efa533a397ea9718b187599127211cf05c4aa"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-Balance.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-First.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-Nested.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-Phones.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-Rows.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/mutation-assessment-Turnover.json",
+      "sha256": "d60bbafefed806fb11403fad299f3b48183b7e785c311432f8f2f66f95e28967"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-ordinary-Balance.json",
+      "sha256": "99b18f743ab2a5cace6d7301820388ed4097c6af2a8dd2f4bb3e5c6a974d1bb7"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-ordinary-Combined.json",
+      "sha256": "36f44ad11c5086673138b64d5a1ceb797a86ced857a51c22cc9f9b7c6954eb86"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-ordinary-Rows.json",
+      "sha256": "978222647bae7f11efcb213744581f4996d7a46997a19b0956cf56cb5e65da9a"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-ordinary-State.json",
+      "sha256": "88c2b93b027145c8abcecc8df0b135a28fdc20680a70ae52f89d840186ff5bb7"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-real.json",
+      "sha256": "a425daceff18ae8b1975c2f845cce0996917b08daeec49a3347d05cd61c92772"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-renamed-Balance.json",
+      "sha256": "078cae541afaed90137c267a3724f293b6cb35d730e412c787647ac5088a3150"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-renamed-Combined.json",
+      "sha256": "9470b6747d1127ee70f607b2e2ed2e50237c3a55a673d927928454d29739289c"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-renamed-Rows.json",
+      "sha256": "bdd7a703f7ccc5fdd06e54fd040973a4d0308bad3e566536d49110948a4919c0"
+    },
+    {
+      "file": "result/virtual-tables-completion/previous-contracts/sql-renamed-State.json",
+      "sha256": "ec349c61b1c3b943a295c883f1eea7666ff78bd40a3da5af8bb5df8f05cd4911"
+    },
+    {
+      "file": "result/virtual-tables-completion/sql-BoundSaved.json",
+      "sha256": "caf8596e1c052977be2ec70341c8b04aae6f3e178996c91b388a5a8686def14e"
+    },
+    {
+      "file": "result/virtual-tables-completion/sql-Filter.json",
+      "sha256": "ac683a5f1c66f8744f8a619680072493c14d48c86b23560a8517db1a582595a9"
+    },
+    {
+      "file": "result/virtual-tables-completion/sql-Monthly.json",
+      "sha256": "140c8321640b0098f92b50b467c7b0c7e45e27d600bfb72af7d1157a1c3bf52b"
+    }
+  ],
+  "preservedFailures": [
+    {
+      "file": "result/virtual-tables-completion/first-runtime.log",
+      "sha256": "28b400ba1a3b9569c87bbb34914ccb32399c8ac584dbc0d973085dbb3a903bb2"
+    },
+    {
+      "file": "result/virtual-tables-completion/repeat-runtime.log",
+      "sha256": "94738b35d50cf81a4addbf2838964922c8f4f2b9573766829c9e81f2d8312d90"
+    },
+    {
+      "file": "result/virtual-tables-completion/extra-runtime.log",
+      "sha256": "78b0975258ecb6b2c46de96946794dd16779a961956511ef09de553f3aeeb48f"
+    },
+    {
+      "file": "result/virtual-tables-completion/affected-regression.log",
+      "sha256": "92768249423fb6d64a02e75d8a71a781e4b05abd3a55a4758fc46d74af6a38bb"
+    },
+    {
+      "file": "result/virtual-tables-completion/final-runtime.log",
+      "sha256": "8714c4103e6729b4a61ee62b6d6e62cc3ae523b6ce9282861bb35b798ff106ad"
+    }
+  ],
+  "limitations": [
+    "No test application on Element: native exchange/settings/cleanup/access lifecycle not verified",
+    "Entity-contract tables removed after platform 7.0",
+    "BalanceAndTurnovers with registrar/record periodization and nullable boundary rows unsupported",
+    "Periodic constants, register key structures, map/set collection sources and user locales pending",
+    "Runtime-computed periodicity, saved query defaults, fill/batch saved definitions and correlated source filters unsupported",
+    "First slices and second/moment slice profiles are explicit executor extensions of the 9.3 Date slice reference",
+    "Calendar week begins Monday in the deterministic executor profile"
+  ],
+  "localExclusions": [
+    "full discovery",
+    "303 forms",
+    "all 44 former roots",
+    "four validate",
+    "full regression",
+    "nightly execution",
+    "native platform compilation"
+  ]
+}

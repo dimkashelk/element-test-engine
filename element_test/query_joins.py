@@ -205,9 +205,9 @@ class Parser:
         probe=schema['fields'][0].name
         base = parse_simple_storage_query('ВЫБРАТЬ ' + probe + ' ИЗ ' + raw + ' КАК ' + alias, self.contracts)
         raw_start = len('ВЫБРАТЬ ' + probe + ' ИЗ ')
-        parameters = tuple(replace(p,start=p.start-raw_start+start,end=p.end-raw_start+start) for p in base.parameters)
-        base = replace(base,source_range=(start,end),source_name=owner,parameters=parameters,
-                       period_range=tuple(x-raw_start+start for x in base.period_range) if base.period_range else None)
+        from .query_composites import shift
+        base = replace(shift(base,start-raw_start),source_range=(start,end),source_name=owner)
+        if base.source_kind=='saved':base=replace(base,projections=tuple((f,f.name) for f in base.fields))
         self.sources.append(base); self.raw_sources.append(raw)
         self.fields.append({}); self.used.append({})
         return len(self.sources)-1
@@ -225,10 +225,13 @@ class Parser:
             self.fields[i][e.name] = next(f for f in self.sources[i].fields if f.name==e.name)
             self.contracts.require(self.fields[i][e.name].type)
         f = self.fields[i][e.name]; self.used[i][e.name] = f
-        nullable = i in self.nullable
-        return replace(e,source=i,type=f.type if not nullable or f.type.endswith('?') else f.type+'?',sql_nullable=nullable)
+        nullable = i in self.nullable or f.sql_nullable
+        from .query_composites import null_column
+        flag=null_column(self.sources[i].projections,next(n for n,(_,l) in enumerate(self.sources[i].projections) if l==e.name)) if self.sources[i].source_kind=='saved' else ''
+        return replace(e,source=i,type=f.type if not nullable or f.type.endswith('?') else f.type+'?',sql_nullable=nullable,null_field=flag)
 
     def prune_source(self, i, s):
+        if s.source_kind=='saved':return s
         fields = tuple((f, f.name) for f in self.used[i].values()) or s.projections
         return replace(s, projections=fields)
 
@@ -344,7 +347,7 @@ class Parser:
             key=p.expression if re.fullmatch(IDENT,p.expression) else (p.start,p.end)
             slot=slots.setdefault(key,len(slots));typ=p.type
             if slot in types and types[slot]!=typ:
-                if {types[slot],typ}=={'Дата','Дата?'}:typ='Дата'
+                if types[slot].rstrip('?')==typ.rstrip('?') and typ.rstrip('?') in {'Дата','ДатаВремя','Момент'}:typ=typ.rstrip('?')
                 else:self.fail('Несовместимые типы одного параметра запроса',p.start)
             types[slot]=typ;parameters.append(replace(p,slot=slot))
         parameters=tuple(replace(p,type=types[p.slot]) for p in parameters)

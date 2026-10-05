@@ -87,6 +87,7 @@ class QueryField:
     name: str
     type: str
     system: bool = False
+    sql_nullable: bool = False
 
 
 @dataclass(frozen=True)
@@ -124,6 +125,10 @@ class StorageQuery:
     end_slot: int | None = None
     definition: object = None
     definition_source: dict | None = None
+    source_filter: object = None
+    totals_periodicity: str = 'Период'
+    complement: str = 'ЗаписиИГраницыПериода'
+    definition_slots: tuple = ()
 
     def to_dict(self):
         return asdict(self)
@@ -176,7 +181,11 @@ def parse_storage_query(text, contracts):
         from .query_joins import parse_relational_query
         return parse_relational_query(text, contracts)
     try:
-        return parse_simple_storage_query(text, contracts)
+        query = parse_simple_storage_query(text, contracts)
+        if query.source_kind=='saved':
+            from .query_projections import parse_computed_query
+            return parse_computed_query(text, contracts)
+        return query
     except UnsupportedSyntaxError:
         # General typed expressions also cover nullable equality and scalar
         # literal comparisons. Source/type ambiguity is still rejected there.
@@ -185,39 +194,9 @@ def parse_storage_query(text, contracts):
 
 
 def parse_simple_storage_query(text, contracts):
-    visible = mask_noncode(text, strings=False)
-    hidden = mask_noncode(text)
-    token_pattern = re.compile(rf'{IDENT}|\d+|::|==|[().,=]|%')
-    tokens = []
-    i = 0
-    while i < len(visible):
-        if visible[i].isspace():
-            i += 1
-            continue
-        if visible[i] == '%':
-            a = i + 1
-            if a < len(text) and text[a] == '{':
-                b, depth = a + 1, 1
-                while b < len(text) and depth:
-                    depth += (hidden[b] == '{') - (hidden[b] == '}')
-                    b += 1
-                if depth or not text[a+1:b-1].strip():
-                    raise UnsupportedSyntaxError('Непустое выражение параметра запроса не закрыто')
-                tokens.append(('parameter', text[a+1:b-1], a+1, b-1))
-                i = b
-                continue
-            match = re.match(IDENT, text[a:])
-            if not match:
-                raise UnsupportedSyntaxError('Неподдержанная форма параметра запроса')
-            b = a + len(match[0])
-            tokens.append(('parameter', match[0], a, b))
-            i = b
-            continue
-        match = token_pattern.match(visible, i)
-        if not match:
-            raise UnsupportedSyntaxError(f'Запрос вне storage AST: позиция {i}')
-        tokens.append(('token', match[0], i, match.end()))
-        i = match.end()
+    # Share the general lexer, including strings and nested filter expressions.
+    from .query_projections import ComputedParser
+    tokens = ComputedParser(text, contracts).tokens
     pos = 0
 
     def accept(word):
@@ -277,25 +256,27 @@ def parse_simple_storage_query(text, contracts):
     member, end_token = '', None
     if accept('.'):
         member = identifier()
-    from .query_sources import source_schema
+    from .query_sources import source_schema, source_arguments
+    arguments = []
+    if accept('('):
+        period_start = tokens[pos-1][2]
+        arguments, pos = source_arguments(tokens, pos)
+        period_range = (period_start, tokens[pos-1][3])
     schema = source_schema(contracts, owner, member)
     source_kind = schema['kind']
-    if accept('('):
-        if source_kind not in {'slice-last','slice-first','balance','turnover','balance-turnover'}:
+    totals_periodicity, complement, filter_tokens = 'Период', 'ЗаписиИГраницыПериода', ()
+    if period_range:
+        if source_kind == 'saved':
+            if len(arguments) != len(schema['parameters']):
+                raise UnsupportedSyntaxError('Неверное число параметров сохранённого источника')
+        elif source_kind not in {'slice-last','slice-first','balance','turnover','balance-turnover'}:
             raise UnsupportedSyntaxError('Параметры для этого источника не поддержаны')
-        period_start = tokens[pos-1][2]
-        if not accept(')'):
-            if pos < len(tokens) and tokens[pos][0] == 'parameter':
-                period_token = tokens[pos]; pos += 1
-            elif not (pos < len(tokens) and tokens[pos][1] == ','):
-                raise UnsupportedSyntaxError('Граница виртуальной таблицы требует параметр')
-            if accept(','):
-                if source_kind not in {'turnover','balance-turnover'}:
-                    raise UnsupportedSyntaxError('Фильтр виртуальной таблицы пока вне контракта')
-                if pos < len(tokens) and tokens[pos][0] == 'parameter':
-                    end_token = tokens[pos]; pos += 1
-            expect(')')
-        period_range = (period_start, tokens[pos-1][3])
+        else:
+            from .query_sources import virtual_arguments
+            period_token, end_token, totals_periodicity, complement, filter_tokens = virtual_arguments(source_kind, arguments)
+            schema = source_schema(contracts, owner, member, totals_periodicity)
+    elif source_kind=='saved' and schema['parameters']:
+        raise UnsupportedSyntaxError('Сохранённый источник требует параметры')
     elif source_kind in {'slice-last','slice-first'}:
         raise UnsupportedSyntaxError('Срез требует скобки параметров')
     source_range = (source_start, tokens[pos-1][3])
@@ -311,7 +292,7 @@ def parse_simple_storage_query(text, contracts):
         field = fields[name]
         if source_kind in {'slice-last','slice-first'} and '|' in field.type:
             raise UnsupportedSyntaxError('Union-поле среза требует отдельного типизированного контракта')
-        scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата', 'ДатаВремя'}
+        scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата', 'ДатаВремя', 'Момент'}
         enum = contracts.canonical_elements.get(field.type.rstrip('?'))
         if field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
             raise UnsupportedSyntaxError('Тип поля запроса вне контракта: ' + field.type)
@@ -347,6 +328,19 @@ def parse_simple_storage_query(text, contracts):
         return slot
     period_slot = parameter(period_token, schema['period_type']+'?') if period_token else None
     end_slot = parameter(end_token, schema['period_type']+'?') if end_token else None
+    definition_slots = ()
+    if source_kind=='saved':
+        bound_slots = {}
+        for declared, argument in zip(schema['parameters'], arguments):
+            if len(argument)!=1 or argument[0][0]!='parameter':
+                raise UnsupportedSyntaxError('Параметр сохранённого источника требует captured выражение')
+            bound_slots[declared['Имя']] = parameter(argument[0], declared['Тип'])
+        from .storage_queries import unique_parameters
+        definition_slots = tuple(bound_slots[p.expression] for p in unique_parameters(schema['definition']))
+    source_filter = None
+    if filter_tokens:
+        from .query_sources import bind_source_filter
+        source_filter = bind_source_filter(text, filter_tokens, contracts, schema, alias, parameter)
     if accept('ГДЕ'):
         while True:
             field = bind(field_path())
@@ -377,7 +371,7 @@ def parse_simple_storage_query(text, contracts):
             # XBQL permits a projection alias in ORDER BY.
             projected = [f for f,label in bound_projections if path == (None,label)]
             field = projected[0] if projected else bind(path)
-            if field.type not in {'Число', 'Строка', 'Дата', 'ДатаВремя'}:
+            if field.type not in {'Число', 'Строка', 'Дата', 'ДатаВремя', 'Момент'}:
                 raise UnsupportedSyntaxError('Сортировка вне подтверждённых не-nullable типов')
             descending = accept('УБЫВ')
             if not descending:
@@ -393,4 +387,4 @@ def parse_simple_storage_query(text, contracts):
         source_kind, schema['periodicity'], dimensions, period_slot, period_range,
         source_range, owner, 'captured-date-or-runtime-UTC-at-creation' if source_kind in {'slice-last','slice-first'} else None, fill,
         schema['fields'], member, schema['resources'], schema['register_kind'], end_slot,
-        schema.get('definition'),schema.get('definition_source'))
+        schema.get('definition'),schema.get('definition_source'), source_filter, totals_periodicity, complement, definition_slots)

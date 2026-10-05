@@ -71,6 +71,7 @@ def shift(query, offset):
         if not isinstance(e,Expression):return e
         return replace(e,range=tuple(x+offset for x in e.range),children=tuple(expression(c) for c in e.children))
     kwargs['projections']=tuple((expression(e),label) for e,label in query.projections)
+    if getattr(query,'source_filter',None):kwargs['source_filter']=expression(query.source_filter)
     if query.source_kind=='relational':
         kwargs['predicates']=tuple(expression(e) for e in query.predicates)
         kwargs['ordering']=tuple((expression(e),d) for e,d in query.ordering)
@@ -91,10 +92,12 @@ def capture(queries):
     for p in sorted((p for q in queries for p in q.parameters),key=lambda p:p.start):
         key=p.expression if re.fullmatch(IDENT,p.expression) else (p.start,p.end)
         slot=slots.setdefault(key,len(slots))
-        if slot in types and types[slot]!=p.type:
-            raise UnsupportedSyntaxError('Несовместимые типы общего captured параметра')
-        types[slot]=p.type;out.append(replace(p,slot=slot))
-    return tuple(out)
+        typ=p.type
+        if slot in types and types[slot]!=typ:
+            if types[slot].rstrip('?')==typ.rstrip('?') and typ.rstrip('?') in {'Дата','ДатаВремя','Момент'}:typ=typ.rstrip('?')
+            else:raise UnsupportedSyntaxError('Несовместимые типы общего captured параметра')
+        types[slot]=typ;out.append(replace(p,slot=slot))
+    return tuple(replace(p,type=types[p.slot]) for p in out)
 
 
 def null_column(columns,index):
@@ -127,7 +130,7 @@ def needs_context(query):
 
 
 def internal(query):
-    return query.source_kind in ('relational','union','temporary','batch')
+    return query.source_kind in ('relational','union','temporary','batch','saved')
 
 
 def row_type(query,name,private=False):

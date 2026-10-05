@@ -61,7 +61,7 @@ class PlatformMocks:
         properties = element['properties']
         accumulation = element['elementType'] == 'РегистрНакопления'
         dimensions = properties.get('Измерения', [])
-        fields = dimensions + properties.get('Ресурсы', []) + properties.get('Реквизиты', [])
+        fields = dimensions + [{'Тип':'Число',**f} for f in properties.get('Ресурсы', [])] + properties.get('Реквизиты', [])
         if accumulation:
             if properties.get('ВидРегистра', 'Остатки') != 'Остатки' and not (self.storage_registers and properties.get('ВидРегистра')=='Обороты'):
                 raise InputError('Мок регистра накопления поддерживает только Остатки')
@@ -88,7 +88,7 @@ class PlatformMocks:
             periodicity = properties['Периодичность']
             if periodicity != 'Момент' and not (self.storage_registers and periodicity in {'День', 'Секунда'}):
                 raise InputError('Периодичность мока пока поддерживается только Момент')
-            fields = [{'Имя': 'Период', 'Тип': {'День': 'Дата', 'Секунда': 'ДатаВремя'}.get(periodicity, 'Момент')}] + fields
+            fields = [{'Имя': 'Период', 'Тип': {'День': 'Дата', 'Секунда': 'ДатаВремя', 'Момент':'Момент'}[periodicity]}] + fields
         names = [f['Имя'] for f in fields]
         if len(set(names)) != len(names) or any(not re.fullmatch(IDENT, n) for n in names):
             raise InputError('Некорректные поля регистра ' + name)

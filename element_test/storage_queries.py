@@ -42,12 +42,16 @@ def generate_query(query, contracts):
         return name
     parameters = unique_parameters(query)
     required = {f.name: f for f,_ in query.projections + query.predicates + query.ordering}
+    from .query_sources import filter_fields, filter_condition
+    source_helpers={}
+    required.update({f.name:f for f in filter_fields(query)})
     sliced = query.source_kind in {'slice-last','slice-first'}
     if sliced:
         from .query_plan import QueryField
         required.update({f.name: f for f in query.dimensions})
-        period_type = 'Дата' if query.periodicity=='День' else 'ДатаВремя'
+        period_type = next(f.type for f in query.fields if f.name=='Период')
         required['Период'] = QueryField(query.owner, 'Период', period_type, True)
+    next_period = sliced and 'СледующийПериод' in required
     def declaration(structure, fields, readonly=False):
         return '@Глобально\nструктура ' + structure + '\n' + ''.join(
             '    ' + ('знч' if readonly else 'пер') + ' ' + label + ': ' + contracts.sbsl_type(f.type) + '\n'
@@ -74,10 +78,12 @@ def generate_query(query, contracts):
     else:
         text += '                знч Снимок = Значение как Соответствие<Строка, Объект?>\n'
     text += row_guard(query,contracts)
-    projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': Снимок[' + contracts.literal(f.name,'Строка') + ']'
+    projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': '+(period_type+'{Максимум}' if next_period and f.name=='СледующийПериод' else 'Снимок[' + contracts.literal(f.name,'Строка') + ']')
                               for f in required.values()) + '}'
     text += ('                знч Проекция = СериализацияJson.ЗаписатьОбъект(' + projected + ')\n'
              '                знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип())\n')
+    if query.source_filter:
+        text += '                если не ('+filter_condition(query,contracts,helpers=source_helpers)+')\n                    продолжить\n                ;\n'
     if sliced:
         # Group only after the inclusive boundary. WHERE is applied to complete
         # slices below; a resource predicate must never resurrect an older row.
@@ -85,6 +91,9 @@ def generate_query(query, contracts):
             contracts.literal(f.type,'Строка') + ', "value": СтрокаДанных.' + f.name + '}' for f in query.dimensions) + '}'
         text = text.replace('        знч Строки = новый Массив<Данные>()\n',
             '        знч Строки = новый Массив<Данные>()\n        знч Группы = новый Соответствие<Строка, Данные>()\n')
+        if next_period:
+            text = text.replace('        знч Группы =', '        знч История = новый Массив<Данные>()\n        знч Группы =')
+            text += '                    История.Добавить(СтрокаДанных)\n'
         first=query.source_kind=='slice-first'
         text += ('                    если СтрокаДанных.Период '+('>=' if first else '<=')+' Граница\n'
                  '                        знч Ключ = СериализацияJson.ЗаписатьОбъект(' + key + ')\n'
@@ -92,6 +101,10 @@ def generate_query(query, contracts):
                  '                            Группы[Ключ] = СтрокаДанных\n'
                  '                        ;\n                    ;\n                ;\n            ;\n        ;\n'
                  '        для СтрокаДанных из Группы.Значения()\n')
+        if next_period:
+            equal=' и '.join('Кандидат.'+f.name+' == СтрокаДанных.'+f.name for f in query.dimensions) or 'Истина'
+            text += ('            для Кандидат из История\n                если '+equal+' и Кандидат.Период > СтрокаДанных.Период и Кандидат.Период < СтрокаДанных.СледующийПериод\n'
+                     '                    СтрокаДанных.СледующийПериод = Кандидат.Период\n                ;\n            ;\n')
     condition = ' и '.join(('СтрокаДанных.' + f.name + ' != Неопределено и ' if f.type.endswith('?') else '') +
                            'СтрокаДанных.' + f.name + ' == П' + str(slot) for f,slot in query.predicates) or 'Истина'
     text += '                если ' + condition + '\n'
@@ -132,16 +145,19 @@ def generate_query(query, contracts):
     if sliced:
         period = 'П' + str(query.period_slot) if query.period_slot is not None else 'Неопределено'
         strict_period = next((p.type == period_type for p in parameters if p.slot == query.period_slot),False)
-        default = period_type+'{Минимум}' if query.source_kind=='slice-first' else period_type+'.Сейчас(новый ЧасовойПояс("UTC"))'
+        default = period_type+'{Минимум}' if query.source_kind=='slice-first' else period_type+'.Сейчас('+('' if period_type=='Момент' else 'новый ЧасовойПояс("UTC")')+')'
         boundary = period if strict_period else period + ' ?? '+default
         prelude = ('    знч ДатаГраницы = ' + boundary + '\n'
                    '    ТестСессия.Событие("query:slice-boundary:" + ДатаГраницы.ВСтроку())\n')
         args.append('Граница = ДатаГраницы')
     text += '@Глобально\nметод Создать(' + signature + '): Запрос\n' + prelude + '    возврат новый Запрос(' + ', '.join(args) + ')\n;\n'
+    text += ''.join(body for _,body in source_helpers.values())
     contracts.definitions[name] = text
     contracts.method_dependencies[name] = ['ТестСессия.Записи'] + [f.type for f in required.values()]
     if 'ТестДоступ.' in text:
         contracts.method_dependencies[name].append('ТестДоступ.Проверить')
+    if 'ТестШаблоны.' in text:
+        contracts.method_dependencies[name].append('ТестШаблоны.Совпадает')
     if query.fill:
         contracts.method_dependencies[name].append(row_type)
     return name
@@ -237,7 +253,7 @@ def bind_queries(plan):
                 'accessContract': 'executor-fixture-045' if hasattr(c,'query_access') else 'unrestricted-executor-no-native-ACL',
                 'backend': plan.storage.config.get('backend','memory'),
                 'limitations': (['implicit-execute-local-temporary-scope', 'last-statement-result', 'validated-index-hints', 'native-XBQL-unavailable'] if query.mode == 'storage-unions-nesting-v1' or query.source_kind in ('union','batch') else ['metadata-derived-virtual-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
-                                if query.source_kind == 'relational' else ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']) + ['native-XBQL-and-access-rights-unavailable', 'no-exchange-change-lifecycle', 'no-virtual-source-filter-or-period-expansion']})
+                                if query.source_kind == 'relational' else ['single-source', 'no-unsorted-order-guarantee']) + ['native-XBQL-and-access-rights-unavailable', 'no-exchange-change-lifecycle', 'static-total-periodicity-only', 'no-record-period-balance-and-turnover']})
             for source in sources:
                 if source.source_kind=='users':continue
                 element = c.resolve(source.owner)[0]
