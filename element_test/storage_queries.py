@@ -162,6 +162,8 @@ def generate_query(query, contracts):
         contracts.method_dependencies[name].append('ТестДоступ.Проверить')
     if 'ТестШаблоны.' in text:
         contracts.method_dependencies[name].append('ТестШаблоны.Совпадает')
+    if 'ТестПолноеСовпадение.' in text:
+        contracts.method_dependencies[name].append('ТестПолноеСовпадение.Совпадает')
     if query.fill:
         contracts.method_dependencies[name].append(row_type)
     return name
@@ -265,6 +267,7 @@ def bind_queries(plan):
                 element = c.resolve(source.owner)[0]
                 if source.source_kind in {'ordinary','table-part','collection'} and element not in plan.storage_elements:
                     plan.storage_elements.append(element)
+                    plan.query_storage_elements.append(element)
             plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'],[]).append(name + '.Запрос')
             if any(p.expression in getattr(c,'query_context_expressions',{}) for p in query.parameters):
                 from .query_context import OWNER

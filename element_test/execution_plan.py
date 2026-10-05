@@ -112,6 +112,7 @@ class ExecutionPlan:
     declarations: dict = field(default_factory=dict)
     unavailable: list = field(default_factory=list)
     storage_elements: list = field(default_factory=list)
+    query_storage_elements: list = field(default_factory=list)
     sequence: list = field(default_factory=list)
     probes: list = field(default_factory=list)
     co_located_modules: dict = field(default_factory=dict)

@@ -302,6 +302,7 @@ def generate_source_query(q,c):
     text=text.replace('                ;\n            ;\n        ;\n        знч Результат', '                ;\n        ;\n        знч Результат',1)
     text+=''.join(body for _,body in helpers.values())
     if 'ТестШаблоны.' in text:dependencies=dependencies+['ТестШаблоны.Совпадает']
+    if 'ТестПолноеСовпадение.' in text:dependencies=dependencies+['ТестПолноеСовпадение.Совпадает']
     c.definitions[name]=text;c.method_dependencies[name]=dependencies
     return name
 

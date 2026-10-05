@@ -363,7 +363,7 @@ def render_plan(plan, sandbox):
         runtime_metadata += ', "status": ТестОтказ == Неопределено ? "EXECUTED" : "ERROR", "message": ТестОтказ'
     if storage:
         for element in plan.storage_elements:
-            storage.attach(element)
+            storage.attach(element,query_only=element in plan.query_storage_elements)
         setup = storage.setup() + setup
         invocation += '    ТестСессия.ПроверитьСессию()\n'
         if storage.config.get('backend') == 'postgres':

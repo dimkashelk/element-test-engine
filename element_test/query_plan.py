@@ -174,7 +174,7 @@ def parse_storage_query(text, contracts):
     if re.search(r'\b(?:ОБЪЕДИНИТЬ|ПОМЕСТИТЬ|СОЗДАТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ|ИНДЕКСИРОВАТЬ|ВСТАВИТЬ|ИЗМЕНИТЬ|УДАЛИТЬ|СУЩЕСТВУЕТ|МЕЖДУ|ПОДОБНО|ОТЛИЧАЕТСЯ|ИЕРАРХИИ)\b|;|\(\s*ВЫБРАТЬ|\bВ\s*\(', routing, re.I):
         from .query_composites import parse_composite_query
         return parse_composite_query(text, contracts)
-    if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', routing, re.I):
+    if re.search(r'\b(?:КОЛИЧЕСТВО|СУММА|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ|ВЫРАЗИТЬ|ПЕРВЫЙНЕNULL|УУИД|ACOS|ASIN|ATAN|COS|SIN|TAN|EXP|LOG|LOG10|СТЕПЕНЬ|КОРЕНЬ)\s*\(|\b(?:СГРУППИРОВАТЬ|ИМЕЮЩИЕ|РАЗЛИЧНЫЕ|ВЫБОР)\b|[+*/-]|%\s*\d|\.(?:Год|Месяц|День|Час|Минута|Секунда)\b|\.(?!СрезПоследних|ЗаменитьNull)[A-Za-zА-Яа-яЁё]+\s*\(', routing, re.I):
         from .query_projections import parse_computed_query
         return parse_computed_query(text, contracts)
     if re.search(r'\bСОЕДИНЕНИЕ\b|\bNULL\b|\bЗаменитьNull\b', routing, re.I):

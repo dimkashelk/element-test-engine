@@ -395,6 +395,7 @@ class MetadataStorage:
             raise InvalidTestError('storage.transaction должен быть Булево')
         self.contracts, self.config = contracts, config
         self.attached = set()
+        self.query_snapshot_types = {}
         self.register_schemas = {}
         contracts.reference_id_type = config.get('idType', 'Строка')
         import uuid
@@ -417,12 +418,35 @@ class MetadataStorage:
         from .record_sets import attach_register
         return attach_register(self, name)
 
-    def attach(self, element):
+    def attach(self, element, *, query_only=False):
         c = self.contracts
         schema = StorageSchema.from_element(element)
         if schema.identity in self.attached:
             return
         self.attached.add(schema.identity)
+        # A query does not load an entity object. Standard Files has no YAML
+        # type; leave that unsupported attribute out of a read-only snapshot
+        # rather than fabricate a file service or weaken the object contract.
+        implicit_files=any(f['Имя']=='Файлы' and not f.get('Тип') for f in element['properties'].get('Реквизиты',[]))
+        if query_only and implicit_files:
+            from hashlib import sha256
+            typ='ТестСнимокЗапроса'+sha256(schema.identity.encode()).hexdigest()[:16]+'.Данные'
+            fields=[{'Имя':'Ссылка','Тип':schema.identity+'.Ссылка'}]
+            fields += [dict(f) for f in element['properties'].get('Реквизиты',[]) if f['Имя']!='Файлы' or f.get('Тип')]
+            fields += [{'Имя':t['Имя'],'Тип':'Массив<'+schema.identity+'.'+t['Имя']+'>'} for t in element['properties'].get('ТабличныеЧасти',[])]
+            previous=c.namespace,c.imports;c.namespace,c.imports=element['namespace'],element['properties'].get('Импорт',[])
+            try:
+                for f in fields:
+                    if f['Имя']=='Наименование' and element['elementType']=='Справочник':f.setdefault('Тип','Строка')
+                    if not f.get('Тип'):raise InputError('Неизвестный тип поля снимка запроса: '+f['Имя'])
+                    c.require(f['Тип']);f['Тип']=c.canonical_type(f['Тип'])
+                c.fields[typ]=fields
+                c.definitions[typ]='@Глобально\nструктура Данные\n'+''.join('    пер '+f['Имя']+': '+c.sbsl_type(f['Тип'])
+                    + (' = '+c.literal(f['ЗначениеПоУмолчанию'],f['Тип']) if 'ЗначениеПоУмолчанию' in f else '')+'\n' for f in fields)+';\n'
+                c.method_dependencies[typ]=[f['Тип'] for f in fields]
+                self.query_snapshot_types[schema.identity]=typ
+            finally:c.namespace,c.imports=previous
+            return
         owner = c.canonical_type(schema.identity)
         obj, ref, data = owner + '.Объект', owner + '.Ссылка', owner + '.Данные'
         for typ in (obj, ref, data):
@@ -494,7 +518,8 @@ class MetadataStorage:
             value = item['value']
             if not isinstance(value, dict) or 'Ссылка' not in value:
                 raise InvalidTestError('Начальная запись требует Ссылка')
-            typ = c.canonical_type(owner + '.Объект')
+            from .resolution import qualified
+            typ = self.query_snapshot_types.get(qualified(matches[0])) or c.canonical_type(owner + '.Объект')
             obj = c.literal(value, typ)
             if 'ТестСостояниеНовизны' in c.definitions[typ]:
                 obj = '{' + ', '.join(c.literal(f['Имя'], 'Строка') + ': (' + obj + ').' + f['Имя'] for f in c.fields[typ]) + '}'

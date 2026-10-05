@@ -32,11 +32,14 @@ METHODS = {
  'Округлить': ('Число', ('Число',), 'Число'),
  'Дата': ('ДатаВремя', (), 'Дата'),
  'ДобавитьДни': ('Дата', ('Число',), 'Дата'),
+ 'ПолноеСовпадение': ('Строка', ('Строка',), 'Булево'),
 }
 
 
 class ComputedParser(Parser):
     def method_expression(self, child, method, start):
+        if self.pos >= len(self.tokens) or self.tokens[self.pos][1]!='(':
+            return Expression('property',name=method,children=(child,),range=(start,self.tokens[self.pos-1][3]))
         method=next((m for m in METHODS if m.upper()==method.upper()),method)
         if method.upper()=='ЗАМЕНИТЬNULL':
             self.expect('(')
@@ -53,8 +56,12 @@ class ComputedParser(Parser):
         return Expression('method',name=method,children=(child,*args),range=(start,self.tokens[self.pos-1][3]))
 
     def expression(self, precedence=0):
+        from .query_functions import function_atom
         start = self.tokens[self.pos][2] if self.pos < len(self.tokens) else len(self.text)
-        if self.accept('-'):
+        atom=function_atom(self)
+        if atom is not None:
+            e=atom
+        elif self.accept('-'):
             e = Expression('negate', children=(self.expression(30),))
         elif self.accept('+'):
             e = self.expression(30)
@@ -108,11 +115,13 @@ class ComputedParser(Parser):
             e=self.method_expression(e,self.identifier(),start)
         while self.pos < len(self.tokens):
             op = self.tokens[self.pos][1]
-            level = {'+': 10, '-': 10, '*': 20, '/': 20, '%': 20}.get(op, -1)
+            power=op=='*' and self.pos+1<len(self.tokens) and self.tokens[self.pos+1][1]=='*'
+            if power:op='**'
+            level = {'+': 10, '-': 10, '*': 20, '/': 20, '%': 20, '**':40}.get(op, -1)
             if level < precedence: break
-            self.pos += 1
-            right = self.expression(level + 1)
-            e = Expression('binary', value=op, children=(e, right), range=(start, right.range[1]))
+            self.pos += 2 if power else 1
+            right = self.expression(level if power else level + 1)
+            e = Expression('math' if power else 'binary',name='Степень' if power else '',value=op, children=(e, right), range=(start, right.range[1]))
         return e
 
     def comparison(self):
@@ -134,6 +143,11 @@ class ComputedParser(Parser):
         return e
 
     def bind(self, e, visible, expected=None):
+        if e.kind=='field' and len(e.value)==2 and e.value[0] not in [s.alias for s in self.sources[:visible]] and e.name in ('Год','Месяц','День','Час','Минута','Секунда'):
+            e=replace(e,kind='property',children=(Expression('field',name=e.value[0],value=(e.value[0],),range=e.range),))
+        from .query_functions import bind_function
+        function=bind_function(self,e,visible,expected)
+        if function is not None:return function
         from .query_predicates import bind_predicate
         extended = bind_predicate(self, e, visible, expected)
         if extended is not None: return extended
@@ -181,7 +195,7 @@ class ComputedParser(Parser):
             typ=self.contracts.canonical_type(e.value[0]);child=self.bind(e.children[0],visible,typ)
             if child.type.rstrip('?')!=typ: self.fail('ВЫРАЗИТЬ не преобразует несовместимые типы',e.range[0])
             qs=e.value[1]
-            if qs and (typ not in ('Число','Строка') or len(qs)>(2 if typ=='Число' else 1) or qs[0]<1 or (qs[0]>32 or (len(qs)==2 and qs[1]>32))): self.fail('Квалификатор ВЫРАЗИТЬ вне контракта',e.range[0])
+            if qs and (typ not in ('Число','Строка') or len(qs)>(2 if typ=='Число' else 1) or (typ=='Число' and (qs[0]<1 or qs[0]>32 or len(qs)==2 and qs[1]>32))): self.fail('Квалификатор ВЫРАЗИТЬ вне контракта',e.range[0])
             self.contracts.require(typ)
             return replace(e,type=typ+('?' if child.type.endswith('?') else ''),sql_nullable=child.sql_nullable,children=(child,))
         if e.kind=='in':
@@ -227,6 +241,9 @@ class ExpressionRenderer:
         self.helpers={}
 
     def null(self,e,row='С',group='Группа'):
+        from .query_functions import function_null
+        function=function_null(self,e,row,group)
+        if function is not None:return function
         if e.kind=='field':
             absent=row+'.С'+str(e.source)+' == Неопределено'
             return absent+' или ('+row+'.С'+str(e.source)+' как '+self.row_types[e.source]+').'+e.null_field if e.null_field else absent
@@ -243,6 +260,9 @@ class ExpressionRenderer:
         return 'Ложь'
 
     def value(self,e,row='С',group='Группа'):
+        from .query_functions import function_value
+        function=function_value(self,e,row,group)
+        if function is not None:return function
         v=lambda c:self.value(c,row,group)
         if e.kind=='field':return '('+row+'.С'+str(e.source)+' как '+self.row_types[e.source]+').'+e.name
         if e.kind in ('null','undefined'):return 'Неопределено'
@@ -262,6 +282,7 @@ class ExpressionRenderer:
                 result='('+self.tri(e.children[i],row,group)+' == 1 ? '+v(e.children[i+1])+' : '+result+')'
             return result
         if e.kind=='cast':
+            if e.children[0].kind in ('null','undefined'):return 'Неопределено'
             result='('+v(e.children[0])+' как '+e.type.rstrip('?')+')';typ,qs=e.value
             if qs:
                 if typ=='Число':
@@ -273,7 +294,7 @@ class ExpressionRenderer:
                         self.helpers[key]=(method,body)
                     from .storage_queries import query_name
                     result=query_name(self.query)+'.'+self.helpers[key][0]+'('+result+')'
-                else:
+                elif qs[0]:
                     key=('string-length',qs)
                     if key not in self.helpers:
                         method='Квалификатор'+str(len(self.helpers))

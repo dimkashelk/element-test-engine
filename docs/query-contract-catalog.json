@@ -1138,13 +1138,71 @@
           "direct": true,
           "status": "PASS",
           "origin": "fresh-041"
+        },
+        {
+          "criterionId": "active",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "90a12c0226692b14aceff458880697b0897cb6b7a661a169fc10c8c1bbaf89c0",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "sourceFile": "Мероприятия/Задачи.xbsl",
+          "range": [
+            1543,
+            1861
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-tasks-test"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "90a12c0226692b14aceff458880697b0897cb6b7a661a169fc10c8c1bbaf89c0",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "sourceFile": "Мероприятия/Задачи.xbsl",
+          "range": [
+            1543,
+            1861
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-tasks-test"
+        },
+        {
+          "criterionId": "active",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "90a12c0226692b14aceff458880697b0897cb6b7a661a169fc10c8c1bbaf89c0",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "sourceFile": "Мероприятия/Задачи.xbsl",
+          "range": [
+            1543,
+            1861
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-tasks-run"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "90a12c0226692b14aceff458880697b0897cb6b7a661a169fc10c8c1bbaf89c0",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "sourceFile": "Мероприятия/Задачи.xbsl",
+          "range": [
+            1543,
+            1861
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-tasks-run"
         }
       ],
       "evidence": [
         "result/projections-aggregates/public-tasks-test",
         "result/projections-aggregates/public-tasks-test",
         "result/projections-aggregates/public-tasks-run",
-        "result/projections-aggregates/public-tasks-run"
+        "result/projections-aggregates/public-tasks-run",
+        "result/query-040-042-completion/fresh-041/public-tasks-test",
+        "result/query-040-042-completion/fresh-041/public-tasks-run"
       ],
       "apiBinding": null,
       "reference041": {
@@ -6388,9 +6446,9 @@
       "compatibilityVersion": "9.0",
       "discovered": true,
       "parsed": true,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
       "ast": {
         "owner": "Пресейл::Сделки",
         "alias": "Сделки",
@@ -6409,7 +6467,8 @@
                 12,
                 16
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Дата"
           ],
@@ -6427,7 +6486,8 @@
                 22,
                 35
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Ответственный"
           ],
@@ -6455,14 +6515,16 @@
                     47,
                     64
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 41,
                 65
               ],
-              "sql_nullable": true
+              "sql_nullable": true,
+              "null_field": ""
             },
             "Сумма"
           ]
@@ -6481,7 +6543,8 @@
                   "owner": "Пресейл::Сделки",
                   "name": "Дата",
                   "type": "ДатаВремя",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Дата"
               ],
@@ -6490,7 +6553,8 @@
                   "owner": "Пресейл::Сделки",
                   "name": "Ответственный",
                   "type": "Сотрудники.Ссылка?",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Ответственный"
               ],
@@ -6499,7 +6563,8 @@
                   "owner": "Пресейл::Сделки",
                   "name": "СуммаВВалютеУчета",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "СуммаВВалютеУчета"
               ]
@@ -6520,7 +6585,117 @@
             ],
             "source_name": "Сделки",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Дата",
+                "type": "ДатаВремя",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Номер",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Файлы",
+                "type": "",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Наименование",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Ответственный",
+                "type": "Сотрудники.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "ДатаЗакрытия",
+                "type": "ДатаВремя",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Направление",
+                "type": "Направления.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Клиент",
+                "type": "Клиенты.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "КонтактноеЛицо",
+                "type": "КонтактныеЛица.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Стадия",
+                "type": "СтадииСделок.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "ВалютаСделки",
+                "type": "Валюты.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "СуммаВВалютеСделки",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "СуммаВВалютеУчета",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Пресейл::Сделки",
+                "name": "Ссылка",
+                "type": "Сделки.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -6541,7 +6716,8 @@
               111,
               124
             ],
-            "sql_nullable": false
+            "sql_nullable": false,
+            "null_field": ""
           },
           {
             "kind": "field",
@@ -6556,16 +6732,59 @@
               130,
               134
             ],
-            "sql_nullable": false
+            "sql_nullable": false,
+            "null_field": ""
           }
         ],
         "having": [],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
-      "unsupportedReason": "Typed AST parsed; no independently authored direct executable criterion for this exact source/range (external XBQL binding or additional source operations remain queued)",
+      "unsupportedReason": null,
       "nextStage": "041-projections-and-aggregates",
-      "criteria": [],
-      "evidence": [],
+      "criteria": [
+        {
+          "criterionId": "external-sales",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-041-completion",
+          "sourceHash": "c4c8dab121464a0ee074a71b5f732b540345806d3db25ab3389545edd75c3d75",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "range": [
+            0,
+            135
+          ],
+          "executionProjectSourceHash": "70f93cd95d23ed6c2caeae04d38127c2917ef7a8defd7e3efdd1805f0299b9b1",
+          "wrapperSourceHash": "3053aba4bc723c9001c9132a2d9b093c831fdf22bac76a59ebf97eab72ea1d6f",
+          "mode": "exact-external-query-through-literal",
+          "nativeReportLifecycle": false,
+          "sourceFile": "Пресейл/ПродажиПоНеделям.xbql"
+        },
+        {
+          "criterionId": "external-sales-empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-041-completion",
+          "sourceHash": "c4c8dab121464a0ee074a71b5f732b540345806d3db25ab3389545edd75c3d75",
+          "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+          "range": [
+            0,
+            135
+          ],
+          "executionProjectSourceHash": "70f93cd95d23ed6c2caeae04d38127c2917ef7a8defd7e3efdd1805f0299b9b1",
+          "wrapperSourceHash": "3053aba4bc723c9001c9132a2d9b093c831fdf22bac76a59ebf97eab72ea1d6f",
+          "mode": "exact-external-query-through-literal",
+          "nativeReportLifecycle": false,
+          "sourceFile": "Пресейл/ПродажиПоНеделям.xbql"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-external-sales.json",
+        "result/query-040-042-completion/assessment-external-sales-empty.json",
+        "result/query-040-042-completion/external-sales.json",
+        "result/query-040-042-completion/external-sales-empty.json"
+      ],
       "apiBinding": null,
       "reference041": {
         "sources": [
@@ -25772,6 +25991,146 @@
           "direct": true,
           "status": "PASS",
           "origin": "fresh-042"
+        },
+        {
+          "criterionId": "employee",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-test"
+        },
+        {
+          "criterionId": "fallback",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-test"
+        },
+        {
+          "criterionId": "duplicate",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-test"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-test"
+        },
+        {
+          "criterionId": "undefined",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-test"
+        },
+        {
+          "criterionId": "employee",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-run"
+        },
+        {
+          "criterionId": "fallback",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-run"
+        },
+        {
+          "criterionId": "duplicate",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-run"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-run"
+        },
+        {
+          "criterionId": "undefined",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "7d0bdc99d5262ce767f9d8230562a7167e44ce3bcde18182961c86f30db3a610",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ХранилищеНастроек/Подразделения.xbsl",
+          "range": [
+            111,
+            521
+          ],
+          "evidence": "result/query-040-042-completion/fresh-042/public-real-run"
         }
       ],
       "evidence": [
@@ -25784,7 +26143,9 @@
         "result/unions-nesting/public-real-run",
         "result/unions-nesting/public-real-run",
         "result/unions-nesting/public-real-run",
-        "result/unions-nesting/public-real-run"
+        "result/unions-nesting/public-real-run",
+        "result/query-040-042-completion/fresh-042/public-real-test",
+        "result/query-040-042-completion/fresh-042/public-real-run"
       ],
       "apiBinding": null,
       "reference042": {
@@ -26250,11 +26611,41 @@
           "direct": true,
           "status": "PASS",
           "origin": "fresh-041"
+        },
+        {
+          "criterionId": "maximum",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "59102deac224e7d73c3d13e7f54d68d1856bdc6b557493e335ff8a55ae070d31",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Администрирование/ОписаниеРаботыФормаОбъекта.xbsl",
+          "range": [
+            97,
+            256
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-max-test"
+        },
+        {
+          "criterionId": "maximum",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "59102deac224e7d73c3d13e7f54d68d1856bdc6b557493e335ff8a55ae070d31",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Администрирование/ОписаниеРаботыФормаОбъекта.xbsl",
+          "range": [
+            97,
+            256
+          ],
+          "evidence": "result/query-040-042-completion/fresh-041/public-max-run"
         }
       ],
       "evidence": [
         "result/projections-aggregates/public-max-test",
-        "result/projections-aggregates/public-max-run"
+        "result/projections-aggregates/public-max-run",
+        "result/query-040-042-completion/fresh-041/public-max-test",
+        "result/query-040-042-completion/fresh-041/public-max-run"
       ],
       "apiBinding": null,
       "reference041": {
@@ -29326,13 +29717,71 @@
           "direct": true,
           "status": "PASS",
           "origin": "fresh-040"
+        },
+        {
+          "criterionId": "active",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "fa929c43904851dd99730f747da2afbacb2541b18c5377cd2db8d103db828df4",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Проверка/Кейсы.xbsl",
+          "range": [
+            172,
+            500
+          ],
+          "evidence": "result/query-040-042-completion/fresh-040/public-cases-test"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "fa929c43904851dd99730f747da2afbacb2541b18c5377cd2db8d103db828df4",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Проверка/Кейсы.xbsl",
+          "range": [
+            172,
+            500
+          ],
+          "evidence": "result/query-040-042-completion/fresh-040/public-cases-test"
+        },
+        {
+          "criterionId": "active",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "fa929c43904851dd99730f747da2afbacb2541b18c5377cd2db8d103db828df4",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Проверка/Кейсы.xbsl",
+          "range": [
+            172,
+            500
+          ],
+          "evidence": "result/query-040-042-completion/fresh-040/public-cases-run"
+        },
+        {
+          "criterionId": "empty",
+          "status": "PASS",
+          "direct": true,
+          "origin": "fresh-040-042-completion-public",
+          "sourceHash": "fa929c43904851dd99730f747da2afbacb2541b18c5377cd2db8d103db828df4",
+          "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+          "sourceFile": "Проверка/Кейсы.xbsl",
+          "range": [
+            172,
+            500
+          ],
+          "evidence": "result/query-040-042-completion/fresh-040/public-cases-run"
         }
       ],
       "evidence": [
         "result/joins-null/public-cases-test",
         "result/joins-null/public-cases-test",
         "result/joins-null/public-cases-run",
-        "result/joins-null/public-cases-run"
+        "result/joins-null/public-cases-run",
+        "result/query-040-042-completion/fresh-040/public-cases-test",
+        "result/query-040-042-completion/fresh-040/public-cases-run"
       ],
       "apiBinding": null,
       "reference040": {
@@ -51792,7 +52241,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/computed-projection.xbql",
       "semantics": [
-        "adapter-storage-projections-aggregates-041",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -51809,7 +52258,7 @@
           "criterionId": "ComputedProjection",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-041-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
           "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
           "sourceFile": "Entry/Main.xbsl",
@@ -51821,8 +52270,8 @@
         }
       ],
       "evidence": [
-        "result/projections-aggregates/documented-assessment-ComputedProjection.json",
-        "result/projections-aggregates/documented-ComputedProjection.json"
+        "result/query-040-042-completion/fresh-041/documented-assessment-ComputedProjection.json",
+        "result/query-040-042-completion/fresh-041/documented-ComputedProjection.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -51902,7 +52351,8 @@
                     8,
                     13
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 },
                 {
                   "kind": "literal",
@@ -51915,14 +52365,16 @@
                     16,
                     17
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 8,
                 17
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Double"
           ]
@@ -51941,7 +52393,8 @@
                   "owner": "Data::Item",
                   "name": "Total",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Total"
               ]
@@ -51962,7 +52415,54 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -51971,7 +52471,9 @@
         "source_kind": "relational",
         "grouping": [],
         "having": [],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "88cfa82fb0cb8e2757c8ae7fdb5722f00c32d6e79f88342a2f4da2635fa75bdb"
     },
@@ -51993,20 +52495,221 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/nullable.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_nullable",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3856,
+            3917
+          ],
+          "fixtureHash": "1d0551751afc79e4b824b4303d21bf90839f09f964522022dc12028996d5dd7b"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_nullable.json",
+        "result/query-040-042-completion/ordinary-join_nullable.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка?",
+              "name": "Optional",
+              "source": 0,
+              "value": [
+                "Optional"
+              ],
+              "children": [],
+              "range": [
+                8,
+                16
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Optional"
+          ]
+        ],
+        "predicates": [
+          {
+            "kind": "is-null",
+            "type": "Булево",
+            "name": "",
+            "source": null,
+            "value": null,
+            "children": [
+              {
+                "kind": "field",
+                "type": "Строка?",
+                "name": "Optional",
+                "source": 0,
+                "value": [
+                  "Optional"
+                ],
+                "children": [],
+                "range": [
+                  35,
+                  43
+                ],
+                "sql_nullable": false,
+                "null_field": ""
+              }
+            ],
+            "range": [
+              35,
+              53
+            ],
+            "sql_nullable": false,
+            "null_field": ""
+          }
+        ],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Optional",
+                  "type": "Строка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Optional"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              20,
+              30
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "1d0551751afc79e4b824b4303d21bf90839f09f964522022dc12028996d5dd7b"
     },
     {
       "contractId": "documented-replace-null",
@@ -52026,20 +52729,218 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/replace-null.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_replace_null",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3978,
+            4043
+          ],
+          "fixtureHash": "f86f11c6c0d573c96f12c2ef46cc49fa62246d781a6e0a436914680f9b0af722"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_replace_null.json",
+        "result/query-040-042-completion/ordinary-join_replace_null.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "kind": "coalesce",
+              "type": "Строка?",
+              "name": "",
+              "source": null,
+              "value": null,
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Строка?",
+                  "name": "Optional",
+                  "source": 0,
+                  "value": [
+                    "Optional"
+                  ],
+                  "children": [],
+                  "range": [
+                    8,
+                    16
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                {
+                  "kind": "literal",
+                  "type": "Строка",
+                  "name": "",
+                  "source": null,
+                  "value": "",
+                  "children": [],
+                  "range": [
+                    30,
+                    32
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                }
+              ],
+              "range": [
+                8,
+                33
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Value"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "Item",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Optional",
+                  "type": "Строка?",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Optional"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              47,
+              57
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "f86f11c6c0d573c96f12c2ef46cc49fa62246d781a6e0a436914680f9b0af722"
     },
     {
       "contractId": "documented-left-join",
@@ -52059,20 +52960,359 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/left-join.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_left_join",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3232,
+            3328
+          ],
+          "fixtureHash": "33d50127e7ecacd783598dbc0f2716b420f84b8f9669e5a13477fb699207626f"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_left_join.json",
+        "result/query-040-042-completion/ordinary-join_left_join.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "A",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "A",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "A",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              19,
+              29
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "B",
+            "projections": [
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              53,
+              64
+            ],
+            "source_name": "Other::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Other::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Ссылка",
+                "type": "ТестТип9fad72b7ef372954.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [
+          {
+            "kind": "left",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 0,
+                  "value": [
+                    "A",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    74,
+                    79
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 1,
+                  "value": [
+                    "B",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    83,
+                    88
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                }
+              ],
+              "range": [
+                74,
+                88
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "range": [
+              36,
+              88
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "33d50127e7ecacd783598dbc0f2716b420f84b8f9669e5a13477fb699207626f"
     },
     {
       "contractId": "documented-inner-join",
@@ -52091,20 +53331,359 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/inner-join.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_inner_join",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3387,
+            3488
+          ],
+          "fixtureHash": "7c92bd5121514c0ff0c3896a62b489987f7d889c07639546e14303e915dce015"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_inner_join.json",
+        "result/query-040-042-completion/ordinary-join_inner_join.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "A",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "A",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "A",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              19,
+              29
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "B",
+            "projections": [
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              58,
+              69
+            ],
+            "source_name": "Other::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Other::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Ссылка",
+                "type": "ТестТип9fad72b7ef372954.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [
+          {
+            "kind": "inner",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 0,
+                  "value": [
+                    "A",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    79,
+                    84
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 1,
+                  "value": [
+                    "B",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    88,
+                    93
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                }
+              ],
+              "range": [
+                79,
+                93
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "range": [
+              36,
+              93
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "7c92bd5121514c0ff0c3896a62b489987f7d889c07639546e14303e915dce015"
     },
     {
       "contractId": "documented-right-join",
@@ -52124,20 +53703,359 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/right-join.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_right_join",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3547,
+            3644
+          ],
+          "fixtureHash": "e9c4d65f64cf0f0ffc232013a6cad0cd0e43aa721d0c3b96700a0998ce0d0eb7"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_right_join.json",
+        "result/query-040-042-completion/ordinary-join_right_join.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "A",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка?",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "A",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": true,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "A",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              19,
+              29
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "B",
+            "projections": [
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              54,
+              65
+            ],
+            "source_name": "Other::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Other::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Ссылка",
+                "type": "ТестТип9fad72b7ef372954.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [
+          {
+            "kind": "right",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 0,
+                  "value": [
+                    "A",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    75,
+                    80
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 1,
+                  "value": [
+                    "B",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    84,
+                    89
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                }
+              ],
+              "range": [
+                75,
+                89
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "range": [
+              36,
+              89
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "e9c4d65f64cf0f0ffc232013a6cad0cd0e43aa721d0c3b96700a0998ce0d0eb7"
     },
     {
       "contractId": "documented-full-join",
@@ -52157,20 +54075,359 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/full-join.xbql",
       "semantics": [
-        "query-reference-9.1"
+        "executor-040-042-completion",
+        "element-reference-9.3",
+        "script-current"
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "040-joins-and-null",
-      "criteria": [],
-      "evidence": [],
-      "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending"
+      "criteria": [
+        {
+          "criterionId": "join_full_join",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-040-042-completion",
+          "sourceHash": "c22ed67fcbc5e8fb9032c7aea4705c3195da051d79ae8ad26cad405f04f7eb5a",
+          "projectSourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            3702,
+            3799
+          ],
+          "fixtureHash": "2b10e99e13e863c8bb220c90748e309cf9a9a6440c9aa782a87adf5d5096a1a3"
+        }
+      ],
+      "evidence": [
+        "result/query-040-042-completion/assessment-ordinary-join_full_join.json",
+        "result/query-040-042-completion/ordinary-join_full_join.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "A",
+        "projections": [
+          [
+            {
+              "kind": "field",
+              "type": "Строка?",
+              "name": "Label",
+              "source": 0,
+              "value": [
+                "A",
+                "Label"
+              ],
+              "children": [],
+              "range": [
+                8,
+                15
+              ],
+              "sql_nullable": true,
+              "null_field": ""
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "sources": [
+          {
+            "owner": "Data::Item",
+            "alias": "A",
+            "projections": [
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ],
+              [
+                {
+                  "owner": "Data::Item",
+                  "name": "Label",
+                  "type": "Строка",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Label"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              19,
+              29
+            ],
+            "source_name": "Data::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Optional",
+                "type": "Строка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          },
+          {
+            "owner": "Other::Item",
+            "alias": "B",
+            "projections": [
+              [
+                {
+                  "owner": "Other::Item",
+                  "name": "Key",
+                  "type": "Число",
+                  "system": false,
+                  "sql_nullable": false
+                },
+                "Key"
+              ]
+            ],
+            "predicates": [],
+            "parameters": [],
+            "ordering": [],
+            "limit": null,
+            "mode": "storage-staged-executor-v1",
+            "source_kind": "ordinary",
+            "periodicity": null,
+            "dimensions": [],
+            "period_slot": null,
+            "period_range": null,
+            "source_range": [
+              54,
+              65
+            ],
+            "source_name": "Other::Item",
+            "boundary": null,
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Other::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Ссылка",
+                "type": "ТестТип9fad72b7ef372954.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
+          }
+        ],
+        "joins": [
+          {
+            "kind": "full",
+            "source": 1,
+            "condition": {
+              "kind": "compare",
+              "type": "Булево",
+              "name": "",
+              "source": null,
+              "value": "==",
+              "children": [
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 0,
+                  "value": [
+                    "A",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    75,
+                    80
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                },
+                {
+                  "kind": "field",
+                  "type": "Число",
+                  "name": "Key",
+                  "source": 1,
+                  "value": [
+                    "B",
+                    "Key"
+                  ],
+                  "children": [],
+                  "range": [
+                    84,
+                    89
+                  ],
+                  "sql_nullable": false,
+                  "null_field": ""
+                }
+              ],
+              "range": [
+                75,
+                89
+              ],
+              "sql_nullable": false,
+              "null_field": ""
+            },
+            "range": [
+              36,
+              89
+            ]
+          }
+        ],
+        "fill": null,
+        "mode": "storage-relational-joins-null-v1",
+        "source_kind": "relational",
+        "grouping": [],
+        "having": [],
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
+      },
+      "fixtureHash": "2b10e99e13e863c8bb220c90748e309cf9a9a6440c9aa782a87adf5d5096a1a3"
     },
     {
       "contractId": "documented-group",
@@ -52190,7 +54447,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/group.xbql",
       "semantics": [
-        "adapter-storage-projections-aggregates-041",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -52207,7 +54464,7 @@
           "criterionId": "Group",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-041-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
           "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
           "sourceFile": "Entry/Main.xbsl",
@@ -52219,8 +54476,8 @@
         }
       ],
       "evidence": [
-        "result/projections-aggregates/documented-assessment-Group.json",
-        "result/projections-aggregates/documented-Group.json"
+        "result/query-040-042-completion/fresh-041/documented-assessment-Group.json",
+        "result/query-040-042-completion/fresh-041/documented-Group.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -52293,7 +54550,8 @@
                 8,
                 13
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Label"
           ],
@@ -52321,14 +54579,16 @@
                     21,
                     26
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 15,
                 27
               ],
-              "sql_nullable": true
+              "sql_nullable": true,
+              "null_field": ""
             },
             "СУММА"
           ]
@@ -52347,7 +54607,8 @@
                   "owner": "Data::Item",
                   "name": "Label",
                   "type": "Строка",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Label"
               ],
@@ -52356,7 +54617,8 @@
                   "owner": "Data::Item",
                   "name": "Total",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Total"
               ]
@@ -52377,7 +54639,54 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -52398,11 +54707,14 @@
               59,
               64
             ],
-            "sql_nullable": false
+            "sql_nullable": false,
+            "null_field": ""
           }
         ],
         "having": [],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "aa08479776c7298569704c8df55ac72c997ed44c5f3d6c7a0e8217ae571a20a3"
     },
@@ -52425,7 +54737,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/having.xbql",
       "semantics": [
-        "adapter-storage-projections-aggregates-041",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -52442,7 +54754,7 @@
           "criterionId": "Having",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-041-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
           "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
           "sourceFile": "Entry/Main.xbsl",
@@ -52454,8 +54766,8 @@
         }
       ],
       "evidence": [
-        "result/projections-aggregates/documented-assessment-Having.json",
-        "result/projections-aggregates/documented-Having.json"
+        "result/query-040-042-completion/fresh-041/documented-assessment-Having.json",
+        "result/query-040-042-completion/fresh-041/documented-Having.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -52528,7 +54840,8 @@
                 8,
                 13
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Label"
           ],
@@ -52556,14 +54869,16 @@
                     21,
                     26
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 15,
                 27
               ],
-              "sql_nullable": true
+              "sql_nullable": true,
+              "null_field": ""
             },
             "СУММА"
           ]
@@ -52582,7 +54897,8 @@
                   "owner": "Data::Item",
                   "name": "Label",
                   "type": "Строка",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Label"
               ],
@@ -52591,7 +54907,8 @@
                   "owner": "Data::Item",
                   "name": "Total",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Total"
               ]
@@ -52612,7 +54929,54 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -52633,7 +54997,8 @@
               59,
               64
             ],
-            "sql_nullable": false
+            "sql_nullable": false,
+            "null_field": ""
           }
         ],
         "having": [
@@ -52667,14 +55032,16 @@
                       79,
                       84
                     ],
-                    "sql_nullable": false
+                    "sql_nullable": false,
+                    "null_field": ""
                   }
                 ],
                 "range": [
                   73,
                   85
                 ],
-                "sql_nullable": true
+                "sql_nullable": true,
+                "null_field": ""
               },
               {
                 "kind": "literal",
@@ -52687,17 +55054,21 @@
                   88,
                   89
                 ],
-                "sql_nullable": false
+                "sql_nullable": false,
+                "null_field": ""
               }
             ],
             "range": [
               73,
               89
             ],
-            "sql_nullable": true
+            "sql_nullable": true,
+            "null_field": ""
           }
         ],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "3919f6cde3ab68d7b39b10965f53a15dea4c494de037f4abdd97f030632ca564"
     },
@@ -52718,7 +55089,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/distinct.xbql",
       "semantics": [
-        "adapter-storage-unions-nesting-042",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -52735,7 +55106,7 @@
           "criterionId": "distinct",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-042-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
           "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
           "sourceFile": "Entry/Main.xbsl",
@@ -52747,8 +55118,8 @@
         }
       ],
       "evidence": [
-        "result/unions-nesting/documented-assessment-distinct.json",
-        "result/unions-nesting/documented-distinct.json"
+        "result/query-040-042-completion/fresh-042/documented-assessment-distinct.json",
+        "result/query-040-042-completion/fresh-042/documented-distinct.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -52837,7 +55208,8 @@
                   "owner": "Data::Item",
                   "name": "Label",
                   "type": "Строка",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Label"
               ]
@@ -52858,7 +55230,75 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Amount",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Day",
+                "type": "Дата",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Peer",
+                "type": "ТестТип2dc46950b8601763.Ссылка?",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Kind",
+                "type": "Category",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -52868,7 +55308,8 @@
         "grouping": [],
         "having": [],
         "distinct": true,
-        "subqueries": []
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "a61711286682e1f04235daf54c15c311c279c38f8942fc56975a8667770068ed"
     },
@@ -52889,7 +55330,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/union.xbql",
       "semantics": [
-        "adapter-storage-unions-nesting-042",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -52906,7 +55347,7 @@
           "criterionId": "union",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-042-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
           "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
           "sourceFile": "Entry/Main.xbsl",
@@ -52918,8 +55359,8 @@
         }
       ],
       "evidence": [
-        "result/unions-nesting/documented-assessment-union.json",
-        "result/unions-nesting/documented-union.json"
+        "result/query-040-042-completion/fresh-042/documented-assessment-union.json",
+        "result/query-040-042-completion/fresh-042/documented-union.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -53029,7 +55470,8 @@
                       "owner": "Data::Item",
                       "name": "Label",
                       "type": "Строка",
-                      "system": false
+                      "system": false,
+                      "sql_nullable": false
                     },
                     "Label"
                   ]
@@ -53050,7 +55492,75 @@
                 ],
                 "source_name": "Data::Item",
                 "boundary": null,
-                "fill": null
+                "fill": null,
+                "fields": [
+                  {
+                    "owner": "Data::Item",
+                    "name": "Key",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Amount",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Label",
+                    "type": "Строка",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Flag",
+                    "type": "Булево",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Day",
+                    "type": "Дата",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Peer",
+                    "type": "ТестТип2dc46950b8601763.Ссылка?",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Kind",
+                    "type": "Category",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Ссылка",
+                    "type": "ТестТип2dc46950b8601763.Ссылка",
+                    "system": true,
+                    "sql_nullable": false
+                  }
+                ],
+                "member": "",
+                "resources": [],
+                "register_kind": "",
+                "end_slot": null,
+                "definition": null,
+                "definition_source": null,
+                "source_filter": null,
+                "totals_periodicity": "Период",
+                "complement": "ЗаписиИГраницыПериода",
+                "definition_slots": []
               }
             ],
             "joins": [],
@@ -53060,7 +55570,8 @@
             "grouping": [],
             "having": [],
             "distinct": false,
-            "subqueries": []
+            "subqueries": [],
+            "outer_parameters": []
           },
           {
             "owner": "Other::Item",
@@ -53100,7 +55611,8 @@
                       "owner": "Other::Item",
                       "name": "Label",
                       "type": "Строка",
-                      "system": false
+                      "system": false,
+                      "sql_nullable": false
                     },
                     "Label"
                   ]
@@ -53121,7 +55633,75 @@
                 ],
                 "source_name": "Other::Item",
                 "boundary": null,
-                "fill": null
+                "fill": null,
+                "fields": [
+                  {
+                    "owner": "Other::Item",
+                    "name": "Key",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Amount",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Label",
+                    "type": "Строка",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Flag",
+                    "type": "Булево",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Day",
+                    "type": "Дата",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Peer",
+                    "type": "ТестТип2dc46950b8601763.Ссылка?",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Kind",
+                    "type": "Category",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Ссылка",
+                    "type": "ТестТип9fad72b7ef372954.Ссылка",
+                    "system": true,
+                    "sql_nullable": false
+                  }
+                ],
+                "member": "",
+                "resources": [],
+                "register_kind": "",
+                "end_slot": null,
+                "definition": null,
+                "definition_source": null,
+                "source_filter": null,
+                "totals_periodicity": "Период",
+                "complement": "ЗаписиИГраницыПериода",
+                "definition_slots": []
               }
             ],
             "joins": [],
@@ -53131,7 +55711,8 @@
             "grouping": [],
             "having": [],
             "distinct": false,
-            "subqueries": []
+            "subqueries": [],
+            "outer_parameters": []
           }
         ],
         "operators": [
@@ -53144,7 +55725,8 @@
         "source_kind": "union",
         "mode": "storage-unions-nesting-v1",
         "source_name": "",
-        "source_range": null
+        "source_range": null,
+        "outer_parameters": []
       },
       "fixtureHash": "859bb087150e9c5830abd6e632ed941439fa71a32457842f2168766642873c1e"
     },
@@ -53165,7 +55747,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/union-all.xbql",
       "semantics": [
-        "adapter-storage-unions-nesting-042",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -53182,7 +55764,7 @@
           "criterionId": "union_all",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-042-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
           "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
           "sourceFile": "Entry/Main.xbsl",
@@ -53194,8 +55776,8 @@
         }
       ],
       "evidence": [
-        "result/unions-nesting/documented-assessment-union_all.json",
-        "result/unions-nesting/documented-union_all.json"
+        "result/query-040-042-completion/fresh-042/documented-assessment-union_all.json",
+        "result/query-040-042-completion/fresh-042/documented-union_all.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -53305,7 +55887,8 @@
                       "owner": "Data::Item",
                       "name": "Label",
                       "type": "Строка",
-                      "system": false
+                      "system": false,
+                      "sql_nullable": false
                     },
                     "Label"
                   ]
@@ -53326,7 +55909,75 @@
                 ],
                 "source_name": "Data::Item",
                 "boundary": null,
-                "fill": null
+                "fill": null,
+                "fields": [
+                  {
+                    "owner": "Data::Item",
+                    "name": "Key",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Amount",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Label",
+                    "type": "Строка",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Flag",
+                    "type": "Булево",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Day",
+                    "type": "Дата",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Peer",
+                    "type": "ТестТип2dc46950b8601763.Ссылка?",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Kind",
+                    "type": "Category",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Ссылка",
+                    "type": "ТестТип2dc46950b8601763.Ссылка",
+                    "system": true,
+                    "sql_nullable": false
+                  }
+                ],
+                "member": "",
+                "resources": [],
+                "register_kind": "",
+                "end_slot": null,
+                "definition": null,
+                "definition_source": null,
+                "source_filter": null,
+                "totals_periodicity": "Период",
+                "complement": "ЗаписиИГраницыПериода",
+                "definition_slots": []
               }
             ],
             "joins": [],
@@ -53336,7 +55987,8 @@
             "grouping": [],
             "having": [],
             "distinct": false,
-            "subqueries": []
+            "subqueries": [],
+            "outer_parameters": []
           },
           {
             "owner": "Other::Item",
@@ -53376,7 +56028,8 @@
                       "owner": "Other::Item",
                       "name": "Label",
                       "type": "Строка",
-                      "system": false
+                      "system": false,
+                      "sql_nullable": false
                     },
                     "Label"
                   ]
@@ -53397,7 +56050,75 @@
                 ],
                 "source_name": "Other::Item",
                 "boundary": null,
-                "fill": null
+                "fill": null,
+                "fields": [
+                  {
+                    "owner": "Other::Item",
+                    "name": "Key",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Amount",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Label",
+                    "type": "Строка",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Flag",
+                    "type": "Булево",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Day",
+                    "type": "Дата",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Peer",
+                    "type": "ТестТип2dc46950b8601763.Ссылка?",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Kind",
+                    "type": "Category",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Other::Item",
+                    "name": "Ссылка",
+                    "type": "ТестТип9fad72b7ef372954.Ссылка",
+                    "system": true,
+                    "sql_nullable": false
+                  }
+                ],
+                "member": "",
+                "resources": [],
+                "register_kind": "",
+                "end_slot": null,
+                "definition": null,
+                "definition_source": null,
+                "source_filter": null,
+                "totals_periodicity": "Период",
+                "complement": "ЗаписиИГраницыПериода",
+                "definition_slots": []
               }
             ],
             "joins": [],
@@ -53407,7 +56128,8 @@
             "grouping": [],
             "having": [],
             "distinct": false,
-            "subqueries": []
+            "subqueries": [],
+            "outer_parameters": []
           }
         ],
         "operators": [
@@ -53420,7 +56142,8 @@
         "source_kind": "union",
         "mode": "storage-unions-nesting-v1",
         "source_name": "",
-        "source_range": null
+        "source_range": null,
+        "outer_parameters": []
       },
       "fixtureHash": "5b2f228f4721f369ee2956d85458af06b7a657e0762b72429d8dce48d6ccf581"
     },
@@ -53441,7 +56164,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/nested.xbql",
       "semantics": [
-        "adapter-storage-unions-nesting-042",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -53458,7 +56181,7 @@
           "criterionId": "nested",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-042-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
           "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
           "sourceFile": "Entry/Main.xbsl",
@@ -53470,8 +56193,8 @@
         }
       ],
       "evidence": [
-        "result/unions-nesting/documented-assessment-nested.json",
-        "result/unions-nesting/documented-nested.json"
+        "result/query-040-042-completion/fresh-042/documented-assessment-nested.json",
+        "result/query-040-042-completion/fresh-042/documented-nested.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -53590,7 +56313,8 @@
                       "owner": "Data::Item",
                       "name": "Label",
                       "type": "Строка",
-                      "system": false
+                      "system": false,
+                      "sql_nullable": false
                     },
                     "Label"
                   ]
@@ -53611,7 +56335,75 @@
                 ],
                 "source_name": "Data::Item",
                 "boundary": null,
-                "fill": null
+                "fill": null,
+                "fields": [
+                  {
+                    "owner": "Data::Item",
+                    "name": "Key",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Amount",
+                    "type": "Число",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Label",
+                    "type": "Строка",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Flag",
+                    "type": "Булево",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Day",
+                    "type": "Дата",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Peer",
+                    "type": "ТестТип2dc46950b8601763.Ссылка?",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Kind",
+                    "type": "Category",
+                    "system": false,
+                    "sql_nullable": false
+                  },
+                  {
+                    "owner": "Data::Item",
+                    "name": "Ссылка",
+                    "type": "ТестТип2dc46950b8601763.Ссылка",
+                    "system": true,
+                    "sql_nullable": false
+                  }
+                ],
+                "member": "",
+                "resources": [],
+                "register_kind": "",
+                "end_slot": null,
+                "definition": null,
+                "definition_source": null,
+                "source_filter": null,
+                "totals_periodicity": "Период",
+                "complement": "ЗаписиИГраницыПериода",
+                "definition_slots": []
               }
             ],
             "joins": [],
@@ -53621,7 +56413,8 @@
             "grouping": [],
             "having": [],
             "distinct": false,
-            "subqueries": []
+            "subqueries": [],
+            "outer_parameters": []
           }
         ],
         "joins": [],
@@ -53631,7 +56424,8 @@
         "grouping": [],
         "having": [],
         "distinct": false,
-        "subqueries": []
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "ea9edb97fe159772653e4d1ff861d092fd2f43383f69b2d149f3b91674454df3"
     },
@@ -54874,7 +57668,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/compound.xbql",
       "semantics": [
-        "adapter-storage-unions-nesting-042",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -54891,7 +57685,7 @@
           "criterionId": "compound",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-042-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "195e6e05bd1c6dbbe488dd037a0854f0e31b4dbf11fb2620dc151efcec18ac81",
           "projectSourceHash": "0e6e04f279299f487960ae1899eb95f693b186f5636df67e6bedf031e730375f",
           "sourceFile": "Entry/Main.xbsl",
@@ -54903,8 +57697,8 @@
         }
       ],
       "evidence": [
-        "result/unions-nesting/documented-assessment-compound.json",
-        "result/unions-nesting/documented-compound.json"
+        "result/query-040-042-completion/fresh-042/documented-assessment-compound.json",
+        "result/query-040-042-completion/fresh-042/documented-compound.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -55024,7 +57818,8 @@
                         "owner": "Data::Item",
                         "name": "Label",
                         "type": "Строка",
-                        "system": false
+                        "system": false,
+                        "sql_nullable": false
                       },
                       "Label"
                     ]
@@ -55045,7 +57840,75 @@
                   ],
                   "source_name": "Data::Item",
                   "boundary": null,
-                  "fill": null
+                  "fill": null,
+                  "fields": [
+                    {
+                      "owner": "Data::Item",
+                      "name": "Key",
+                      "type": "Число",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Amount",
+                      "type": "Число",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Flag",
+                      "type": "Булево",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Day",
+                      "type": "Дата",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Peer",
+                      "type": "ТестТип2dc46950b8601763.Ссылка?",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Kind",
+                      "type": "Category",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Data::Item",
+                      "name": "Ссылка",
+                      "type": "ТестТип2dc46950b8601763.Ссылка",
+                      "system": true,
+                      "sql_nullable": false
+                    }
+                  ],
+                  "member": "",
+                  "resources": [],
+                  "register_kind": "",
+                  "end_slot": null,
+                  "definition": null,
+                  "definition_source": null,
+                  "source_filter": null,
+                  "totals_periodicity": "Период",
+                  "complement": "ЗаписиИГраницыПериода",
+                  "definition_slots": []
                 }
               ],
               "joins": [],
@@ -55055,7 +57918,8 @@
               "grouping": [],
               "having": [],
               "distinct": false,
-              "subqueries": []
+              "subqueries": [],
+              "outer_parameters": []
             },
             "columns": [],
             "index": [],
@@ -55105,7 +57969,8 @@
                         "owner": "Other::Item",
                         "name": "Label",
                         "type": "Строка",
-                        "system": false
+                        "system": false,
+                        "sql_nullable": false
                       },
                       "Label"
                     ]
@@ -55126,7 +57991,75 @@
                   ],
                   "source_name": "Other::Item",
                   "boundary": null,
-                  "fill": null
+                  "fill": null,
+                  "fields": [
+                    {
+                      "owner": "Other::Item",
+                      "name": "Key",
+                      "type": "Число",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Amount",
+                      "type": "Число",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Label",
+                      "type": "Строка",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Flag",
+                      "type": "Булево",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Day",
+                      "type": "Дата",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Peer",
+                      "type": "ТестТип2dc46950b8601763.Ссылка?",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Kind",
+                      "type": "Category",
+                      "system": false,
+                      "sql_nullable": false
+                    },
+                    {
+                      "owner": "Other::Item",
+                      "name": "Ссылка",
+                      "type": "ТестТип9fad72b7ef372954.Ссылка",
+                      "system": true,
+                      "sql_nullable": false
+                    }
+                  ],
+                  "member": "",
+                  "resources": [],
+                  "register_kind": "",
+                  "end_slot": null,
+                  "definition": null,
+                  "definition_source": null,
+                  "source_filter": null,
+                  "totals_periodicity": "Период",
+                  "complement": "ЗаписиИГраницыПериода",
+                  "definition_slots": []
                 }
               ],
               "joins": [],
@@ -55136,7 +58069,8 @@
               "grouping": [],
               "having": [],
               "distinct": false,
-              "subqueries": []
+              "subqueries": [],
+              "outer_parameters": []
             },
             "columns": [],
             "index": [],
@@ -55152,7 +58086,8 @@
         "source_kind": "batch",
         "mode": "storage-unions-nesting-v1",
         "source_name": "",
-        "source_range": null
+        "source_range": null,
+        "outer_parameters": []
       },
       "fixtureHash": "06d8defbd7d0d9f2a11809b528860f6cbfc54644966af28123a98cb9a57e8181"
     },
@@ -56032,7 +58967,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/case.xbql",
       "semantics": [
-        "adapter-storage-projections-aggregates-041",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -56049,7 +58984,7 @@
           "criterionId": "Case",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-041-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
           "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
           "sourceFile": "Entry/Main.xbsl",
@@ -56061,8 +58996,8 @@
         }
       ],
       "evidence": [
-        "result/projections-aggregates/documented-assessment-Case.json",
-        "result/projections-aggregates/documented-Case.json"
+        "result/query-040-042-completion/fresh-041/documented-assessment-Case.json",
+        "result/query-040-042-completion/fresh-041/documented-Case.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -56142,7 +59077,8 @@
                     20,
                     24
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 },
                 {
                   "kind": "field",
@@ -56157,7 +59093,8 @@
                     31,
                     36
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 },
                 {
                   "kind": "literal",
@@ -56170,14 +59107,16 @@
                     43,
                     44
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 8,
                 50
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Value"
           ]
@@ -56196,7 +59135,8 @@
                   "owner": "Data::Item",
                   "name": "Total",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Total"
               ],
@@ -56205,7 +59145,8 @@
                   "owner": "Data::Item",
                   "name": "Flag",
                   "type": "Булево",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Flag"
               ]
@@ -56226,7 +59167,54 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [],
@@ -56235,7 +59223,9 @@
         "source_kind": "relational",
         "grouping": [],
         "having": [],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "7aa1585d5ed12c52bf5876b6360091187ba2c26b80c04b076c9c41b70c9d1482"
     },
@@ -56891,7 +59881,7 @@
       "dependencies": [],
       "fixture": "tests/corpus/storage-query-fill/documented-forms/combined-join-group-null.xbql",
       "semantics": [
-        "adapter-storage-projections-aggregates-041",
+        "executor-040-042-completion",
         "element-reference-9.3",
         "script-current"
       ],
@@ -56908,7 +59898,7 @@
           "criterionId": "CombinedJoinGroupNull",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-041-transferable",
+          "origin": "fresh-040-042-completion",
           "sourceHash": "335d535d2a1f8acc8252d49b801368c4ad1332e9d3300401557b1e33ba644eb9",
           "projectSourceHash": "c075570f0d29f9b8e1f548c0823d2720ce9f5be59d58b7207c38fbf87583e87d",
           "sourceFile": "Entry/Main.xbsl",
@@ -56920,8 +59910,8 @@
         }
       ],
       "evidence": [
-        "result/projections-aggregates/documented-assessment-CombinedJoinGroupNull.json",
-        "result/projections-aggregates/documented-CombinedJoinGroupNull.json"
+        "result/query-040-042-completion/fresh-041/documented-assessment-CombinedJoinGroupNull.json",
+        "result/query-040-042-completion/fresh-041/documented-CombinedJoinGroupNull.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -56995,7 +59985,8 @@
                 8,
                 15
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "Label"
           ],
@@ -57031,7 +60022,8 @@
                         23,
                         30
                       ],
-                      "sql_nullable": true
+                      "sql_nullable": true,
+                      "null_field": ""
                     },
                     {
                       "kind": "literal",
@@ -57044,21 +60036,24 @@
                         44,
                         45
                       ],
-                      "sql_nullable": false
+                      "sql_nullable": false,
+                      "null_field": ""
                     }
                   ],
                   "range": [
                     23,
                     46
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 17,
                 47
               ],
-              "sql_nullable": true
+              "sql_nullable": true,
+              "null_field": ""
             },
             "СУММА"
           ]
@@ -57077,7 +60072,8 @@
                   "owner": "Data::Item",
                   "name": "Key",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Key"
               ],
@@ -57086,7 +60082,8 @@
                   "owner": "Data::Item",
                   "name": "Label",
                   "type": "Строка",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Label"
               ]
@@ -57107,7 +60104,54 @@
             ],
             "source_name": "Data::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Data::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Data::Item",
+                "name": "Ссылка",
+                "type": "ТестТип2dc46950b8601763.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           },
           {
             "owner": "Other::Item",
@@ -57118,7 +60162,8 @@
                   "owner": "Other::Item",
                   "name": "Key",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Key"
               ],
@@ -57127,7 +60172,8 @@
                   "owner": "Other::Item",
                   "name": "Total",
                   "type": "Число",
-                  "system": false
+                  "system": false,
+                  "sql_nullable": false
                 },
                 "Total"
               ]
@@ -57148,7 +60194,54 @@
             ],
             "source_name": "Other::Item",
             "boundary": null,
-            "fill": null
+            "fill": null,
+            "fields": [
+              {
+                "owner": "Other::Item",
+                "name": "Key",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Label",
+                "type": "Строка",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Total",
+                "type": "Число",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Flag",
+                "type": "Булево",
+                "system": false,
+                "sql_nullable": false
+              },
+              {
+                "owner": "Other::Item",
+                "name": "Ссылка",
+                "type": "ТестТип9fad72b7ef372954.Ссылка",
+                "system": true,
+                "sql_nullable": false
+              }
+            ],
+            "member": "",
+            "resources": [],
+            "register_kind": "",
+            "end_slot": null,
+            "definition": null,
+            "definition_source": null,
+            "source_filter": null,
+            "totals_periodicity": "Период",
+            "complement": "ЗаписиИГраницыПериода",
+            "definition_slots": []
           }
         ],
         "joins": [
@@ -57176,7 +60269,8 @@
                     106,
                     111
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 },
                 {
                   "kind": "field",
@@ -57192,14 +60286,16 @@
                     115,
                     120
                   ],
-                  "sql_nullable": false
+                  "sql_nullable": false,
+                  "null_field": ""
                 }
               ],
               "range": [
                 106,
                 120
               ],
-              "sql_nullable": false
+              "sql_nullable": false,
+              "null_field": ""
             },
             "range": [
               68,
@@ -57225,11 +60321,14 @@
               138,
               145
             ],
-            "sql_nullable": false
+            "sql_nullable": false,
+            "null_field": ""
           }
         ],
         "having": [],
-        "distinct": false
+        "distinct": false,
+        "subqueries": [],
+        "outer_parameters": []
       },
       "fixtureHash": "f881c835ac5ac5f997653a3bd7d5c31ee976a5b7e7b363e4b2cbc5ba3a33309e"
     },
@@ -57294,7 +60393,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57378,7 +60477,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57505,7 +60604,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57589,7 +60688,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57673,7 +60772,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57757,7 +60856,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57841,7 +60940,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -57925,7 +61024,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58009,7 +61108,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58093,7 +61192,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58177,7 +61276,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58261,7 +61360,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58345,7 +61444,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58464,7 +61563,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58548,7 +61647,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58667,7 +61766,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58880,7 +61979,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; finite supported signatures and remaining methods are listed in the stage-41 contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "041-projections-and-aggregates",
       "criteria": [],
       "evidence": [],
@@ -58964,7 +62063,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -59040,7 +62139,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -59358,7 +62457,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documented reference 9.1 selected for compatibility 9.0; this contract still requires parser/runtime extension and an independent executable criterion",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "040-joins-and-null",
       "criteria": [],
       "evidence": [],
@@ -59434,7 +62533,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -59514,7 +62613,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -59629,7 +62728,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -59924,7 +63023,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -60004,7 +63103,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -60084,7 +63183,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -60207,7 +63306,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -60634,7 +63733,7 @@
       "planned": false,
       "executed": false,
       "independentlyAssessed": false,
-      "unsupportedReason": "Documentation inventory has no exact executable source/criterion; index operations in this adapter are validated logical hints, native physical indexes and extended temporary field definitions remain outside the verified contract",
+      "unsupportedReason": "Documentation inventory has no exact executable source/range/criterion; supported signatures and temporary field semantics are recorded in the 040-042 completion contract",
       "nextStage": "042-unions-and-nesting",
       "criteria": [],
       "evidence": [],
@@ -62118,5 +65217,18 @@
       "mode": "explicit-emulation-alias",
       "nativeSignatureConfirmed": false
     }
+  },
+  "stage040042CompletionReference": {
+    "version": "9.3",
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false,
+    "sources": [
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/first-not-null-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/full-match-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/uuid-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/math-and-trigonometric-functions/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/"
+    ]
   }
 }

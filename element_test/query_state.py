@@ -31,6 +31,7 @@ def relocated(q,segments,span):
 
 def parse_mutation(raw,contracts,tables,offset):
     from .query_composites import Statement,parse_select,tokens,top_tokens,shift,column_type
+    from .query_temporary import descriptor,cast_text,insert_expressions
     ts=tokens(raw)
     if not ts or ts[0][1].upper() not in ('ВСТАВИТЬ','ИЗМЕНИТЬ','УДАЛИТЬ'):return None
     operation={'ВСТАВИТЬ':'insert','ИЗМЕНИТЬ':'update','УДАЛИТЬ':'delete'}[ts[0][1].upper()]
@@ -64,9 +65,12 @@ def parse_mutation(raw,contracts,tables,offset):
             if pos<len(ts) and ts[pos][1]==',':pos+=1;continue
             expect(')');break
         if len(set(targets))!=len(targets):raise UnsupportedSyntaxError('Повторяющееся поле ВСТАВИТЬ')
+        if any(descriptor(e).get('auto') or descriptor(e).get('computed') for e,n in schema if n in targets):
+            raise UnsupportedSyntaxError('ВСТАВИТЬ не изменяет автоматическое/вычисляемое поле')
         if pos>=len(ts):raise UnsupportedSyntaxError('ВСТАВИТЬ требует значения или SELECT')
         if ts[pos][1].upper()=='ВЫБРАТЬ':
-            q=shift(parse_select(raw[ts[pos][2]:],contracts,tables),offset+ts[pos][2])
+            begin=ts[pos][2]
+            q=shift(parse_select(raw[begin:],contracts,tables),offset+begin)
             if len(q.projections)!=len(targets):raise UnsupportedSyntaxError('Число полей ВСТАВИТЬ не совпадает')
             # Preserve original query ranges; mapping is positional, labels may differ.
             projections=list(q.projections)
@@ -77,23 +81,33 @@ def parse_mutation(raw,contracts,tables,offset):
             for (e,_),target in zip(q.projections,targets):
                 typ=column_type(next(c for c,n in schema if n==target))
                 if column_type(e) not in (typ,typ.rstrip('?')):raise UnsupportedSyntaxError('Несовместимый тип ВСТАВИТЬ: '+target)
-            missing=[n for e,n in schema if n not in targets and not e.type.endswith('?')]
-            if missing:raise UnsupportedSyntaxError('Обязательные поля ВСТАВИТЬ отсутствуют: '+', '.join(missing))
-            return Statement('insert',table,q,columns=schema,index=tuple(targets),range=span)
+            # A derived SELECT applies qualifiers/defaults to each supplied row.
+            # Leave simple legacy inserts intact, including typed NULL columns.
+            if not any(any(descriptor(e).values()) for e,_ in schema):
+                missing=[n for e,n in schema if n not in targets and not e.type.endswith('?')]
+                if missing:raise UnsupportedSyntaxError('Обязательные поля ВСТАВИТЬ отсутствуют: '+', '.join(missing))
+                return Statement('insert',table,q,columns=schema,index=tuple(targets),range=span)
+            supplied={target:'__Insert42.'+label for target,(_,label) in zip(targets,q.projections)}
+            text='ВЫБРАТЬ '+', '.join(expr+' КАК '+name for expr,name in insert_expressions(schema,supplied))+' ИЗ ('
+            append(raw[begin:],begin);append(') КАК __Insert42')
+            q=relocated(parse_select(text,contracts,tables),segments,span)
+            return Statement('insert',table,q,columns=schema,index=tuple(names),range=span)
         expect('ЗНАЧЕНИЯ');expect('(')
         begin=ts[pos][2]
+        if ts[pos][0]=='parameter':begin-=2 if raw[begin-2:begin]=='%{' else 1
         if ts[-1][1]!=')':raise UnsupportedSyntaxError('Незакрытые ЗНАЧЕНИЯ')
         parts=split(begin,ts[-1][2])
         if len(parts)!=len(targets):raise UnsupportedSyntaxError('Число значений ВСТАВИТЬ не совпадает')
-        values=dict(zip(targets,parts))
-        for i,(e,n) in enumerate(schema):
+        values=dict(zip(targets,parts));placeholders={n:'__Supply42_'+str(i) for i,n in enumerate(targets)}
+        replacements={placeholders[n]:expression_range(a,b) for n,(a,b) in values.items()}
+        for i,(expr,n) in enumerate(insert_expressions(schema,placeholders)):
             if i:append(', ')
-            if n in values:
-                a,b=values[n];fragment,a=expression_range(a,b)
-                append('ВЫРАЗИТЬ(');append(fragment,a);append(' КАК '+e.type.rstrip('?')+')')
-            elif e.type.endswith('?'):append('NULL')
-            else:raise UnsupportedSyntaxError('Обязательное поле ВСТАВИТЬ отсутствует: '+n)
-            append(' КАК '+n)
+            start=0
+            for t in tokens(expr):
+                if t[0]=='token' and t[1] in replacements:
+                    append(expr[start:t[2]]);fragment,origin=replacements[t[1]]
+                    append('(');append(fragment,origin);append(')');start=t[3]
+            append(expr[start:]);append(' КАК '+n)
         append(' ИЗ '+SINGLETON)
         local={**tables,SINGLETON:((Expression('column','Число'),'Marker'),)}
         q=relocated(parse_select(text,contracts,local),segments,span)
@@ -114,6 +128,9 @@ def parse_mutation(raw,contracts,tables,offset):
         for a,b in split(rest_start,end):
             m=re.match(rf'\s*({IDENT})\s*=\s*',raw[a:b])
             if not m or m[1] not in names or m[1] in targets:raise UnsupportedSyntaxError('Неизвестное или повторяющееся поле ИЗМЕНИТЬ')
+            e=next(e for e,n in schema if n==m[1])
+            if descriptor(e).get('auto') or descriptor(e).get('computed'):
+                raise UnsupportedSyntaxError('ИЗМЕНИТЬ не изменяет автоматическое/вычисляемое поле')
             targets.append(m[1]);assignments.append((a+m.end(),b))
     elif raw[rest_start:end].strip():raise UnsupportedSyntaxError('УДАЛИТЬ: неожиданный оператор')
     append(', '.join(names))
@@ -124,7 +141,8 @@ def parse_mutation(raw,contracts,tables,offset):
         used.add(value);return value
     for target,(a,b) in zip(targets,assignments):
         e=next(e for e,n in schema if n==target);fragment,a=expression_range(a,b)
-        append(', ВЫРАЗИТЬ(');append(fragment,a);append(' КАК '+e.type.rstrip('?')+') КАК '+alias())
+        expr=cast_text(e,'__Value42');before,after=expr.split('__Value42')
+        append(', '+before);append(fragment,a);append(after+' КАК '+alias())
     append(', ')
     if where:
         a=rest_start+where[3];fragment,a=expression_range(a,len(raw));append(fragment,a)
@@ -147,10 +165,15 @@ def parse_mutation(raw,contracts,tables,offset):
 
 def render_mutation(step,i,child,contracts):
     from .query_composites import declaration,null_column
+    from .query_temporary import descriptor
     n='ТаблицаИзменений'+str(i);key=contracts.literal(step.table,'Строка')
     declarations=declaration(n,step.columns,contracts,flags=True)
     text='        пер Количество'+str(i)+' = 0\n        знч Новые'+str(i)+' = новый Массив<'+n+'>()\n'
     if step.operation=='insert':
+        automatic=next((label for e,label in step.columns if descriptor(e).get('auto')),None)
+        if automatic:
+            counter=contracts.literal('__Auto42:'+step.table,'Строка')
+            text+='        пер Авто'+str(i)+' = Контекст.СодержитКлюч('+counter+') ? СериализацияJson.ПрочитатьОбъект<Число>(Контекст['+counter+'], Тип<Число>) : 0\n'
         text+='        для Старый из СериализацияJson.ПрочитатьОбъект<Массив<'+n+'>>(Контекст['+key+'], Тип<Массив<'+n+'>>)\n            Новые'+str(i)+'.Добавить(Старый)\n        ;\n'
     text+='        для С из Шаг'+str(i)+'\n'
     match='Истина' if step.operation=='insert' else 'С.'+child.projections[-1][1]+' == Истина'
@@ -163,6 +186,9 @@ def render_mutation(step,i,child,contracts):
             if label in step.index:
                 k=step.index.index(label);value='С.'+child.projections[k][1];null='С.'+null_column(child.projections,k)
             else:value='Неопределено';null='Истина'
+            if descriptor(e).get('auto'):
+                text+='            Авто'+str(i)+' += 1\n'
+                value='Авто'+str(i);null='Ложь'
         else:
             value='С.'+child.projections[j][1];null='С.'+null_column(child.projections,j)
             if step.operation=='update' and label in step.index:
@@ -171,4 +197,6 @@ def render_mutation(step,i,child,contracts):
                 null='('+match+' ? С.'+null_column(child.projections,k)+' : '+null+')'
         values.extend((label+' = '+value,null_column(step.columns,j)+' = '+null))
     text+='            Новые'+str(i)+'.Добавить(новый '+n+'('+', '.join(values)+'))\n        ;\n        Контекст.Вставить('+key+', СериализацияJson.ЗаписатьОбъект(Новые'+str(i)+'))\n'
+    if step.operation=='insert' and automatic:
+        text+='        Контекст.Вставить('+counter+', СериализацияJson.ЗаписатьОбъект(Авто'+str(i)+'))\n'
     return declarations,text

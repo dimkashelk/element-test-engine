@@ -434,6 +434,7 @@ def bind_dynamic(plan):
                     e = c.resolve(s.owner)[0]
                     if e not in plan.storage_elements:
                         plan.storage_elements.append(e)
+                        plan.query_storage_elements.append(e)
             heterogeneous = len({tuple((label,f.type) for f,label in q.projections) for _,q in variants if q}) > 1
             if d.runtime_text or heterogeneous or not any(q for _,q in variants):
                 from .query_runtime_text import generate_runtime_text

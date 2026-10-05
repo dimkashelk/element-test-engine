@@ -1,0 +1,1016 @@
+{
+  "stages": [
+    40,
+    41,
+    42
+  ],
+  "date": "2026-10-05",
+  "status": "completed-within-explicit-executor-contract",
+  "reference": {
+    "version": "9.3",
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "nativeXBQL": false,
+    "sources": [
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/first-not-null-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/full-match-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/uuid-function/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/math-and-trigonometric-functions/",
+      "https://1cmycloud.com/console/help/element/9.3/docs/topics/create-temporary-table-statement/"
+    ]
+  },
+  "historicalMeasurements": [
+    "docs/query-stage-040-measurements.json",
+    "docs/query-stage-041-measurements.json",
+    "docs/query-stage-042-measurements.json"
+  ],
+  "tests": {
+    "distinctSuccessfulMethods": 48,
+    "newMethods": 13,
+    "affectedLegacyMethods": 35,
+    "latestSuccessfulEvidence": {
+      "test_query_completion.CompletionDockerTest.test_exact_real_sales_query_duplicates_null_owner_dates_and_empty": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/real-sales-sql-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_invalid_runtime_regex_overflow_and_empty_sources": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_mutations_independently_fail_and_equivalent_alternative_pass": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_scalar_functions_null_undefined_lazy_branches_regex_dates_uuid": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_six_exact_join_null_templates_with_independent_bag_answers": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_temporary_defaults_qualifiers_computed_auto_null_and_repeat_lifetime": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionPlanTest.test_invalid_defaults_computed_cycles_types_qualifiers_and_indices": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/temporary-null-repeat-final.stderr"
+      },
+      "test_query_completion.CompletionPlanTest.test_read_only_file_snapshot_does_not_claim_object_or_file_operations": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/temporary-null-repeat-final.stderr"
+      },
+      "test_query_completion.CompletionPlanTest.test_typed_new_functions_temporary_columns_and_original_captures": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/temporary-null-repeat-final.stderr"
+      },
+      "test_query_completion.CompletionPublicTest.test_public_new_criteria_test_run_and_unavailable_points": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionPublicTest.test_two_fresh_batches_new_semantics_no_state_leak": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionSqlTest.test_selected_storage_queries_independent_sql_audit_and_cleanup": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/acceptance-final.stderr"
+      },
+      "test_query_completion.CompletionDockerTest.test_math_sql_null_negative_power_and_pattern_subset": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/date-boundary-final.stderr"
+      },
+      "test_query_state.StatePlanTest.test_access_policy_rejects_ambiguous_owner_or_invalid_id": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_state.StatePlanTest.test_dml_duplicate_missing_type_and_unknown_tables": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_state.StatePlanTest.test_two_projects_queries_ranges_and_no_answers": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_state.StatePlanTest.test_unconfirmed_hierarchy_correlation_platform_writes_fail_closed": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_null_vs_undefined_precision_and_distinct_limit": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_projections.ProjectionEdgeTest.test_rounding_overflow_null_coalesce_and_dead_case_branch": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_projections.ProjectionDockerTest.test_real_direct_roots": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_projections.ProjectionDocumentedTest.test_exact_review_template_queries_have_executable_teacher_criteria": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeDockerTest.test_named_fill_dependencies_after_repair": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeDockerTest.test_exact_documented_templates_independently_assessed": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeEdgeTest.test_hidden_null_column_collision_and_nullable_alias_comparison": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeEdgeTest.test_union_and_batch_reference_captures_are_detached": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeMembershipEdgeTest.test_missing_join_side_membership_and_optional_derived_alias": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_state.StateDockerTest.test_state_repeated_snapshots_and_rollback": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_state.StateEdgeTest.test_conditional_assignments_counts_duplicate_rows_and_exists_union": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_joins.JoinDockerTest.test_real_direct_root_empty_base_multiple_missing_and_daily_boundaries": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_joins.JoinDockerTest.test_autocheck_direct_root_enum_duplicates_order_and_mutations": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositeRealTest.test_direct_unchanged_current_department_root": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_projections.ProjectionPublicTest.test_public_real_test_run_and_control": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_composites.CompositePublicTest.test_public_real_test_run_and_fail_unsupported_pass": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_joins.JoinPublicTest.test_public_autocheck_direct_root_test_run": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/affected-final.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_dynamic_original_text_and_deferred_bindings": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/results-plan-final.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_local_project_constructor_spelling_is_excluded": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/results-plan-final.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_produced_nominal_rows_constructor_mapping_ranges_no_answers": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/results-plan-final.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_shadowing_reassignment_visibility_generated_public_constructor": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/results-plan-final.stderr"
+      },
+      "test_query_results.ResultPlanTest.test_unrelated_project_execute_and_parameter_methods_are_not_query_api": {
+        "status": "ok",
+        "evidence": "result/query-040-042-completion/results-plan-final.stderr"
+      }
+    },
+    "logs": [
+      {
+        "file": "result/query-040-042-completion/acceptance-final.stderr",
+        "sha256": "1a38a2c9b1c28fd9fd5c1414b757d40959918eb503512f3a94758a3b9c0db35b"
+      },
+      {
+        "file": "result/query-040-042-completion/boundaries-final.stderr",
+        "sha256": "27a3d6672d0ee5d8616f59696ea9bf13d327f55fd6aeb2a8deea89fa6bc561c8"
+      },
+      {
+        "file": "result/query-040-042-completion/affected-final.stderr",
+        "sha256": "063cfc03f604bd799c2214784daa68f8aa8e65f1b45425b4848bbc7e2c502493"
+      },
+      {
+        "file": "result/query-040-042-completion/results-plan-final.stderr",
+        "sha256": "e48efd1b8f8d3600bd080dd5cd109f67283bcd589069c7c1125f8baa452fa519"
+      },
+      {
+        "file": "result/query-040-042-completion/real-sales-sql-final.stderr",
+        "sha256": "9f41f7da7a6374fd72a6f7f9cdc2ead79077edf238139e6a6913a861068cf91c"
+      },
+      {
+        "file": "result/query-040-042-completion/temporary-null-repeat-final.stderr",
+        "sha256": "91d5432e6f10c8dd1f5e159b1fa356c30ca0442edb4d438a146a17e18fb4570e"
+      },
+      {
+        "file": "result/query-040-042-completion/date-boundary-final.stderr",
+        "sha256": "a8cfaad943a93095e2d41bb5c0fd7276caf707237d0cd18aa4e8299397c4bb33"
+      }
+    ]
+  },
+  "catalog": {
+    "040": {
+      "scopeCount": 73,
+      "counts": {
+        "parsed": 8,
+        "planned": 8,
+        "executed": 8,
+        "independentlyAssessed": 8
+      },
+      "newExactAssessments": [
+        "documented-left-join",
+        "documented-inner-join",
+        "documented-right-join",
+        "documented-full-join",
+        "documented-nullable",
+        "documented-replace-null"
+      ]
+    },
+    "041": {
+      "scopeCount": 39,
+      "counts": {
+        "parsed": 9,
+        "planned": 8,
+        "executed": 8,
+        "independentlyAssessed": 8
+      },
+      "newExactAssessments": [
+        "query-d565e4520d6ae9fa6c758141"
+      ]
+    },
+    "042": {
+      "scopeCount": 46,
+      "counts": {
+        "parsed": 6,
+        "planned": 6,
+        "executed": 6,
+        "independentlyAssessed": 6
+      },
+      "newExactAssessments": []
+    }
+  },
+  "newExactAssessments": [
+    "documented-left-join",
+    "documented-inner-join",
+    "documented-right-join",
+    "documented-full-join",
+    "documented-nullable",
+    "documented-replace-null",
+    "query-d565e4520d6ae9fa6c758141"
+  ],
+  "public": [
+    {
+      "folder": "result/query-040-042-completion/public-new-test",
+      "sourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+      "score": 18,
+      "maxScore": 18,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/public-new-run",
+      "sourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+      "score": 18,
+      "maxScore": 18,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/public-control",
+      "sourceHash": "1d2b607be4ebf1b4f00b755513ecdca98f148ae21da6c29753d0028e1d830e9b",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-041/public-tasks-test",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-041/public-tasks-run",
+      "sourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-041/public-max-test",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 1,
+      "maxScore": 1,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-041/public-max-run",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 1,
+      "maxScore": 1,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-041/public-control",
+      "sourceHash": "e90fcd9ee31b3b00461ae42e5aa0b66fdf04262083244857b9577cd4340af448",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-042/public-real-test",
+      "sourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "score": 5,
+      "maxScore": 5,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-042/public-real-run",
+      "sourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "score": 5,
+      "maxScore": 5,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-042/public-control",
+      "sourceHash": "00e00b7c09dc061de54b051ac2908bc9d562e1cc439b45e029e5c869e9f1f4c0",
+      "score": 1,
+      "maxScore": 2,
+      "unavailablePoints": 1,
+      "checks": [
+        "FAIL",
+        "UNSUPPORTED",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-040/public-cases-test",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/fresh-040/public-cases-run",
+      "sourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "score": 2,
+      "maxScore": 2,
+      "unavailablePoints": 0,
+      "checks": [
+        "PASS",
+        "PASS"
+      ]
+    }
+  ],
+  "batches": [
+    {
+      "folder": "result/query-040-042-completion/batch-1",
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "folder": "result/query-040-042-completion/batch-2",
+      "scores": [
+        3,
+        0,
+        3
+      ],
+      "cacheHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "sql": [
+    {
+      "file": "result/query-040-042-completion/sql-external-sales.json",
+      "sha256": "6db4fb86b80a39a1856badf6964e1f49d4f7a90635264f4de8a82544fc9d22e3",
+      "status": "PASS",
+      "audit": "independent PostgreSQL read and SBSL expected",
+      "cleanup": true
+    },
+    {
+      "file": "result/query-040-042-completion/sql-ordinary-First.json",
+      "sha256": "6709e1f0cf8600db8d8c251210a030fc68a5bf1dcc76684ecf4c9a4af525bd4c",
+      "status": "PASS",
+      "audit": "independent PostgreSQL read and SBSL expected",
+      "cleanup": true
+    },
+    {
+      "file": "result/query-040-042-completion/sql-ordinary-join_full_join.json",
+      "sha256": "16e2ec242d5e4c4782c554e5ebd97c1c58d1ed06afbb3d1604836deff4e6f5ca",
+      "status": "PASS",
+      "audit": "independent PostgreSQL read and SBSL expected",
+      "cleanup": true
+    },
+    {
+      "file": "result/query-040-042-completion/sql-renamed-TempSelect.json",
+      "sha256": "57e1abf4a97d928a28cffd7c68c0b7b7847ed00966d869d222398281d70a6f1c",
+      "status": "PASS",
+      "audit": "independent PostgreSQL read and SBSL expected",
+      "cleanup": true
+    }
+  ],
+  "mutations": [
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-DateParts.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-DateParts.json",
+        "sha256": "0d043d47e4abde99d7cb8c99f6253ac24577007d3283344f2958bdba85a3c78e"
+      },
+      "status": "FAIL"
+    },
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-First.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-First.json",
+        "sha256": "2ae677cfc8977985591b0b47480c53ffb922b3b3bc2a83fd20a7182b038ce999"
+      },
+      "status": "FAIL"
+    },
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-Match.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-Match.json",
+        "sha256": "0628a2ba46c3ddcad9ca1d90b037fdc086853ae2c47b85bfbaa134e2daa791c1"
+      },
+      "status": "FAIL"
+    },
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-TempFields.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-TempFields.json",
+        "sha256": "1670cb17699de214533ba276b31294d5728f210e2accd9d99bf3a710417f7bb0"
+      },
+      "status": "FAIL"
+    },
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-TempSelect.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-TempSelect.json",
+        "sha256": "4ef83f7c81a0282f6e9de47993704351eb0496f4597d6fb1a44eca9b0fc43f05"
+      },
+      "status": "FAIL"
+    },
+    {
+      "assessment": {
+        "file": "result/query-040-042-completion/assessment-mutation-join_full_join.json",
+        "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+      },
+      "runtime": {
+        "file": "result/query-040-042-completion/mutation-join_full_join.json",
+        "sha256": "43d10edf18e6616a7789c1ed58cc311fdb4616e2b5dd2e2e85af2c8675b4a4ad"
+      },
+      "status": "FAIL"
+    }
+  ],
+  "schemaValidation": {
+    "status": "PASS",
+    "validatedArtifacts": 56
+  },
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true
+    }
+  ],
+  "evidence": [
+    {
+      "file": "result/query-040-042-completion/assessment-alternative.json",
+      "sha256": "7dfb0eb5386e59a1b841a07764b4091c8c6afdcaf3adc594c479c171dfebd41d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-boundary-date.json",
+      "sha256": "007ce2041111eb90afc7ebfea144e86cc9773507bf1878de35824b48cb8cd1fb"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-boundary-default.json",
+      "sha256": "5d06c3be2eda7a1bb261da3f0b2aca6f5b67cc22a223a875981190709d91e75d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-boundary-math.json",
+      "sha256": "765c65711e2dc958a92ff5a37eff4cd3000cf65f44e0bfbb7598e86183ed2470"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-empty-DateParts.json",
+      "sha256": "503067c44c5bbeea2304b2ebb3ba94f93d38230c01d1bb6a13d71beaa170022a"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-empty-First.json",
+      "sha256": "3a2739a6e32ab4124e2044a7420d5a279c6c09382ba7cebc713e60c28597a61c"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-empty-Match.json",
+      "sha256": "8f8876c6f3627a9425251fedc95bdbbbd424c74361800cc18fbf83dbdcb36d8a"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-empty-TempSelect.json",
+      "sha256": "c3040d93ef4dbdfcfcaf40d4083609635809fa6e3bb1a354515980dbe99e75eb"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-external-sales-empty.json",
+      "sha256": "4c9e58ddc178334f5f99504961a2252b750d19c9310b3e075fcdb63351a2b427"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-external-sales.json",
+      "sha256": "fb60a5d06b170506ce7e27a8ef01929adf82e722da7095df5c8bd67bbcc56eeb"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-DateParts.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-First.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-Match.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-TempFields.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-TempSelect.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-mutation-join_full_join.json",
+      "sha256": "3aa3771fccc20380b4d7f9fe7dc9aa8adbf85f4ca306f2fca697f168660a182d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-AllNull.json",
+      "sha256": "7764d577e1ef658bf046dcd3691664ccab6b1b8e904204da682fb5a14c21be10"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-DateParts.json",
+      "sha256": "1bfb52c65cbef6d3cab5753384c2698dc79ba758e39de7c920ac220e37201279"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-First.json",
+      "sha256": "e3c14dbfb172e2a09a7656ae811f4de789ac33809e39cb67c061e856e9590233"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-Match.json",
+      "sha256": "be7cea7d311ebff5ea55b9aaad4895cc0e8a8ab4e74f53fca00c0cb9368a724c"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-Math.json",
+      "sha256": "c7a1e12eb03d995c3e8a7648dbe980798aec188a0746bbee7b1299f925f9af85"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-NullDefaults.json",
+      "sha256": "b62f8d959073a84c9a522ffd5ccefa56da3b08a34b66f7ec743b122a557c4bda"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-OptionalValue.json",
+      "sha256": "4cb1f6cad3df06437f409fd507df4ddb634471c8bc2f4a86e6b7b289656c42c9"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-TempCapture.json",
+      "sha256": "ad2c53748cef10a47fdde9e3bd3e1cc4d4a03e3bc1b5a9212d04da75bfd2c6d9"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-TempFields.json",
+      "sha256": "4ba528f52021de0efd8437337fee2b80bc42074eec87cb06f6bd0af6e0a3a76b"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-TempLife.json",
+      "sha256": "d7c83caae7e87331e6685ba819a8e6302756bb6966c6e1d75da778479039a943"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-TempSelect.json",
+      "sha256": "dc9754a8eb95ff2b60cfab68e5d1ad569f3f6faf4b112130c4e72064c8f59157"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-Uuid.json",
+      "sha256": "0f00850c9dede20b4f2205bd6a81d0d9fe956f31a7163bb4dc987a1b771c1902"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_full_join.json",
+      "sha256": "68152d34677621aee57eb95e16ffeeb843be605faf8940953991bb7f2b6cba0e"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_inner_join.json",
+      "sha256": "c8f468938a61fb19ac0cc867207ac97529bdaaad8da5574b066c6b3545648439"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_left_join.json",
+      "sha256": "27418cc71ebd04338cf493d67271b42149fc2b9ed8c25c31dfa787c2ba76ca04"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_nullable.json",
+      "sha256": "4da2786220f6175cdc36b9b4f4485dc381eb8a0c7db8d182eeb447a05594b4c4"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_replace_null.json",
+      "sha256": "05b2ed65644178edafc5ded8a01e529b2df508e126ef9c85b6b9c8abb4306438"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-ordinary-join_right_join.json",
+      "sha256": "190498705de1887151826aeb7f453568a419cc345bf07aad243546a4bd687115"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-pattern-0-0.json",
+      "sha256": "afb05be9ab370fc6bc4f029388010171c453f775ad73e9b195ddf146ed82517b"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-pattern-1-4.json",
+      "sha256": "2ffd67e84046e8fa8070d48cccc60785b26ea3ffb1d7be8765d7465919a48125"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-pattern-3-1.json",
+      "sha256": "050a83150a60a9e40993848b9ff48d87be058d0abdc26aad425b7d4ab63d46ec"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-pattern-5-2.json",
+      "sha256": "2eadbc3106cd2788f793858f335a419f18db48270b3fad430bf809f27a77bda2"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-AllNull.json",
+      "sha256": "fca960b8a6344b4d512b0222ec03e0479d7fa52b48a9a500f54fa630c1d2c058"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-DateParts.json",
+      "sha256": "92eae8780517b7ad3e9b547ab4620d4e7f9255aafefe2fb50a412e0f1d7d4bbf"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-First.json",
+      "sha256": "506e8e44ef2d2e1eac43fb2ca242285eee0d245c556d64648fd00626be1640ce"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-Match.json",
+      "sha256": "f89c9663b5ec52b917d47c03b8494cc6db0164868fc0b4dd390b24ac0001080e"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-Math.json",
+      "sha256": "94988f894b71d9c0f8d44551244119e02374eb0588bb73899f6fc89833f59110"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-NullDefaults.json",
+      "sha256": "7448d442acec2734987948f10edbe291eb318deca3dbe700e912eab8a0bb30f3"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-OptionalValue.json",
+      "sha256": "d235526de18770ae094d27fbf1cacba61ec92454464bf001e453ea03336a9de8"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-TempCapture.json",
+      "sha256": "12c1ab6ec7fe51c9b0392f30a9894ee0c3b1abf7fadd404bb7bbf7c4a3809251"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-TempFields.json",
+      "sha256": "7b974bbec1bfc920cb45eedcf2f38c9ff469ebdb5e047dfd122eefefbd7e458e"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-TempLife.json",
+      "sha256": "e04b6f98045d262f86fec21e2d4b3cd8da12676af213d7005d090aafd0132dc3"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-TempSelect.json",
+      "sha256": "375db65cccf2542a9235810e113eb62ad1930ceedb74f1d5a52227cd69b5e95a"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-Uuid.json",
+      "sha256": "598439be07a047a6f6d1037526f2558e078dcef7ea48a37c2bb0c60385d8cebe"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_full_join.json",
+      "sha256": "3e144ec7e7b1ea2de7be519e915877547b52a22ef208f73fe216ea22551762a0"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_inner_join.json",
+      "sha256": "2e2123110b2d6374df66e41306432be4ec67f738e72614af5ed5f13e8aae042d"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_left_join.json",
+      "sha256": "56044aca2f8136b9fac83d7ca4e94337811243ed6b7099a0fb4adc5251ffa2c8"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_nullable.json",
+      "sha256": "15c59a53d4fa84a4f1dcaf5957b25a1aa45205a58c0fdbd84306e91ac7a23d2c"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_replace_null.json",
+      "sha256": "9e02c8340df588fac3d2013cd250c55d78c806dd7b64659ca07736ec87b5249b"
+    },
+    {
+      "file": "result/query-040-042-completion/assessment-renamed-join_right_join.json",
+      "sha256": "e70cc0d69cb1058995ae8c79d3341bf3c7610da77a61fbc9dfb0a53b262e1828"
+    },
+    {
+      "file": "result/query-040-042-completion/sql-external-sales.json",
+      "sha256": "6db4fb86b80a39a1856badf6964e1f49d4f7a90635264f4de8a82544fc9d22e3"
+    },
+    {
+      "file": "result/query-040-042-completion/sql-ordinary-First.json",
+      "sha256": "6709e1f0cf8600db8d8c251210a030fc68a5bf1dcc76684ecf4c9a4af525bd4c"
+    },
+    {
+      "file": "result/query-040-042-completion/sql-ordinary-join_full_join.json",
+      "sha256": "16e2ec242d5e4c4782c554e5ebd97c1c58d1ed06afbb3d1604836deff4e6f5ca"
+    },
+    {
+      "file": "result/query-040-042-completion/sql-renamed-TempSelect.json",
+      "sha256": "57e1abf4a97d928a28cffd7c68c0b7b7847ed00966d869d222398281d70a6f1c"
+    }
+  ],
+  "initialFailuresAndRepeats": [
+    {
+      "file": "result/query-040-042-completion/initial-plans.stderr",
+      "sha256": "9f809bc0c1df549d4451cd6aca1a50917a774eaf7f92b2b0ae209c20c0d291e4"
+    },
+    {
+      "file": "result/query-040-042-completion/native-match.stderr",
+      "sha256": "34276aeaf48cb824aa274739ad246e213c05c195c7205c695d3137872acad4c4"
+    },
+    {
+      "file": "result/query-040-042-completion/native-functions-repeat.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/native-match-repeat.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/new-plans.stderr",
+      "sha256": "0203b0c192e18eb1bb4c3ef2d97b1c2b04812245437619954364dac295dd9394"
+    },
+    {
+      "file": "result/query-040-042-completion/new-plans-repeat.stderr",
+      "sha256": "3d20d0b7a431e098883317b346bf267c107494ecd9c332938dd91fec29b0c7cf"
+    },
+    {
+      "file": "result/query-040-042-completion/final-plans.stderr",
+      "sha256": "85e68b397470ff0eced41912c51828c1d154244acd5e7900a7a513961958db3c"
+    },
+    {
+      "file": "result/query-040-042-completion/new-docker.stderr",
+      "sha256": "fdedf628dafac61a8debb663583b0417bd851ec471f1033f93fda2eb70776956"
+    },
+    {
+      "file": "result/query-040-042-completion/real-sql.stderr",
+      "sha256": "7d3025f7f62fb958b54c550ea5d2c40e688906f5b0255d779326526f782c297f"
+    },
+    {
+      "file": "result/query-040-042-completion/new-docker-repeat.stderr",
+      "sha256": "a36d9c501927455749680d006a289989cd22416ef6e8ba20c7037b0e0b186cd8"
+    },
+    {
+      "file": "result/query-040-042-completion/new-docker-final.stderr",
+      "sha256": "3ca1d3d79f9dd1c1dbd985bb66120f80918aaaf59fa2d765039f333c03de78ed"
+    },
+    {
+      "file": "result/query-040-042-completion/math-real.stderr",
+      "sha256": "c218966981042e7b5b63de3f620a48f40db8f8141673c75082047761850bfb5b"
+    },
+    {
+      "file": "result/query-040-042-completion/completion-plans.stderr",
+      "sha256": "03a9a6f3e8d40084b57733b0f775b4c644006051a97a6c2afe94af1bd6e25b18"
+    },
+    {
+      "file": "result/query-040-042-completion/public-new-test.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/public-new-run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/native-functions.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/native-pattern.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/record-final.stderr",
+      "sha256": "3b8eb837842f5b5780d01720b40ba8ab38794961111152657d449d00f5bcab1f"
+    },
+    {
+      "file": "result/query-040-042-completion/record-final-repeat.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/temporary-null-final.stderr",
+      "sha256": "16fae349330b406893a14ef33564eb3914e91c6a8beed04b20e9a410a7d292d1"
+    },
+    {
+      "file": "result/query-040-042-completion/record-final-second-repeat.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "nativeProbes": [
+    {
+      "file": "result/query-040-042-completion/native-functions.stdout",
+      "sha256": "56c69d8746308503b41c31a3a07f89f17471ce30a9098addb794cfba6557b011"
+    },
+    {
+      "file": "result/query-040-042-completion/native-functions.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "result/query-040-042-completion/native-pattern.stdout",
+      "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+    },
+    {
+      "file": "result/query-040-042-completion/native-pattern.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limitations": [
+    "Native XBQL and platform report/file/resource lifecycle not executed",
+    "SQL NULL and Undefined have one JSON null representation outside the relational AST",
+    "Math power uses nine fraction digits for bases without a statically known fraction qualifier",
+    "Temporary union types, default depending on auto field and nondeterministic/default captured expressions unsupported",
+    "Temporary auto counter is sequential per Execute; no concurrent/native insertion claim",
+    "Query-only typed snapshot omits implicit Files; object loading and Files queries remain unsupported",
+    "Physical indexes and complete query catalog remain outside verified scope"
+  ],
+  "localExclusions": [
+    "full discovery",
+    "303 forms",
+    "44 former roots",
+    "four validate",
+    "full regression",
+    "nightly execution"
+  ],
+  "preserved": [
+    "four source archives",
+    "previous assignment expected",
+    "runtime/input limits",
+    "CI schedule",
+    "historical measurement files"
+  ],
+  "evidenceRouting": {
+    "tasks040042": "all affected receipts redirected to fresh folders",
+    "initialLegacyDeviation": "Initial affected task-44 plan and task-45 state tests wrote their original evidence paths; later runner also redirects 044/045. Historical measurement files and their logs remain unchanged."
+  }
+}

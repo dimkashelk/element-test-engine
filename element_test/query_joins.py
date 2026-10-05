@@ -456,5 +456,7 @@ def generate_relational_query(query, contracts):
     contracts.method_dependencies[name]=[n+'.Запрос' for n in names]+[e.type for e,_ in query.projections]+[generate_query(s,contracts)+'.Запрос' for s in query.subqueries]
     if 'ТестШаблоны.' in text:
         contracts.method_dependencies[name].append('ТестШаблоны.Совпадает')
+    if 'ТестПолноеСовпадение.' in text:
+        contracts.method_dependencies[name].append('ТестПолноеСовпадение.Совпадает')
     if query.fill:contracts.method_dependencies[name].append(query.fill['type'])
     return name

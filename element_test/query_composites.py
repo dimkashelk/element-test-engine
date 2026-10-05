@@ -198,6 +198,10 @@ class NestedParser(ComputedParser):
         if len(matching)!=1:self.fail('Неизвестное или неоднозначное поле: '+'.'.join(e.value),e.range[0])
         i=matching[0];s=self.sources[i]
         if s.source_kind in LEAF_KINDS:return super().field(e,visible)
+        if s.source_kind=='temporary':
+            from .query_temporary import computed_field
+            computed=computed_field(self,e,i,s.projections)
+            if computed is not None:return computed
         index=next(n for n,(_,l) in enumerate(s.projections) if l==e.name)
         column=s.projections[index][0];typ=column_type(column)
         self.fields[i][e.name]=QueryField(s.owner,e.name,typ)
@@ -366,13 +370,8 @@ def parse_batch(text,contracts,outer,separators):
         if create:
             name=create[1]
             if name in tables:raise UnsupportedSyntaxError('Временная таблица уже существует: '+name)
-            columns=[]
-            for declaration in create[2].split(','):
-                m=re.fullmatch(rf'\s*({IDENT})\s*:\s*({IDENT}(?:::{IDENT})*(?:\.Ссылка)?\??)\s*',declaration)
-                if not m:raise UnsupportedSyntaxError('Определение поля временной таблицы вне подтверждённого контракта')
-                typ=contracts.canonical_type(m[2]);contracts.require(typ)
-                if m[1] in [l for _,l in columns]:raise UnsupportedSyntaxError('Повторяющееся поле временной таблицы')
-                columns.append((Expression('column',typ),m[1]))
+            from .query_temporary import parse_columns
+            columns=parse_columns(create[2],contracts,tables,name)
             tables[name]=tuple(columns);steps.append(Statement('create',name,columns=tuple(columns),range=span));continue
         if drop:
             name=drop[2]
@@ -424,6 +423,9 @@ def validate_index(name,fields,tables,indices):
     if name in indices:raise UnsupportedSyntaxError('У временной таблицы может быть только один индекс')
     names={label for _,label in tables[name]}
     if len(set(fields))!=len(fields) or not fields or any(f not in names for f in fields):raise UnsupportedSyntaxError('Неизвестное или повторяющееся поле индекса')
+    from .query_temporary import descriptor
+    if any(descriptor(e).get('computed') for e,label in tables[name] if label in fields):
+        raise UnsupportedSyntaxError('Индекс не допускает вычисляемое поле')
     indices[name]=fields
 
 
@@ -518,8 +520,10 @@ def generate_composite_query(query,contracts):
                     from .query_state import render_mutation
                     declaration_,body=render_mutation(step,i,step.query,contracts)
                     text=declaration_+text+body
-            elif step.operation=='create' or step.operation=='truncate':text+='        Контекст.Вставить('+key+', "[]")\n'
-            elif step.operation=='drop':text+='        Контекст.Удалить('+key+')\n'
+            elif step.operation=='create' or step.operation=='truncate':
+                text+='        Контекст.Вставить('+key+', "[]")\n'
+                if step.operation=='create':text+='        Контекст.Удалить('+contracts.literal('__Auto42:'+step.table,'Строка')+')\n'
+            elif step.operation=='drop':text+='        Контекст.Удалить('+key+')\n        Контекст.Удалить('+contracts.literal('__Auto42:'+step.table,'Строка')+')\n'
             # An index is a validated performance hint: no bag/order semantics.
         text+='        знч Результат = новый Массив<СтрокаДанных>()\n'
         last=query.statements[-1]
