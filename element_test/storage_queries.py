@@ -19,10 +19,14 @@ def query_name(query):
 
 
 def generate_public_query(query, contracts):
-    name = generate_query(query, contracts)
+    from dataclasses import replace
+    lazy_fill = bool(getattr(contracts, 'query_results', False) and query.fill
+                     and (query.fill['constructor']=='native-positional'
+                          or any(m.get('runtimeCast') for m in query.fill['mapping'])))
+    name = generate_query(replace(query, fill=None) if lazy_fill else query, contracts)
     if getattr(contracts, 'query_results', False):
         from .query_results import wrap_query
-        name, _ = wrap_query(name, query, contracts)
+        name, _ = wrap_query(name, query, contracts, raw=lazy_fill)
     return name
 
 
@@ -168,6 +172,7 @@ def adapt_storage_queries(source, contracts):
     from .call_types import _local_type
     declarations = parse_module(source)[0]
     node = declarations[0] if declarations else None
+    contracts.query_declaration_annotations = node.annotations if node else ()
     bindings = method_local_bindings(source,node) if node else ()
     owner = next((m for m in contracts.model['modules']
                   if m['sourceFile'] == contracts.current_source),
@@ -198,6 +203,7 @@ def bind_queries(plan):
         c.current_source = symbol.owner['sourceFile']
         c.namespace, c.imports = symbol.owner['namespace'], symbol.owner.get('imports', [])
         node = parse_module(symbol.source)[0][0]
+        c.query_declaration_annotations = node.annotations
         locals_ = method_local_bindings(symbol.source,node)
         query_variables = {}
         for start,end,body,text in query_literals(symbol.source):

@@ -150,8 +150,14 @@ def render_plan(plan, sandbox):
                 key, val = [t.strip() for t in split_parameters(return_mapping[1])]
                 if key in contracts.enums:
                     enum_value = contracts.sbsl_type(val)
+            result_types = getattr(contracts,'result_types',set())
+            observers = {p.partition(':')[0].strip():p.partition(':')[0].strip()+'.ТестНаблюдение()'
+                         for p in parse_module(symbol.source)[0][0].parameters(symbol.source)
+                         if contracts.canonical_type(p.partition(':')[2].strip()) in result_types}
+            result_return = contracts.canonical_type(parse_module(symbol.source)[0][0].return_type(symbol.source) or 'ничто') in result_types
             compiled = instrument(compiled, '::'.join(filter(None, (symbol.identity.project,
-                                  symbol.identity.namespace, symbol.identity.owner, declaration.name))), enum_map_value_type=enum_value)
+                                  symbol.identity.namespace, symbol.identity.owner, declaration.name))), enum_map_value_type=enum_value,
+                                  parameter_observers=observers, return_observer='{value}.ТестНаблюдение()' if result_return else None)
         if owner["sourceFile"] == module["sourceFile"]:
             adapted.append(compiled)
             root_compiled[declaration.name] = compiled

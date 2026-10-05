@@ -273,7 +273,14 @@ class ExpressionRenderer:
                         self.helpers[key]=(method,body)
                     from .storage_queries import query_name
                     result=query_name(self.query)+'.'+self.helpers[key][0]+'('+result+')'
-                else:result+='.Подстрока(0, '+str(qs[0])+')'
+                else:
+                    key=('string-length',qs)
+                    if key not in self.helpers:
+                        method='Квалификатор'+str(len(self.helpers))
+                        body='@Глобально\nметод '+method+'(Значение: Строка): Строка\n    возврат Значение.Длина() <= '+str(qs[0])+' ? Значение : Значение.Подстрока(0, '+str(qs[0])+')\n;\n'
+                        self.helpers[key]=(method,body)
+                    from .storage_queries import query_name
+                    result=query_name(self.query)+'.'+self.helpers[key][0]+'('+result+')'
             return result
         if e.kind=='method':return '('+v(e.children[0])+' как '+e.children[0].type.rstrip('?')+').'+e.name+'('+', '.join(v(c) for c in e.children[1:])+')'
         if e.kind=='aggregate':return self.aggregate(e,group)

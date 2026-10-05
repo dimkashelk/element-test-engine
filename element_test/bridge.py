@@ -153,8 +153,13 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             source = symbol.pop('source')
             symbol['sourceHash'] = sha256(source.encode()).hexdigest()
         for query in item.get('plan', {}).get('queries', []):
-            query['sourceHash'] = sha256(query.pop('text').encode()).hexdigest()
-            for parameter in query['ast']['parameters']:
+            text = query.pop('text')
+            if text is None:
+                query['textExpressionHash'] = sha256(query.pop('textExpression').encode()).hexdigest()
+                query['textOrigin'] = 'runtime-expression'
+            else:
+                query['sourceHash'] = sha256(text.encode()).hexdigest()
+            for parameter in query['ast'].get('parameters', []):
                 parameter['expressionHash'] = sha256(parameter.pop('expression').encode()).hexdigest()
     for item in plans:
         for opening in item.get('plan', {}).get('formOpenings', []):

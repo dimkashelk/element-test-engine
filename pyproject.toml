@@ -11,3 +11,6 @@ dependencies = ["PyYAML>=6.0,<7"]
 
 [tool.setuptools.packages.find]
 include = ["element_test*"]
+
+[tool.setuptools.package-data]
+element_test = ["query_text.sbsl"]

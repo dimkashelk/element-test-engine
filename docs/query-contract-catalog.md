@@ -1,4 +1,4 @@
-# Каталог контрактов запросов — №39/40/41/42/43
+# Каталог контрактов запросов — №39–45
 
 Воспроизведение: `python3 -m element_test.query_catalog`. Архивы открываются только для чтения.
 
@@ -13,6 +13,8 @@
 | Движок::Движок | 1 | 1 | 0 |
 | ДемоСРМ::ДемоСРМ | 31 | 35 | 3 |
 | Примеры::Примеры_new | 72 | 80 | 8 |
+
+Дополнение №44: девять точных критериев получили свежие свидетельства. `ЗапросСВыборкой` проверен как явный эмулятор; native-сигнатура не заявляется. [Измерения дополнения](query-stage-044-completion-measurements.json).
 
 P — parsed, L — planned, E — executed, A — independentlyAssessed. Исторические журналы №31–33 не являются свежей приёмкой.
 
@@ -508,7 +510,7 @@ P — parsed, L — planned, E — executed, A — independentlyAssessed. Ист
 | documented-state | tests/corpus/storage-query-fill/documented-forms/state.xbql  | state, transaction | 0/0/0/0 | Historical state outline is prose, not an exact executable source. Snapshot/rollback semantics have separate portable criteria. / 045-state-rights-and-combinations |
 | documented-rights | tests/corpus/storage-query-fill/documented-forms/rights.xbql  | rights | 0/0/0/0 | Historical rights outline is prose. Executor read-policy fixtures do not establish native ACL/RLS. / 045-state-rights-and-combinations |
 | documented-collections | tests/corpus/storage-query-fill/documented-forms/collections.xbql  | source, parameter | 0/0/0/0 | Custom captured data source requires a separately confirmed provider contract. / 045-state-rights-and-combinations |
-| documented-dynamic-api | tests/corpus/storage-query-fill/documented-forms/dynamic-api.xbql  | api | 0/0/0/0 | Historical ЗапросСВыборкой(Text) template has no confirmed 9.3/native signature; supported ПроизвольныйЗапрос constant text has separate portable criteria / 044-result-and-resources |
+| documented-dynamic-api | tests/corpus/storage-query-fill/documented-forms/dynamic-api.xbql  | api | 1/1/1/1 |  / 044-result-and-resources |
 | documented-combined-fill-slice-order | tests/corpus/storage-query-fill/documented-forms/combined-fill-slice-order.xbql  | fill, slice-last, order, limit | 1/1/1/1 |  / 039-named-fill-criteria |
 | documented-combined-join-group-null | tests/corpus/storage-query-fill/documented-forms/combined-join-group-null.xbql  | join, group, aggregate, null | 1/1/1/1 |  / 041-projections-and-aggregates |
 | documentation-convert-to-string-in-query-language | tests/corpus/storage-query-fill/documented-forms/convert-to-string-in-query-language.md  | convert-to-string-in-query-language | 0/0/0/0 | Documentation inventory has no exact executable source/criterion; confirmed finite API signatures and unsupported operations are recorded in the stage-44 contract / 044-result-and-resources |

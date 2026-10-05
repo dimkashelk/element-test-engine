@@ -11,17 +11,31 @@ from .yaml_io import UnsupportedSyntaxError
 
 
 def result_type(row, c):
+    from .query_columns import prepare_columns, COLUMN
+    prepare_columns(c)
     name = 'ТестРезультат' + sha256(row.encode()).hexdigest()[:16]
     typ = name + '.Результат'
+    c.result_types = getattr(c,'result_types',set())
+    c.result_types.add(typ)
     if typ in c.definitions:
         return typ
     text = '''@Глобально
 структура Результат
-    знч Строки: Массив<ROW>
+    знч Строки: Массив<Объект?>
+    обз знч ТестПреобразовать: (Объект?) -> ROW
+    знч Колонки: Массив<COLUMN>
     пер Позиция: Число = -1
     пер Закрыт: Булево
     пер Начат: Булево
     пер ЗапретОбхода: Булево
+    @Глобально
+    метод ТестНаблюдение(): Соответствие<Строка, Объект?>
+        возврат {"kind": "query-result", "closed": Закрыт, "started": Начат}
+    ;
+    @Глобально
+    метод ПолучитьОписанияКолонок(): ЧитаемыйМассив<COLUMN>
+        возврат Колонки
+    ;
     @Глобально
     метод Закрыть()
         ЗапретОбхода = Истина
@@ -57,7 +71,12 @@ def result_type(row, c):
     ;
     @Глобально
     метод ТестТекущая(): ROW
-        возврат Строки[Позиция]
+        попытка
+            возврат ТестПреобразовать(Строки[Позиция])
+        поймать Ошибка: Исключение
+            ТестОсвободить()
+            выбросить Ошибка
+        ;
     ;
     @Глобально
     метод ВМассив(): Массив<ROW>
@@ -105,37 +124,52 @@ def result_type(row, c):
     ;
 ;
 @Глобально
-метод Создать(Строки: Массив<ROW>): Результат
+метод Создать(Строки: Массив<Объект?>, Преобразовать: (Объект?) -> ROW, Колонки: Массив<COLUMN>): Результат
     ТестСессия.Событие("query-result:open")
-    знч Р = новый Результат(Строки = Строки)
+    знч Р = новый Результат(Строки = Строки, ТестПреобразовать = Преобразовать, Колонки = Колонки)
     если Строки.Пусто()
         Р.ТестОсвободить()
     ;
     возврат Р
 ;
-'''.replace('ROW', row)
+'''.replace('ROW', row).replace('COLUMN',COLUMN)
     # An empty result is already closed but its first empty traversal is valid.
     text = text.replace('если Закрыт или Начат', 'если ЗапретОбхода или Начат или (Закрыт и не Строки.Пусто())')
     c.definitions[typ] = text
-    c.method_dependencies[typ] = [row, 'ТестСессия.Записи']
+    c.method_dependencies[typ] = [row, 'ТестСессия.Записи',COLUMN]
     return typ
 
 
-def wrap_query(name, query, c):
+def wrap_query(name, query, c, raw=False):
     from .storage_queries import unique_parameters
-    wrapper = 'ТестРесурсЗапрос' + sha256(name.encode()).hexdigest()[:16]
+    wrapper = 'ТестРесурсЗапрос' + sha256((name+str(query.fill)).encode()).hexdigest()[:16]
     row = query.fill['type'] if query.fill else name + '.СтрокаРезультата'
     typ = result_type(row, c)
     if wrapper not in c.definitions:
         args = unique_parameters(query)
         signature = ', '.join('П'+str(p.slot)+': '+c.sbsl_type(p.type) for p in args)
         values = ', '.join('П'+str(p.slot) for p in args)
+        if raw:
+            from .query_construction import constructor_args
+            fields = []
+            for m in query.fill['mapping']:
+                value = '(Значение как ' + name + '.СтрокаРезультата).' + m['alias']
+                if m.get('runtimeCast'):
+                    value = '(' + value + ' как ' + c.sbsl_type(m['fieldType']) + ')'
+                fields.append(value)
+            conversion = 'новый ' + row + '(' + constructor_args(query, fields) + ')'
+        else:
+            conversion = 'Значение как ' + row
+        from .query_columns import columns_source, COLUMN
         c.definitions[wrapper] = ('@Глобально\nструктура Запрос\n    знч Основа: '+name+'.Запрос\n'
             '    @Глобально\n    метод Выполнить(): '+typ+'\n'
-            '        возврат '+typ.removesuffix('.Результат')+'.Создать(Основа.Выполнить())\n    ;\n;\n'
+            + columns_source(query,c) +
+            '        знч Строки = новый Массив<Объект?>()\n'
+            '        для Строка из Основа.Выполнить()\n            Строки.Добавить(Строка)\n        ;\n'
+            '        возврат '+typ.removesuffix('.Результат')+'.Создать(Строки, (Значение: Объект?) -> '+conversion+', Колонки)\n    ;\n;\n'
             '@Глобально\nметод Создать('+signature+'): Запрос\n'
             '    возврат новый Запрос(Основа = '+name+'.Создать('+values+'))\n;\n')
-        c.method_dependencies[wrapper] = [name+'.Запрос', typ]
+        c.method_dependencies[wrapper] = [name+'.Запрос', typ, row,COLUMN]
     return wrapper, typ
 
 

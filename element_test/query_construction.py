@@ -10,7 +10,14 @@ from .yaml_io import UnsupportedSyntaxError
 def resolve_fill(c, name, projections, span, type_span, projection_spans=None):
     targets = c.resolve(name)
     local = c.local_by_source.get(c.current_source, {}).get(name)
-    if not targets and local:
+    native = name in {'Дата','Время','ДатаВремя','Момент','Ууид'} and not targets and not local
+    if native:
+        # These one-string constructors are present in the installed Script.
+        # Their actual input validation is native and occurs at row retrieval.
+        canonical, owner, file = name, 'Стд::'+name, None
+        fields = [{'Имя':'Представление','Тип':'Строка','constructorRequired':True}]
+        named_only = False
+    elif not targets and local:
         canonical, fields, named_only = local_constructor(c, name)
         owner, file = c.current_source + '::' + name, c.current_source
     else:
@@ -23,12 +30,15 @@ def resolve_fill(c, name, projections, span, type_span, projection_spans=None):
         owner, file, named_only = qualified(target), target['sourceFile'], False
     by_name = {f['Имя']: f for f in fields}
     supplied = {label for _, label in projections}
-    compatible = lambda column, field: column.type == field['Тип'] or column.type + '?' == field['Тип']
+    # Nullable values may narrow at retrieval, rather than preventing the query
+    # from compiling. The result wrapper performs the runtime cast lazily.
+    compatible = lambda column, field: (column.type == field['Тип'] or column.type+'?' == field['Тип']
+        or c.query_results and (column.type.rstrip('?') == field['Тип'].rstrip('?') or column.type.rstrip('?')=='Объект'))
     named = (all(label in by_name and compatible(col, by_name[label]) for col, label in projections)
              and all(not f.get('constructorRequired') or f['Имя'] in supplied for f in fields))
     if named:
         chosen = [by_name[label] for _, label in projections]
-        mode = 'automatic-named'
+        mode = 'native-positional' if native else 'automatic-named'
     else:
         if named_only:
             raise UnsupportedSyntaxError('Конструктор ЗАПОЛНИТЬ допускает только именованные параметры: ' + name)
@@ -42,12 +52,13 @@ def resolve_fill(c, name, projections, span, type_span, projection_spans=None):
             if all(label in by_name for _,label in projections):
                 raise UnsupportedSyntaxError('Отсутствующее обязательное поле ЗАПОЛНИТЬ: ' + name)
             raise UnsupportedSyntaxError('Неизвестная колонка ЗАПОЛНИТЬ: ' + name)
-        mode = 'automatic-positional'
+        mode = 'native-positional' if native else 'automatic-positional'
     return {'owner': owner, 'sourceFile': file, 'type': canonical,
             'sourceName': name, 'range': span, 'typeRange': type_span,
             'constructor': mode, 'fields': tuple(fields), 'mapping': tuple(
                 {'column': col.name, 'alias': label, 'parameter': f['Имя'], 'columnType': col.type,
-                 'fieldType': f['Тип'], 'range': projection_spans[i] if projection_spans else getattr(col, 'range', None)}
+                 'fieldType': f['Тип'], 'runtimeCast': col.type.rstrip('?')=='Объект' or (col.type.endswith('?') or getattr(col, 'sql_nullable', False)) and not f['Тип'].endswith('?'),
+                 'range': projection_spans[i] if projection_spans else getattr(col, 'range', None)}
                 for i, ((col, label), f) in enumerate(zip(projections, chosen)))}
 
 
@@ -99,6 +110,8 @@ def local_constructor(c, name):
 
 def constructor_args(query, values):
     labels = [m['parameter'] for m in query.fill['mapping']] if query.fill else [l for _, l in query.projections]
+    if query.fill and query.fill['constructor']=='native-positional':
+        return ', '.join(values)
     return ', '.join(label + ' = ' + value for label, value in zip(labels, values))
 
 
@@ -132,6 +145,11 @@ def parse_produced(text, c):
     c.method_dependencies[canonical] = [typ for typ, _ in types]
     c.produced_types = getattr(c, 'produced_types', {})
     c.produced_types[identity] = canonical
+    c.produced_visibility = getattr(c,'produced_visibility',{})
+    visibility = (m[2],) if m[2] else getattr(c,'query_declaration_annotations',())
+    if identity in c.produced_visibility and c.produced_visibility[identity] != visibility:
+        raise UnsupportedSyntaxError('Конфликт видимости порождённого типа: ' + name)
+    c.produced_visibility[identity] = visibility
     fields = [{'Имя': label, 'Тип': typ, 'ТолькоЧтение': True} for typ, label in types]
     c.fields[canonical] = fields
     fill = {'owner': source + '::' + name, 'sourceFile': source, 'sourceName': name,

@@ -11,7 +11,7 @@ from .resolution import qualified
 from .yaml_io import UnsupportedSyntaxError
 
 LEAF_KINDS = {'ordinary', 'slice-last', 'slice-first', 'register', 'balance',
-              'turnover', 'balance-turnover', 'table-part', 'collection','users','constants','saved'}
+              'turnover', 'balance-turnover', 'table-part', 'collection','users','constants','saved','custom-collection'}
 CALENDAR_PERIODS = ('Год', 'Полугодие', 'Квартал', 'Месяц', 'Декада', 'Неделя',
                     'День', 'Час', 'Минута', 'Секунда')
 HISTORY_PERIOD_TYPES = {'День':'Дата', 'Секунда':'ДатаВремя', 'Момент':'Момент'}
@@ -108,6 +108,9 @@ def filter_condition(q, c, snapshot=False, helpers=None):
 
 
 def source_schema(c, name, member='', totals_periodicity='Период'):
+    if name in getattr(c,'custom_query_sources',{}):
+        if member:raise UnsupportedSyntaxError('Пользовательский источник не имеет виртуальных членов')
+        return c.custom_query_sources[name]
     if name=='Пользователи' and hasattr(c,'query_user_fields') and not c.resolve(name):
         if member:raise UnsupportedSyntaxError('Системный источник Пользователи не имеет табличных частей')
         return {'owner':name,'kind':'users','fields':tuple(QueryField(name,f['Имя'],f['Тип']) for f in c.query_user_fields),'dimensions':(),'resources':(),'period_type':'Дата','periodicity':None,'register_kind':''}
@@ -259,8 +262,11 @@ def generate_source_query(q,c):
           '        если Состояние.СодержитКлюч('+lit(q.owner)+')\n'
           '            для JSON из Состояние['+lit(q.owner)+'].Значения()\n'
           '                знч Значение: Объект? = СериализацияJson.ПрочитатьОбъект(JSON)\n')
-    if q.source_kind in {'users','constants','saved'}:
-        if q.source_kind=='users':value='ТестСистемныеИсточники.Пользователи()';dependencies=dependencies+['ТестСистемныеИсточники.Пользователь']
+    if q.source_kind in {'users','constants','saved','custom-collection'}:
+        if q.source_kind=='custom-collection':
+            p=next(p for p in q.parameters if p.expression=='__Источник_'+q.owner.removeprefix('&'))
+            value='П'+str(p.slot);dependencies=dependencies+[p.type]
+        elif q.source_kind=='users':value='ТестСистемныеИсточники.Пользователи()';dependencies=dependencies+['ТестСистемныеИсточники.Пользователь']
         elif q.source_kind=='saved':
             child=generate_query(q.definition,c);value=child+'.Создать().Выполнить()';dependencies=dependencies+[child+'.Запрос']
             value=child+'.Создать('+', '.join('П'+str(slot) for slot in q.definition_slots)+').Выполнить()'
@@ -277,7 +283,7 @@ def generate_source_query(q,c):
         read+='                пер Индекс = 0\n                для Элемент из (Значение как Массив<Объект?>)\n                    знч Снимок = Элемент как Соответствие<Строка, Объект?>\n'
         if q.register_kind:read+='                    Снимок.Вставить("Индекс", Индекс)\n                    Снимок.Вставить("НомерСтроки", Индекс + 1)\n'
         read+='                    Индекс += 1\n                    Исходные.Добавить(Снимок)\n                ;\n'
-    if q.source_kind not in {'users','constants','saved'}:read+='            ;\n        ;\n'
+    if q.source_kind not in {'users','constants','saved','custom-collection'}:read+='            ;\n        ;\n'
     if q.source_filter:
         read += ('        знч Отфильтрованные = новый Массив<Соответствие<Строка, Объект?>>()\n'
                  '        для Снимок из Исходные\n            если '+filter_condition(q,c,snapshot=True,helpers=helpers)+'\n'

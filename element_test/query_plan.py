@@ -326,6 +326,8 @@ def parse_simple_storage_query(text, contracts):
         slot_types[slot] = typ
         parameters.append(QueryParameter(expression, start, end, typ, slot))
         return slot
+    if source_kind=='custom-collection':
+        parameter(('parameter',schema['parameter'],*source_range),schema['type'])
     period_slot = parameter(period_token, schema['period_type']+'?') if period_token else None
     end_slot = parameter(end_token, schema['period_type']+'?') if end_token else None
     definition_slots = ()

@@ -1,0 +1,1670 @@
+{
+  "stage": 44,
+  "mode": "completion-with-explicit-emulation",
+  "refreshedCount": 9,
+  "counts": {
+    "parsed": 9,
+    "planned": 9,
+    "executed": 9,
+    "independentlyAssessed": 9
+  },
+  "unselectedRecordsPreserved": true,
+  "fullCatalogExecuted": false,
+  "archives": [
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true
+    },
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true
+    }
+  ],
+  "contracts": [
+    {
+      "contractId": "query-df785deb6d99bb2091eb6160",
+      "family": "literal",
+      "operations": [
+        "source",
+        "projection",
+        "generate"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Контрагенты"
+      },
+      "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+      "range": [
+        255,
+        432
+      ],
+      "bodyStart": 262,
+      "line": 10,
+      "text": "\n        ВЫБРАТЬ\n            Наименование,\n            Инн,\n            Кпп\n        @Локально\n        ПОРОДИТЬ ДанныеКонтрагента\n        ИЗ \n            Контрагенты\n    ",
+      "target": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Контрагенты",
+        "method": "ДанныеКонтрагентов",
+        "parameters": [],
+        "returnType": "Массив<ДанныеКонтрагента>",
+        "range": [
+          184,
+          569
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+        "alias": "Контрагенты",
+        "projections": [
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+              "name": "Наименование",
+              "type": "Строка",
+              "system": false
+            },
+            "Наименование"
+          ],
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+              "name": "Инн",
+              "type": "Строка",
+              "system": false
+            },
+            "Инн"
+          ],
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+              "name": "Кпп",
+              "type": "Строка",
+              "system": false
+            },
+            "Кпп"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-staged-executor-v1",
+        "source_kind": "ordinary",
+        "periodicity": null,
+        "dimensions": [],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          153,
+          164
+        ],
+        "source_name": "Контрагенты",
+        "boundary": null,
+        "fill": {
+          "owner": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl::ДанныеКонтрагента",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+          "sourceName": "ДанныеКонтрагента",
+          "type": "ТестПорожденный856964f20259d8dc.Значение",
+          "range": [
+            84,
+            128
+          ],
+          "typeRange": [
+            111,
+            128
+          ],
+          "constructor": "produced-readonly-internal",
+          "visibility": "Локально",
+          "fields": [
+            {
+              "Имя": "Наименование",
+              "Тип": "Строка",
+              "ТолькоЧтение": true
+            },
+            {
+              "Имя": "Инн",
+              "Тип": "Строка",
+              "ТолькоЧтение": true
+            },
+            {
+              "Имя": "Кпп",
+              "Тип": "Строка",
+              "ТолькоЧтение": true
+            }
+          ],
+          "mapping": [
+            {
+              "column": "Наименование",
+              "alias": "Наименование",
+              "parameter": "Наименование",
+              "columnType": "Строка",
+              "fieldType": "Строка"
+            },
+            {
+              "column": "Инн",
+              "alias": "Инн",
+              "parameter": "Инн",
+              "columnType": "Строка",
+              "fieldType": "Строка"
+            },
+            {
+              "column": "Кпп",
+              "alias": "Кпп",
+              "parameter": "Кпп",
+              "columnType": "Строка",
+              "fieldType": "Строка"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+            "name": "Наименование",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+            "name": "Инн",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+            "name": "Кпп",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Контрагенты",
+            "name": "Ссылка",
+            "type": "ТестТип3eec7000321354a8.Ссылка",
+            "system": true
+          }
+        ],
+        "member": "",
+        "resources": [],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "ДанныеКонтрагентов",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+          "range": [
+            255,
+            432
+          ]
+        },
+        {
+          "criterionId": "ДанныеКонтрагентов",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+          "range": [
+            255,
+            432
+          ]
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
+      ],
+      "apiBinding": null,
+      "reference044": "stage044Reference",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "query-e2dcc64917cc89fdeae25be1",
+      "family": "api-candidate",
+      "operations": [],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Контрагенты"
+      },
+      "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+      "range": [
+        461,
+        478
+      ],
+      "bodyStart": 461,
+      "line": 21,
+      "text": "Запрос.Выполнить(",
+      "target": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Контрагенты",
+        "method": "ДанныеКонтрагентов",
+        "parameters": [],
+        "returnType": "Массив<ДанныеКонтрагента>",
+        "range": [
+          184,
+          569
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "mode": "typed-receiver-044",
+        "operation": "Выполнить",
+        "receiver": "Запрос",
+        "queryProofs": [
+          {
+            "mode": "storage-staged-executor-v1",
+            "astHash": "82ba63b41b338a0eed1f84e89588e79cfadbc7aea7f5e98211e197c522b3b69d"
+          }
+        ]
+      },
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "ДанныеКонтрагентов",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+          "range": [
+            461,
+            478
+          ]
+        },
+        {
+          "criterionId": "ДанныеКонтрагентов",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
+          "range": [
+            461,
+            478
+          ]
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
+      ],
+      "apiBinding": {
+        "operation": "Выполнить",
+        "receiver": "Запрос",
+        "localBinding": true,
+        "projectOwners": [],
+        "resolution": "receiver-contract-required"
+      },
+      "reference044": "stage044Reference",
+      "apiResolution044": "typed-query-receiver",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "query-dfb504c8f4cdcfddbac7e1f6",
+      "family": "literal",
+      "operations": [
+        "source",
+        "projection",
+        "fill"
+      ],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Номенклатура"
+      },
+      "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+      "range": [
+        85,
+        256
+      ],
+      "bodyStart": 92,
+      "line": 3,
+      "text": "\n        ВЫБРАТЬ\n            Наименование,\n            Артикул,\n            Описание\n        ЗАПОЛНИТЬ ДанныеНоменклатуры\n        ИЗ \n            Номенклатура\n    ",
+      "target": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Номенклатура",
+        "method": "ДанныеНоменклатуры",
+        "parameters": [],
+        "returnType": "Массив<ДанныеНоменклатуры>",
+        "range": [
+          13,
+          394
+        ]
+      },
+      "dependencies": [
+        {
+          "namespace": "ЗаполнениеСтруктурыВЗапросе",
+          "owner": "Номенклатура",
+          "kind": "Справочник",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.yaml"
+        },
+        {
+          "namespace": "ЗаполнениеСтруктурыВЗапросе",
+          "owner": "ДанныеНоменклатуры",
+          "kind": "Структура",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/ДанныеНоменклатуры.yaml"
+        }
+      ],
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+        "alias": "Номенклатура",
+        "projections": [
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+              "name": "Наименование",
+              "type": "Строка",
+              "system": false
+            },
+            "Наименование"
+          ],
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+              "name": "Артикул",
+              "type": "Строка",
+              "system": false
+            },
+            "Артикул"
+          ],
+          [
+            {
+              "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+              "name": "Описание",
+              "type": "Строка",
+              "system": false
+            },
+            "Описание"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-staged-executor-v1",
+        "source_kind": "ordinary",
+        "periodicity": null,
+        "dimensions": [],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          146,
+          158
+        ],
+        "source_name": "Номенклатура",
+        "boundary": null,
+        "fill": {
+          "owner": "ЗаполнениеСтруктурыВЗапросе::ДанныеНоменклатуры",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/ДанныеНоменклатуры.yaml",
+          "type": "ДанныеНоменклатуры.Значение",
+          "sourceName": "ДанныеНоменклатуры",
+          "range": [
+            93,
+            121
+          ],
+          "typeRange": [
+            103,
+            121
+          ],
+          "constructor": "automatic-named",
+          "fields": [
+            {
+              "Имя": "Наименование",
+              "Тип": "Строка",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Артикул",
+              "Тип": "Строка",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Описание",
+              "Тип": "Строка",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            }
+          ],
+          "mapping": [
+            {
+              "column": "Наименование",
+              "alias": "Наименование",
+              "parameter": "Наименование",
+              "columnType": "Строка",
+              "fieldType": "Строка",
+              "range": [
+                29,
+                41
+              ]
+            },
+            {
+              "column": "Артикул",
+              "alias": "Артикул",
+              "parameter": "Артикул",
+              "columnType": "Строка",
+              "fieldType": "Строка",
+              "range": [
+                55,
+                62
+              ]
+            },
+            {
+              "column": "Описание",
+              "alias": "Описание",
+              "parameter": "Описание",
+              "columnType": "Строка",
+              "fieldType": "Строка",
+              "range": [
+                76,
+                84
+              ]
+            }
+          ]
+        },
+        "fields": [
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+            "name": "Наименование",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+            "name": "Артикул",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+            "name": "Описание",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "ЗаполнениеСтруктурыВЗапросе::Номенклатура",
+            "name": "Ссылка",
+            "type": "ТестТипdeffdc52521131c1.Ссылка",
+            "system": true
+          }
+        ],
+        "member": "",
+        "resources": [],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "unsupportedReason": null,
+      "nextStage": "039-named-fill-criteria",
+      "criteria": [
+        {
+          "criterionId": "ДанныеНоменклатуры",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+          "range": [
+            85,
+            256
+          ]
+        },
+        {
+          "criterionId": "ДанныеНоменклатуры",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+          "range": [
+            85,
+            256
+          ]
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
+      ],
+      "apiBinding": null,
+      "reference044": "stage044Reference",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "query-2ec66b6ade7da0420532e987",
+      "family": "api-candidate",
+      "operations": [],
+      "archive": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "projectIdentity": {
+        "Поставщик": "Примеры",
+        "Имя": "Примеры_new",
+        "Версия": "1.0",
+        "ВидПроекта": null
+      },
+      "libraryIdentity": null,
+      "ownerIdentity": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Номенклатура"
+      },
+      "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+      "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+      "file": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+      "range": [
+        285,
+        302
+      ],
+      "bodyStart": 285,
+      "line": 13,
+      "text": "Запрос.Выполнить(",
+      "target": {
+        "namespace": "ЗаполнениеСтруктурыВЗапросе",
+        "module": "Номенклатура",
+        "method": "ДанныеНоменклатуры",
+        "parameters": [],
+        "returnType": "Массив<ДанныеНоменклатуры>",
+        "range": [
+          13,
+          394
+        ]
+      },
+      "dependencies": [],
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "ast": {
+        "mode": "typed-receiver-044",
+        "operation": "Выполнить",
+        "receiver": "Запрос",
+        "queryProofs": [
+          {
+            "mode": "storage-staged-executor-v1",
+            "astHash": "730326bf221bf260155300a4429493982c1e5c33c67ab803888414d2aad47c3a"
+          }
+        ]
+      },
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "ДанныеНоменклатуры",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+          "range": [
+            285,
+            302
+          ]
+        },
+        {
+          "criterionId": "ДанныеНоменклатуры",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
+          "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
+          "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
+          "range": [
+            285,
+            302
+          ]
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
+      ],
+      "apiBinding": {
+        "operation": "Выполнить",
+        "receiver": "Запрос",
+        "localBinding": true,
+        "projectOwners": [],
+        "resolution": "receiver-contract-required"
+      },
+      "reference044": "stage044Reference",
+      "apiResolution044": "typed-query-receiver",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "documented-fill",
+      "family": "documented-form",
+      "operations": [
+        "fill",
+        "projection"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Label КАК Name ЗАПОЛНИТЬ Data::Card ИЗ Data::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/fill.xbql",
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "039-named-fill-criteria",
+      "criteria": [
+        {
+          "criterionId": "fill",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
+          "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            40,
+            97
+          ],
+          "queryRange": [
+            33,
+            98
+          ],
+          "fixtureHash": "916102da2e9ea6c6a8ed0cbfd36461899209d8b5a9ac2bcab1b89037ba896e5d"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-fill.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-fill.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "owner": "Data::Item",
+              "name": "Label",
+              "type": "Строка",
+              "system": false
+            },
+            "Name"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-staged-executor-v1",
+        "source_kind": "ordinary",
+        "periodicity": null,
+        "dimensions": [],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          47,
+          57
+        ],
+        "source_name": "Data::Item",
+        "boundary": null,
+        "fill": {
+          "owner": "Data::Card",
+          "sourceFile": "Data/Card.yaml",
+          "type": "ТестТипeb51e17778456af9.Значение",
+          "sourceName": "Data::Card",
+          "range": [
+            23,
+            43
+          ],
+          "typeRange": [
+            33,
+            43
+          ],
+          "constructor": "automatic-named",
+          "fields": [
+            {
+              "Имя": "Name",
+              "Тип": "Строка",
+              "Обязательное": true,
+              "ТолькоЧтение": true,
+              "constructorRequired": true,
+              "defaultKind": "required"
+            },
+            {
+              "Имя": "Amount",
+              "Тип": "Число?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Note",
+              "Тип": "Строка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Ref",
+              "Тип": "ТестТип2dc46950b8601763.Ссылка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Second",
+              "Тип": "ТестТип2dc46950b8601763.Ссылка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Default",
+              "Тип": "Строка",
+              "ЗначениеПоУмолчанию": "authored",
+              "constructorRequired": false,
+              "defaultKind": "explicit"
+            },
+            {
+              "Имя": "Empty",
+              "Тип": "Строка",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Flag",
+              "Тип": "Булево",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Day",
+              "Тип": "Дата?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Key",
+              "Тип": "Ууид?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Kind",
+              "Тип": "Category?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            }
+          ],
+          "mapping": [
+            {
+              "column": "Label",
+              "alias": "Name",
+              "parameter": "Name",
+              "columnType": "Строка",
+              "fieldType": "Строка",
+              "range": [
+                8,
+                22
+              ]
+            }
+          ]
+        },
+        "fields": [
+          {
+            "owner": "Data::Item",
+            "name": "Label",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Optional",
+            "type": "Строка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Link",
+            "type": "ТестТип2dc46950b8601763.Ссылка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Flag",
+            "type": "Булево",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Day",
+            "type": "Дата",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Key",
+            "type": "Ууид",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Kind",
+            "type": "Category",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Ссылка",
+            "type": "ТестТип2dc46950b8601763.Ссылка",
+            "system": true
+          }
+        ],
+        "member": "",
+        "resources": [],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "reference044": "stage044Reference",
+      "fixtureHash": "916102da2e9ea6c6a8ed0cbfd36461899209d8b5a9ac2bcab1b89037ba896e5d",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "documented-generate",
+      "family": "documented-form",
+      "operations": [
+        "generate"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ Label ПОРОДИТЬ Row ИЗ Data::Item",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/generate.xbql",
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "generate",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
+          "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            167,
+            207
+          ],
+          "queryRange": [
+            160,
+            208
+          ],
+          "fixtureHash": "1048203362d921775d3d057c7dacc33c5470439cd1265b2965c642a39946a075"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-generate.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-generate.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "owner": "Data::Item",
+              "name": "Label",
+              "type": "Строка",
+              "system": false
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-staged-executor-v1",
+        "source_kind": "ordinary",
+        "periodicity": null,
+        "dimensions": [],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          30,
+          40
+        ],
+        "source_name": "Data::Item",
+        "boundary": null,
+        "fill": {
+          "owner": "Entry/Main.xbsl::Row",
+          "sourceFile": "Entry/Main.xbsl",
+          "sourceName": "Row",
+          "type": "ТестПорожденный2db830530d1bec89.Значение",
+          "range": [
+            14,
+            26
+          ],
+          "typeRange": [
+            23,
+            26
+          ],
+          "constructor": "produced-readonly-internal",
+          "visibility": "declaration",
+          "fields": [
+            {
+              "Имя": "Label",
+              "Тип": "Строка",
+              "ТолькоЧтение": true
+            }
+          ],
+          "mapping": [
+            {
+              "column": "Label",
+              "alias": "Label",
+              "parameter": "Label",
+              "columnType": "Строка",
+              "fieldType": "Строка"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "owner": "Data::Item",
+            "name": "Label",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Optional",
+            "type": "Строка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Link",
+            "type": "ТестТип2dc46950b8601763.Ссылка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Flag",
+            "type": "Булево",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Day",
+            "type": "Дата",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Key",
+            "type": "Ууид",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Kind",
+            "type": "Category",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Ссылка",
+            "type": "ТестТип2dc46950b8601763.Ссылка",
+            "system": true
+          }
+        ],
+        "member": "",
+        "resources": [],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "reference044": "stage044Reference",
+      "fixtureHash": "1048203362d921775d3d057c7dacc33c5470439cd1265b2965c642a39946a075",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "documented-result-resources",
+      "family": "documented-form",
+      "operations": [
+        "result",
+        "resources"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "Запрос{ВЫБРАТЬ Label ИЗ Data::Item}.Выполнить().ЕдинственныйИлиНеопределено()",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/result-resources.xbql",
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "result_resources",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
+          "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            279,
+            356
+          ],
+          "queryRange": [
+            279,
+            314
+          ],
+          "fixtureHash": "704a4e6abed94cf147e360ea3f69238b94b186806b93e9a6b68f667713a496df"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-result_resources.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-result_resources.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Item",
+        "alias": "Item",
+        "projections": [
+          [
+            {
+              "owner": "Data::Item",
+              "name": "Label",
+              "type": "Строка",
+              "system": false
+            },
+            "Label"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [],
+        "ordering": [],
+        "limit": null,
+        "mode": "storage-staged-executor-v1",
+        "source_kind": "ordinary",
+        "periodicity": null,
+        "dimensions": [],
+        "period_slot": null,
+        "period_range": null,
+        "source_range": [
+          17,
+          27
+        ],
+        "source_name": "Data::Item",
+        "boundary": null,
+        "fill": null,
+        "fields": [
+          {
+            "owner": "Data::Item",
+            "name": "Label",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Optional",
+            "type": "Строка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Link",
+            "type": "ТестТип2dc46950b8601763.Ссылка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Flag",
+            "type": "Булево",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Day",
+            "type": "Дата",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Key",
+            "type": "Ууид",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Kind",
+            "type": "Category",
+            "system": false
+          },
+          {
+            "owner": "Data::Item",
+            "name": "Ссылка",
+            "type": "ТестТип2dc46950b8601763.Ссылка",
+            "system": true
+          }
+        ],
+        "member": "",
+        "resources": [],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "reference044": "stage044Reference",
+      "fixtureHash": "704a4e6abed94cf147e360ea3f69238b94b186806b93e9a6b68f667713a496df",
+      "completion044Mode": "standalone-emulation"
+    },
+    {
+      "contractId": "documented-dynamic-api",
+      "family": "documented-form",
+      "operations": [
+        "api"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "новый ЗапросСВыборкой(Text)",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/dynamic-api.xbql",
+      "semantics": [
+        "query-reference-9.1"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "044-result-and-resources",
+      "criteria": [
+        {
+          "criterionId": "Legacy",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion-emulation",
+          "sourceHash": "8f41e2f4dfc7f90d426d2ac2809b115b69c2ae553aadace298a71b37123a68c5",
+          "projectSourceHash": "c8d85c22f95b479bd07b00dffad4979e7c1174ecfb58f0d386b232c3833d23b4",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            47,
+            74
+          ],
+          "fixtureHash": "5d7f46e54d6ff29e54c9a0984f0f152f6a714ff26f0848f798261a27bbfee25a"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/new-public"
+      ],
+      "referenceVersion": "9.1",
+      "fixtureStatus": "executable-emulation",
+      "ast": {
+        "kind": "runtime-select",
+        "parser": "Script",
+        "sources": [
+          "Data::Item",
+          "Other::Item"
+        ]
+      },
+      "reference044": "stage044Reference",
+      "nativeSignatureConfirmed": false,
+      "completion044Mode": "explicit-historical-api-emulation",
+      "fixtureHash": "5d7f46e54d6ff29e54c9a0984f0f152f6a714ff26f0848f798261a27bbfee25a"
+    },
+    {
+      "contractId": "documented-combined-fill-slice-order",
+      "family": "documented-form",
+      "operations": [
+        "fill",
+        "slice-last",
+        "order",
+        "limit"
+      ],
+      "projectIdentity": {},
+      "libraryIdentity": null,
+      "ownerIdentity": null,
+      "sourceHash": null,
+      "file": null,
+      "range": null,
+      "text": "ВЫБРАТЬ ПЕРВЫЕ 1 Label КАК Name ЗАПОЛНИТЬ Data::Card ИЗ Data::Book.СрезПоследних(%D) УПОРЯДОЧИТЬ ПО Total",
+      "target": null,
+      "dependencies": [],
+      "fixture": "tests/corpus/storage-query-fill/documented-forms/combined-fill-slice-order.xbql",
+      "semantics": [
+        "adapter-result-resources-044",
+        "element-reference-9.3",
+        "script-current"
+      ],
+      "compatibilityVersion": "9.0",
+      "discovered": true,
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
+      "nextStage": "039-named-fill-criteria",
+      "criteria": [
+        {
+          "criterionId": "combined_fill_slice_order",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion",
+          "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
+          "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            427,
+            532
+          ],
+          "queryRange": [
+            420,
+            533
+          ],
+          "fixtureHash": "8b6473e3ec328490f1019db661ed56e25161423e09cf19fb3125f1faa38dc16f"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-combined_fill_slice_order.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-combined_fill_slice_order.json"
+      ],
+      "referenceVersion": "9.3",
+      "fixtureStatus": "executable-transferable-project",
+      "ast": {
+        "owner": "Data::Book",
+        "alias": "Book",
+        "projections": [
+          [
+            {
+              "owner": "Data::Book",
+              "name": "Label",
+              "type": "Строка",
+              "system": false
+            },
+            "Name"
+          ]
+        ],
+        "predicates": [],
+        "parameters": [
+          {
+            "expression": "D",
+            "start": 82,
+            "end": 83,
+            "type": "Дата?",
+            "slot": 0
+          }
+        ],
+        "ordering": [
+          [
+            {
+              "owner": "Data::Book",
+              "name": "Total",
+              "type": "Число",
+              "system": false
+            },
+            false
+          ]
+        ],
+        "limit": 1,
+        "mode": "storage-slice-last-day-v1",
+        "source_kind": "slice-last",
+        "periodicity": "День",
+        "dimensions": [
+          {
+            "owner": "Data::Book",
+            "name": "Label",
+            "type": "Строка",
+            "system": false
+          }
+        ],
+        "period_slot": 0,
+        "period_range": [
+          80,
+          84
+        ],
+        "source_range": [
+          56,
+          84
+        ],
+        "source_name": "Data::Book",
+        "boundary": "captured-date-or-runtime-UTC-at-creation",
+        "fill": {
+          "owner": "Data::Card",
+          "sourceFile": "Data/Card.yaml",
+          "type": "ТестТипeb51e17778456af9.Значение",
+          "sourceName": "Data::Card",
+          "range": [
+            32,
+            52
+          ],
+          "typeRange": [
+            42,
+            52
+          ],
+          "constructor": "automatic-named",
+          "fields": [
+            {
+              "Имя": "Name",
+              "Тип": "Строка",
+              "Обязательное": true,
+              "ТолькоЧтение": true,
+              "constructorRequired": true,
+              "defaultKind": "required"
+            },
+            {
+              "Имя": "Amount",
+              "Тип": "Число?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Note",
+              "Тип": "Строка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Ref",
+              "Тип": "ТестТип2dc46950b8601763.Ссылка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Second",
+              "Тип": "ТестТип2dc46950b8601763.Ссылка?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Default",
+              "Тип": "Строка",
+              "ЗначениеПоУмолчанию": "authored",
+              "constructorRequired": false,
+              "defaultKind": "explicit"
+            },
+            {
+              "Имя": "Empty",
+              "Тип": "Строка",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Flag",
+              "Тип": "Булево",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Day",
+              "Тип": "Дата?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Key",
+              "Тип": "Ууид?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            },
+            {
+              "Имя": "Kind",
+              "Тип": "Category?",
+              "constructorRequired": false,
+              "defaultKind": "implicit"
+            }
+          ],
+          "mapping": [
+            {
+              "column": "Label",
+              "alias": "Name",
+              "parameter": "Name",
+              "columnType": "Строка",
+              "fieldType": "Строка",
+              "range": [
+                17,
+                31
+              ]
+            }
+          ]
+        },
+        "fields": [
+          {
+            "owner": "Data::Book",
+            "name": "Период",
+            "type": "Дата",
+            "system": true
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Label",
+            "type": "Строка",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Optional",
+            "type": "Строка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Link",
+            "type": "ТестТип2dc46950b8601763.Ссылка?",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Flag",
+            "type": "Булево",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Day",
+            "type": "Дата",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Key",
+            "type": "Ууид",
+            "system": false
+          },
+          {
+            "owner": "Data::Book",
+            "name": "Kind",
+            "type": "Category",
+            "system": false
+          }
+        ],
+        "member": "СрезПоследних",
+        "resources": [
+          {
+            "owner": "Data::Book",
+            "name": "Total",
+            "type": "Число",
+            "system": false
+          }
+        ],
+        "register_kind": "",
+        "end_slot": null,
+        "definition": null,
+        "definition_source": null
+      },
+      "reference044": "stage044Reference",
+      "fixtureHash": "8b6473e3ec328490f1019db661ed56e25161423e09cf19fb3125f1faa38dc16f",
+      "completion044Mode": "standalone-emulation"
+    }
+  ]
+}

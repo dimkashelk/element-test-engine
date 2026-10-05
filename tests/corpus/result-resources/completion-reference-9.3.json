@@ -1,0 +1,54 @@
+{
+  "version": "9.3",
+  "readDate": "2026-10-05",
+  "access": "authenticated in-app browser, read only",
+  "executorVersion": "10.0.2-1",
+  "executionCompatibilityVersion": "current",
+  "sources": [
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/CustomQuery_ru/",
+      "contract": "Текст is mutable, accepts invalid text without validation; execution checks it. Parameter and data-source setters accept unused names and replacements. Data sources use ИЗ &Name."
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/CustomQueryResultRow_ru/",
+      "contract": "Dynamic rows expose read-only lookup by string column name, as well as named properties."
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/QueryResultColumnDescription_ru/",
+      "contract": "Column descriptors expose readonly Имя and Тип."
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/DatabaseDataType_ru/",
+      "contract": "Descriptors contain native type sets plus optional number, string and byte qualifiers. The emulator preserves cast qualifiers; unqualified string/bytes use 0 and numbers use explicit fake defaults 32/32."
+    },
+    {
+      "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/fill/",
+      "contract": "Constructor matching tries named parameters, then positions. Unknown and nullable values may fail when reading a row instead of preventing compilation."
+    }
+  ],
+  "adapter": "Explicit Script emulation authorized by the user. Source-finite text uses the existing typed AST; runtime text/heterogeneous schemas use a Script SELECT AST. Mutable Text, declared array sources, readonly lookup by column name, descriptors and qualifiers, lazy nullable/unknown narrowing, installed scalar constructors, owner-scoped generated types, and an explicit historical ЗапросСВыборкой alias are supported. Rows are materialized with a single-pass resource state, not a native database cursor.",
+  "runtimeGrammar": [
+    "ordinary scalar/reference sources",
+    "declared array sources",
+    "projection fields and КАК aliases",
+    "ПЕРВЫЕ",
+    "source aliases",
+    "named & parameters and scalar literals",
+    "comparison predicates combined with И",
+    "ORDER BY with ВОЗР/УБЫВ",
+    "whitespace and line comments"
+  ],
+  "fakeDefaults": {
+    "numberIntegerLength": 32,
+    "numberFractionLength": 32,
+    "stringLength": 0,
+    "byteLength": 0
+  },
+  "nativeCursorConfirmed": false,
+  "nativeXBQLConfirmed": false,
+  "legacyQueryApi": {
+    "spelling": "ЗапросСВыборкой",
+    "mode": "explicit-emulation-alias",
+    "nativeSignatureConfirmed": false
+  }
+}

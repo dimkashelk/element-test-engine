@@ -532,6 +532,8 @@ def bind_types(plan):
                 and not any(d.start <= a < d.end for d in dynamic_spans)]
         if any((c.current_source,t) in getattr(c,'produced_types',{}) for _,_,t in constructor_types(symbol.source)):
             raise UnsupportedSyntaxError('Порождённый тип не имеет публичного конструктора')
+        if any(c.canonical_type(t) in set(c.produced_types.values()) for _,_,t in constructor_types(symbol.source)):
+            raise UnsupportedSyntaxError('Порождённый тип не имеет публичного конструктора')
         body += [t for _,_,t in body_type_references(symbol.source) if _project_body_type(c,t)]
         plan.body_types.extend(body)
         for typ in types + body:

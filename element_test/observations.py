@@ -3,11 +3,11 @@ import json
 from .indexer import lex, parse_module
 
 
-def instrument(source, identity, enum_map_value_type=None):
+def instrument(source, identity, enum_map_value_type=None, parameter_observers=None, return_observer=None):
     node = parse_module(source)[0][0]
     label = json.dumps(identity, ensure_ascii=False).replace('${', '\\${')
     params = [p.partition(':')[0].strip() for p in node.parameters(source)]
-    args = '{' + ', '.join(json.dumps(p, ensure_ascii=False) + ': ' + p for p in params) + '}'
+    args = '{' + ', '.join(json.dumps(p, ensure_ascii=False) + ': ' + (parameter_observers or {}).get(p,p) for p in params) + '}'
     if not params:
         args = 'новый Соответствие<Строка, Объект?>()'
     def log(event, value):
@@ -29,6 +29,8 @@ def instrument(source, identity, enum_map_value_type=None):
         indent = source[source.rfind('\n', 0, statement.start) + 1:statement.start]
         original = source[expression.start:expression.end]
         transported = name
+        if return_observer:
+            transported = return_observer.format(value=name)
         transport = ''
         if enum_map_value_type:
             transported = name + 'Транспорт'

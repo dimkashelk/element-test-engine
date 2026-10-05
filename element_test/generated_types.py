@@ -85,6 +85,21 @@ class ProjectTypes:
             if token in self.platform_type_aliases:
                 return self.platform_type_aliases[token]
             owner, dot, variant = token.partition(".")
+            if dot:
+                from .resolution import resolve_call_modules, method_visible
+                from types import SimpleNamespace
+                modules = resolve_call_modules(self.model['modules'], owner, self.namespace,
+                                               self.imports, self.model.get('properties'))
+                produced = [(m, self.produced_types[(m['sourceFile'],variant)]) for m in modules
+                            if (m['sourceFile'],variant) in self.produced_types]
+                if produced:
+                    source = next((m for m in self.model['modules'] if m['sourceFile']==self.current_source),
+                                  {'sourceFile':self.current_source,'namespace':self.namespace})
+                    visible = [(m,typ) for m,typ in produced if method_visible(SimpleNamespace(
+                        annotations=getattr(self,'produced_visibility',{}).get((m['sourceFile'],variant),())),source,m)]
+                    if len(visible)!=1:
+                        raise InputError('Порождённый тип недоступен или неоднозначен: ' + token)
+                    return visible[0][1]
             if owner in self.canonical_elements:
                 element = self.canonical_elements[owner]
                 return token + '.Значение' if element['elementType'] == 'Структура' and not dot else token
@@ -286,7 +301,8 @@ class ProjectTypes:
             default = ""
             if "ЗначениеПоУмолчанию" in field:
                 default = " = " + self.literal(field["ЗначениеПоУмолчанию"], field_type)
-            lines.append(f"    пер {name}: {self.sbsl_type(field_type)}{default}")
+            emitted_type = re.sub(r'(?<![\w:.])Объект(?![\w.])', 'Стд::Объект', self.sbsl_type(field_type))
+            lines.append(f"    пер {name}: {emitted_type}{default}")
         self.active.remove(type_name)
         self.fields[type_name] = fields
         self.definitions[type_name] = "\n".join(lines + [";", ""])
@@ -352,6 +368,13 @@ class ProjectTypes:
             return "Неопределено" if value is None else self.literal(value, type_name[:-1])
         if type_name in {"Строка", "Число", "Булево"}:
             return sbsl_literal(value, type_name)
+        if type_name == 'Объект':
+            import json
+            try:
+                text=json.dumps(value,ensure_ascii=False,allow_nan=False)
+            except (ValueError,TypeError) as exc:
+                raise InvalidTestError('Объект требует конечное JSON-значение') from exc
+            return 'СериализацияJson.ПрочитатьОбъект<Объект>('+sbsl_literal(text,'Строка')+')'
         if type_name == 'Ууид':
             import uuid
             if not isinstance(value, str) or not re.fullmatch(

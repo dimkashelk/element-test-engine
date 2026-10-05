@@ -11390,7 +11390,7 @@
           "criterionId": "ДанныеКонтрагентов",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
@@ -11403,7 +11403,7 @@
           "criterionId": "ДанныеКонтрагентов",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
@@ -11414,11 +11414,12 @@
         }
       ],
       "evidence": [
-        "result/result-resources/public-real-test",
-        "result/result-resources/public-real-run"
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
       ],
       "apiBinding": null,
-      "reference044": "stage044Reference"
+      "reference044": "stage044Reference",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "query-e2dcc64917cc89fdeae25be1",
@@ -11487,7 +11488,7 @@
           "criterionId": "ДанныеКонтрагентов",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
@@ -11500,7 +11501,7 @@
           "criterionId": "ДанныеКонтрагентов",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "7f1d4c868b5a2293d822f53d192e44b22cda273d56831d9ee27d601c660a1ddf",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Контрагенты.xbsl",
@@ -11511,8 +11512,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/public-real-test",
-        "result/result-resources/public-real-run"
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
       ],
       "apiBinding": {
         "operation": "Выполнить",
@@ -11522,7 +11523,8 @@
         "resolution": "receiver-contract-required"
       },
       "reference044": "stage044Reference",
-      "apiResolution044": "typed-query-receiver"
+      "apiResolution044": "typed-query-receiver",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "query-dfb504c8f4cdcfddbac7e1f6",
@@ -11748,7 +11750,7 @@
           "criterionId": "ДанныеНоменклатуры",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
@@ -11761,7 +11763,7 @@
           "criterionId": "ДанныеНоменклатуры",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
@@ -11772,11 +11774,12 @@
         }
       ],
       "evidence": [
-        "result/result-resources/public-real-test",
-        "result/result-resources/public-real-run"
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
       ],
       "apiBinding": null,
-      "reference044": "stage044Reference"
+      "reference044": "stage044Reference",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "query-2ec66b6ade7da0420532e987",
@@ -11845,7 +11848,7 @@
           "criterionId": "ДанныеНоменклатуры",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
@@ -11858,7 +11861,7 @@
           "criterionId": "ДанныеНоменклатуры",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044",
+          "origin": "fresh-044-completion",
           "sourceHash": "ed4d646d2e629d17b8da4a0df5f6103e77d739490d8f4074c011784e498bdea3",
           "projectSourceHash": "51f96c5c108d24d4433766480fbab21512e34def787109d48635b95d5579f03b",
           "sourceFile": "ЗаполнениеСтруктурыВЗапросе/Номенклатура.xbsl",
@@ -11869,8 +11872,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/public-real-test",
-        "result/result-resources/public-real-run"
+        "result/result-resources-completion/fresh-test_query_results/public-real-test",
+        "result/result-resources-completion/fresh-test_query_results/public-real-run"
       ],
       "apiBinding": {
         "operation": "Выполнить",
@@ -11880,7 +11883,8 @@
         "resolution": "receiver-contract-required"
       },
       "reference044": "stage044Reference",
-      "apiResolution044": "typed-query-receiver"
+      "apiResolution044": "typed-query-receiver",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "query-ff0f65d0715c0555000adaf3",
@@ -54452,7 +54456,7 @@
           "criterionId": "fill",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044-transferable",
+          "origin": "fresh-044-completion",
           "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
           "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
           "sourceFile": "Entry/Main.xbsl",
@@ -54468,8 +54472,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/assessment-documented-fill.json",
-        "result/result-resources/documented-fill.json"
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-fill.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-fill.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -54666,7 +54670,8 @@
         "definition_source": null
       },
       "reference044": "stage044Reference",
-      "fixtureHash": "916102da2e9ea6c6a8ed0cbfd36461899209d8b5a9ac2bcab1b89037ba896e5d"
+      "fixtureHash": "916102da2e9ea6c6a8ed0cbfd36461899209d8b5a9ac2bcab1b89037ba896e5d",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "documented-generate",
@@ -54702,7 +54707,7 @@
           "criterionId": "generate",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044-transferable",
+          "origin": "fresh-044-completion",
           "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
           "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
           "sourceFile": "Entry/Main.xbsl",
@@ -54718,8 +54723,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/assessment-documented-generate.json",
-        "result/result-resources/documented-generate.json"
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-generate.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-generate.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -54849,7 +54854,8 @@
         "definition_source": null
       },
       "reference044": "stage044Reference",
-      "fixtureHash": "1048203362d921775d3d057c7dacc33c5470439cd1265b2965c642a39946a075"
+      "fixtureHash": "1048203362d921775d3d057c7dacc33c5470439cd1265b2965c642a39946a075",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "documented-compound",
@@ -56268,7 +56274,7 @@
           "criterionId": "result_resources",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044-transferable",
+          "origin": "fresh-044-completion",
           "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
           "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
           "sourceFile": "Entry/Main.xbsl",
@@ -56284,8 +56290,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/assessment-documented-result_resources.json",
-        "result/result-resources/documented-result_resources.json"
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-result_resources.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-result_resources.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -56384,7 +56390,8 @@
         "definition_source": null
       },
       "reference044": "stage044Reference",
-      "fixtureHash": "704a4e6abed94cf147e360ea3f69238b94b186806b93e9a6b68f667713a496df"
+      "fixtureHash": "704a4e6abed94cf147e360ea3f69238b94b186806b93e9a6b68f667713a496df",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "documented-state",
@@ -56535,18 +56542,45 @@
       ],
       "compatibilityVersion": "9.0",
       "discovered": true,
-      "parsed": false,
-      "planned": false,
-      "executed": false,
-      "independentlyAssessed": false,
-      "unsupportedReason": "Historical ЗапросСВыборкой(Text) template has no confirmed 9.3/native signature; supported ПроизвольныйЗапрос constant text has separate portable criteria",
+      "parsed": true,
+      "planned": true,
+      "executed": true,
+      "independentlyAssessed": true,
+      "unsupportedReason": null,
       "nextStage": "044-result-and-resources",
-      "criteria": [],
-      "evidence": [],
+      "criteria": [
+        {
+          "criterionId": "Legacy",
+          "direct": true,
+          "status": "PASS",
+          "origin": "fresh-044-completion-emulation",
+          "sourceHash": "8f41e2f4dfc7f90d426d2ac2809b115b69c2ae553aadace298a71b37123a68c5",
+          "projectSourceHash": "c8d85c22f95b479bd07b00dffad4979e7c1174ecfb58f0d386b232c3833d23b4",
+          "sourceFile": "Entry/Main.xbsl",
+          "range": [
+            47,
+            74
+          ],
+          "fixtureHash": "5d7f46e54d6ff29e54c9a0984f0f152f6a714ff26f0848f798261a27bbfee25a"
+        }
+      ],
+      "evidence": [
+        "result/result-resources-completion/new-public"
+      ],
       "referenceVersion": "9.1",
-      "fixtureStatus": "review-template-execution-pending",
-      "ast": null,
-      "reference044": "stage044Reference"
+      "fixtureStatus": "executable-emulation",
+      "ast": {
+        "kind": "runtime-select",
+        "parser": "Script",
+        "sources": [
+          "Data::Item",
+          "Other::Item"
+        ]
+      },
+      "reference044": "stage044Reference",
+      "nativeSignatureConfirmed": false,
+      "completion044Mode": "explicit-historical-api-emulation",
+      "fixtureHash": "5d7f46e54d6ff29e54c9a0984f0f152f6a714ff26f0848f798261a27bbfee25a"
     },
     {
       "contractId": "documented-combined-fill-slice-order",
@@ -56585,7 +56619,7 @@
           "criterionId": "combined_fill_slice_order",
           "direct": true,
           "status": "PASS",
-          "origin": "fresh-044-transferable",
+          "origin": "fresh-044-completion",
           "sourceHash": "fe2b189ff9e12e22a537155089db0cc8bf1dfffc6906c17f243de1485a401291",
           "projectSourceHash": "b87d3949b2c01525c0d1a7f3c9b05a1425c9a973b840f001a53e9c169c2132be",
           "sourceFile": "Entry/Main.xbsl",
@@ -56601,8 +56635,8 @@
         }
       ],
       "evidence": [
-        "result/result-resources/assessment-documented-combined_fill_slice_order.json",
-        "result/result-resources/documented-combined_fill_slice_order.json"
+        "result/result-resources-completion/fresh-test_query_results/assessment-documented-combined_fill_slice_order.json",
+        "result/result-resources-completion/fresh-test_query_results/documented-combined_fill_slice_order.json"
       ],
       "referenceVersion": "9.3",
       "fixtureStatus": "executable-transferable-project",
@@ -56834,7 +56868,8 @@
         "definition_source": null
       },
       "reference044": "stage044Reference",
-      "fixtureHash": "8b6473e3ec328490f1019db661ed56e25161423e09cf19fb3125f1faa38dc16f"
+      "fixtureHash": "8b6473e3ec328490f1019db661ed56e25161423e09cf19fb3125f1faa38dc16f",
+      "completion044Mode": "standalone-emulation"
     },
     {
       "contractId": "documented-combined-join-group-null",
@@ -62029,5 +62064,59 @@
       "native permissions and ACL handlers",
       "custom data sources"
     ]
+  },
+  "stage044CompletionReference": {
+    "version": "9.3",
+    "readDate": "2026-10-05",
+    "access": "authenticated in-app browser, read only",
+    "executorVersion": "10.0.2-1",
+    "executionCompatibilityVersion": "current",
+    "sources": [
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/CustomQuery_ru/",
+        "contract": "Текст is mutable, accepts invalid text without validation; execution checks it. Parameter and data-source setters accept unused names and replacements. Data sources use ИЗ &Name."
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/CustomQueryResultRow_ru/",
+        "contract": "Dynamic rows expose read-only lookup by string column name, as well as named properties."
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/QueryResultColumnDescription_ru/",
+        "contract": "Column descriptors expose readonly Имя and Тип."
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/DatabaseDataType_ru/",
+        "contract": "Descriptors contain native type sets plus optional number, string and byte qualifiers. The emulator preserves cast qualifiers; unqualified string/bytes use 0 and numbers use explicit fake defaults 32/32."
+      },
+      {
+        "url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/fill/",
+        "contract": "Constructor matching tries named parameters, then positions. Unknown and nullable values may fail when reading a row instead of preventing compilation."
+      }
+    ],
+    "adapter": "Explicit Script emulation authorized by the user. Source-finite text uses the existing typed AST; runtime text/heterogeneous schemas use a Script SELECT AST. Mutable Text, declared array sources, readonly lookup by column name, descriptors and qualifiers, lazy nullable/unknown narrowing, installed scalar constructors, owner-scoped generated types, and an explicit historical ЗапросСВыборкой alias are supported. Rows are materialized with a single-pass resource state, not a native database cursor.",
+    "runtimeGrammar": [
+      "ordinary scalar/reference sources",
+      "declared array sources",
+      "projection fields and КАК aliases",
+      "ПЕРВЫЕ",
+      "source aliases",
+      "named & parameters and scalar literals",
+      "comparison predicates combined with И",
+      "ORDER BY with ВОЗР/УБЫВ",
+      "whitespace and line comments"
+    ],
+    "fakeDefaults": {
+      "numberIntegerLength": 32,
+      "numberFractionLength": 32,
+      "stringLength": 0,
+      "byteLength": 0
+    },
+    "nativeCursorConfirmed": false,
+    "nativeXBQLConfirmed": false,
+    "legacyQueryApi": {
+      "spelling": "ЗапросСВыборкой",
+      "mode": "explicit-emulation-alias",
+      "nativeSignatureConfirmed": false
+    }
   }
 }
