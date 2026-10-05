@@ -356,19 +356,8 @@ class Parser:
             sources.append(self.prune_source(i,s))
         fill=None
         if fill_name:
-            targets=self.contracts.resolve(fill_name)
-            if len(targets)!=1 or targets[0]['elementType']!='Структура':self.fail('Тип ЗАПОЛНИТЬ отсутствует или неоднозначен: '+fill_name,fill_type_span[0])
-            from .resolution import qualified
-            canonical=self.contracts.canonical_type(qualified(targets[0]));self.contracts.require(canonical)
-            fields=self.contracts.fields[canonical];by_name={f['Имя']:f for f in fields};mapping=[]
-            for e,label in bound:
-                if label not in by_name:self.fail('Неизвестная колонка ЗАПОЛНИТЬ: '+label,e.range[0])
-                typ=by_name[label]['Тип']
-                if e.type!=typ and e.type+'?'!=typ:self.fail('Несовместимые типы ЗАПОЛНИТЬ: '+e.type+' → '+typ,e.range[0])
-                mapping.append({'column':e.name,'parameter':label,'columnType':e.type,'fieldType':typ,'range':e.range})
-            for f in fields:
-                if f['constructorRequired'] and f['Имя'] not in dict((label,e) for e,label in bound):self.fail('Отсутствующее обязательное поле ЗАПОЛНИТЬ: '+f['Имя'])
-            fill={'owner':qualified(targets[0]),'sourceFile':targets[0]['sourceFile'],'type':canonical,'sourceName':fill_name,'range':fill_span,'typeRange':fill_type_span,'constructor':'automatic-named','fields':tuple(fields),'mapping':tuple(mapping)}
+            from .query_construction import resolve_fill
+            fill=resolve_fill(self.contracts,fill_name,bound,fill_span,fill_type_span)
         return RelationalQuery(sources[0].owner,sources[0].alias,tuple((slot_expr(e),l) for e,l in bound),tuple(slot_expr(e) for e in where),parameters,tuple((slot_expr(e),d) for e,d in ordering),limit,tuple(sources),tuple(replace(j,condition=slot_expr(j.condition)) for j in joins),fill,grouping=tuple(slot_expr(e) for e in grouping),having=tuple(slot_expr(e) for e in having),distinct=distinct,mode='storage-projections-aggregates-v1' if hasattr(self,'validate_groups') else 'storage-relational-joins-null-v1')
 
 

@@ -1,0 +1,15 @@
+структура Result<T>
+    знч Rows: Массив<T>
+    пер Closed: Булево
+    метод Close()
+        Closed = Истина
+    ;
+    метод Array(): Массив<T>
+        возврат Rows
+    ;
+;
+метод Скрипт(): Объект
+    знч R = новый Result<Число>(Rows = [1,2])
+    R.Close()
+    возврат {"rows": R.Array(), "closed": R.Closed}
+;

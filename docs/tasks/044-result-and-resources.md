@@ -1,6 +1,12 @@
 # Задание №44: Query API, результат и ресурсы
 
-Статус: **следующее после №43**, обновлено 5 октября 2026 года. Реализация не выполнена.
+Статус: **реализовано в ограниченном executor-контракте**, проверено 5 октября 2026 года.
+35 целевых тестов успешны, шесть SBSL FAIL мутаций, четыре SQL-сценария;
+public test/run 2/2, два batch 3/0/3, 46 артефактов проверены по схемам.
+[Контракт и ограничения](../result-and-resources.md),
+[измерения](../query-stage-044-measurements.json),
+[точечное покрытие](../query-stage-044-coverage.json).
+Следующее — [№45](045-state-rights-and-combinations.md).
 Основание: [каталог](../query-contract-catalog.md) и
 [общий план](../corpus-verification-plan.md). Выбор записей: nextStage
 `044-result-and-resources`, операции api, result, resources, generate, fill; связанные сочетания включаются явно.

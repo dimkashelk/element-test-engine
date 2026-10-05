@@ -1,0 +1,16 @@
+{
+  "version": "9.3",
+  "readDate": "2026-10-05",
+  "access": "authenticated in-app browser, read only",
+  "executorVersion": "10.0.2-1",
+  "executionCompatibilityVersion": "current",
+  "sources": [
+    {"url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/custom-query/", "contract": "ПроизвольныйЗапрос(constant Text), УстановитьПараметр(name, Object?), arbitrary names accepted, overwrites; checks deferred until execution"},
+    {"url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/QueryResult_ru/", "contract": "single traversal, automatically closes when last row obtained or empty, explicit Закрыть and исп"},
+    {"url": "https://1cmycloud.com/console/help/element/9.3/docs/stdlib/element/xbsl/Std/Database/TypedQuery_ru/", "contract": "typed literals, generated readonly structural rows have no public constructors"},
+    {"url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/produce/", "contract": "owner-scoped named generated type, default visibility of owning declaration; explicit visibility annotation"},
+    {"url": "https://1cmycloud.com/console/help/element/9.3/docs/topics/fill/", "contract": "named constructor attempted before positional; extra parameters must have defaults; nullable narrowing may fail at row retrieval"}
+  ],
+  "adapter": "concrete materialized cursor state and AST-lowered for/исп, not a native database cursor; constant dynamic query text; scalar typed constructor configuration",
+  "unavailable": ["native XBQL in standalone Script", "runtime-computed query text and Text replacement", "native custom database classes", "full dynamic column descriptors and index lookup", "nullable narrowing at row retrieval", "cross-module generated visibility", "arbitrary platform constructors"]
+}

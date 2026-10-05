@@ -8,7 +8,7 @@ from hashlib import sha256
 import json
 import re
 
-from .indexer import call_code, parse_module, method_call_expressions, method_local_callable_bindings
+from .indexer import mask_noncode, call_code, parse_module, method_call_expressions, method_local_callable_bindings
 from .model import select_check_project
 from .resolution import combined_library_symbols
 from .yaml_io import InputError, InvalidTestError, UnsupportedSyntaxError
@@ -38,6 +38,7 @@ class SourceSymbol:
     end: int
     annotations: tuple = ()
     annotation_ranges: list = field(default_factory=list)
+    local_structures: tuple = ()
 
 
 @dataclass(frozen=True)
@@ -368,6 +369,9 @@ def plan_execution(root, source_model, check):
     source_cache = {path: (root / path).read_text(encoding='utf-8-sig')
                     for path in dict.fromkeys(s.owner['sourceFile'] for s in symbols)}
     declaration_cache = {path: parse_module(source)[0] for path,source in source_cache.items()}
+    from .local_structures import scalar_structures
+    for symbol in symbols:
+        symbol.local_structures = tuple(scalar_structures(source_cache[symbol.identity.source_file]))
     for symbol in symbols:
         node = parse_module(symbol.source)[0][0]
         callable_bindings = method_local_callable_bindings(symbol.source, node)
@@ -441,6 +445,12 @@ def plan_execution(root, source_model, check):
                         from .yaml_io import InputError
                         raise InputError('Операция менеджера с Ууид/хранением требует явный storage контракт')
                     metadata = matches[0]
+            from .query_api import proven_api_call
+            if not project and proven_api_call(symbol, runtime_model, call):
+                plan.bindings.append(CapabilityBinding('query-api',call.name,owner,'typed-receiver-044',
+                    'Получатель разрешён по исходному объявлению запроса/результата',symbol.identity.source_file,
+                    symbol.start+call.start,symbol.start+call.end))
+                continue
             plan.bindings.append(registry.bind(call.name, receiver, project=project, callback=callback, metadata=metadata, backend="storage" in check,
                                   source_file=symbol.identity.source_file,
                                   start=symbol.start + call.start, end=symbol.start + call.end))
@@ -452,6 +462,8 @@ def plan_execution(root, source_model, check):
         raise InvalidTestError(f'{exc} ({plan.entry.identity.source_file}:{plan.entry.start}-{plan.entry.end})') from exc
     from .storage_queries import bind_queries
     bind_queries(plan)
+    from .query_api import bind_dynamic
+    bind_dynamic(plan)
     from .record_sets import bind_record_sets
     bind_record_sets(plan)
     bind_system_ids(plan)
@@ -502,6 +514,8 @@ def bind_types(plan):
         if mocks:
             raise InvalidTestError('storage и mocks требуют разных сценариев')
         plan.storage = MetadataStorage(c, plan.check['storage'], audit_history='formEffects' in plan.check)
+    from .query_api import prepare_query_types, dynamic_queries
+    prepare_query_types(plan, c)
     c.configure_references(mocks.get('objects', {}))
     plan.platform = PlatformMocks(c, mocks, plan.check)
     plan.platform.storage_mode = plan.storage is not None
@@ -511,7 +525,11 @@ def bind_types(plan):
         node = parse_module(symbol.source)[0][0]
         types = symbol.parameter_types + ([node.return_type(symbol.source)] if node.return_type(symbol.source) not in {None,'ничто'} else [])
         plan.signature_types.extend(types)
-        body = [t for _,_,t in constructor_types(symbol.source) if t not in RUNTIME_CONSTRUCTORS]
+        dynamic_spans = list(dynamic_queries(symbol.source, plan.model, symbol.owner, symbol.local_structures))
+        body = [t for a,_,t in constructor_types(symbol.source) if t not in RUNTIME_CONSTRUCTORS
+                and not any(d.start <= a < d.end for d in dynamic_spans)]
+        if any((c.current_source,t) in getattr(c,'produced_types',{}) for _,_,t in constructor_types(symbol.source)):
+            raise UnsupportedSyntaxError('Порождённый тип не имеет публичного конструктора')
         body += [t for _,_,t in body_type_references(symbol.source) if _project_body_type(c,t)]
         plan.body_types.extend(body)
         for typ in types + body:

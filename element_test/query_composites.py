@@ -384,7 +384,8 @@ def declaration(name,columns,contracts,flags=False):
 def public_result(query,contracts):
     result=query.fill['type'] if query.fill else 'СтрокаРезультата'
     text='' if query.fill else declaration(result,query.projections,contracts)
-    text+='    @Глобально\n    метод Выполнить(): Массив<'+result+'>\n        знч Результат = новый Массив<'+result+'>()\n        для С из ВыполнитьВнутренне()\n            Результат.Добавить(новый '+result+'('+', '.join(label+' = С.'+label for _,label in query.projections)+'))\n        ;\n        возврат Результат\n    ;\n'
+    from .query_construction import constructor_args
+    text+='    @Глобально\n    метод Выполнить(): Массив<'+result+'>\n        знч Результат = новый Массив<'+result+'>()\n        для С из ВыполнитьВнутренне()\n            Результат.Добавить(новый '+result+'('+constructor_args(query, ['С.'+label for _,label in query.projections])+'))\n        ;\n        возврат Результат\n    ;\n'
     return text
 
 

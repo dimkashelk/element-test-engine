@@ -148,6 +148,9 @@ def query_literals(source):
 
 def parse_storage_query(text, contracts):
     """Parse typed storage/relational AST without evaluating data."""
+    if re.search(r'\bПОРОДИТЬ\b', mask_noncode(text), re.I):
+        from .query_construction import parse_produced
+        return parse_produced(text, contracts)
     # Captured Script expressions are opaque to the XBQL dispatcher. Their
     # method calls/arithmetic must not turn an ordinary slice into an aggregate.
     routing = list(mask_noncode(text))
@@ -318,34 +321,8 @@ def parse_simple_storage_query(text, contracts):
             seen.add(label)
     fill = None
     if fill_name:
-        from .yaml_io import InputError
-        try:
-            targets = contracts.resolve(fill_name)
-            if len(targets) != 1 or targets[0]['elementType'] != 'Структура':
-                raise UnsupportedSyntaxError('Тип ЗАПОЛНИТЬ отсутствует, неоднозначен, недоступен или не является YAML-структурой: ' + fill_name)
-            target = targets[0]
-            canonical = contracts.canonical_type(qualified(target))
-            contracts.require(canonical)
-            target_fields = contracts.fields[canonical]
-            by_name = {f['Имя']: f for f in target_fields}
-            mapping = []
-            for (column,label), span in zip(bound_projections, projection_ranges):
-                if label not in by_name:
-                    raise UnsupportedSyntaxError(f'Неизвестная колонка ЗАПОЛНИТЬ: {label} ({span[0]}-{span[1]})')
-                field = by_name[label]
-                if column.type != field['Тип'] and column.type + '?' != field['Тип']:
-                    raise UnsupportedSyntaxError(f'Несовместимые типы ЗАПОЛНИТЬ: {column.type} → {field["Тип"]}, {label} ({span[0]}-{span[1]})')
-                mapping.append({'column': column.name, 'parameter': label, 'columnType': column.type,
-                                'fieldType': field['Тип'], 'range': span})
-            supplied = {label for _,label in bound_projections}
-            for field in target_fields:
-                if field['constructorRequired'] and field['Имя'] not in supplied:
-                    raise UnsupportedSyntaxError('Отсутствующее обязательное поле ЗАПОЛНИТЬ: ' + field['Имя'])
-            fill = {'owner': qualified(target), 'sourceFile': target['sourceFile'], 'type': canonical,
-                    'sourceName': fill_name, 'range': fill_range, 'typeRange': fill_type_range,
-                    'constructor': 'automatic-named', 'fields': tuple(target_fields), 'mapping': tuple(mapping)}
-        except InputError as exc:
-            raise UnsupportedSyntaxError(str(exc) + f' (ЗАПОЛНИТЬ {fill_type_range[0]}-{fill_type_range[1]})') from exc
+        from .query_construction import resolve_fill
+        fill = resolve_fill(contracts, fill_name, bound_projections, fill_range, fill_type_range, projection_ranges)
     predicates, parameters, slots, slot_types = [], [], {}, {}
     def parameter(token, typ):
         _, expression, start, end = token

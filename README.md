@@ -1011,7 +1011,14 @@ CASE/ВЫРАЗИТЬ, DISTINCT, агрегаты и GROUP/HAVING. Два реа
 SQL-сценариев. Public test/run по 2/2, два batch 3/0/3 без cacheHit.
 [Контракт и платформенный остаток](docs/virtual-tables.md),
 [измерения](docs/query-stage-043-measurements.json).
-[Следующее №44](docs/tasks/044-result-and-resources.md) — Query API, результат и ресурсы.
+[№44](docs/tasks/044-result-and-resources.md) реализовало постоянный текст
+ПроизвольныйЗапрос, типизированный однократный результат и закрытие ресурсов,
+ПОРОДИТЬ, позиционное заполнение и подтверждённую конфигурацию конструктора.
+35 целевых тестов, шесть SBSL FAIL мутаций, четыре SQL-сценария;
+public test/run 2/2, два batch 3/0/3, 46 проверенных по схемам артефактов.
+[Контракт и ограничения](docs/result-and-resources.md),
+[измерения](docs/query-stage-044-measurements.json).
+[Следующее №45](docs/tasks/045-state-rights-and-combinations.md) — состояние, права и сочетания.
 
 ```bash
 python3 -m element_test.query_catalog

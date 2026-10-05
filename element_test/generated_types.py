@@ -39,6 +39,8 @@ class ProjectTypes:
         self.reference_id_type = "Строка"
         self.platform_type_aliases = {}
         self.declarative_read = False
+        self.produced_types = {}
+        self.query_results = False
 
     def resolve(self, name, namespace=None):
         if name in self.canonical_elements:
@@ -63,6 +65,9 @@ class ProjectTypes:
             raise InputError("Имя типа должно быть строкой")
         if type_name.strip() in self.platform_type_aliases:
             return self.platform_type_aliases[type_name.strip()]
+        from .query_results import result_type
+        type_name = re.sub(r'(?<![\w:])(?:Стд::БазаДанных::)?РезультатЗапроса<([^<>]+)>',
+            lambda m: result_type(self.canonical_type(m[1]), self), type_name)
         for path, alias in import_specs(self.imports):
             if alias and resolve_symbols(self.model["elements"], path, self.namespace,
                                          self.imports, self.model.get("properties")):
@@ -72,6 +77,11 @@ class ProjectTypes:
 
         def shorten(match):
             token = match[0]
+            produced = getattr(self, 'produced_types', {}).get((self.current_source, token))
+            if produced:
+                return produced
+            if token in self.definitions:
+                return token
             if token in self.platform_type_aliases:
                 return self.platform_type_aliases[token]
             owner, dot, variant = token.partition(".")
@@ -119,6 +129,14 @@ class ProjectTypes:
     def require(self, type_name, namespace=None):
         if not isinstance(type_name, str):
             raise InputError('Имя типа должно быть строкой')
+        produced = getattr(self, 'produced_types', {}).get((self.current_source, type_name))
+        if produced:
+            return
+        result = re.fullmatch(r'(?:Стд::БазаДанных::)?РезультатЗапроса<([^<>]+)>', type_name)
+        if result:
+            self.require(result[1], namespace)
+            self.canonical_type(type_name)
+            return
         if type_name in self.platform_type_aliases and self.platform_type_aliases[type_name] in self.definitions:
             return
         namespace = self.namespace if namespace is None else namespace

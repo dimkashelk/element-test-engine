@@ -18,6 +18,14 @@ def query_name(query):
     return 'ТестЗапрос' + sha256(json.dumps(schema, sort_keys=True).encode()).hexdigest()[:16]
 
 
+def generate_public_query(query, contracts):
+    name = generate_query(query, contracts)
+    if getattr(contracts, 'query_results', False):
+        from .query_results import wrap_query
+        name, _ = wrap_query(name, query, contracts)
+    return name
+
+
 def generate_query(query, contracts):
     """Only metadata/AST become code; no rows, expected values or Python filter."""
     if query.source_kind in ('union','batch','temporary'):
@@ -103,7 +111,8 @@ def generate_query(query, contracts):
             copied = 'новый ' + base + '(Идентификатор = ' + value + '.Идентификатор)'
             return '(' + value + ' == Неопределено ? Неопределено : ' + copied + ')' if field.type.endswith('?') else copied
         return value
-    text += '            Результат.Добавить(новый ' + row_type + '(' + ', '.join(label + ' = ' + projection(f) for f,label in query.projections) + '))\n'
+    from .query_construction import constructor_args
+    text += '            Результат.Добавить(новый ' + row_type + '(' + constructor_args(query, [projection(f) for f,label in query.projections]) + '))\n'
     text += '        ;\n        возврат Результат\n    ;\n;\n'
     if query.ordering:
         text += '@Глобально\nметод Раньше(А: Данные, Б: Данные): Булево\n'
@@ -149,7 +158,7 @@ def adapt_storage_queries(source, contracts):
             source,node,expression,body+at,bindings,owner,contracts.model
         ) if node and re.fullmatch(IDENT,expression) else None
         query = parse_storage_query(text, contracts)
-        name = generate_query(query, contracts)
+        name = generate_public_query(query, contracts)
         replacements.append((start,end,name + '.Создать(' + ', '.join(getattr(contracts,'query_context_expressions',{}).get(p.expression,p.expression) for p in unique_parameters(query)) + ')'))
     for a,b,value in reversed(replacements):
         source = source[:a] + value + source[b:]
@@ -186,7 +195,7 @@ def bind_queries(plan):
             for nested in nodes(query):
                 fill = nested.fill
                 if fill and (method_binding_visible(locals_,fill['sourceName'].split('::')[0],body+fill['typeRange'][0])
-                             or fill['sourceName'] in c.local_by_source.get(c.current_source, {})):
+                             or fill['sourceName'] in c.local_by_source.get(c.current_source, {}) and fill.get('sourceFile') != c.current_source):
                     raise UnsupportedSyntaxError('Затенённый тип ЗАПОЛНИТЬ: ' + fill['sourceName'] +
                                                  f" ({symbol.start+body+fill['typeRange'][0]}-{symbol.start+body+fill['typeRange'][1]})")
             sources = tuple(leaves(query))
@@ -215,10 +224,11 @@ def bind_queries(plan):
                     compatible = {p.type, p.type[:-1]} if p.type.endswith('?') else {p.type}
                     if inferred and c.canonical_type(inferred) not in compatible:
                         raise UnsupportedSyntaxError('Несовместимый тип параметра запроса: ' + p.expression)
-            name = generate_query(query,c)
+            name = generate_public_query(query,c)
             plan.queries.append({'sourceFile': symbol.identity.source_file, 'symbol': symbol.identity.declaration,
                 'start': symbol.start + start, 'end': symbol.start + end, 'bodyStart': symbol.start + body,
-                'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else name + '.СтрокаРезультата',
+                'text': text, 'ast': query.to_dict(), 'rowType': query.fill['type'] if query.fill else query_name(query) + '.СтрокаРезультата',
+                'resultContract': 'single-pass-044' if c.query_results else 'materialized-array',
                 'backend': plan.storage.config.get('backend','memory'),
                 'limitations': (['implicit-execute-local-temporary-scope', 'last-statement-result', 'validated-index-hints', 'native-XBQL-unavailable'] if query.mode == 'storage-unions-nesting-v1' or query.source_kind in ('union','batch') else ['metadata-derived-virtual-sources', 'left-associated-joins', 'NULL-output-as-Undefined', 'no-unsorted-order-guarantee']
                                 if query.source_kind == 'relational' else ['single-source', 'equality-and', 'filled-reference-parameter-only' if query.source_kind == 'slice-last' else 'no-nullable-predicate', 'no-unsorted-order-guarantee']) + ['native-XBQL-and-access-rights-unavailable', 'no-exchange-change-lifecycle', 'no-virtual-source-filter-or-period-expansion']})
@@ -238,6 +248,8 @@ def bind_queries(plan):
             declaration = re.fullmatch(rf'\s*(?:знч|пер)\s+({IDENT})\s*=\s*', line)
             if declaration:
                 query_variables[declaration[1]] = end
+        if getattr(c, 'query_results', False):
+            continue  # Resource lowering is handled once by bind_dynamic.
         # The adapter materializes a detached native array and holds no cursor.
         # Lower only resources proven to be its query result; unrelated исп
         # declarations retain native resource semantics.
