@@ -15,8 +15,14 @@ concurrency:
 
 jobs:
   regression:
+    name: Regression shard ${{ matrix.shard }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3]
     defaults:
       run:
         shell: bash
@@ -76,10 +82,11 @@ jobs:
 
       - name: Full regression
         id: tests
-        timeout-minutes: 270
+        # Each balanced shard is estimated at 78 minutes; allow startup/load headroom.
+        timeout-minutes: 150
         run: |
           mkdir -p result/nightly
-          python tools/ci/run_nightly.py 2>&1 | tee result/nightly/tests.log
+          python tools/ci/run_nightly.py --shard-index ${{ matrix.shard }} --shard-count 4 2>&1 | tee result/nightly/tests.log
 
       - name: Morning summary
         if: ${{ always() && steps.checkout.outcome == 'success' }}
@@ -91,7 +98,44 @@ jobs:
         if: ${{ always() && steps.checkout.outcome == 'success' }}
         uses: actions/upload-artifact@v7
         with:
-          name: nightly-${{ github.run_id }}-${{ github.run_attempt }}
+          name: nightly-${{ github.run_id }}-${{ github.run_attempt }}-shard-${{ matrix.shard }}
           path: result/
+          retention-days: 14
+          if-no-files-found: error
+
+  summary:
+    name: Complete regression summary
+    needs: regression
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Download all shard reports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: nightly-${{ github.run_id }}-${{ github.run_attempt }}-shard-*
+          path: result/shards
+          merge-multiple: false
+
+      - name: Verify complete coverage and publish morning summary
+        if: ${{ always() }}
+        env:
+          NIGHTLY_JOB_STATUS: ${{ needs.regression.result }}
+        run: python tools/ci/run_nightly.py --aggregate result/shards --shard-count 4
+
+      - name: Save combined summary
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-${{ github.run_id }}-${{ github.run_attempt }}-summary
+          path: result/nightly/
           retention-days: 14
           if-no-files-found: error

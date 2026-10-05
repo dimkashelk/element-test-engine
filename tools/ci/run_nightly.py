@@ -11,7 +11,10 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from tools.ci.sharding import aggregate_reports, shard_suites
+
 OUTPUT = ROOT / 'result/nightly/result.json'
+WEIGHTS = ROOT / 'config/nightly-module-timings.json'
 REQUIRED_DUMPS = (
     'Dvizhok.xdump', 'Demo-SRM-dev-2026-09-28-21-38.xdump',
     'Prakticheskie-primery-2026-09-30-15-20.xdump', 'autocheck-2026-09-24-16-14.xdump',
@@ -124,7 +127,7 @@ def form_corpus_summary(manifest, directory):
             'expressionsWithoutRuntime':sum(len(r['notRuntimeChecked']) for r in reports)}
 
 
-def summary(output, job_status='success'):
+def summary(output, job_status='success', *, collect_forms=True):
     data = json.loads(output.read_text()) if output.exists() else {
         **metadata(), 'status': 'not_started', 'message': 'Tests did not start; inspect setup steps.'}
     if data['status'] == 'running':
@@ -132,7 +135,7 @@ def summary(output, job_status='success'):
     if data['status'] == 'passed' and job_status != 'success':
         data['status'] = 'incomplete'
     manifest=ROOT/'tests/corpus/all-dump-forms/manifest.json'
-    if output==OUTPUT and manifest.exists():
+    if collect_forms and output==OUTPUT and manifest.exists():
         data['formCorpus']=form_corpus_summary(manifest,ROOT/'result/all-dump-forms/nightly')
     save(output, data)
     lines = ['# Nightly regression', '', f"Status: **{data['status']}**",
@@ -152,6 +155,14 @@ def summary(output, job_status='success'):
         lines += ['', '## Slowest tests', '']
         for row in sorted(data['timings'], key=lambda row: row['seconds'], reverse=True)[:10]:
             lines.append(f"- `{row['test']}`: {row['seconds']:.1f}s")
+    if 'shard' in data:
+        shard = data['shard']
+        lines += ['', f"Shard: {shard['index'] + 1}/{shard['count']}; planned tests: {len(shard['expectedTests'])}."]
+    if 'shards' in data:
+        lines += ['', '## Parallel runners', '', '| Shard | Status | Completed / planned | Seconds |',
+                  '| --- | --- | ---: | ---: |']
+        for shard in sorted(data['shards'], key=lambda shard: shard['index']):
+            lines.append(f"| {shard['index'] + 1} | {shard['status']} | {shard['testsRun']} / {shard['planned']} | {shard['seconds']:.1f} |")
     if data.get('message'):
         lines += ['', data['message']]
     if 'formCorpus' in data:
@@ -175,19 +186,36 @@ def summary(output, job_status='success'):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--summary-only', action='store_true')
+    parser.add_argument('--shard-index', type=int, default=0)
+    parser.add_argument('--shard-count', type=int, default=1)
+    parser.add_argument('--list-shards', action='store_true', help='Show allocation without executing tests')
+    parser.add_argument('--aggregate', type=Path, help='Directory containing downloaded shard artifacts')
     args = parser.parse_args()
+    if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
+        parser.error('Require shard-count > 0 and 0 <= shard-index < shard-count')
+    if args.aggregate:
+        data = aggregate_reports(args.aggregate.glob('*/nightly/result.json'), args.shard_count, metadata())
+        save(OUTPUT, data)
+        data = summary(OUTPUT, os.environ.get('NIGHTLY_JOB_STATUS', 'success'), collect_forms=False)
+        return 0 if data['status'] == 'passed' else 1
     if args.summary_only:
         summary(OUTPUT, os.environ.get('NIGHTLY_JOB_STATUS', 'success'))
         return 0
     info = metadata()
+    suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests'))
+    weights = json.loads(WEIGHTS.read_text())['moduleSeconds']
+    suites, plans = shard_suites(suite, args.shard_count, weights)
+    if args.list_shards:
+        print(json.dumps(plans, ensure_ascii=False, indent=2))
+        return 0
+    info['shard'] = plans[args.shard_index]
     try:
         preflight()
     except Exception as exc:
         save(OUTPUT, {**info, 'status': 'setup_error', 'message': str(exc)})
         print(str(exc), file=sys.stderr)
         return 2
-    suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests'))
-    return run_suite(suite, OUTPUT, info)
+    return run_suite(suites[args.shard_index], OUTPUT, info)
 
 
 if __name__ == '__main__':

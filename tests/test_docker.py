@@ -206,7 +206,8 @@ class DockerTest(unittest.TestCase):
     def test_real_method_and_input_interpolation_escape(self):
         text = '${Консоль.Записать("probe")}'
         result = self.run_case(lambda check, model: check.update(args=[text, "", ""]))
-        self.assertEqual(result, {"status": "EXECUTED", "actual": text})
+        self.assertEqual(result["status"], "EXECUTED", result)
+        self.assertEqual(result["actual"], text)
 
     def test_timeout(self):
         result = self.run_case(lambda check, model: check.update(timeout="0.001s"))

@@ -59,7 +59,8 @@ class ReadonlyArrayTest(unittest.TestCase):
                 with self.subTest(method=method, value=value):
                     execution = run_pure(root, model, {'target': {'module': 'Probe', 'method': method},
                                                      'args': [value]}, Path(d))
-                    self.assertEqual(execution, {'status': 'EXECUTED', 'actual': expected})
+                    self.assertEqual(execution['status'], 'EXECUTED', execution)
+                    self.assertEqual(execution['actual'], expected)
 
 
 @unittest.skipUnless(ARCHIVE.is_file(), 'Требуется исходный Примеры_new xdump')
