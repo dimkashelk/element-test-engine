@@ -332,6 +332,28 @@ class CompletionPlanTest(unittest.TestCase):
 
 @unittest.skipUnless(os.getenv('ELEMENT_TEST_DOCKER_TESTS') == '1', 'Task44 Docker opt-in')
 class CompletionDockerTest(unittest.TestCase):
+    def test_multiline_constructor_preserves_native_text_and_rows(self):
+        with TemporaryDirectory() as d:
+            temp=Path(d);root,c=project(d,'Scoped')
+            (root/'Entry/Main.xbsl').write_text('''метод Scoped(): Объект
+    знч Native =
+        "ВЫБРАТЬ Label ИЗ Data::Item
+         ГДЕ Label == &Name"
+    знч Q = новый ПроизвольныйЗапрос(
+        "ВЫБРАТЬ Label ИЗ Data::Item
+         ГДЕ Label == &Name")
+    Q.УстановитьПараметр("Name", "A")
+    исп R = Q.Выполнить()
+    возврат {"text": Q.Текст, "native": Native, "rows": R.ВМассив()}
+;
+'''.replace('Item\n','Item   \n'))
+            value='ВЫБРАТЬ Label ИЗ Data::Item\nГДЕ Label == &Name'
+            answer={'text':value,'native':value,'rows':[{'Label':'A'}]}
+            result=run_pure(root,analyze(root),c,temp)
+            self.assertEqual(result['status'],'EXECUTED',result)
+            self.assertEqual(result['actual']['result'],answer)
+            self.assertEqual(grade(result['actual'],expected(c,answer),temp),'PASS')
+
     def test_runtime_text_errors_are_deferred_and_schema_checked_when_empty(self):
         for text in ('not a query','ВЫБРАТЬ Missing ИЗ Data::Item',
                      'ВЫБРАТЬ Label КАК Same, Total КАК Same ИЗ Data::Item',

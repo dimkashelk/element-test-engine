@@ -79,9 +79,13 @@ class StorageQueryPlanTest(unittest.TestCase):
         self.assertEqual(len(q.parameters),2)
         self.assertEqual(q.parameters[0].expression,'F({"x": "} % ИЗ ${G()}"})')
         self.assertEqual(len(list(query_literals('метод F()\n    возврат Запрос{'+text+'}\n;'))),1)
-        for bad in ['ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Note = %N',
+        for valid in ['ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Note = %N',
+                      'ВЫБРАТЬ Label ИЗ Data::Product УПОРЯДОЧИТЬ ПО Note']:
+            with self.subTest(valid=valid):
+                self.assertEqual(parse_storage_query(valid,c).owner,'Data::Product')
+        for bad in ['ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Unknown = %N',
                     'ВЫБРАТЬ Label ИЗ Data::Product ГДЕ Label = %X И Amount = %X',
-                    'ВЫБРАТЬ Label ИЗ Data::Product УПОРЯДОЧИТЬ ПО Note',
+                    'ВЫБРАТЬ Label ИЗ Data::Product УПОРЯДОЧИТЬ ПО Unknown',
                     'ВЫБРАТЬ Unknown ИЗ Data::Product',
                     'ВЫБРАТЬ X.Label ИЗ Data::Product КАК P',
                     'ВЫБРАТЬ Label КАК N, Amount КАК N ИЗ Data::Product',
@@ -260,7 +264,8 @@ class StorageQueryDockerTest(unittest.TestCase):
             base=check(s,'Fields',['A',3],[row(s),row(s,OTHER,'B',4)])
             expected={'result':[{'Name':'A','Total':3,'Optional':None,'Link':None}],'storage':[row(s),row(s,OTHER,'B',4)]}
             mutations=[('predicate',' И P.Amount = %Amount',''),('parameter','%Amount','%{Amount + 1}'),
-                       ('field','P.Label = %{Helper.A(Label)}','P.Note = %{Helper.A(Label)}')]
+                       ('nullable-field','P.Label = %{Helper.A(Label)}','P.Note = %{Helper.A(Label)}'),
+                       ('field','P.Label = %{Helper.A(Label)}','P.Unknown = %{Helper.A(Label)}')]
             # Unknown/unconfirmed field is honest UNSUPPORTED; valid but wrong logic grades FAIL.
             for label,a,b in mutations:
                 p.write_text(original.replace(a,b))

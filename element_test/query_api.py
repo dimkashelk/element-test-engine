@@ -36,7 +36,24 @@ def finite_texts(source, node, expression, active=()):
         value = source[expression.start:expression.end]
         if '${' in value or '\\' in value or '"' in value[1:-1]:
             raise UnsupportedSyntaxError('Интерполяция/escape текста Query API требует отдельный контракт')
-        return {value[1:-1]}
+        text = value[1:-1]
+        if '\n' in text:
+            prefix = source[source.rfind('\n',0,expression.start)+1:expression.start]
+            if prefix.strip():
+                raise UnsupportedSyntaxError('Многострочная строка должна начинаться на отдельной строке')
+            # Native String literals remove indentation up to the first character
+            # after the opening quote, and trailing whitespace except on the last line.
+            boundary = len(prefix) + 1
+            lines = text.split('\n')
+            for i,line in enumerate(lines):
+                if i:
+                    indent = len(line) - len(line.lstrip(' '))
+                    line = line[min(indent,boundary):]
+                    if line.startswith('\t') and indent < boundary:
+                        raise UnsupportedSyntaxError('Табуляция до границы многострочной строки')
+                lines[i] = line.rstrip() if i < len(lines)-1 else line
+            text = '\n'.join(lines)
+        return {text}
     if expression.kind == 'binary' and expression.value == '+':
         left, right = expression.children
         left_values = finite_texts(source,node,left,active)
@@ -122,6 +139,15 @@ def dynamic_queries(source, model, owner, local_types=()):
         if node.return_type(source) == 'Объект' and re.search(rf'\bвозврат\s+{re.escape(decl[1])}\.Выполнить\s*\(\s*\)\s*(?:\n|;)', code):
             raise UnsupportedSyntaxError('Возврат непрочитанного ресурса Query API не имеет JSON-контракта')
         expr = source[e.children[1].start:e.children[1].end] if len(e.children)==2 else '""'
+        # AST spans omit the original indentation. Emit the proven literal value
+        # so moving the constructor cannot change multiline indentation semantics.
+        if len(e.children)==2 and e.children[1].kind=='string' and '\n' in expr:
+            if initial:
+                from .runtime import sbsl_literal
+                expr = sbsl_literal(next(iter(initial)), 'Строка')
+            else:
+                prefix = source[source.rfind('\n',0,e.children[1].start)+1:e.children[1].start]
+                expr = '\n' + prefix + expr
         a,b = (e.children[1].start+1,e.children[1].end-1) if len(e.children)==2 else (e.end,e.end)
         yield DynamicQuery(e.start,e.end,next(iter(sorted(initial)),''),a,b,decl[1],expr,tuple(sorted(texts)),runtime_text,typ)
 

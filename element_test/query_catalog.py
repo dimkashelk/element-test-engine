@@ -158,6 +158,28 @@ def build_catalog(repo=REPO,evidence=()):
 
 
 def markdown(catalog):
+ if catalog.get('currentReview'):
+  # Keep historical per-occurrence evidence visible, but never present it as
+  # the current planner's status or combine documentation with source work.
+  historical=dict(catalog);historical.pop('currentReview')
+  rendered=markdown(historical)
+  review=catalog['currentReview'];summary=review['summary']
+  intro=['# Каталог контрактов запросов — текущая проверка и история','',
+   'Текущая очередь и планирование: [отчёт](query-catalog-current.md), [JSON](query-catalog-current.json).',
+   'Обновление без выполнения исходного кода: `python3 -m element_test.query_catalog_refresh`.', '',
+   'Виды записей разделены: реальные запросы, кандидаты API, исполняемые примеры, текстовые требования и документация. '
+   'Доказанные API-потребители связаны с запросом; одинаковый текст разных исходных вхождений не объединяется.', '',
+   f"Реальные запросы: {summary['historicallyAssessedSourceQueries']} исторически оценены, "
+   f"{summary['unassessedSourceQueries']} без независимой оценки. Страницы документации не входят в этот знаменатель.", '',
+   'Все исходные contractId, sourceHash/range, критерии и свидетельства сохранены. '
+   'Поля P/L/E/A и причины в таблице ниже — исторические; актуальный разбор/план и версионная применимость '
+   'хранятся отдельно в currentReview. Нового runtime или оценивания это обновление не подтверждает.', '',
+   '## Историческая инвентаризация и доказательства','']
+  # The discovery CLI is intentionally distinct from evidence-preserving refresh.
+  rendered=rendered.replace('Воспроизведение: `python3 -m element_test.query_catalog`. Архивы открываются только для чтения.',
+   'Первичное обнаружение без накопленных доказательств: `python3 -m element_test.query_catalog --output /tmp/query-discovery.json`. '
+   'Для обновления рабочего каталога использовать query_catalog_refresh.')
+  return '\n'.join(intro)+rendered
  stage040=catalog.get('stage040Reference')
  reference=('Для №40–43 пользователь выбрал справку Элемента **9.3** и установленный Script **10.0.2-1**. Профиль `9.3` использует режим Script `current`: отдельного режима `-c 9.3` в этом executor нет. Исходные версии архивов сохраняются. Исторические свидетельства №39 относятся к справке 9.1 и режиму `-c 9.0`.' if stage040 else
   'Официальная справка Элемента **9.1** выбрана пользователем для проекта с режимом совместимости **9.0**. Версия источника сохраняется; Script-пробы и runtime выполняются с `-c 9.0`. Раздел 9.0 возвращает 404 и отсутствует в меню архивных версий.')

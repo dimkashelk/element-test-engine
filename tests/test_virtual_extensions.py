@@ -331,7 +331,10 @@ class VirtualArgumentsDockerTest(unittest.TestCase):
                 bounds=[('ДатаОстатков',END)] if index==2 else [('НачалоПериода',START),('КонецПериода',END)]
                 wrapper=root/namespace/'Virtual43Probe.xbsl'
                 setters=''.join('    Q.УстановитьПараметр("'+name+'", новый ДатаВремя("'+value+'"))\n' for name,value in bounds)
-                wrapper.write_text('метод Execute(): Объект\n    знч Q = новый ПроизвольныйЗапрос("'+text+'")\n'+setters+'    исп R = Q.Выполнить()\n    возврат R.ВМассив()\n;\n')
+                # The literal begins on its own line; continuation indentation
+                # compensates for the quote so its native value is the exact XBQL.
+                literal=text.replace('\n','\n ')
+                wrapper.write_text('метод Execute(): Объект\n    знч Q = новый ПроизвольныйЗапрос(\n"'+literal+'")\n'+setters+'    исп R = Q.Выполнить()\n    возврат R.ВМассив()\n;\n')
                 register='ОстаткиНоменклатуры' if index==2 else 'Продажи'
                 metadata=load_yaml(root/namespace/(register+'.yaml'))
                 dimensions={f['Имя']:copy.deepcopy(REFS[n%len(REFS)]) for n,f in enumerate(metadata['Измерения'])}

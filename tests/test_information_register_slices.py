@@ -48,9 +48,11 @@ class SlicePlanTest(unittest.TestCase):
         contracts=ProjectTypes(model,'Entry',['Data::Prices как Book'])
         shared=parse_storage_query('ВЫБРАТЬ Price ИЗ Book.СрезПоследних(%D) ГДЕ Период == %D',contracts)
         self.assertEqual([(p.slot,p.type) for p in shared.parameters],[(0,'Дата'),(0,'Дата')])
+        nullable=parse_storage_query('ВЫБРАТЬ Price ИЗ Book.СрезПоследних() ГДЕ Note == %N',contracts)
+        self.assertEqual(nullable.parameters[0].type,'Строка')
         for query in ['ВЫБРАТЬ Price ИЗ Book.СрезПоследних(%{Неопределено}, %D)',
                       'ВЫБРАТЬ Unknown ИЗ Book.СрезПоследних()',
-                      'ВЫБРАТЬ Price ИЗ Book.СрезПоследних() ГДЕ Note == %N',
+                      'ВЫБРАТЬ Price ИЗ Book.СрезПоследних() ГДЕ Unknown == %N',
                       'ВЫБРАТЬ Price ИЗ Book.СрезПоследних() УПОРЯДОЧИТЬ ПО Product',
                       'ВЫБРАТЬ Price ИЗ Book.СрезПоследних() СОЕДИНЕНИЕ Book',
                       'ВЫБРАТЬ Price ИЗ Book.СрезПоследних(%D) ГДЕ Price == %D']:

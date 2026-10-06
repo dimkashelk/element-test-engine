@@ -88,12 +88,12 @@ class ProjectTypes:
             if dot:
                 from .resolution import resolve_call_modules, method_visible
                 from types import SimpleNamespace
-                modules = resolve_call_modules(self.model['modules'], owner, self.namespace,
+                modules = resolve_call_modules(self.model.get('modules', []), owner, self.namespace,
                                                self.imports, self.model.get('properties'))
                 produced = [(m, self.produced_types[(m['sourceFile'],variant)]) for m in modules
                             if (m['sourceFile'],variant) in self.produced_types]
                 if produced:
-                    source = next((m for m in self.model['modules'] if m['sourceFile']==self.current_source),
+                    source = next((m for m in self.model.get('modules', []) if m['sourceFile']==self.current_source),
                                   {'sourceFile':self.current_source,'namespace':self.namespace})
                     visible = [(m,typ) for m,typ in produced if method_visible(SimpleNamespace(
                         annotations=getattr(self,'produced_visibility',{}).get((m['sourceFile'],variant),())),source,m)]

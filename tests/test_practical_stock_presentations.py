@@ -89,7 +89,7 @@ class PracticalStockPresentationsTest(unittest.TestCase):
             with patch('element_test.runtime.shutil.which', return_value='docker'):
                 execution = run_pure(root, model, boundary, temp)
             self.assertEqual((execution['status'], execution['reasonCode']), ('UNSUPPORTED', 'unsupported_syntax'))
-            self.assertIn('Запрос', execution['message'])
+            self.assertIn('Nullable-ссылка иерархии', execution['message'])
 
     @unittest.skipUnless(DOCKER, 'Docker integration is opt-in')
     def test_reference_and_independent_filter_sort_representation_mutations(self):

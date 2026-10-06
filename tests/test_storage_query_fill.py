@@ -23,6 +23,16 @@ from test_record_sets import grade, normalized
 
 def setUpModule():EVIDENCE.mkdir(parents=True,exist_ok=True)
 
+def unavailable_fill_project(destination):
+ # Unknown aliases now select the positional constructor (task 44). Keep the
+ # original corpus intact and use an absent nominal type for the control case.
+ shutil.copytree(CORPUS/'ordinary',destination)
+ source=destination/'Entry/Main.xbsl';text=source.read_text()
+ query='ВЫБРАТЬ Label КАК Missing ЗАПОЛНИТЬ Result ИЗ Data::Item'
+ assert text.count(query)==1
+ source.write_text(text.replace(query,query.replace('ЗАПОЛНИТЬ Result','ЗАПОЛНИТЬ MissingType')))
+ return destination
+
 class FillPlanTest(unittest.TestCase):
  def test_catalog_all_projects_stable_ids_and_visible_malformed_candidates(self):
   from element_test.query_catalog import build_catalog, literals_with_failures
@@ -176,13 +186,24 @@ class FillDockerTest(unittest.TestCase):
    p=root/'Data/Card.yaml';p.write_text(p.read_text().replace('authored','mutated'))
    c=portable_check();r=self.execute(root,c,temp,'mutation-default');self.assertEqual(grade(r['actual'],expected(c,portable_rows()),temp),'FAIL')
 
+ def test_unknown_alias_uses_positional_constructor(self):
+  root=CORPUS/'ordinary';c=portable_check(method='Unsupported')
+  plan=plan_execution(root,analyze(root),c)
+  self.assertEqual(plan.queries[0]['ast']['fill']['constructor'],'automatic-positional')
+  with TemporaryDirectory() as d:
+   temp=Path(d);r=self.execute(root,c,temp,'positional-legacy-alias')
+   exp=expected(c,[card('A'),card('B')])
+   self.assertEqual(normalized(r['actual']),normalized(exp))
+   self.assertEqual(grade(r['actual'],exp,temp),'PASS')
+
  def test_invalid_fixture_timeout_unsupported_and_next_supported(self):
   root=CORPUS/'ordinary'
   with TemporaryDirectory() as d:
    temp=Path(d);c=portable_check();c['storage']['initial'][0]['value']['Key']='bad-uuid'
    r=run_pure(root,analyze(root),c,temp);write_json(EVIDENCE/'invalid-fixture.json',r);self.assertEqual((r['status'],r['reasonCode']),('UNSUPPORTED','invalid_test'))
    c=portable_check();c['timeout']=0.001;r=run_pure(root,analyze(root),c,temp);write_json(EVIDENCE/'timeout.json',r);self.assertEqual(r['status'],'TIMEOUT')
-   r=run_pure(root,analyze(root),portable_check(method='Unsupported'),temp);write_json(EVIDENCE/'unsupported.json',r);self.assertEqual(r['status'],'UNSUPPORTED')
+   unavailable=unavailable_fill_project(temp/'unavailable')
+   r=run_pure(unavailable,analyze(unavailable),portable_check(method='Unsupported'),temp);write_json(EVIDENCE/'unsupported.json',r);self.assertEqual((r['status'],r['reasonCode']),('UNSUPPORTED','unsupported_syntax'))
    self.execute(root,portable_check(),temp,'after-unavailable')
 
  def test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots(self):
@@ -244,7 +265,9 @@ class FillPublicTest(unittest.TestCase):
   a=json.loads((EVIDENCE/'public-test/result.json').read_text());b=json.loads((EVIDENCE/'public-run/result.json').read_text())
   self.assertEqual(a['checks'],b['checks'])
   from element_test.bridge import run_test
-  result,package=run_test(CORPUS/'ordinary',REPO/'assignments/storage-query-fill-control',EVIDENCE/'public-control')
+  with TemporaryDirectory() as control_directory:
+   control=unavailable_fill_project(Path(control_directory)/'source')
+   result,package=run_test(control,REPO/'assignments/storage-query-fill-control',EVIDENCE/'public-control')
   self.assertEqual([c['status'] for c in result['checks']],['FAIL','UNSUPPORTED','PASS']);self.assertEqual(package['unavailablePoints'],1)
   with TemporaryDirectory() as d:
    temp=Path(d);submissions=[]

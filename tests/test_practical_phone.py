@@ -39,7 +39,7 @@ class PracticalPhoneTest(unittest.TestCase):
                 execution = run_pure(root, model, boundary, temp)
             self.assertEqual((execution["status"], execution["reasonCode"]),
                              ("UNSUPPORTED", "unsupported_syntax"))
-            self.assertIn("Запрос", execution["message"])
+            self.assertIn("Nullable-ссылка иерархии", execution["message"])
 
     @unittest.skipUnless(os.environ.get("ELEMENT_TEST_DOCKER_TESTS") == "1", "Docker integration is opt-in")
     def test_reference_and_mutated_phone_rule(self):
