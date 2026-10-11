@@ -1,0 +1,1564 @@
+{
+  "schemaVersion": 1,
+  "technicalOnly": true,
+  "denominator": "condition outcomes in parsed project methods",
+  "totalOutcomes": 74,
+  "coveredOutcomes": 0,
+  "records": [
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "CRM",
+        "owner": "СделкаФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "CRM/СделкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "fileHash": "062f017ecdb221979abb81fedea4ba7e460c4eda994fc20728b8712c2800b438",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-5ef27adde420be53d7ef5b22",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "CRM",
+        "owner": "СделкаФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "CRM/СделкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "fileHash": "062f017ecdb221979abb81fedea4ba7e460c4eda994fc20728b8712c2800b438",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        300,
+        320
+      ],
+      "line": 12,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-afb59ff59f94c6be67756720",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "CRM",
+        "owner": "СделкаФормаОбъекта",
+        "declaration": "АрхивироватьОбработчик",
+        "source_file": "CRM/СделкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "fileHash": "062f017ecdb221979abb81fedea4ba7e460c4eda994fc20728b8712c2800b438",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        641,
+        656
+      ],
+      "line": 22,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-2e827c5908e8a0d4250460ae",
+      "localRange": [
+        63,
+        78
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "CRM",
+        "owner": "СделкаФормаОбъекта",
+        "declaration": "ОбновитьПредставлениеАрхивирования",
+        "source_file": "CRM/СделкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "fileHash": "062f017ecdb221979abb81fedea4ba7e460c4eda994fc20728b8712c2800b438",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        858,
+        873
+      ],
+      "line": 33,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-8114d9fb7408d547cea701e4",
+      "localRange": [
+        52,
+        67
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "CRM",
+        "owner": "СделкаФормаОбъекта",
+        "declaration": "СуммаОтмеченногоСпросаОбработчик",
+        "source_file": "CRM/СделкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "CRM/СделкаФормаОбъекта.xbsl",
+      "fileHash": "062f017ecdb221979abb81fedea4ba7e460c4eda994fc20728b8712c2800b438",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1187,
+        1272
+      ],
+      "line": 43,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-6015544e98dea3581599d014",
+      "localRange": [
+        185,
+        270
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ПроизвольноеПриветствие",
+        "declaration": "КнопкаОбратныйОтсчетПриНажатии",
+        "source_file": "Администрирование/ПроизвольноеПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.xbsl",
+      "fileHash": "4706590b683678601eb6ebe135e650636ecb4fbbe0d65c8ed8999d50b627127e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        498,
+        518
+      ],
+      "line": 16,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-2cae32d5ff080bdb40fbb01a",
+      "localRange": [
+        160,
+        180
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ПроизвольноеПриветствие",
+        "declaration": "ОбратныйОтсчет",
+        "source_file": "Администрирование/ПроизвольноеПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.xbsl",
+      "fileHash": "4706590b683678601eb6ebe135e650636ecb4fbbe0d65c8ed8999d50b627127e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        710,
+        730
+      ],
+      "line": 23,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-76c58588c5976f77c5dbe08b",
+      "localRange": [
+        32,
+        52
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ПроизвольноеПриветствие",
+        "declaration": "ПолучитьНадпись",
+        "source_file": "Администрирование/ПроизвольноеПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.xbsl",
+      "fileHash": "4706590b683678601eb6ebe135e650636ecb4fbbe0d65c8ed8999d50b627127e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1043,
+        1090
+      ],
+      "line": 33,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-77debdf94b4a7735e9f2c358",
+      "localRange": [
+        41,
+        88
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ПроизвольноеПриветствие",
+        "declaration": "ПолучитьНадпись",
+        "source_file": "Администрирование/ПроизвольноеПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.xbsl",
+      "fileHash": "4706590b683678601eb6ebe135e650636ecb4fbbe0d65c8ed8999d50b627127e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1178,
+        1221
+      ],
+      "line": 37,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-e1a73ac18c6ca100cbc844b9",
+      "localRange": [
+        176,
+        219
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ПроизвольноеПриветствие",
+        "declaration": "ПолучитьНадпись",
+        "source_file": "Администрирование/ПроизвольноеПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.xbsl",
+      "fileHash": "4706590b683678601eb6ebe135e650636ecb4fbbe0d65c8ed8999d50b627127e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1262,
+        1281
+      ],
+      "line": 39,
+      "column": 16,
+      "kind": "condition",
+      "construct": "иначе если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-d8d0a35878246ae7b1a4d21f",
+      "localRange": [
+        260,
+        279
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ОбновитьПриветствие",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1029,
+        1075
+      ],
+      "line": 37,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-40ecdf64b951ca5266035ffe",
+      "localRange": [
+        202,
+        248
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ОбновитьПриветствие",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1127,
+        1173
+      ],
+      "line": 39,
+      "column": 16,
+      "kind": "condition",
+      "construct": "иначе если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-5690a5c813035620d42ff9d3",
+      "localRange": [
+        300,
+        346
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ОбновитьПриветствие",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1225,
+        1271
+      ],
+      "line": 41,
+      "column": 16,
+      "kind": "condition",
+      "construct": "иначе если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-385315cb1e1d22ad2e3a6edb",
+      "localRange": [
+        398,
+        444
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ПолучитьТекстДня",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        2069,
+        2099
+      ],
+      "line": 63,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-3935278e1899661a2783ad29",
+      "localRange": [
+        101,
+        131
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "КнопкаРассчитатьПриНажатии",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        2415,
+        2437
+      ],
+      "line": 74,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-23666417021dd40ce3dfac01",
+      "localRange": [
+        191,
+        213
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "РассчитатьДни",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        3183,
+        3465
+      ],
+      "line": 92,
+      "column": 5,
+      "kind": "loop",
+      "construct": "пока",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-78609cc4037d0f08bd7a40fc",
+      "localRange": [
+        222,
+        504
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "РассчитатьДни",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        3188,
+        3212
+      ],
+      "line": 92,
+      "column": 10,
+      "kind": "condition",
+      "construct": "пока",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-3c41d9f4abb3519caf52fac4",
+      "localRange": [
+        227,
+        251
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "РассчитатьДни",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        3313,
+        3333
+      ],
+      "line": 95,
+      "column": 14,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-aecd6e9d7f1e7edd14138c51",
+      "localRange": [
+        352,
+        372
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ПолучитьКоличествоПоступленияДС",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        4009,
+        4026
+      ],
+      "line": 121,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-b95ee6074cdb0008047e8df8",
+      "localRange": [
+        338,
+        355
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "ПолучитьЦенаНоменклатуры",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        4896,
+        4913
+      ],
+      "line": 146,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-e183a55763bd38685119869f",
+      "localRange": [
+        564,
+        581
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Администрирование",
+        "owner": "ФормаПриветствие",
+        "declaration": "КнопкаВывестиЦенаНоменклатурыПриНажатии",
+        "source_file": "Администрирование/ФормаПриветствие.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        5175,
+        5213
+      ],
+      "line": 156,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-6032a8c2785150ec56654554",
+      "localRange": [
+        184,
+        222
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Продажи",
+        "owner": "ЗаказФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Продажи/ЗаказФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "fileHash": "f315b6a6feac15a3c777111e801e8abb0b68c5972c054959adbd77f1954891ee",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        58,
+        75
+      ],
+      "line": 5,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-98a3083435600bccf91e420a",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Продажи",
+        "owner": "ЗаказФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Продажи/ЗаказФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "fileHash": "f315b6a6feac15a3c777111e801e8abb0b68c5972c054959adbd77f1954891ee",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        313,
+        333
+      ],
+      "line": 14,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-a1bff0d61f8573eff5af9efb",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Продажи",
+        "owner": "ЗаказФормаОбъекта",
+        "declaration": "АрхивироватьОбработчик",
+        "source_file": "Продажи/ЗаказФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "fileHash": "f315b6a6feac15a3c777111e801e8abb0b68c5972c054959adbd77f1954891ee",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        654,
+        669
+      ],
+      "line": 24,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-a0848663133d09ce3d846007",
+      "localRange": [
+        63,
+        78
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Продажи",
+        "owner": "ЗаказФормаОбъекта",
+        "declaration": "ОбновитьПредставлениеАрхивирования",
+        "source_file": "Продажи/ЗаказФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "fileHash": "f315b6a6feac15a3c777111e801e8abb0b68c5972c054959adbd77f1954891ee",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        871,
+        886
+      ],
+      "line": 35,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-9ca2654fd8f98b68601ceed9",
+      "localRange": [
+        52,
+        67
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Продажи",
+        "owner": "ЗаказФормаОбъекта",
+        "declaration": "РассчитатьИтоги",
+        "source_file": "Продажи/ЗаказФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.xbsl",
+      "fileHash": "f315b6a6feac15a3c777111e801e8abb0b68c5972c054959adbd77f1954891ee",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        2131,
+        2274
+      ],
+      "line": 67,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-aeea2d96bd62537759083d44",
+      "localRange": [
+        168,
+        311
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "Отгрузка",
+        "declaration": "ПеренестиТабличнуюЧасть",
+        "source_file": "Товары/Отгрузка.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/Отгрузка.xbsl",
+      "fileHash": "b7bdbbcab0e317c683824861aaa881c3d397e8a9053ae1aa0830f5469d61e326",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        126,
+        416
+      ],
+      "line": 6,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-54fb6699ff17dfb6eaa225d6",
+      "localRange": [
+        96,
+        386
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "Отгрузка.Объект",
+        "declaration": "ПередЗаписью",
+        "source_file": "Товары/Отгрузка.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "fileHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        804,
+        1197
+      ],
+      "line": 21,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-32789856875a5f3ed2f29913",
+      "localRange": [
+        578,
+        971
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "Отгрузка.Объект",
+        "declaration": "ПередЗаписью",
+        "source_file": "Товары/Отгрузка.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "fileHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        839,
+        927
+      ],
+      "line": 22,
+      "column": 14,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-b4f92d9854e68b1d9d1a016f",
+      "localRange": [
+        613,
+        701
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "Отгрузка.Объект",
+        "declaration": "ПослеЗаписи",
+        "source_file": "Товары/Отгрузка.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/Отгрузка.Объект.xbsl",
+      "fileHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        1413,
+        1695
+      ],
+      "line": 34,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-4a257f2b6cb30b0e4942c11d",
+      "localRange": [
+        201,
+        483
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ОтгрузкаФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "fileHash": "f7db6f9640c81847a82cd80d62570f3d5e3bea90946a8b5f928e5907ac442441",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-5d981fb2afe2e5dd0a83d0cc",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ОтгрузкаФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "fileHash": "f7db6f9640c81847a82cd80d62570f3d5e3bea90946a8b5f928e5907ac442441",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        185,
+        201
+      ],
+      "line": 8,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-d7c2dbd91b1f772b48042ac5",
+      "localRange": [
+        173,
+        189
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ОтгрузкаФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.xbsl",
+      "fileHash": "f7db6f9640c81847a82cd80d62570f3d5e3bea90946a8b5f928e5907ac442441",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        431,
+        451
+      ],
+      "line": 14,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-07bdd4a5dd5116a4c7512f8c",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ПоступлениеТоваров.Объект",
+        "declaration": "ПриСозданииНаОсновании",
+        "source_file": "Товары/ПоступлениеТоваров.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ПоступлениеТоваров.Объект.xbsl",
+      "fileHash": "b1909618411dfc8c2e0c03740ed414b824c0dcf2cb07e517014d91903ae9cba9",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        163,
+        471
+      ],
+      "line": 5,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-2751c23f5f84be281802736f",
+      "localRange": [
+        151,
+        459
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ПоступлениеТоваров.Объект",
+        "declaration": "ПослеЗаписи",
+        "source_file": "Товары/ПоступлениеТоваров.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ПоступлениеТоваров.Объект.xbsl",
+      "fileHash": "b1909618411dfc8c2e0c03740ed414b824c0dcf2cb07e517014d91903ae9cba9",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        707,
+        1444
+      ],
+      "line": 19,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-4ee8347654f642e49cafd1ca",
+      "localRange": [
+        221,
+        958
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ПоступлениеТоваровФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+      "fileHash": "7369bba305c863ae1a0580dc88b6d2f3c61099e90bd79a9fe2845bc4ecfb8af8",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-2f155ce978975d23634cb771",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Товары",
+        "owner": "ПоступлениеТоваровФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.xbsl",
+      "fileHash": "7369bba305c863ae1a0580dc88b6d2f3c61099e90bd79a9fe2845bc4ecfb8af8",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        285,
+        305
+      ],
+      "line": 11,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-4a6de63ac602d9bd8a14c769",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "ПоступлениеДенежныхСредствФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+      "fileHash": "097112a376806912d556241cce954efe55fc64463234248316b01089e602eef4",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-79e5df97b7dbf2603251f19c",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "ПоступлениеДенежныхСредствФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.xbsl",
+      "fileHash": "097112a376806912d556241cce954efe55fc64463234248316b01089e602eef4",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        303,
+        323
+      ],
+      "line": 11,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-0c6aca5ac868e069fd6c322a",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "РасходДенежныхСредств.Объект",
+        "declaration": "ПередЗаписью",
+        "source_file": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+      "fileHash": "d0165279e54906f47a50dc945273a0215e6004e72f843ccba0c63f6bae03b430",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        582,
+        602
+      ],
+      "line": 20,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-501a554d0f3dc9f81ad5cd53",
+      "localRange": [
+        364,
+        384
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "РасходДенежныхСредств.Объект",
+        "declaration": "ПередЗаписью",
+        "source_file": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+      "fileHash": "d0165279e54906f47a50dc945273a0215e6004e72f843ccba0c63f6bae03b430",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        673,
+        696
+      ],
+      "line": 23,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-2c5862a5f36838d29f7a1cbd",
+      "localRange": [
+        455,
+        478
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "РасходДенежныхСредствФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+      "fileHash": "563d444b0739bebeddf8151b05805792e0a1f140c57fdba2752f6a2c64bc36cf",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-17d847f287fd3c833f1bd1f6",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "РасходДенежныхСредствФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.xbsl",
+      "fileHash": "563d444b0739bebeddf8151b05805792e0a1f140c57fdba2752f6a2c64bc36cf",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        293,
+        313
+      ],
+      "line": 11,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-db5d17517159f6746b9194a7",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "СчетНаОплату.Объект",
+        "declaration": "ПриСозданииНаОсновании",
+        "source_file": "Финансы/СчетНаОплату.Объект.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/СчетНаОплату.Объект.xbsl",
+      "fileHash": "77fc0ac59c1d3b1682281f2d041dcdb57aa5188a36711857409206fb10c6ff31",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        173,
+        249
+      ],
+      "line": 6,
+      "column": 5,
+      "kind": "loop",
+      "construct": "для",
+      "outcomes": [
+        "zero",
+        "nonzero",
+        "exhausted",
+        "break-exit",
+        "abrupt-exit"
+      ],
+      "id": "branch-964b6f2b38f3e40a1d24ff33",
+      "localRange": [
+        161,
+        237
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "СчетНаОплатуФормаОбъекта",
+        "declaration": "ПослеСоздания",
+        "source_file": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+      "fileHash": "c7d4c36a1d392d4d684ff92d6cfec8a8642fd78bac4df92720571ff14147d5f3",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        43,
+        60
+      ],
+      "line": 3,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-6bb4659a86f50ca415105ecc",
+      "localRange": [
+        31,
+        48
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    },
+    {
+      "symbol": {
+        "provider": "Движок",
+        "project": "Движок",
+        "namespace": "Финансы",
+        "owner": "СчетНаОплатуФормаОбъекта",
+        "declaration": "ПредставлениеРедактированиеДанныхОбработчик",
+        "source_file": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+        "version": "1.0"
+      },
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.xbsl",
+      "fileHash": "c7d4c36a1d392d4d684ff92d6cfec8a8642fd78bac4df92720571ff14147d5f3",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "range": [
+        275,
+        295
+      ],
+      "line": 11,
+      "column": 10,
+      "kind": "condition",
+      "construct": "если",
+      "outcomes": [
+        "true",
+        "false"
+      ],
+      "id": "branch-dacf12b41c2372a43982fc48",
+      "localRange": [
+        84,
+        104
+      ],
+      "counts": {},
+      "status": "no-scenario"
+    }
+  ],
+  "unreachable": [],
+  "methodCoverageIsNotBranchCoverage": true,
+  "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+  "methods": 58,
+  "blockedMethods": [],
+  "rejectedEvidenceRecords": 0,
+  "completeDenominator": true,
+  "sourceCompatibilityVersion": "9.0",
+  "platformSemantics": "not-checked",
+  "execution": "not-checked"
+}

@@ -24,6 +24,9 @@ def render_plan(plan, sandbox):
     args = check.get("args", [])
     runtime_model = plan.model
     contracts = plan.contracts
+    if plan.check.get('branches'):
+        from .branches import HELPER
+        contracts.definitions[plan.branch_helper] = HELPER
     storage, platform = plan.storage, plan.platform
     mocks = check.get('mocks', {})
     if not isinstance(check.get('captureException', False), bool):
@@ -130,6 +133,10 @@ def render_plan(plan, sandbox):
         occupied = sorted((a,b) for a,b,_ in replacements if a != b)
         if any(b > c for (a,b),(c,d) in zip(occupied,occupied[1:])):
             raise InputError('Конфликт проверенных преобразований исходных диапазонов')
+        if plan.check.get('branches'):
+            from .branches import edits
+            replacements.extend(edits(plan, symbol))
+            module_type_dependencies.setdefault(owner['sourceFile'], []).append(plan.branch_helper + '.Condition')
         # Stable ordering matters for insertions at one lexical boundary:
         # a nested resource tail must precede its enclosing catch fallback.
         for start, end, replacement in sorted(replacements, key=lambda r: (r[0], r[1]), reverse=True):

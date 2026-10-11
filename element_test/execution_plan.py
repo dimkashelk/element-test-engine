@@ -140,6 +140,7 @@ class ExecutionPlan:
     report: dict = field(default_factory=dict)
     navigation: dict = field(default_factory=dict)
     panel: dict = field(default_factory=dict)
+    branches: list = field(default_factory=list)
 
     def to_dict(self):
         lifecycle_contracts = self.storage.lifecycle_contracts if self.storage else []
@@ -173,6 +174,7 @@ class ExecutionPlan:
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
                 "timers": self.timers, "interface": self.interface,
                 "report": self.report, "navigation": self.navigation, "panel": self.panel,
+                "branches": self.branches,
                 "observations": self.observations, "instanceProbes": self.probes, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -181,7 +183,14 @@ class ExecutionPlan:
 
 
 def plan_execution(root, source_model, check):
+    if 'generative' in check:
+        from .generative import planning_check
+        check = planning_check(check)
     entries = {'report', 'navigation', 'panel', 'interface', 'querySource', 'formRequirement'} & check.keys()
+    if 'branches' in check and type(check['branches']) is not bool:
+        raise InvalidTestError('branches требует Булево')
+    if entries and check.get('branches'):
+        raise InvalidTestError('branches требует исходный method entry; декларативные поверхности имеют отдельные знаменатели')
     if len(entries) > 1:
         raise InvalidTestError('runtime требует один декларативный вход')
     if entries & {'report', 'navigation', 'panel'}:
@@ -375,6 +384,8 @@ def plan_execution(root, source_model, check):
         plan.sequence = sequence
     if not isinstance(check.get('trace', False), bool):
         raise InvalidTestError('trace должен быть Булево')
+    from .branches import prepare as prepare_branches
+    prepare_branches(plan)
     if 'storage' in check:
         from .generated_types import ProjectTypes
         from .runtime import constructor_types, body_type_references

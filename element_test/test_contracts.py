@@ -28,8 +28,8 @@ CAPABILITIES = {
     'report-layout': ('report', 51, 'scoped', 'element_test.report_runtime', ['query-source', 'metadata-structure'], 'Typed row formulas, roles and stable sorting; native pivot/aggregation UI remains external'),
     'navigation': ('navigation-panel', 51, 'scoped', 'element_test.navigation', ['ui-action'], 'Declaration-resolved model opening; custom form handlers and native rendering remain external'),
     'report-panel': ('navigation-panel', 51, 'scoped', 'element_test.report_runtime', ['report-layout', 'navigation', 'timer-events'], 'Shared storage and fixed-rate full refresh; native dashboard rendering remains external'),
-    'branch-measurement': ('branches-invariants', 52, 'extension-required', 'element_test.observations', ['method-runtime'], 'Outcome instrumentation preserving short circuit and effects'),
-    'generated-invariants': ('branches-invariants', 52, 'extension-required', 'element_test.observations', ['branch-measurement'], 'Typed generators, seed, independent relations and shrinking'),
+    'branch-measurement': ('branches-invariants', 52, 'scoped', 'element_test.branches', ['method-runtime'], 'Source condition outcomes and loop/selection boundaries; no inference of unreachable paths or native platform acceptance'),
+    'generated-invariants': ('branches-invariants', 52, 'scoped', 'element_test.generative', ['branch-measurement'], 'Bounded scalar/array domains, independent SBSL relations and local shrinking; memory method entry, no arbitrary native generators'),
 }
 
 FAMILIES = {

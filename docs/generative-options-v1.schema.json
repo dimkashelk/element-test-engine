@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "cases": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 64
+    },
+    "maxShrinks": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 64
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/domain"
+      }
+    },
+    "relation": {
+      "$ref": "#/$defs/expression"
+    },
+    "transform": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/expression"
+      }
+    },
+    "replayInputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 8
+      }
+    },
+    "replaySourceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "seed",
+    "cases",
+    "domains",
+    "relation"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "domain": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "min": {
+          "type": "integer",
+          "minimum": -1000000,
+          "maximum": 1000000
+        },
+        "max": {
+          "type": "integer",
+          "minimum": -1000000,
+          "maximum": 1000000
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "alphabet": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "items": {
+          "$ref": "#/$defs/domain"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "expression": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "arg": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 7
+            }
+          },
+          "required": [
+            "arg"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "result": {
+              "const": true
+            }
+          },
+          "required": [
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pairedResult": {
+              "const": true
+            }
+          },
+          "required": [
+            "pairedResult"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "literal": {
+              "type": [
+                "integer",
+                "string",
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "literal"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "equal",
+                "notEqual",
+                "less",
+                "lessEqual",
+                "greater",
+                "greaterEqual",
+                "add",
+                "subtract",
+                "multiply",
+                "and",
+                "or",
+                "not",
+                "length",
+                "sum",
+                "get",
+                "at",
+                "reverse"
+              ]
+            },
+            "args": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "$ref": "#/$defs/expression"
+              }
+            }
+          },
+          "required": [
+            "op",
+            "args"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

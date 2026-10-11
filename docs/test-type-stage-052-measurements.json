@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "stage": 52,
+  "date": "2026-10-11",
+  "scope": "Generic branch/invariant infrastructure, no final-dump business scenarios",
+  "status": "implemented-in-scoped-contract",
+  "publicYamlTypesAdded": [],
+  "runtime": {
+    "sourceCompatibilityVersion": "9.0",
+    "executorVersion": "10.0.2-1",
+    "generatorVersion": "v1-splitmix64",
+    "gradingEngine": "SBSL",
+    "execution": "fresh Docker executor for each input/paired input/shrink"
+  },
+  "tests": {
+    "newDistinctPassed": 16,
+    "existingDistinctPassed": 42,
+    "totalDistinctPassed": 58,
+    "repeatRunsNotAdded": true,
+    "groups": [
+      {
+        "selector": "tests.test_branches_invariants.BranchPlanTest",
+        "passed": 6,
+        "coverage": "Source positions/hash identity, domain constraints/seed golden sequence, no method-to-branch inference, stale evidence rejection, invalid configs and optional full schema validation"
+      },
+      {
+        "selector": "tests.test_branches_invariants.BranchScriptTest",
+        "passed": 4,
+        "coverage": "Short circuit/single evaluation, for/while/selection/ternary, nested loops, abrupt exits, nullable guards, independent typed SBSL relations and safe invalid oracle"
+      },
+      {
+        "selector": "tests.test_branches_invariants.GeneratedExecutionTest",
+        "passed": 5,
+        "coverage": "Boundary counterexample [8] -> [5], repeat/replay and source guard; numeric/array metamorphism; fresh mutable context; source exception evidence; test/run/batch PASS/FAIL/UNSUPPORTED; grading schemas"
+      },
+      {
+        "selector": "tests.test_branches_invariants.BranchPostgresTest",
+        "passed": 1,
+        "coverage": "Source lifecycle condition outcomes preserve independently audited PostgreSQL state"
+      },
+      {
+        "selector": "tests.test_engine tests.test_runtime_limits tests.test_reason_codes tests.test_grading tests.test_expression_ast tests.test_capability_map",
+        "passed": 36
+      },
+      {
+        "selector": "tests.test_universal_runtime.UniversalRuntimeTest.test_chain_callback_constants_trace_and_wrong_dependency tests.test_universal_runtime.UniversalRuntimeTest.test_free_void_and_value_exception_keep_infrastructure_failure tests.test_cross_module_runtime",
+        "passed": 6
+      }
+    ],
+    "python": "3.12",
+    "schemaValidator": "jsonschema on installed Python 3.12; optional test dependency, no production dependency added",
+    "fullDiscoveryRun": false,
+    "full303FormsRun": false,
+    "old44RootsRun": false,
+    "nightlyScheduleChanged": false
+  },
+  "publicAcceptance": {
+    "test": "PASS and independent FAIL/UNSUPPORTED",
+    "run": "PASS",
+    "batch": {
+      "passed": 1,
+      "failed": 1,
+      "incomplete": 1,
+      "inputError": 0,
+      "cacheHit": false
+    },
+    "unavailablePoints": 4,
+    "independentComparison": "SBSL evaluates every generated and shrink relation; Python does not award points"
+  },
+  "finalDump": {
+    "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+    "methods": 58,
+    "conditions": 37,
+    "conditionOutcomes": 74,
+    "loops": 9,
+    "coveredConditionOutcomes": 0,
+    "completeParsedDenominator": true,
+    "businessExecution": "not-checked",
+    "businessAssignmentsCreated": false,
+    "businessExpectedChanged": false,
+    "technicalAcceptanceOfSource": "not-checked",
+    "reusedExactSourcePlans": 43,
+    "preparedQuerySources": 5,
+    "querySourcesExecuted": 0,
+    "staticSyntacticBranchesInCapabilityMap": 42,
+    "staticBranchesAreNotOutcomeCount": true
+  },
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true,
+      "comparison": "stage 051 measured bytes"
+    },
+    {
+      "file": "Dvizhok-final.xdump",
+      "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+      "unchanged": true,
+      "comparison": "stage 051 measured bytes"
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true,
+      "comparison": "stage 051 measured bytes"
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true,
+      "comparison": "stage 051 measured bytes"
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true,
+      "comparison": "stage 051 measured bytes"
+    }
+  ],
+  "limitations": [
+    "Bounded integer/bool/string/nullable/array domains; no native ref/date/fractional domains",
+    "Source method/memory generative entry; no state-machine sequence or generative PostgreSQL",
+    "Local minimality under declared reductions, not global minimum; budget exhaustion explicit",
+    "Condition outcomes, loop boundaries and selection arms remain separate; no MC/DC/path coverage",
+    "Native platform/browser semantics and final-dump correctness not assessed"
+  ],
+  "sourceHashes": {
+    "element_test/branches.py": "d4218c2e6b4b19d51f85d1faacacf7a3d0ab61e89ec75b2f7be756c625131bd2",
+    "element_test/generative.py": "67e3a0d16c1219232206ae248f1c5a25a7e29ff38dd944de9da311ed66a5b7e7",
+    "element_test/execution_plan.py": "6c1c2224bf4103172184292fb87a7d8e20606e853beac92ccea8a16c448a2379",
+    "element_test/renderer.py": "6131040407208e4267496a1b123a4a754785ec92bac1153e645238aa208a81e5",
+    "element_test/runtime.py": "6f4d4a4b3ef963ebc6a14e09f3223bdb1d76e504d1b9b3e70bb4cd1c174bb421",
+    "element_test/integration.py": "c44bbc35cef23b2c8d0492a9ec1ec6a35d5e93f8f5d761bfbf6594b25010b817",
+    "element_test/test_contracts.py": "5da41765b6b70d90106ceabcb6400eaa23f35386205cc4e5ad138f10cbc8cd2f",
+    "src/ДвижокТестирования.sbsl": "5f6dcbdbb31b49353a32a929153e480fa9fe85a23beb06aa082018e3980af52f",
+    "tests/test_branches_invariants.py": "1b2d6f40080124e3a1f2b8f1fed3d97d828564dde13869383e2c54c3fa670b6e"
+  },
+  "artifactHashes": {
+    "docs/generative-options-v1.schema.json": "8287a75cfca7bf486765c6ae631c9fbf6861bddd7532768d016965b8f444ea12",
+    "docs/dvizhok-final-branch-inventory.json": "f44e73dd27cdb137785fd2d06faaf7283f32c357973ffe86c0422dd310da0ee5",
+    "docs/dvizhok-final-capability-map-052.json": "e29d06d2461d396c7776a4677b3a9549f36027ebb6eb3196b6ca40b8da9d0ade",
+    "docs/test-type-contracts-v1.json": "259fb1ebbe9373a8c5c41a3caffaa3946f106860b52f1ef54aeea7202520f3b3"
+  }
+}

@@ -2,7 +2,7 @@
 
 №46 реализует спецификацию и read-only карту инфраструктуры.
 №47 реализует [исходный query entry](source-query-execution.md), №48 —
-[управляемые часы и таймеры](timer-events.md); №49 — [состояния и действия UI](interface-actions.md). №50 — [ограничения и lifecycle](metadata-lifecycle.md). №51 — [отчёты, навигация и панель](report-navigation-panel.md). №52 остаётся в очереди.
+[управляемые часы и таймеры](timer-events.md); №49 — [состояния и действия UI](interface-actions.md). №50 — [ограничения и lifecycle](metadata-lifecycle.md). №51 — [отчёты, навигация и панель](report-navigation-panel.md). №52 — [ветви и генеративные проверки](branches-and-invariants.md).
 Семейства не добавляются в YAML `type`.
 Результаты исполнения/баллы по Dvizhok-final не формируются.
 
@@ -55,7 +55,7 @@ callback; порядок событий, равные моменты, повто
 | metadata-lifecycle | Расширить element/field/method/runtime и storage | Метаданные, новое/существующее состояние, write-параметры; validate/write/reload/rollback | Декларация ограничения, отказ, свежий снимок объекта/регистров; enforcement включается storage.lifecycle (№50 scoped) |
 | report | Расширить element/runtime, добавить report IR | Селектор отчёта, параметры, storage; query/evaluate layout | Данные, формулы, роли, иерархия и сортировка; формулы не считаются XBSL-привязками |
 | navigation-panel | Расширить element/runtime | Фрагмент/панель, контекст видимости; resolve/open/refresh | Маршрут, доступность, виджеты, расположение, refresh; встроенные native формы/рендеринг отдельно |
-| branches-invariants | Расширить наблюдения runtime | Seed, типизированные домены, независимое отношение; instrument/generate/shrink | Исходы ветвей, seed и контрпример; сохранение однократного вычисления и short circuit требует №52 |
+| branches-invariants | runtime.branches / runtime.generative (№52 scoped) | Seed, типизированные домены, независимое SBSL отношение; instrument/generate/shrink/replay | Исходы условий и границы циклов, seed, локальный контрпример; memory method entry, однократное вычисление и short circuit |
 
 Отдельного публичного YAML типа на этом этапе не требуется ни одному семейству.
 Если при реализации самостоятельный source/report entry нельзя выразить расширением
@@ -152,4 +152,10 @@ python3 -m element_test.capability_map --project Dvizhok-final.xdump \
 [№50 реализовано в ограниченном контракте](tasks/050-metadata-lifecycle-and-storage.md);
 [измерения механизма](test-type-stage-050-measurements.json).
 №51 реализован в ограниченном [runtime-контракте](report-navigation-panel.md).
-Очередь №52 сохраняет зависимости и первые блокировки. Следующий этап — P2 №52.
+№52 реализован в ограниченном [runtime-контракте](branches-and-invariants.md).
+[Актуальная карта №52](dvizhok-final-capability-map-052.json) пересчитана
+read-only; прежняя карта №46 сохранена как исторический снимок.
+[Измерения механизма](test-type-stage-052-measurements.json) и
+[статический инвентарь](dvizhok-final-branch-inventory.json) не объявляют
+бизнес-исполнение финального дампа. Очередь типов №46–52 завершена в этих
+контрактах; точный остаток и авторские сценарии сохраняются отдельно.

@@ -105,6 +105,22 @@ def decode_output(text):
     return value
 
 
+def partial_trace(text):
+    """Retain completed probes when a source exception prevents final JSON output."""
+    result = []
+    text = text.lstrip()
+    while text.startswith(('ELEMENT_CALL ', 'ELEMENT_TRACE ')):
+        tracing = text.startswith('ELEMENT_TRACE ')
+        text = text[len('ELEMENT_TRACE ' if tracing else 'ELEMENT_CALL '):]
+        try:
+            item, end = json.JSONDecoder().raw_decode(text)
+        except ValueError:
+            break
+        if tracing and isinstance(item, dict): result.append(item)
+        text = text[end:].lstrip()
+    return result
+
+
 def execute_engine(command, model, assignment, temporary):
     result = subprocess.run([str(REPO / "bin/script-runtime"), str(REPO / "src/ДвижокТестирования.sbsl"),
                              command, str(model), str(assignment)], cwd=temporary,
@@ -456,6 +472,9 @@ def executor_cpu_ulimit(timeout):
 
 def run_pure(root, model, check, temporary, *, plan_sink=None):
     """Run one standalone method in Docker; return evidence, never award points."""
+    if 'generative' in check:
+        from .generative import run_generated
+        return run_generated(root, model, check, temporary, plan_sink=plan_sink)
     def status(name, message, reason):
         return {"status": name, "message": message, "reasonCode": reason}
 
@@ -531,7 +550,12 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
         if process.returncode:
             if any(marker in stderr + stdout for marker in ('Ошибки компиляции скрипта:', 'Script compilation error:')):
                 return status('UNSUPPORTED', (stderr or stdout)[:4000], 'unsupported_syntax')
-            return status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000], "execution_error")
+            failure = status("ERROR", (stderr or stdout or f"Код runtime: {process.returncode}")[:4000], "execution_error")
+            if check.get('branches'):
+                from .branches import summarize
+                failure['trace'] = partial_trace(stdout)
+                failure['branchCoverage'] = summarize(prepared_plan.get('branches', []), failure['trace'])
+            return failure
         try:
             decoded = decode_output(stdout)
         except (InputError, ValueError, KeyError, TypeError):
@@ -548,6 +572,9 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             evidence.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
         if 'trace' in decoded:
             evidence['trace'] = decoded['trace']
+        if check.get('branches'):
+            from .branches import summarize
+            evidence['branchCoverage'] = summarize(prepared_plan.get('branches', []), decoded.get('trace', []))
         if 'storageTrace' in decoded:
             evidence['storageTrace'] = decoded['storageTrace']
         if 'storageDiagnostics' in decoded:

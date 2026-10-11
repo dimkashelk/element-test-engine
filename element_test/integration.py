@@ -258,6 +258,10 @@ ALTER ROLE smoke SET statement_timeout = '3s';
                         result.update(status='ERROR', message=decoded.get('message') or 'Ошибка выполнения', reasonCode='execution_error')
                     if 'trace' in decoded:
                         result['trace'] = decoded['trace']
+                    if check.get('branches') and (directory / 'execution-plan.json').is_file():
+                        from .branches import summarize
+                        prepared = json.loads((directory / 'execution-plan.json').read_text())
+                        result['branchCoverage'] = summarize(prepared.get('branches', []), decoded.get('trace', []))
                     if 'storageTrace' in decoded:
                         result['storageTrace'] = decoded['storageTrace']
                     if 'storageDiagnostics' in decoded:

@@ -439,24 +439,24 @@
       "id": "branch-measurement",
       "family": "branches-invariants",
       "stage": 52,
-      "readiness": "extension-required",
-      "implementation": "element_test.observations",
+      "readiness": "scoped",
+      "implementation": "element_test.branches",
       "dependencies": [
         "method-runtime"
       ],
-      "firstGap": "Outcome instrumentation preserving short circuit and effects",
+      "firstGap": "Source condition outcomes and loop/selection boundaries; no inference of unreachable paths or native platform acceptance",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
       "id": "generated-invariants",
       "family": "branches-invariants",
       "stage": 52,
-      "readiness": "extension-required",
-      "implementation": "element_test.observations",
+      "readiness": "scoped",
+      "implementation": "element_test.generative",
       "dependencies": [
         "branch-measurement"
       ],
-      "firstGap": "Typed generators, seed, independent relations and shrinking",
+      "firstGap": "Bounded scalar/array domains, independent SBSL relations and local shrinking; memory method entry, no arbitrary native generators",
       "technicalAcceptance": "not-checked-for-this-source"
     }
   ],
