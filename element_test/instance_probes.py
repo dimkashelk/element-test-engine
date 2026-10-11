@@ -18,6 +18,8 @@ def prepare_probes(plan):
         index = probe['action']
         if type(index) is not int or not 0 <= index < len(steps):
             raise InvalidTestError('probeMutations: неизвестный action')
+        if 'method' not in steps[index]:
+            raise InvalidTestError('probeMutations: action должен быть вызовом метода')
         symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == plan.module['sourceFile'] and s.identity.declaration == steps[index]['method'])
         suffix = str(index) if plan.sequence else ''
         if probe['target'] == 'result' and 'argument' not in probe:

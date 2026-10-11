@@ -361,6 +361,8 @@ class BindingPlan:
 
 
 def plan_binding(root, model, check):
+    if 'timers' in check:
+        raise InvalidTestError('timers пока требует обычный runtime, без formRequirement')
     from .execution_plan import plan_execution
     from .model import select_check_project
     root,model = select_check_project(root,model,check)

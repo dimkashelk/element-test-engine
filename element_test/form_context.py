@@ -256,6 +256,8 @@ def generate_form_types(plan, c, *, form=None):
     form['argumentBindings'] = []
     calls = plan.sequence or [{'method': plan.entry.identity.declaration, 'args': plan.check.get('args', [])}]
     for step in calls:
+        if 'method' not in step:
+            continue
         symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == plan.module['sourceFile']
                       and s.identity.declaration == step['method'])
         for index, (value, typ) in enumerate(zip(step['args'], symbol.parameter_types)):

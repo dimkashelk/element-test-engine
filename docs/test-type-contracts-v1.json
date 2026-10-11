@@ -282,7 +282,7 @@
       "family": "time-event",
       "stage": 48,
       "readiness": "scoped",
-      "implementation": "element_test.platform_mocks",
+      "implementation": "element_test.session_contracts",
       "dependencies": [
         "method-runtime"
       ],
@@ -293,12 +293,12 @@
       "id": "timer-events",
       "family": "time-event",
       "stage": 48,
-      "readiness": "extension-required",
-      "implementation": "element_test.platform_mocks",
+      "readiness": "scoped",
+      "implementation": "element_test.timer_events",
       "dependencies": [
         "clock"
       ],
-      "firstGap": "Registration, cancellation, deterministic event queue and session shutdown",
+      "firstGap": "Only own declaration-resolved ()->ничто callbacks; dynamic/foreign callbacks remain unsupported",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {

@@ -135,6 +135,7 @@ class ExecutionPlan:
     clock: dict = field(default_factory=dict)
     executor_locale: str = None
     query_entry: dict = field(default_factory=dict)
+    timers: dict = field(default_factory=dict)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.check.get("runtimeProfile", self.model.get("compatibilityVersion", "9.0")),
@@ -157,6 +158,7 @@ class ExecutionPlan:
                 "recordSets": self.record_sets,
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
+                "timers": self.timers,
                 "observations": self.observations, "instanceProbes": self.probes, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -217,9 +219,12 @@ def plan_execution(root, source_model, check):
     sequence = check.get('sequence')
     if sequence is not None:
         if not isinstance(sequence, list) or not sequence or len(sequence) > 40:
-            raise InvalidTestError('sequence требует 1..40 вызовов того же целевого модуля')
+            raise InvalidTestError('sequence требует 1..40 вызовов/действий сессии')
         all_reachable = {(o['sourceFile'], parse_module(t)[0][0].name): (o,t,p) for o,t,p in reachable}
+        from .timer_events import validate_step
         for step in sequence:
+            if validate_step(step, check):
+                continue
             if not isinstance(step, dict) or set(step) != {'method', 'args'} or not isinstance(step['args'], list):
                 raise InvalidTestError('sequence вызов требует method и args')
             step_method, step_types = extract_method(original, step['method'], allow_void=True)
@@ -369,6 +374,8 @@ def plan_execution(root, source_model, check):
                        if qualified(e) in (effect_contract or {}).get('lifecycle', {})}
     from .session_contracts import prepare_session, bind_session_call
     prepare_session(plan)
+    from .timer_events import prepare_timers, bind_timer_call
+    prepare_timers(plan)
     bind_source_contracts(plan)
     registry = CapabilityRegistry()
     reachable_names = {s.identity.declaration for s in symbols}
@@ -404,6 +411,10 @@ def plan_execution(root, source_model, check):
                        or any(s.owner['sourceFile'] == dest['sourceFile'] and s.identity.declaration == call.name
                               for dest in destinations for s in symbols))
             callback = owner is None and method_callable_binding_visible(callable_bindings, call.name, call.start)
+            timer_binding = bind_timer_call(plan, symbol, node, call, project=project, callback=callback)
+            if timer_binding:
+                plan.bindings.append(timer_binding)
+                continue
             session_binding = bind_session_call(plan, symbol, node, call, project=project)
             if session_binding:
                 plan.bindings.append(session_binding)

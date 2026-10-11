@@ -112,14 +112,15 @@ def bind_session_call(plan, symbol, node, call, *, project):
         return CapabilityBinding('constants', 'Получить', state['owner'], 'read-only-session',
                                  'Typed snapshot of declared YAML constants', symbol.owner['sourceFile'],
                                  symbol.start + call.start, symbol.start + call.end)
-    if plan.clock and not matches and call.receiver in {'Дата', 'Время'} and call.name == 'Сейчас':
+    clock_owners = {'Дата', 'Время'} | ({'ДатаВремя', 'Момент'} if plan.timers else set())
+    if plan.clock and not matches and call.receiver in clock_owners and call.name == 'Сейчас':
         if ast_call is None or len(ast_call.children) != 1:
             raise UnsupportedSyntaxError('clock перехватывает только Сейчас() без аргументов')
         plan.source_transforms.setdefault((symbol.owner['sourceFile'], node.name), []).append(
-            (call.receiver_start, ast_call.end, 'ТестЧасы.' + call.receiver + '()'))
+            (call.receiver_start, ast_call.end, 'ТестЧасы.' + {'ДатаВремя': 'Снимок'}.get(call.receiver, call.receiver) + '()'))
         plan.module_type_dependencies.setdefault(symbol.owner['sourceFile'], []).append('ТестЧасы.Метка')
         return CapabilityBinding('clock', 'Сейчас', call.receiver, 'docker-session-snapshot',
-                                 'One date/time snapshot before all original calls', symbol.owner['sourceFile'],
+                                 'Coherent managed session clock' if plan.timers else 'One date/time snapshot before all original calls', symbol.owner['sourceFile'],
                                  symbol.start + call.start, symbol.start + call.end)
     return None
 
@@ -131,6 +132,8 @@ def generate_session_types(plan, c):
         c.literal(state['values'], state['type'])
     if plan.clock:
         add_structure(c, 'ТестЧасы.Метка', [])
+    from .timer_events import generate_timer_types
+    generate_timer_types(plan, c)
 
 
 def render_session(plan, sandbox):
@@ -170,8 +173,24 @@ def render_session(plan, sandbox):
     возврат новый Время(С.Час, С.Минута, С.Секунда, С.Миллисекунда)
 ;
 ''', encoding='utf-8')
+        if plan.timers:
+            with path.open('a', encoding='utf-8') as stream:
+                stream.write('''
+@Глобально
+метод Сдвинуть(Миллисекунды: Число)
+    Инициализировать(Снимок().ДобавитьМиллисекунды(Миллисекунды))
+;
+@Глобально
+метод Момент(): Момент
+    возврат Снимок().ВМомент(новый ЧасовойПояс(''' + sbsl_literal(clock['timezone'], 'Строка') + '''))
+;
+''')
         setup = '    ТестЧасы.Инициализировать(' + instant + ')\n'
         metadata = ', "clock": {"date": ТестЧасы.Дата(), "time": ТестЧасы.Время(), "snapshot": ТестЧасы.Снимок(), "timezone": ' + sbsl_literal(clock['timezone'], 'Строка') + ', "locale": ' + sbsl_literal(plan.executor_locale or '', 'Строка') + ', "mode": ' + sbsl_literal(clock['mode'], 'Строка') + '}'
+    from .timer_events import render_timers
+    setup += render_timers(plan, sandbox)
+    if plan.timers:
+        metadata += ', "timers": ТестТаймеры.Наблюдение(), "_timerActions": Истина'
     return setup, metadata
 
 

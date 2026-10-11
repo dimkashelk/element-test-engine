@@ -63,7 +63,7 @@ class CapabilityMapTest(unittest.TestCase):
             self.assertEqual(len(widget['dependsOn']), 1)
             self.assertFalse(any(k in json.dumps(data) for k in ('"criterionId":', '"expected":', '"PASS"', '"points":')))
 
-    def test_timer_is_a_gap_without_author_scenario_and_shadowing_is_respected(self):
+    def test_timer_is_scoped_without_source_acceptance_and_shadowing_is_respected(self):
         source = ('метод Start()\n ПодключитьОбработчикТаймера(&Tick, 1с)\n;\n'
                   'метод Tick()\n ОтключитьОбработчикТаймера(&Tick)\n;\n')
         with TemporaryDirectory() as tmp:
@@ -73,7 +73,9 @@ class CapabilityMapTest(unittest.TestCase):
             self.assertEqual(len(calls), 2)
             method = next(i for i in data['items'] if i['kind'] == 'method')
             self.assertEqual(method['authorScenario']['status'], 'absent')
-            self.assertEqual(method['firstBlocker']['reasonCode'], 'CAPABILITY_EXTENSION_REQUIRED')
+            self.assertIsNone(method['firstBlocker'])
+            self.assertEqual(method['stages']['adapter']['status'], 'not-checked')
+            self.assertEqual(method['stages']['technicalAcceptance']['status'], 'not-checked')
             (root / 'Main.xbsl').write_text(source + 'метод ПодключитьОбработчикТаймера(Action: Объект, Interval: Объект)\n;\n')
             data = build_map(root, analyze(root))
             calls = [i['value']['operation'] for i in data['items'] if i['kind'] == 'platform-call']

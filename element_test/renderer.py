@@ -211,6 +211,8 @@ def render_plan(plan, sandbox):
             if type(action) is not int or not 0 <= action < int(index):
                 raise InvalidTestError('Ссылка sequence требует предыдущий action')
             step = plan.sequence[action]
+            if 'method' not in step:
+                raise InvalidTestError('Ссылка sequence требует action вызова метода')
             symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == module['sourceFile'] and s.identity.declaration == step['method'])
             if 'actionArg' in value:
                 if not isinstance(ref, list) or len(ref) != 2 or type(ref[1]) is not int or not 0 <= ref[1] < len(symbol.parameter_types):
@@ -230,7 +232,7 @@ def render_plan(plan, sandbox):
     setup = ""
     runtime_metadata = ''
     expression = target["method"] + '(' + call + ')'
-    observed = "Контекст"
+    observed = "Контекст" if is_object else "Неопределено"
     if plan.form:
         from .form_context import form_observation
         observed = form_observation(plan)
@@ -339,18 +341,35 @@ def render_plan(plan, sandbox):
             actual = '{"result": ' + actual + ', "committed": ТестСессия.Аудит()}'
         return argument_setup + invocation, actual
     invocation, actual = drive(target['method'], types, args, return_type)
+    from .timer_events import render_event_step, observation as timer_observation
+    def with_timers(value):
+        return ('{"result": ' + value + ', "timers": ' + timer_observation()
+                + ', "clock": ТестЧасы.Снимок()}') if plan.timers else value
+    actual = with_timers(actual)
     if plan.sequence:
         invocation = '    знч Действия = новый Массив<Строка>()\n'
         for index, step in enumerate(plan.sequence):
+            if 'method' not in step:
+                invoke, events = render_event_step(plan, step, index, observed, is_object)
+                value = '{"events": ' + events + ', "result": ' + observed + ', "timers": ' + timer_observation() + ', "clock": ТестЧасы.Снимок()}'
+                invocation += invoke + '    Действия.Добавить(СериализацияJson.ЗаписатьОбъект(' + value + '))\n'
+                live_values.append(value)
+                continue
             symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == module['sourceFile']
                           and s.identity.declaration == step['method'])
             result_type = parse_module(symbol.source)[0][0].return_type(symbol.source)
             invoke, value = drive(step['method'], symbol.parameter_types, step['args'], result_type, str(index))
+            value = with_timers(value)
             invocation += invoke + '    Действия.Добавить(СериализацияJson.ЗаписатьОбъект(' + value + '))\n'
             live_values.append(value)
         actual = '{"actions": Действия}'
     else:
         live_values.append(actual)
+    if plan.timers:
+        if not plan.sequence:
+            invocation += '    знч ФактДоЗакрытияТаймеров = ' + actual + '\n'
+            actual = 'ФактДоЗакрытияТаймеров'
+        invocation += '    ТестТаймеры.Закрыть()\n'
     if plan.probes:
         invocation += ('    знч СнимокДоПроб = СериализацияJson.ЗаписатьОбъект(' + actual + ')\n'
                        '    знч Пробы = новый Массив<Строка>()\n')
@@ -430,6 +449,9 @@ def render_plan(plan, sandbox):
     # Runtime unsupported operations are typed infrastructure outcomes, never captured business exceptions.
     body = ('    попытка\n' + ''.join('    ' + line + '\n' for line in statements.splitlines())
             + '    поймать Недоступно: ИсключениеНеподдерживаемаяОперация\n'
-            + '        Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"status": "UNSUPPORTED"}))\n    ;\n')
+            + ('        ТестТаймеры.Закрыть()\n' if plan.timers else '')
+            + '        Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"status": "UNSUPPORTED", "message": Недоступно.Описание'
+            + (', "timers": ТестТаймеры.Наблюдение()' if plan.timers else '') + '}))\n'
+            + ('    вконце\n        ТестТаймеры.Закрыть()\n' if plan.timers else '') + '    ;\n')
     script.write_text(imports + "\n" + method + '\n\nметод Скрипт(' + signature + ')\n' + body + ';\n', encoding="utf-8")
     return script

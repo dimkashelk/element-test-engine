@@ -71,6 +71,11 @@ def decode_output(text):
         if snapshot_mode.endswith('sequence'):
             observation['actions'] = [json.loads(action) for action in observation['actions']]
     identities = value.pop('_typeIdentities', {})
+    if value.pop('_timerActions', False):
+        observation = value['actual']['result'] if raw_storage else value['actual']
+        for action in observation.get('actions', []) if isinstance(observation, dict) else []:
+            if 'events' in action:
+                action['events'] = [json.loads(event) for event in action['events']]
     value = neutralize_types(value, identities)
     if identities:
         value['typeIdentities'] = identities
@@ -510,7 +515,10 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
         except (InputError, ValueError, KeyError, TypeError):
             return status("ERROR", "Runtime вернул некорректный результат", "execution_error")
         if decoded.get('status') == 'UNSUPPORTED':
-            return status('UNSUPPORTED', 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
+            result = status('UNSUPPORTED', decoded.get('message') or 'Операция вне поддержанного runtime контракта', 'unsupported_contract')
+            if 'timers' in decoded:
+                result['timers'] = decoded['timers']
+            return result
         evidence = {"status": "EXECUTED", "actual": decoded['actual'], "runtime": {"executorVersion": runtime.get("executorVersion"), "sourceCompatibilityVersion": model["compatibilityVersion"], "executionCompatibilityVersion": runtime.get("executionCompatibilityVersion", model["compatibilityVersion"])}}
         if 'formRequirement' in check:
             evidence['bindings'] = prepared_plan.get('declarativeBindings', [])
@@ -526,6 +534,8 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
             evidence['runtimeDateTime'] = decoded.get('runtimeDateTime')
         if 'clock' in check:
             evidence['clock'] = decoded.get('clock')
+        if 'timers' in check:
+            evidence['timers'] = decoded.get('timers')
         return evidence
     except UnsupportedSyntaxError as exc:
         return status("UNSUPPORTED", str(exc), "unsupported_syntax")

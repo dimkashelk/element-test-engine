@@ -152,7 +152,9 @@ def generate_query(query, contracts):
         default = period_type+'{Минимум}' if query.source_kind=='slice-first' else period_type+'.Сейчас('+('' if period_type=='Момент' else 'новый ЧасовойПояс("UTC")')+')'
         if query.source_kind == 'slice-last' and not strict_period and getattr(contracts, 'query_slice_clock', False):
             clock = contracts.query_slice_clock
-            if period_type == 'Момент':
+            if period_type == 'Момент' and clock.get('advancing'):
+                default = 'ТестЧасы.Момент()'
+            elif period_type == 'Момент':
                 if clock['mode'] != 'fixed':
                     raise UnsupportedSyntaxError('Срез Момент с docker clock требует явную границу параметром')
                 from datetime import datetime, timezone

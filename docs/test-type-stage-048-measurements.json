@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-11",
+  "task": 48,
+  "status": "implemented",
+  "archive": "Dvizhok-final.xdump",
+  "archiveSha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+  "archiveUnchanged": true,
+  "newPublicYamlTypes": [],
+  "runtimeExtension": [
+    "timers",
+    "sequence.advanceTime",
+    "sequence.timerEvent",
+    "sequence.closeTimers"
+  ],
+  "finalDumpSourcePreparation": {
+    "file": "Администрирование/ФормаПриветствие.xbsl",
+    "method": "ПослеСоздания",
+    "sourceRange": [
+      42,
+      694
+    ],
+    "callbacks": [
+      {
+        "id": "callback-81d6922cbe84ebe7fbe9d894",
+        "identity": {
+          "provider": "Движок",
+          "project": "Движок",
+          "namespace": "Администрирование",
+          "owner": "ФормаПриветствие",
+          "declaration": "ОбновитьТекущееВремя",
+          "source_file": "Администрирование/ФормаПриветствие.xbsl",
+          "version": "1.0"
+        },
+        "range": [
+          695,
+          826
+        ],
+        "sourceHash": "6ec5398d5e9259ead16706c2053b626df100062e6e3d970336bbc6f87ab31103"
+      },
+      {
+        "id": "callback-defdafde66b4819e3301dc2b",
+        "identity": {
+          "provider": "Движок",
+          "project": "Движок",
+          "namespace": "Администрирование",
+          "owner": "ФормаПриветствие",
+          "declaration": "ОбновитьПриветствие",
+          "source_file": "Администрирование/ФормаПриветствие.xbsl",
+          "version": "1.0"
+        },
+        "range": [
+          827,
+          1363
+        ],
+        "sourceHash": "144c1d31586c72ebf40f6cc7c7b09ff39839007509676bd339f2e936e65302ab"
+      }
+    ],
+    "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+    "stages": {
+      "planning": "ready",
+      "generation": "ready",
+      "compilation": "not-checked",
+      "execution": "not-checked",
+      "independentAssessment": "not-checked"
+    },
+    "authorCriteriaCreated": 0,
+    "basis": "TimerPlanTest.test_original_welcome_registration_plans_without_dump_execution"
+  },
+  "mechanismAcceptance": {
+    "distinctTestsPassed": 16,
+    "failed": 0,
+    "plannerTests": 7,
+    "dockerTests": 9,
+    "commands": [
+      "ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -p test_timer_events.py -v (15 tests, before adding the single-invocation test)",
+      "ELEMENT_TEST_DOCKER_TESTS=1 PYTHONPATH=tests python3 -m unittest test_timer_events.TimerDockerTest.test_single_invocation_observes_registration_before_automatic_close -v",
+      "python3 -m unittest discover -s tests -p test_timer_events.py -v (latest validation: 7 passed, 9 opt-in skipped)"
+    ],
+    "profiles": [
+      {
+        "source": "9.0",
+        "execution": "9.0"
+      },
+      {
+        "source": "9.3",
+        "execution": "current"
+      }
+    ],
+    "publicTestRun": {
+      "statuses": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3
+    },
+    "batch": {
+      "workers": 2,
+      "submissions": 2,
+      "inputError": 0,
+      "incomplete": 0,
+      "statuses": [
+        [
+          "PASS",
+          "FAIL"
+        ],
+        [
+          "FAIL",
+          "FAIL"
+        ]
+      ],
+      "mutatedSource": "Count += 1 -> Count += 2"
+    },
+    "oracle": "Fixed numerical/state expectations; callback ids only from source selector identity, never from execution"
+  },
+  "targetedRegression": [
+    {
+      "modules": [
+        "test_welcome_calendar",
+        "test_form_context",
+        "test_expression_calls",
+        "test_capability_map",
+        "test_declarative_bindings"
+      ],
+      "passed": 48,
+      "skipped": 16,
+      "failed": 0
+    },
+    {
+      "modules": [
+        "test_source_query"
+      ],
+      "passed": 8,
+      "skipped": 8,
+      "failed": 0
+    },
+    {
+      "dockerTests": [
+        "WelcomeDockerTest.test_portable_aliases_shadowing_and_isolated_sequence",
+        "FormDockerTest.test_portability_and_same_reference_fresh_instances",
+        "SourceQueryDockerTest.test_seconds_and_moment_slices_use_fixed_clock"
+      ],
+      "passed": 3,
+      "failed": 0
+    }
+  ],
+  "checks": {
+    "schemaMatchesImplementation": true,
+    "registryMatchesImplementation": true,
+    "protectedTrackedPathsUnchanged": true,
+    "newDumpAssignments": 0
+  },
+  "protectedTrackedPaths": [
+    "assignments",
+    "config",
+    ".github",
+    "src",
+    "result",
+    "docs/dvizhok-final-capability-map.json",
+    "docs/test-type-stage-046-measurements.json",
+    "docs/test-type-stage-047-measurements.json"
+  ],
+  "limitations": [
+    "Only own &Method / &этот.Method with ()->ничто signature",
+    "No dynamic callback values, lambdas or foreign object instances",
+    "No arbitrary application/dynamic UI; task 49",
+    "Native browser event loop semantics not asserted",
+    "No final dump business execution or PASS",
+    "Full regression remains nightly"
+  ]
+}

@@ -61,7 +61,7 @@ def select_source(root, model, selector):
 
 def plan_source_query(root, source_model, check):
     root, selected = select_check_project(root, source_model, check)
-    conflicts = {'target', 'args', 'context', 'sequence', 'formRequirement', 'mocks', 'captureCalls',
+    conflicts = {'target', 'args', 'context', 'sequence', 'timers', 'formRequirement', 'mocks', 'captureCalls',
                  'captureException', 'observeFailure', 'observe', 'snapshotArgs', 'instanceProbes', 'queryResults',
                  'snapshotConstants', 'clockOracle', 'runtimeDateTime', 'captureExceptionTypes', 'formEffects'}
     if conflicts & check.keys():
