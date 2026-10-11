@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "backend": {
+      "enum": [
+        "memory",
+        "postgres"
+      ]
+    },
+    "idType": {
+      "enum": [
+        "Строка",
+        "Ууид"
+      ]
+    },
+    "transaction": {
+      "type": "boolean"
+    },
+    "lifecycle": {
+      "type": "boolean"
+    },
+    "registers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "initial": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 100
+    },
+    "initialRegisters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "filter": {
+            "type": "object"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "type",
+          "filter",
+          "rows"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 100
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

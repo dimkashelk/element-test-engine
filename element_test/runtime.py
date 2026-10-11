@@ -396,6 +396,8 @@ def prepare_script(root, model, check, sandbox):
             script = render_binding(plan, sandbox)
         else:
             script = render_plan(plan, sandbox)
+        from .storage_compilation import finalize
+        finalize(plan, sandbox)
     except InputError as exc:
         if 'formRequirement' in check:
             raise

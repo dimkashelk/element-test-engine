@@ -221,7 +221,8 @@ def render_source_query(plan, sandbox):
     imports = c.write(sandbox)
     session_setup, metadata = render_session(plan, sandbox)
     plan.rendered_session = (session_setup, metadata)
-    identities = {'Scripts::' + typ: qualified(c.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
+    from .storage_compilation import type_name
+    identities = {'Scripts::' + type_name(c, typ): qualified(c.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
                   for typ in c.fields if '.' in typ and typ.split('.')[0] in c.canonical_elements}
     metadata += ', "_typeIdentities": ' + c.literal(identities, 'Соответствие<Строка, Строка>')
     metadata += ', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса(), "storageDiagnostics": {"active": ТестСессия.ЕстьАктивная(), "locks": ТестСессия.Блокировок()}'

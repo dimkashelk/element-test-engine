@@ -86,12 +86,16 @@ def attach_register(storage, name):
         checks += ('            если не СтрокаНабора.Активность\n'
             '                выбросить новый ИсключениеНедопустимоеСостояние("Активность записи не соответствует набору")\n            ;\n')
     else:
-        unique = dims + ([{'Имя': 'Период', 'Тип': 'Дата'}] if any(f['Имя'] == 'Период' for f in c.fields[row]) else [])
+        unique = dims + [f for f in c.fields[row] if f['Имя'] == 'Период']
         checks += ('            знч Идентичность = СериализацияJson.ЗаписатьОбъект(' + values(unique, 'СтрокаНабора.') + ')\n'
             '            если Ключи.СодержитКлюч(Идентичность)\n'
             '                ТестСессия.ИспортитьТранзакцию()\n'
             '                выбросить новый ИсключениеНедопустимоеСостояние("Неуникальный ключ записи")\n            ;\n'
             '            Ключи.Вставить(Идентичность, Истина)\n')
+    if storage.config.get('lifecycle'):
+        from .metadata_lifecycle import validation, describe
+        checks = validation(c, c.fields[row], 'СтрокаНабора.', indent='            ') + checks
+        storage.lifecycle_contracts.append(describe(e))
     definition = definition[:start] + f'''    @Глобально
     метод Прочитать()
         если Фильтр.Ключ == Неопределено
@@ -140,6 +144,11 @@ def attach_register(storage, name):
     ;
 ;
 '''
+    if storage.config.get('lifecycle'):
+        from .metadata_lifecycle import atomic
+        begin = definition.index('    метод Записать(Замещать: Булево = Истина)\n') + len('    метод Записать(Замещать: Булево = Истина)\n')
+        end = definition.rindex('    ;\n;\n')
+        definition = definition[:begin] + atomic(definition[begin:end], indent='        ') + definition[end:]
     materialize = f'''    метод Материализовать(JSON: Строка): {rows}
         знч Результат = новый {rows}()
 '''
@@ -260,7 +269,7 @@ def bind_record_sets(plan):
                     continue
                 if call.name == 'Прочитать' and not typ.endswith('.НаборЗаписей'):
                     raise UnsupportedSyntaxError('Прочитать поддержан только для НаборЗаписей')
-                if call.name == 'Прочитать' and schema['periodicity'] not in {'Непериодический', 'День'}:
+                if call.name == 'Прочитать' and schema['periodicity'] not in ({'Непериодический', 'День', 'Секунда', 'Момент'} if plan.storage.config.get('lifecycle') else {'Непериодический', 'День'}):
                     raise UnsupportedSyntaxError('Чтение периодического регистра подтверждено только для День')
                 if call.name == 'Установить' and typ.endswith('.ФильтрНабора'):
                     expression = next(n for n in node.expression_tree.walk()

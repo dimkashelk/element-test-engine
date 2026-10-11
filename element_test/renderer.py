@@ -431,7 +431,8 @@ def render_plan(plan, sandbox):
     if plan.probes or plan.sequence:
         metadata += ', "_snapshotMode": ' + sbsl_literal(snapshot_mode, 'Строка')
     from .resolution import qualified
-    identities = {'Scripts::' + typ: qualified(contracts.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
+    from .storage_compilation import type_name
+    identities = {'Scripts::' + type_name(contracts, typ): qualified(contracts.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
                   for typ in contracts.fields if '.' in typ and typ.split('.')[0] in contracts.canonical_elements}
     metadata += ', "_typeIdentities": ' + contracts.literal(identities, 'Соответствие<Строка, Строка>')
     if storage:

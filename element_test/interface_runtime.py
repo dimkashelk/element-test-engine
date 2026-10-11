@@ -156,6 +156,7 @@ def plan_interface(root, source_model, check):
         plain['args'] = calls[0]['args']
         plan = plan_execution(root, source_model, plain)
     else:
+        hook_plan = None
         if plain.get('formEffects') == {'write': True} and describe_form(e, extended=True).get('recordType'):
             pass
         elif plain.get('formEffects') == {'write': True} and describe_form(e, extended=True).get('objectType'):
@@ -167,7 +168,20 @@ def plan_interface(root, source_model, check):
             hooks = [m for m in model['modules'] if m['name'] == object_owner[0]['name'] + '.Объект' and m['namespace'] == object_owner[0]['namespace']
                      and any(h['name'] in {'ПередЗаписью', 'ПослеЗаписи'} for h in m['methods'])]
             if hooks:
-                raise UnsupportedSyntaxError('Декларативная запись с исходными lifecycle hooks требует исходный методный вход; расширение №50')
+                if not plain.get('storage', {}).get('lifecycle'):
+                    raise UnsupportedSyntaxError('Декларативная запись с исходными lifecycle hooks требует storage.lifecycle: true')
+                if len(hooks) != 1:
+                    raise UnsupportedSyntaxError('Неоднозначный модуль lifecycle объекта')
+                names = [h['name'] for h in hooks[0]['methods'] if h['name'] in {'ПередЗаписью', 'ПослеЗаписи'}]
+                # Prepare the original hooks with the same planner. Their
+                # temporary driver is discarded; the final driver writes the
+                # actual form object through the storage lifecycle adapter.
+                hook_check = {k: deepcopy(v) for k, v in plain.items() if k in {'storage', 'constants', 'clock', 'trace', 'runtimeProfile'}}
+                hook_check.update(target={'module': hooks[0]['name'], 'namespace': hooks[0]['namespace'], 'method': names[0]},
+                    context=plain['context'].get('Объект', {}), args=[{}, {}],
+                    sequence=[{'method': name, 'args': [{}, {}]} for name in names])
+                hook_check['_interfaceLifecycleAudit'] = True
+                hook_plan = plan_execution(root, source_model, hook_check)
         elif 'formEffects' in plain:
             raise InvalidTestError('Без исходного обработчика поддержан только formEffects.write')
         path = e['sourceFile'].removesuffix('.yaml') + '.xbsl'
@@ -180,17 +194,27 @@ def plan_interface(root, source_model, check):
         from .form_context import prepare_form
         plan.sequence = plain["sequence"]
         prepare_form(plan); prepare_session(plan); prepare_timers(plan)
-        c = resolver_for(model, e); prepare_ui_aliases(plan, c)
+        c = hook_plan.contracts if hook_plan else resolver_for(model, e)
+        c.namespace, c.imports = e['namespace'], e['properties'].get('Импорт', [])
+        prepare_ui_aliases(plan, c)
         generate_form_types(plan, c); generate_session_types(plan, c)
         plan.contracts = c
         if 'storage' in plain:
             from .storage import MetadataStorage
-            plan.storage = MetadataStorage(c, plain['storage'], audit_history=True)
+            plan.storage = hook_plan.storage if hook_plan else MetadataStorage(c, plain['storage'], audit_history=True)
+            if hook_plan:
+                plan._lifecycle_source_plan = hook_plan
+                plan.symbols = hook_plan.symbols
+                plan.bindings = hook_plan.bindings
+                plan.storage_elements = hook_plan.storage_elements
+                plan.constants.update(hook_plan.constants)
+                plan.exception_types = hook_plan.exception_types
             if plain.get('formEffects') and plan.form.get('objectType'):
                 from .form_effects import generate_effects
                 generate_effects(plan, c)
-                for owner in plan.storage_elements:
-                    plan.storage.attach(owner)
+                if not hook_plan:
+                    for owner in plan.storage_elements:
+                        plan.storage.attach(owner)
     c = plan.contracts
     if plan.form.get('recordOwner'):
         state = add_constants(plan, plan.form['recordOwner'])
@@ -499,7 +523,12 @@ def render_interface(plan, sandbox):
     from .timer_events import render_event_step, observation as timer_observation
     c, form = plan.contracts, plan.form
     # Shared renderer attaches only original source methods and prepares storage.
-    if plan.symbols:
+    if getattr(plan, '_lifecycle_source_plan', None):
+        script = render_plan(plan._lifecycle_source_plan, sandbox)
+        imports = script.read_text().split('\nметод Скрипт(', 1)[0]
+        session_setup, metadata = plan._lifecycle_source_plan.rendered_session
+        plan.rendered_session = session_setup, metadata
+    elif plan.symbols:
         # Its temporary driver must contain only method/timer calls. The final
         # driver below owns all UI actions; the original source is unchanged.
         old_sequence = plan.sequence
@@ -544,6 +573,9 @@ def render_interface(plan, sandbox):
     for index, prepared in enumerate(plan._interface_steps):
         step = prepared['step']; op = next(iter(step))
         invocation += '    пер ТестИсход' + str(index) + ' = "applied"\n'
+        capture_write = op == 'writeInterface' and plan.storage and plan.storage.config.get('lifecycle')
+        if capture_write:
+            invocation += '    пер ОшибкаЗаписи' + str(index) + ': Объект? = Неопределено\n    попытка\n'
         if op in {'advanceTime', 'timerEvent', 'closeTimers'}:
             event_code, events = render_event_step(plan, step, index, form_observation(plan), True)
             # Recompute live bindings before capturing each callback state.
@@ -553,8 +585,17 @@ def render_interface(plan, sandbox):
             invocation += '    если ' + prepared['gate'] + '\n'
             invocation += ''.join('    ' + line + '\n' for line in prepared['code'].splitlines())
             invocation += '    иначе\n        ТестИсход' + str(index) + ' = "blocked"\n    ;\n'
+        if capture_write:
+            validation_type = ' или ОтказЗаписи это ТестБизнесИсключения.ИсключениеВалидации' if 'ИсключениеВалидации' in plan.exception_types else ''
+            invocation += ('    поймать ОтказЗаписи: Исключение\n'
+                '        если не (ОтказЗаписи это ИсключениеНедопустимоеСостояние' + validation_type + ')\n'
+                '            выбросить ОтказЗаписи\n        ;\n'
+                '        ТестИсход' + str(index) + ' = "rejected"\n'
+                '        ОшибкаЗаписи' + str(index) + ' = {"type": ОтказЗаписи.ПолучитьТип().ВСтроку(), "message": ОтказЗаписи.Описание}\n    ;\n')
         invocation += _recalculate(plan)
         code, actual = _observation(plan, index)
+        if capture_write:
+            actual = actual[:-1] + ', "exception": ОшибкаЗаписи' + str(index) + '}'
         invocation += code
         actual = '{"outcome": ТестИсход' + str(index) + ', "observation": ' + actual
         if plan.timers:
@@ -571,7 +612,8 @@ def render_interface(plan, sandbox):
             invocation += '    ТестСессия.Опубликовать(Путь)\n'
         actual = '{"result": ' + actual + ', "storage": ТестСессия.Аудит(Истина)}'
         metadata += ', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса()'
-    identities = {'Scripts::' + typ: qualified(c.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
+    from .storage_compilation import type_name
+    identities = {'Scripts::' + type_name(c, typ): qualified(c.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
                   for typ in c.fields if '.' in typ and typ.split('.')[0] in c.canonical_elements}
     metadata += ', "_snapshotMode": "sequence", "_typeIdentities": ' + c.literal(identities, 'Соответствие<Строка, Строка>')
     statements = setup + invocation + '    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": ' + actual + metadata + '}))\n'

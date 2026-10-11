@@ -334,7 +334,7 @@
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Full metadata enforcement/write parameters require stage 50; navigation requires stage 51",
+      "firstGap": "Metadata lifecycle is opt-in storage.lifecycle; navigation requires stage 51",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -375,12 +375,12 @@
       "id": "metadata-validation",
       "family": "metadata-lifecycle",
       "stage": 50,
-      "readiness": "extension-required",
-      "implementation": "element_test.storage",
+      "readiness": "scoped",
+      "implementation": "element_test.metadata_lifecycle",
       "dependencies": [
         "metadata-structure"
       ],
-      "firstGap": "Enforcement of declared constraints at write time",
+      "firstGap": "Declared scalar constraints; dynamic numbering prefixes and ambiguous object reference unions remain unsupported",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -393,7 +393,7 @@
         "method-runtime",
         "query-source"
       ],
-      "firstGap": "Before/after snapshots, write parameters and extended register effects",
+      "firstGap": "Atomic object/register/constant staging; partial register filters, register handlers and concurrent native lifecycle remain unsupported",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {

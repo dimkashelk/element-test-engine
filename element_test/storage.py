@@ -385,8 +385,13 @@ def session_module(path, *, postgres=False, audit_history=False):
 
 class MetadataStorage:
     def __init__(self, contracts, config, *, audit_history=False):
-        if not isinstance(config, dict) or set(config) - {'backend', 'idType', 'initial', 'initialRegisters', 'transaction', 'registers'}:
-            raise InvalidTestError('storage принимает backend, idType, initial, initialRegisters, transaction, registers')
+        from .metadata_lifecycle import storage_options_schema
+        from .test_contracts import validate_schema
+        validate_schema(config, storage_options_schema(), 'storage')
+        if not isinstance(config, dict) or set(config) - {'backend', 'idType', 'initial', 'initialRegisters', 'transaction', 'registers', 'lifecycle'}:
+            raise InvalidTestError('storage принимает backend, idType, initial, initialRegisters, transaction, registers, lifecycle')
+        if type(config.get('lifecycle', False)) is not bool:
+            raise InvalidTestError('storage.lifecycle требует Булево')
         if config.get('backend', 'memory') not in {'memory', 'postgres'}:
             raise InputError('Неподдержанный backend storage')
         if config.get('idType', 'Строка') not in {'Строка', 'Ууид'}:
@@ -394,9 +399,11 @@ class MetadataStorage:
         if not isinstance(config.get('transaction', False), bool):
             raise InvalidTestError('storage.transaction должен быть Булево')
         self.contracts, self.config = contracts, config
+        contracts.metadata_lifecycle = config.get('lifecycle', False)
         self.attached = set()
         self.query_snapshot_types = {}
         self.register_schemas = {}
+        self.lifecycle_contracts = []
         contracts.reference_id_type = config.get('idType', 'Строка')
         import uuid
         self.path = '/tmp/element-storage-' + uuid.uuid4().hex + '.json'
@@ -407,6 +414,9 @@ class MetadataStorage:
         contracts.definitions.setdefault(failure_type, '@Глобально\nисключение СбойХранилища\n;\n')
         contracts.method_dependencies['ТестСессия'] = [canonical]
         contracts.definitions['ТестСессия'] = session_module(self.path, postgres=config.get('backend') == 'postgres', audit_history=audit_history)
+        if config.get('lifecycle'):
+            from .metadata_lifecycle import session_writes
+            contracts.definitions['ТестСессия'] = session_writes(contracts.definitions['ТестСессия'])
         registers = config.get('registers', [])
         if not isinstance(registers, list) or len(set(str(r) for r in registers)) != len(registers):
             raise InvalidTestError('storage.registers требует список уникальных типов')
@@ -487,19 +497,30 @@ class MetadataStorage:
                   f'    иначе\n        знч Снимок = Старый как {obj}\n'
                   f'        До = новый {data}({previous_projection})\n    ;\n')
         handlers = c.methods.get(obj, '')
-        calls_before = '    ПередЗаписью(До, новый ' + owner + '.ПараметрыЗаписи())\n' if 'метод ПередЗаписью(' in handlers else ''
-        calls_after = '    ПослеЗаписи(До, новый ' + owner + '.ПараметрыЗаписи())\n' if 'метод ПослеЗаписи(' in handlers else ''
-        if calls_before or calls_after:
-            c.require(owner + '.ПараметрыЗаписи')
+        calls_before = '    ПередЗаписью(До, Параметры)\n' if 'метод ПередЗаписью(' in handlers else ''
+        calls_after = '    ПослеЗаписи(До, Параметры)\n' if 'метод ПослеЗаписи(' in handlers else ''
+        c.require(owner + '.ПараметрыЗаписи')
         snapshot = ', '.join(f['Имя'] + ' = этот.' + f['Имя'] for f in c.fields[obj])
         stored = 'новый ' + obj + '(' + snapshot + ')'
         if 'ТестСостояниеНовизны' in c.definitions[obj]:
             stored = '{' + ', '.join(literal(f['Имя']) + ': этот.' + f['Имя'] for f in c.fields[obj]) + '}'
         id_text = 'Ссылка.Идентификатор.ВСтроку()' if id_type == 'Ууид' else 'Ссылка.Идентификатор'
-        c.attach_method(obj, f'''метод Записать()
-{before}{calls_before}    ТестСессия.Записать({literal(schema.identity)}, {id_text}, СериализацияJson.ЗаписатьОбъект({stored}))
-{calls_after};
-''', ['ТестСессия.Записи', data])
+        validation = ''
+        if self.config.get('lifecycle'):
+            from .metadata_lifecycle import object_validation, describe
+            validation = object_validation(self, element, owner, id_text)
+            if not any(item['owner'] == schema.identity for item in self.lifecycle_contracts):
+                self.lifecycle_contracts.append(describe(element))
+            # The handler sees a detached pre-write value, including all tables.
+            before += f'    До = СериализацияJson.ПрочитатьОбъект<{data}>(СериализацияJson.ЗаписатьОбъект(До), До.ПолучитьТип())\n'
+        parameters = f'    знч Параметры = ПараметрыЗаписи == Неопределено ? новый {owner}.ПараметрыЗаписи() : ПараметрыЗаписи как {owner}.ПараметрыЗаписи\n'
+        body = f'{parameters}{before}{calls_before}{validation}    ТестСессия.Записать({literal(schema.identity)}, {id_text}, СериализацияJson.ЗаписатьОбъект({stored}))\n{calls_after}'
+        if self.config.get('lifecycle'):
+            from .metadata_lifecycle import atomic
+            body = atomic(body)
+        c.attach_method(obj, f'''метод Записать(ПараметрыЗаписи: {owner}.ПараметрыЗаписи? = Неопределено)
+{body};
+''', ['ТестСессия.Записи', data, owner + '.ПараметрыЗаписи'])
 
     def setup(self, *, variable_prefix='НачальныйНабор'):
         c = self.contracts

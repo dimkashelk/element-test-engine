@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "stage": 50,
+  "date": "2026-10-11",
+  "scope": "Reusable metadata/lifecycle/storage mechanism, not dump business scenarios",
+  "contract": "metadata-lifecycle-v1",
+  "flag": "storage.lifecycle: true",
+  "sourceCompatibilityVersion": "9.0",
+  "adapter": "Script 10.0.2-1, executor-emulation",
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true,
+      "comparison": "HEAD bytes"
+    },
+    {
+      "file": "Dvizhok-final.xdump",
+      "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+      "unchanged": true,
+      "comparison": "HEAD bytes"
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true,
+      "comparison": "HEAD bytes"
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true,
+      "comparison": "HEAD bytes"
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true,
+      "comparison": "stage 34 historical hash"
+    }
+  ],
+  "technicalAcceptance": {
+    "suite": "tests/test_metadata_lifecycle.py",
+    "planTests": 3,
+    "localScriptTests": 7,
+    "postgresTests": 2,
+    "publicCliTests": 1,
+    "uniquePassingTests": 13,
+    "passed": [
+      "test_metadata_lifecycle.ConstantsLifecycleTest.test_interface_constants_constraints_and_storage_audit",
+      "test_metadata_lifecycle.DirectLifecycleTest.test_declarative_write_executes_original_hooks_without_form_method",
+      "test_metadata_lifecycle.DomainsLifecycleTest.test_before_creation_update_detachment_nullable_enum_and_scalar_union",
+      "test_metadata_lifecycle.DomainsLifecycleTest.test_renamed_owner_and_namespace_preserve_lifecycle",
+      "test_metadata_lifecycle.DomainsLifecycleTest.test_year_number_series_and_precision_overflow",
+      "test_metadata_lifecycle.LifecycleExecutionTest.test_normalization_required_bounds_unique_tables_and_after_rollback",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_constraints_identity_params_and_no_expected",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_invalid_options_and_unsupported_constraints",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_storage_schema_matches_published_contract",
+      "test_metadata_lifecycle.PublicLifecycleTest.test_public_test_run_batch_independent_grades_and_mutation",
+      "test_metadata_lifecycle.RegisterLifecycleTest.test_register_replacement_multidimension_moment_append_duplicate_rollback",
+      "test_metadata_lifecycle.SqlLifecycleTest.test_declarative_original_hooks_publish_independent_sql_snapshots",
+      "test_metadata_lifecycle.SqlLifecycleTest.test_independent_postgres_register_audit_and_after_rollback"
+    ],
+    "checks": [
+      "detached creation/update До including table rows",
+      "same declared write parameters in original hooks",
+      "required nullable, min/max, decimal rounding, integer precision, length, uniqueness",
+      "enum and nullable scalar union",
+      "fixed prefix/postfix numbering, year series and rollback",
+      "renamed object and namespace",
+      "atomic related object and register rollback",
+      "multidimension register filters, registrar replacement, append/replace Moment history, duplicate keys",
+      "fresh detached object/register/constants snapshots",
+      "direct UI original hooks without source form method",
+      "constants invalid write rejection and saved/live separation",
+      "cyclic metadata compilation preserves original identities",
+      "memory staging and independent PostgreSQL read including UI boundary history"
+    ],
+    "public": {
+      "test": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "run": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "batch": [
+        [
+          "PASS",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        [
+          "FAIL",
+          "FAIL",
+          "UNSUPPORTED"
+        ]
+      ]
+    }
+  },
+  "regression": {
+    "planPassed": 21,
+    "runtimePassed": 5,
+    "passed": [
+      "test_capability_map.CapabilityMapTest.test_all_families_have_api_decisions_and_capability_dependencies",
+      "test_capability_map.CapabilityMapTest.test_contract_validation_rejects_invalid_versions_oracle_types_and_inputs",
+      "test_capability_map.CapabilityMapTest.test_external_query_has_original_position_without_claiming_execution",
+      "test_capability_map.CapabilityMapTest.test_inventory_keeps_positions_categories_and_unknown_acceptance",
+      "test_capability_map.CapabilityMapTest.test_map_rejects_false_statuses_mixed_sources_and_dangling_links",
+      "test_capability_map.CapabilityMapTest.test_query_parse_failure_keeps_later_stages_unknown",
+      "test_capability_map.CapabilityMapTest.test_source_hash_and_occurrence_completeness_guard_reused_plans",
+      "test_capability_map.CapabilityMapTest.test_timer_is_scoped_without_source_acceptance_and_shadowing_is_respected",
+      "test_source_query.SourceQueryPlanTest.test_all_five_final_dump_forms_validate_plan_and_generate_without_execution",
+      "test_source_query.SourceQueryPlanTest.test_bare_slice_equals_empty_arguments_and_keeps_original_ranges",
+      "test_source_query.SourceQueryPlanTest.test_entry_is_original_query_with_no_method_or_expected",
+      "test_source_query.SourceQueryPlanTest.test_invalid_selectors_hashes_and_contracts",
+      "test_source_query.SourceQueryPlanTest.test_literal_occurrences_are_selected_without_running_containing_method",
+      "test_source_query.SourceQueryPlanTest.test_parameter_types_arrays_and_xbql_normalization",
+      "test_source_query.SourceQueryPlanTest.test_sbsl_multiset_keeps_duplicates_resources_and_action_order",
+      "test_source_query.SourceQueryPlanTest.test_union_case_is_typed_and_union_arithmetic_remains_unavailable",
+      "test_interface_actions.InterfacePlanTest.test_computed_inputs_and_cyclic_component_bindings_refused",
+      "test_interface_actions.InterfacePlanTest.test_invalid_inputs_and_unsupported_actions_are_explicit",
+      "test_interface_actions.InterfacePlanTest.test_nineteen_final_declarations_prepare_without_business_execution",
+      "test_interface_actions.InterfacePlanTest.test_no_module_required_and_all_base_types",
+      "test_interface_actions.InterfacePlanTest.test_semantic_handler_and_full_source_identity_without_expected",
+      "test_universal_runtime.UniversalRuntimeTest.test_metadata_crud_sequence_fresh_state_handlers_and_rollback",
+      "test_record_sets.RecordSetDockerTest.test_snapshots_repeat_append_replace_and_rollback",
+      "test_interface_actions.InterfaceDockerTest.test_direct_object_write_and_original_handler_write_then_open",
+      "test_interface_actions.InterfaceDockerTest.test_constants_edit_write_and_detached_snapshots",
+      "test_source_query.SourceQueryDockerTest.test_bare_slice_fixed_clock_empty_repeat_write_and_isolation"
+    ],
+    "declarations": {
+      "queryFormsPrepared": 5,
+      "uiDeclarationsPrepared": 19,
+      "businessExecuted": 0
+    },
+    "fullSuite": "existing nightly, not executed"
+  },
+  "verification": {
+    "uniquePassingTests": 39,
+    "commands": [
+      "ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_INTEGRATION_TESTS=1 PYTHONPATH=tests python3 -m unittest test_metadata_lifecycle test_source_query.SourceQueryDockerTest.test_bare_slice_fixed_clock_empty_repeat_write_and_isolation -v",
+      "PYTHONPATH=tests python3 -m unittest test_capability_map.CapabilityMapTest test_source_query.SourceQueryPlanTest test_interface_actions.InterfacePlanTest -v",
+      "ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_INTEGRATION_TESTS=1 PYTHONPATH=tests python3 -m unittest test_universal_runtime.UniversalRuntimeTest.test_metadata_crud_sequence_fresh_state_handlers_and_rollback test_record_sets.RecordSetDockerTest.test_snapshots_repeat_append_replace_and_rollback test_interface_actions.InterfaceDockerTest.test_direct_object_write_and_original_handler_write_then_open test_interface_actions.InterfaceDockerTest.test_constants_edit_write_and_detached_snapshots -v"
+    ],
+    "finalSuiteDurationSeconds": 51.872,
+    "planRegressionDurationSeconds": 5.218
+  },
+  "boundaries": [
+    "Dynamic numbering prefix/postfix",
+    "Partial/empty register filters and register hooks",
+    "Subordinate information registers 10.0",
+    "Multiple reference alternatives in persisted entity fields",
+    "Native locking/concurrency and object deletion",
+    "External storage.transaction with runtime.interface",
+    "Fixture seeds/queryActions.write bypass lifecycle by design",
+    "No native equivalence or dump business acceptance claimed"
+  ],
+  "preserved": [
+    "input archives",
+    "dump assignments/expected",
+    "historical capability map and stage measurements",
+    "nightly configuration"
+  ]
+}

@@ -263,8 +263,7 @@ class ProjectTypes:
         if variant == "Ссылка":
             fields = [{"Имя": "Идентификатор", "Тип": self.reference_id_type}]
         elif variant == "ПараметрыЗаписи":
-            # Empty test contract: no platform flags or write semantics are invented.
-            fields = []
+            fields = [dict(f) for f in element['properties'].get('ПараметрыЗаписи', [])]
         elif variant in {"Объект", "Данные"}:
             fields = [dict(f) for f in element["properties"].get("Реквизиты", [])]
             if (element['elementType'] == 'Справочник'
@@ -468,6 +467,21 @@ class ProjectTypes:
                         dependencies.update(re.findall(rf"({IDENT})\.", self.sbsl_type(type_name)))
             graph[owner] = dependencies - {owner}
         from .runtime import check_dependency_cycles
+        from .storage_compilation import prepare, definition, lower
+        mapping = prepare(self, graph)
+        if mapping:
+            grouped = {}
+            for name, text in sorted(self.definitions.items()):
+                owner = name.split('.')[0]
+                text = definition(self, name, text)
+                if name in self.methods:
+                    text = text.rsplit(';', 1)[0] + lower(self.methods[name], mapping) + '\n;\n'
+                grouped.setdefault(mapping.get(owner, owner), []).append(text)
+            collapsed = {}
+            for owner, deps in graph.items():
+                target = mapping.get(owner, owner)
+                collapsed.setdefault(target, set()).update(mapping.get(d, d) for d in deps)
+            graph = {owner: deps - {owner} for owner, deps in collapsed.items()}
         check_dependency_cycles(graph)
         for owner, definitions in grouped.items():
             imports = [f"#требуется {dep}.sbsl" for dep in sorted(graph[owner])]

@@ -130,6 +130,8 @@ def generate_session_types(plan, c):
     for state in plan.constants.values():
         add_structure(c, state['type'], state['fields'])
         c.literal(state['values'], state['type'])
+        if plan.storage and plan.storage.config.get('lifecycle'):
+            c.method_dependencies.setdefault(state['type'], []).append('ТестСессия.Записи')
     if plan.clock:
         add_structure(c, 'ТестЧасы.Метка', [])
     from .timer_events import generate_timer_types
@@ -141,8 +143,27 @@ def render_session(plan, sandbox):
     c = plan.contracts
     for state in plan.constants.values():
         path = sandbox / (state['alias'] + '.sbsl')
+        if plan.storage and plan.storage.config.get('lifecycle'):
+            dependency = '#требуется ТестСессия.sbsl\n'
+            text = path.read_text(encoding='utf-8')
+            if dependency not in text:
+                path.write_text(dependency + text, encoding='utf-8')
         with path.open('a', encoding='utf-8') as f:
-            if plan.check.get('_interface'):
+            if plan.storage and plan.storage.config.get('lifecycle'):
+                from .metadata_lifecycle import validation, describe, atomic
+                element = c.resolve(state['owner'])[0]
+                checks = validation(c, state['fields'], 'Данные.')
+                if not any(item['owner'] == state['owner'] for item in plan.storage.lifecycle_contracts):
+                    plan.storage.lifecycle_contracts.append(describe(element, plan.root))
+                owner_literal = c.literal(state['owner'], 'Строка')
+                f.write('\n@Глобально\nметод Получить(): ' + state['type'] + '\n'
+                    '    знч Начальные = ' + c.literal(state['values'], state['type']) + '\n'
+                    '    знч JSON = ТестСессия.Прочитать(' + owner_literal + ', "constants")\n'
+                    '    если JSON == Неопределено\n        возврат Начальные\n    ;\n'
+                    '    возврат СериализацияJson.ПрочитатьОбъект<' + state['type'] + '>(JSON как Строка, Начальные.ПолучитьТип())\n;\n'
+                    '@Глобально\nметод ТестЗаписать(Данные: ' + state['type'] + ')\n'
+                    + atomic(checks + '    ТестСессия.Записать(' + owner_literal + ', "constants", СериализацияJson.ЗаписатьОбъект(Данные))\n') + ';\n')
+            elif plan.check.get('_interface'):
                 path_literal = c.literal('/tmp/interface-constants-' + sha256(state['owner'].encode()).hexdigest()[:16] + '.json', 'Строка')
                 f.write('\nконст Путь = ' + path_literal + '\n@Глобально\nметод Получить(): ' + state['type'] + '\n'
                     '    знч Начальные = ' + c.literal(state['values'], state['type']) + '\n'

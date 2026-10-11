@@ -139,6 +139,13 @@ class ExecutionPlan:
     interface: dict = field(default_factory=dict)
 
     def to_dict(self):
+        lifecycle_contracts = self.storage.lifecycle_contracts if self.storage else []
+        if self.storage and self.storage.config.get('lifecycle'):
+            from .metadata_lifecycle import describe
+            from .resolution import qualified
+            elements = {qualified(e): e for e in self.model['elements']}
+            lifecycle_contracts = [describe(elements[item['owner']], self.root)
+                                   for item in lifecycle_contracts]
         return {"schemaVersion": 1, "executorProfile": self.check.get("runtimeProfile", self.model.get("compatibilityVersion", "9.0")),
                 "sourceCompatibilityVersion": self.model.get("compatibilityVersion", "9.0"),
                 "entry": asdict(self.entry.identity),
@@ -157,6 +164,8 @@ class ExecutionPlan:
                 "queries": self.queries,
                 "queryEntry": self.query_entry,
                 "recordSets": self.record_sets,
+                "metadataLifecycle": lifecycle_contracts,
+                "metadataCompilation": getattr(self.contracts, 'storage_module_names', {}),
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
                 "timers": self.timers, "interface": self.interface,
@@ -547,7 +556,8 @@ def bind_types(plan):
         from .storage import MetadataStorage
         if mocks:
             raise InvalidTestError('storage и mocks требуют разных сценариев')
-        plan.storage = MetadataStorage(c, plan.check['storage'], audit_history='formEffects' in plan.check)
+        plan.storage = MetadataStorage(c, plan.check['storage'],
+            audit_history='formEffects' in plan.check or plan.check.get('_interfaceLifecycleAudit', False))
     from .query_api import prepare_query_types, dynamic_queries
     prepare_query_types(plan, c)
     c.configure_references(mocks.get('objects', {}))
@@ -582,6 +592,15 @@ def bind_types(plan):
     from .form_context import generate_form_types
     generate_form_types(plan, c)
     plan.contracts = c
+    if plan.storage and plan.storage.config.get('lifecycle'):
+        from .metadata_lifecycle import describe, object_validation
+        from .resolution import qualified
+        for element in plan.storage_elements:
+            owner = c.canonical_type(qualified(element))
+            for variant in ('Объект', 'Данные'):
+                c.require(owner + '.' + variant)
+            object_validation(plan.storage, element, owner, 'Ссылка.Идентификатор.ВСтроку()' if c.reference_id_type == 'Ууид' else 'Ссылка.Идентификатор')
+            plan.storage.lifecycle_contracts.append(describe(element, plan.root))
     # Script forbids A.Object -> A's source manager -> A.Object imports.
     # Co-locate that original static manager with its generated metadata types.
     if plan.module.get('moduleType') == 'object' and 'context' in plan.check:
