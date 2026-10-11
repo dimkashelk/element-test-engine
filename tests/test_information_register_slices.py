@@ -80,7 +80,7 @@ class SlicePlanTest(unittest.TestCase):
                 if change=='missing':del first['rows'][0]['Product']
                 if change=='date':first['rows'][0]['Период']='2026-09-30T00:00:00'
                 if change=='duplicate':first['rows'][1]['Период']=first['rows'][0]['Период']
-                if change=='filter':del first['filter']['Vendor']
+                if change=='filter':first['filter']['Unknown']=first['filter'].pop('Vendor')
                 with self.subTest(change=change),self.assertRaises(InvalidTestError):prepare_script(root,analyze(root),c,Path(d))
 
 @unittest.skipUnless(os.environ.get('ELEMENT_TEST_DOCKER_TESTS')=='1','Task 33 Docker opt-in')

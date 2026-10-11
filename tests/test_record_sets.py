@@ -61,10 +61,10 @@ class RecordSetPlanTest(unittest.TestCase):
             actual['storage'][0]['value'].append(copy.deepcopy(actual['storage'][0]['value'][0]))
             self.assertEqual(grade(actual,expected,temp),'FAIL')
 
-    def test_full_filter_required_and_teacher_input_errors(self):
+    def test_partial_filter_and_teacher_input_errors(self):
         root=CORPUS/'information';model=analyze(root)
-        with self.assertRaisesRegex(InputError,'полный фильтр'):
-            plan_execution(root,model,info_check('Partial',[]))
+        partial=plan_execution(root,model,info_check('Partial',[]))
+        self.assertEqual(next(r['filterMask'] for r in partial.record_sets if r['operation']=='Установить'),['Key'])
         with TemporaryDirectory() as d:
             p=Path(d)
             for key,value in [('filter',{'Unknown':'base'}),('type','Missing'),('rows',[{'Период':'invalid'}])]:
@@ -129,7 +129,7 @@ class RecordSetDockerTest(unittest.TestCase):
                     self.assertEqual(normalized(r['actual']),normalized(expected));self.assertEqual(grade(r['actual'],expected,temp),'PASS')
                     wrong=copy.deepcopy(expected);wrong['storage'][1]['value'].append({'teacher':'independent-wrong'})
                     self.assertEqual(grade(r['actual'],wrong,temp),'FAIL')
-                unsupported=make('Partial' if name=='information' else 'Недоступно',[])
+                unsupported=make('EmptyFilter' if name=='information' else 'Недоступно',[])
                 self.assertEqual(run_pure(root,analyze(root),unsupported,temp)['status'],'UNSUPPORTED')
                 self.execute(root,make(),temp,name+'-recovery')
 

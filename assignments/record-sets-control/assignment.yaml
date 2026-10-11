@@ -122,14 +122,14 @@ checks:
         Factor: 1
         Link:
           Идентификатор: abcdef12-1234-4234-8234-123456789abc
-- id: partial-filter
+- id: empty-filter
   type: runtime
   points: 1
   comparison: record-sets-unordered
   target:
     module: Flow
     namespace: Entry
-    method: Partial
+    method: EmptyFilter
   args: []
   storage:
     idType: Ууид

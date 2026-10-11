@@ -1,5 +1,6 @@
 """Metadata record-set adapter: planning in Python, state and row operations in Script."""
 import re
+from hashlib import sha256
 from types import SimpleNamespace
 
 from .indexer import parse_module, method_call_expressions, method_local_bindings
@@ -18,6 +19,8 @@ def attach_register(storage, name):
         raise InputError('Хранение набора требует однозначный регистр')
     e = matches[0]
     identity = qualified(e)
+    if e['elementType'] == 'РегистрСведений' and e['properties'].get('РежимЗаписи') == 'ПодчинениеРегистратору':
+        raise UnsupportedSyntaxError('Подчинённый регистр сведений 10.0 вне контракта хранения')
     if any(m['namespace'] == e['namespace'] and m['name'] == e['name'] + '.НаборЗаписей'
            and any(n['name'] in {'ПередЗаписью', 'ПослеЗаписи'} for n in m.get('methods', []))
            for m in c.model.get('modules', [])):
@@ -170,13 +173,174 @@ def attach_register(storage, name):
     materialize += '        возврат Результат\n    ;\n'
     definition = definition.rsplit(';', 1)[0] + materialize + ';\n'
     c.definitions[st] = definition
+    if not accumulation:
+        _information_storage(c, identity, st, row, dims, values,
+                             bool(storage.config.get('lifecycle')))
     c.method_dependencies[st] = ['ТестСессия.Записи']
     c.method_dependencies[ft] = [f['Тип'] for f in dims]
     storage.register_schemas[identity] = {'owner': identity, 'kind': e['elementType'],
         'rowType': row, 'setType': st, 'filterType': ft, 'filterFields': dims,
         'fields': c.fields[row], 'periodicity': e['properties'].get('Периодичность', 'Непериодический'),
         'backend': storage.config.get('backend', 'memory'), 'contract': CONTRACT,
-        'limitations': ['full-filter-only', 'unordered', 'isolated-staging', 'no-balances', 'no-register-handlers']}
+        'limitations': ['full-filter-only' if accumulation else 'nonempty-named-dimension-subset',
+                        'unordered', 'isolated-staging', 'no-balances', 'no-register-handlers']}
+
+
+def filter_method(c, schema, names):
+    """One typed signature per observed mask: omitted is never a nullable default.
+
+    Full positional calls retain their old signature. Partial named calls are
+    lowered by AST to these internal methods; original files remain untouched.
+    """
+    dims = schema['filterFields']
+    selected = [f for f in dims if f['Имя'] in names]
+    if len(selected) == len(dims):
+        return 'Установить'
+    mask = sum(1 << i for i, f in enumerate(dims) if f['Имя'] in names)
+    name = 'УстановитьПодмножество' + str(mask)
+    ft = schema['filterType']
+    if 'метод ' + name + '(' not in c.definitions[ft]:
+        signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in selected)
+        fields = ', '.join(c.literal(f['Имя'], 'Строка') + ': ' +
+            ('{"type": (' + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + f['Имя'] + '}'
+             if '|' in f['Тип'] else f['Имя']) for f in selected)
+        method = ('    @Глобально\n    метод ' + name + '(' + signature + ')\n'
+                  '        Ключ = СериализацияJson.ЗаписатьОбъект({' + fields + '})\n    ;\n')
+        c.definitions[ft] = c.definitions[ft].rsplit(';', 1)[0] + method + ';\n'
+    return name
+
+
+def _information_storage(c, identity, st, row, dims, values, lifecycle):
+    """Predicate selection over canonical full-dimension buckets, not filter buckets.
+
+    Full dimensions identify a bucket; dimensions + period identify its rows.
+    Keep the public audit format and empty full buckets for existing consumers.
+    Validate the entire replacement before one session-table mutation.
+    """
+    lit = lambda v: c.literal(v, 'Строка')
+    rows = 'Массив<' + row + '>'
+    unique = dims + [f for f in c.fields[row] if f['Имя'] == 'Период']
+    definition = c.definitions[st]
+    start = definition.index('    @Глобально\n    метод Прочитать()')
+    validation = ''
+    if lifecycle:
+        from .metadata_lifecycle import validation as validate
+        validation = validate(c, c.fields[row], 'СтрокаНабора.', indent='            ')
+    body = f'''        если Фильтр.Ключ == Неопределено
+            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")
+        ;
+        знч Предыдущие = ВсеСтроки()
+        знч Результат = новый {rows}()
+        для СтрокаНабора из Предыдущие
+            если не Замещать или не Соответствует(СтрокаНабора)
+                Результат.Добавить(СтрокаНабора)
+            ;
+        ;
+        для СтрокаНабора из Записи
+{validation}            если не Соответствует(СтрокаНабора)
+                ТестСессия.ИспортитьТранзакцию()
+                выбросить новый ИсключениеНедопустимоеСостояние("Запись не соответствует фильтру")
+            ;
+            Результат.Добавить(СтрокаНабора)
+        ;
+        знч Ключи = новый Соответствие<Строка, Булево>()
+        знч Группы = новый Соответствие<Строка, {rows}>()
+        знч Состояние = ТестСессия.ЧитатьВсе()
+        если Состояние.СодержитКлюч({lit(identity)})
+            для Ключ из Состояние[{lit(identity)}].Ключи()
+                Группы.Вставить(Ключ, новый {rows}())
+            ;
+        ;
+        // A full empty replacement retains the previous public empty bucket.
+        знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
+        если Отбор.Размер() == {len(dims)} и не Группы.СодержитКлюч(Фильтр.Ключ как Строка)
+            Группы.Вставить(Фильтр.Ключ как Строка, новый {rows}())
+        ;
+        для СтрокаНабора из Результат
+            знч Идентичность = СериализацияJson.ЗаписатьОбъект({values(unique, 'СтрокаНабора.')})
+            если Ключи.СодержитКлюч(Идентичность)
+                ТестСессия.ИспортитьТранзакцию()
+                выбросить новый ИсключениеНедопустимоеСостояние("Неуникальный ключ записи")
+            ;
+            Ключи.Вставить(Идентичность, Истина)
+            знч Ключ = СериализацияJson.ЗаписатьОбъект({values(dims, 'СтрокаНабора.')})
+            если не Группы.СодержитКлюч(Ключ)
+                Группы.Вставить(Ключ, новый {rows}())
+            ;
+            Группы[Ключ].Добавить(СтрокаНабора)
+        ;
+        знч Таблица = новый Соответствие<Строка, Строка>()
+        для Ключ из Группы.Ключи()
+            Таблица.Вставить(Ключ, СериализацияJson.ЗаписатьОбъект(Группы[Ключ]))
+        ;
+        ТестСессия.ЗаписатьТаблицу({lit(identity)}, Таблица)
+        если не Замещать
+            Записи.Очистить()
+        ;
+'''
+    if lifecycle:
+        from .metadata_lifecycle import atomic
+        body = atomic(body, indent='        ')
+    definition = definition[:start] + f'''    @Глобально
+    метод Прочитать()
+        если Фильтр.Ключ == Неопределено
+            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")
+        ;
+        знч Новые = новый {rows}()
+        знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
+        если Отбор.Размер() == {len(dims)}
+            знч JSON = ТестСессия.Прочитать({lit(identity)}, Фильтр.Ключ как Строка)
+            если JSON != Неопределено
+                Новые.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<{rows}>(JSON как Строка, Новые.ПолучитьТип()))
+            ;
+            Записи = Новые
+            возврат
+        ;
+        для СтрокаНабора из ВсеСтроки()
+            если Соответствует(СтрокаНабора)
+                Новые.Добавить(СтрокаНабора)
+            ;
+        ;
+        Записи = Новые
+    ;
+    @Глобально
+    метод Очистить()
+        Записи.Очистить()
+    ;
+    @Глобально
+    метод Размер(): Число
+        возврат Записи.Размер()
+    ;
+    @Глобально
+    метод Пусто(): Булево
+        возврат Записи.Пусто()
+    ;
+    @Глобально
+    метод Записать(Замещать: Булево = Истина)
+{body}    ;
+    метод ВсеСтроки(): {rows}
+        знч Результат = новый {rows}()
+        знч Состояние = ТестСессия.ЧитатьВсе()
+        если Состояние.СодержитКлюч({lit(identity)})
+            для JSON из Состояние[{lit(identity)}].Значения()
+                Результат.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<{rows}>(JSON, Результат.ПолучитьТип()))
+            ;
+        ;
+        возврат Результат
+    ;
+    метод Соответствует(СтрокаНабора: {row}): Булево
+        знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
+        знч Полный = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(СериализацияJson.ЗаписатьОбъект({values(dims, 'СтрокаНабора.')}), Тип<Соответствие<Строка, Объект?>>)
+        для Имя из Отбор.Ключи()
+            если СериализацияJson.ЗаписатьОбъект(Отбор[Имя]) != СериализацияJson.ЗаписатьОбъект(Полный[Имя])
+                возврат Ложь
+            ;
+        ;
+        возврат Истина
+    ;
+;
+'''
+    c.definitions[st] = definition
 
 
 def register_setup(storage, variable_prefix='НачальныйНабор'):
@@ -186,6 +350,7 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
     if not isinstance(seeds, list) or len(seeds) > 100:
         raise InvalidTestError('storage.initialRegisters требует список до 100 наборов')
     lines = []
+    initial_keys = set()
     for i, seed in enumerate(seeds):
         if not isinstance(seed, dict) or set(seed) != {'type', 'filter', 'rows'}:
             raise InvalidTestError('Начальный набор требует type, filter и rows')
@@ -199,15 +364,17 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
         schema = storage.register_schemas[qualified(matches[0])]
         dims = schema['filterFields']
         filt, rows = seed['filter'], seed['rows']
-        if not isinstance(filt, dict) or set(filt) != {f['Имя'] for f in dims}:
-            raise InvalidTestError('Начальный набор требует полный фильтр без неизвестных измерений')
+        required = {f['Имя'] for f in dims}
+        if (not isinstance(filt, dict) or not filt or not set(filt) <= required or
+                schema['kind'] == 'РегистрНакопления' and set(filt) != required):
+            raise InvalidTestError('Начальный набор требует непустой фильтр без неизвестных измерений')
         if not isinstance(rows, list) or len(rows) > 100:
             raise InvalidTestError('Начальный набор требует до 100 строк')
         fields = {f['Имя']: f['Тип'] for f in schema['fields']}
         for row in rows:
             if not isinstance(row, dict) or set(row) != set(fields):
                 raise InvalidTestError('Начальная строка требует все поля схемы')
-            if any(row[f['Имя']] != filt[f['Имя']] for f in dims):
+            if any(row[name] != value for name, value in filt.items()):
                 raise InvalidTestError('Начальная строка не соответствует фильтру')
             # Query fixtures include inactive historical movements. Writes keep
             # their existing active-record contract; totals ignore these rows.
@@ -215,15 +382,18 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
         # cannot be reported as student failures.
         if schema['kind'] == 'РегистрСведений':
             import json
-            keys = [json.dumps({k: r[k] for k in list(filt) + (['Период'] if 'Период' in fields else [])}, sort_keys=True) for r in rows]
-            if len(set(keys)) != len(keys):
+            keys = [json.dumps({k: r[k] for k in [f['Имя'] for f in dims] + (['Период'] if 'Период' in fields else [])}, sort_keys=True) for r in rows]
+            identities = {(schema['owner'], key) for key in keys}
+            if len(set(keys)) != len(keys) or initial_keys & identities:
                 raise InvalidTestError('Неуникальные ключи начальных строк')
-        args = ', '.join(f['Имя'] + ' = ' + c.literal(filt[f['Имя']], f['Тип']) for f in dims)
+            initial_keys.update(identities)
+        method = filter_method(c, schema, set(filt))
+        args = ', '.join(f['Имя'] + ' = ' + c.literal(filt[f['Имя']], f['Тип']) for f in dims if f['Имя'] in filt)
         expr = c.literal(rows, 'Массив<' + schema['rowType'] + '>')
         name = variable_prefix + str(i)
         lines += ['    ТестСессия.Событие("teacher:register-setup")',
                   '    знч ' + name + ' = новый ' + schema['setType'] + '()',
-                  '    ' + name + '.Фильтр.Установить(' + args + ')',
+                  '    ' + name + '.Фильтр.' + method + '(' + args + ')',
                   '    ' + name + '.Записи.ДобавитьВсе(' + expr + ')']
         if schema['kind']=='РегистрНакопления' and any(not row['Активность'] for row in rows):
             # Author setup represents historical inactive rows, without
@@ -241,6 +411,7 @@ def bind_record_sets(plan):
             raise UnsupportedSyntaxError('Прочитать требует storage; mocks.registers не читают состояние')
         return
     sources = {m['sourceFile']: (plan.root/m['sourceFile']).read_text(encoding='utf-8-sig') for m in plan.model['modules']}
+    source_hashes = {path: sha256((plan.root/path).read_bytes()).hexdigest() for path in sources}
     declarations = {p: parse_module(s)[0] for p, s in sources.items()}
     c = plan.contracts
     previous = c.namespace, c.imports
@@ -272,6 +443,7 @@ def bind_record_sets(plan):
                     raise UnsupportedSyntaxError('Прочитать поддержан только для НаборЗаписей')
                 if call.name == 'Прочитать' and schema['periodicity'] not in ({'Непериодический', 'День', 'Секунда', 'Момент'} if plan.storage.config.get('lifecycle') else {'Непериодический', 'День'}):
                     raise UnsupportedSyntaxError('Чтение периодического регистра подтверждено только для День')
+                filter_ir = {}
                 if call.name == 'Установить' and typ.endswith('.ФильтрНабора'):
                     expression = next(n for n in node.expression_tree.walk()
                         if n.kind == 'call' and n.children[0].start == call.start and
@@ -281,12 +453,56 @@ def bind_record_sets(plan):
                     required = {f['Имя'] for f in schema['filterFields']}
                     names = []
                     for arg in args:
-                        if arg.kind == 'binary' and arg.value == '=' and arg.children[0].kind == 'name':
+                        if arg.kind in {'binary', 'assignment'} and arg.value == '=' and arg.children[0].kind == 'name':
                             names.append(arg.children[0].value)
-                    if len(args) != len(required) or names and (len(names) != len(args) or set(names) != required):
-                        raise UnsupportedSyntaxError('Поддержан только полный фильтр набора')
+                    if names and len(names) != len(args):
+                        raise UnsupportedSyntaxError('Смешанная именованная/позиционная форма фильтра не поддержана')
+                    if len(set(names)) != len(names):
+                        raise InputError('Повторное имя измерения фильтра')
+                    if not set(names) <= required:
+                        raise InputError('Неизвестное измерение фильтра: ' + ', '.join(sorted(set(names) - required)))
+                    if not args:
+                        raise UnsupportedSyntaxError('Пустой фильтр всей таблицы не поддержан')
+                    if (not names and len(args) != len(required) or
+                            schema['kind'] == 'РегистрНакопления' and len(args) != len(required)):
+                        raise UnsupportedSyntaxError('Поддержан только полный позиционный фильтр/фильтр регистратора')
+                    mask = set(names) if names else required
+                    method = filter_method(c, schema, mask)
+                    if method != call.name:
+                        token = expression.children[0].children[-1]
+                        plan.source_transforms.setdefault((symbol.identity.source_file, symbol.identity.declaration), []).append(
+                            (token.start, token.end, method))
+                    selected = [f for f in schema['filterFields'] if f['Имя'] in mask]
+                    expressions = ({a.children[0].value: a.children[1] for a in args} if names else
+                                   {f['Имя']: a for f, a in zip(selected, args)})
+                    # Reject provably wrong value types as a contract error,
+                    # without attempting to evaluate source expressions.
+                    from .generated_types import union_members
+                    for f in selected:
+                        expr = expressions[f['Имя']]
+                        raw = symbol.source[expr.start:expr.end]
+                        inferred = ('Строка' if expr.kind == 'string' else
+                                    'Число' if expr.kind == 'number' else
+                                    'Булево' if raw in {'Истина', 'Ложь'} else
+                                    '?' if raw == 'Неопределено' else
+                                    infer_receiver_type(symbol.source, node,
+                                        SimpleNamespace(receiver_start=expr.start, receiver_end=expr.end),
+                                        symbol.owner, plan.model, declarations, sources, bindings))
+                        if inferred:
+                            actual = c.canonical_type(inferred)
+                            accepted = union_members(f['Тип']) or [f['Тип'].rstrip('?')] + (['?'] if f['Тип'].endswith('?') else [])
+                            actual_members = (['?'] if actual == '?' else union_members(actual) or
+                                              [actual.rstrip('?')] + (['?'] if actual.endswith('?') else []))
+                            if not set(actual_members) <= set(accepted):
+                                raise InputError('Неверный тип фильтра ' + f['Имя'] + ': ' + actual + ', ожидается ' + f['Тип'])
+                    filter_ir = {'filterMask': [f['Имя'] for f in selected],
+                        'filterValues': [{'name': f['Имя'], 'type': f['Тип'],
+                            'expression': symbol.source[expressions[f['Имя']].start:expressions[f['Имя']].end],
+                            'range': [symbol.start + expressions[f['Имя']].start, symbol.start + expressions[f['Имя']].end]}
+                            for f in selected]}
                 plan.record_sets.append({**schema, 'sourceFile': symbol.identity.source_file,
                     'symbol': symbol.identity.declaration, 'operation': call.name,
+                    'sourceHash': source_hashes[symbol.identity.source_file], **filter_ir,
                     'receiverType': c.canonical_type(typ), 'start': symbol.start+call.start,
                     'end': symbol.start + next(n.end for n in node.expression_tree.walk()
                         if n.kind == 'call' and n.children[0].start == call.start and n.children[0].end <= call.end)})
@@ -295,8 +511,8 @@ def bind_record_sets(plan):
                     receiver, field = statement.children
                     schema, typ = schema_for(receiver.start, receiver.end)
                     if schema and typ.endswith('.ФильтрНабора') and field.value != 'Установить':
-                        raise UnsupportedSyntaxError('Поля фильтра набора вне полного Установить не поддержаны')
-                if statement.kind == 'binary' and statement.value in {'=', '??='}:
+                        raise UnsupportedSyntaxError('Поля фильтра набора вне Установить не поддержаны')
+                if statement.kind in {'binary', 'assignment'} and statement.value in {'=', '??='}:
                     left = statement.children[0]
                     if left.kind == 'member' and left.children[1].value == 'Фильтр':
                         receiver = left.children[0]
@@ -313,6 +529,7 @@ def bind_record_sets(plan):
                     [(expr.start, expr.start, '('), (expr.end, expr.end, ').Записи')])
                 plan.record_sets.append({**schema, 'sourceFile': symbol.identity.source_file,
                     'symbol': symbol.identity.declaration, 'operation': 'iterate', 'receiverType': c.canonical_type(typ),
+                    'sourceHash': source_hashes[symbol.identity.source_file],
                     'start': symbol.start+expr.start, 'end': symbol.start+expr.end})
     finally:
         c.namespace, c.imports = previous

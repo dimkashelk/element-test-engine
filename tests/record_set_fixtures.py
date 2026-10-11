@@ -94,7 +94,7 @@ def write_assignments():
             (folder/'assignment.yaml').write_text(dump({'name':'Чтение наборов — '+group,'checks':checks}))
     control=[]
     c=info_check();expected=expected_copy(c,info=True);wrong=copy.deepcopy(expected);wrong['storage'][1]['value'][0]['Price']=123
-    for name,c,expect in [('wrong-answer',c,wrong),('partial-filter',info_check('Partial',[]),None),('recovery',info_check(),expected)]:
+    for name,c,expect in [('wrong-answer',c,wrong),('empty-filter',info_check('EmptyFilter',[]),None),('recovery',info_check(),expected)]:
         control.append({'id':name,'type':'runtime','points':1,'comparison':'record-sets-unordered',**c,'expected':expect})
     folder=REPO/'assignments/record-sets-control';folder.mkdir(exist_ok=True)
     (folder/'assignment.yaml').write_text(dump({'name':'Контроль независимых исходов №32','checks':control}))

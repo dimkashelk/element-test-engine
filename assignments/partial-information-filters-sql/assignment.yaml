@@ -1,0 +1,1493 @@
+name: Частичные фильтры РС №53
+checks:
+- id: partial-read
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Read
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      count: 3
+      sum: 70
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: full-read
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Full
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      count: 1
+      sum: 10
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: null-read
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: 'Null'
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+    - Период: '2026-10-01T12:00:00Z'
+      Product: X
+      Supplier: null
+      Channel: remote
+      Price: 40
+      Link:
+        Идентификатор: 12345678-1234-4234-8234-123456789abc
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: fresh-and-detached
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Snapshot
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      oldCount: 3
+      fresh:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      otherCount: 3
+      otherSum: 70
+      otherLinkOK: true
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: replace-False-False
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Replace
+  args:
+  - false
+  - false
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Replace
+    args:
+    - false
+    - false
+  - method: Replace
+    args:
+    - false
+    - false
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - null
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-02T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 99
+        Link: null
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value: []
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value: []
+- id: replace-False-True
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Replace
+  args:
+  - true
+  - false
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Replace
+    args:
+    - true
+    - false
+  - method: Replace
+    args:
+    - true
+    - false
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - null
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value: []
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value: []
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value: []
+- id: replace-True-False
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Replace
+  args:
+  - false
+  - true
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Replace
+    args:
+    - false
+    - true
+  - method: Replace
+    args:
+    - false
+    - true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - null
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-02T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 99
+        Link: null
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: replace-True-True
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Replace
+  args:
+  - true
+  - true
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Replace
+    args:
+    - true
+    - true
+  - method: Replace
+    args:
+    - true
+    - true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - null
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value: []
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: append-slice-overlap
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Append
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Append
+    args: []
+  - method: Latest
+    args: []
+  - method: Full
+    args: []
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - 99
+      - count: 2
+        sum: 109
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+      - Период: '2026-10-02T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 99
+        Link: null
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: refilter-resets-mask
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Refilter
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result: 30
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+- id: clear-null-only
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: ClearNull
+  args: []
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: ClearNull
+    args: []
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value: []
+- id: fresh-query-after-replace
+  type: runtime
+  points: 1
+  comparison: record-sets-unordered
+  target:
+    namespace: Ware
+    module: Flow
+    method: Replace
+  args:
+  - false
+  - false
+  storage:
+    idType: Ууид
+    lifecycle: true
+    registers:
+    - Ware::Ledger
+    initialRegisters:
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: A
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 10
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: B
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: B
+        Channel: local
+        Price: 20
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: Y
+        Supplier: C
+        Channel: local
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      filter:
+        Product: X
+        Supplier: null
+        Channel: remote
+      rows:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: X
+        Supplier: null
+        Channel: remote
+        Price: 40
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    backend: postgres
+  timeout: 20s
+  trace: true
+  sequence:
+  - method: Replace
+    args:
+    - false
+    - false
+  - method: QuerySum
+    args: []
+  - method: Latest
+    args: []
+  integration:
+    backend: postgres
+    operation: metadata-storage
+  expected:
+    result:
+      actions:
+      - null
+      - 99
+      - 99
+    storage:
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"A\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-02T12:00:00Z'
+        Product: X
+        Supplier: A
+        Channel: local
+        Price: 99
+        Link: null
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : \"B\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value: []
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"Y\",\n  \"Supplier\" : \"C\",\n  \"Channel\" : \"\
+        local\"\n}"
+      value:
+      - Период: '2026-10-01T12:00:00Z'
+        Product: Y
+        Supplier: C
+        Channel: local
+        Price: 30
+        Link:
+          Идентификатор: 12345678-1234-4234-8234-123456789abc
+    - type: Ware::Ledger
+      id: "{\n  \"Product\" : \"X\",\n  \"Supplier\" : null,\n  \"Channel\" : \"remote\"\
+        \n}"
+      value: []

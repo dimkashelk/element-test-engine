@@ -1,0 +1,602 @@
+{
+  "schemaVersion": 1,
+  "stage": 53,
+  "date": "2026-10-11",
+  "scope": "partial independent information-register filters; technical mechanism acceptance, not final receipt business assessment",
+  "contract": "storage-record-set-v1",
+  "contractDocument": "docs/partial-information-register-filters.md",
+  "sourceCompatibilityVersion": "9.0",
+  "adapter": "Script 10.0.2-1, executor-emulation",
+  "publicOptionsChanged": false,
+  "schemaChanged": false,
+  "irAdditions": {
+    "filterMask": "required to distinguish omitted dimensions from explicit NULL",
+    "filterValues": "declared types and original expression ranges; evaluated only by Script",
+    "sourceHash": "exact source file hash"
+  },
+  "archive": {
+    "file": "Dvizhok-final.xdump",
+    "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+    "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+    "unchanged": true,
+    "comparison": "HEAD bytes"
+  },
+  "technicalAcceptance": {
+    "suite": "tests/test_partial_information_filters.py",
+    "uniquePassingTests": 10,
+    "passed": [
+      "test_partial_information_filters.PartialPlanTest.test_mask_typed_values_source_hash_and_boundaries",
+      "test_partial_information_filters.PartialPlanTest.test_empty_unknown_and_teacher_filter_contract",
+      "test_partial_information_filters.PartialPlanTest.test_exact_final_source_preparation",
+      "test_partial_information_filters.PartialPlanTest.test_unsupported_forms_and_subordinated_register_boundary",
+      "test_partial_information_filters.PartialDockerTest.test_compatibility_93_current",
+      "test_partial_information_filters.PartialDockerTest.test_partial_teacher_seed_and_backend_unavailable",
+      "test_partial_information_filters.PartialDockerTest.test_public_test_run_batch_grades_and_isolation",
+      "test_partial_information_filters.PartialDockerTest.test_required_scenarios_and_portability",
+      "test_partial_information_filters.PartialSqlTest.test_compatibility_93_current_sql",
+      "test_partial_information_filters.PartialSqlTest.test_required_scenarios_sql_audit_and_portability"
+    ],
+    "matrixCases": 15,
+    "memoryScenarioExecutions": 30,
+    "postgresScenarioExecutions": 30,
+    "postgresObservation": "independent PostgresSession.audit SELECT captured and compared with teacher state; runtime actual is not expected",
+    "portability": {
+      "ordinary": "Ware::Ledger",
+      "renamed": "Запасы::История",
+      "dimensionCount": 3,
+      "periodicity": "Момент",
+      "executed": true
+    },
+    "requiredScenariosRerunSeconds": 292.466,
+    "scenarios": [
+      {
+        "id": "partial-read",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-partial-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-partial-read.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-partial-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-partial-read.json"
+          }
+        }
+      },
+      {
+        "id": "full-read",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-full-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-full-read.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-full-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-full-read.json"
+          }
+        }
+      },
+      {
+        "id": "null-read",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-null-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-null-read.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-null-read.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-null-read.json"
+          }
+        }
+      },
+      {
+        "id": "fresh-and-detached",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-fresh-and-detached.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-fresh-and-detached.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-fresh-and-detached.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-fresh-and-detached.json"
+          }
+        }
+      },
+      {
+        "id": "replace-False-False",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-replace-False-False.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-replace-False-False.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-replace-False-False.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-replace-False-False.json"
+          }
+        }
+      },
+      {
+        "id": "replace-False-True",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-replace-False-True.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-replace-False-True.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-replace-False-True.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-replace-False-True.json"
+          }
+        }
+      },
+      {
+        "id": "replace-True-False",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-replace-True-False.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-replace-True-False.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-replace-True-False.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-replace-True-False.json"
+          }
+        }
+      },
+      {
+        "id": "replace-True-True",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-replace-True-True.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-replace-True-True.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-replace-True-True.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-replace-True-True.json"
+          }
+        }
+      },
+      {
+        "id": "append-slice-overlap",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-append-slice-overlap.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-append-slice-overlap.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-append-slice-overlap.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-append-slice-overlap.json"
+          }
+        }
+      },
+      {
+        "id": "refilter-resets-mask",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-refilter-resets-mask.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-refilter-resets-mask.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-refilter-resets-mask.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-refilter-resets-mask.json"
+          }
+        }
+      },
+      {
+        "id": "clear-null-only",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-clear-null-only.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-clear-null-only.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-clear-null-only.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-clear-null-only.json"
+          }
+        }
+      },
+      {
+        "id": "fresh-query-after-replace",
+        "observations": [
+          "independent stored full rows",
+          "runtime result"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-fresh-query-after-replace.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-fresh-query-after-replace.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-fresh-query-after-replace.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-fresh-query-after-replace.json"
+          }
+        }
+      },
+      {
+        "id": "Reject",
+        "observations": [
+          "independent stored full rows",
+          "exception with unchanged state"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-Reject.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-Reject.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-Reject.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-Reject.json"
+          }
+        }
+      },
+      {
+        "id": "Conflict",
+        "observations": [
+          "independent stored full rows",
+          "exception with unchanged state"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-Conflict.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-Conflict.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-Conflict.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-Conflict.json"
+          }
+        }
+      },
+      {
+        "id": "Persist",
+        "observations": [
+          "independent stored full rows",
+          "exception with unchanged state"
+        ],
+        "memory": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/ordinary-Persist.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/renamed-Persist.json"
+          }
+        },
+        "postgres": {
+          "ordinary": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-ordinary-Persist.json"
+          },
+          "renamed": {
+            "status": "EXECUTED",
+            "evidence": "result/partial-information-filters/sql-renamed-Persist.json"
+          }
+        }
+      }
+    ],
+    "failureAndRecovery": {
+      "postgresPublicationFailure": "ERROR with initial independently audited state; subsequent run EXECUTED",
+      "backendUnavailable": "UNSUPPORTED/backend_unavailable, no PASS",
+      "invalidFilter": "UNSUPPORTED, no PASS",
+      "wrongExpected": "SBSL FAIL for each ordinary and renamed successful scenario"
+    },
+    "publicCli": {
+      "test": {
+        "statuses": [
+          "PASS",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        "score": 2,
+        "maxScore": 4,
+        "unavailablePoints": 3,
+        "evidence": "result/partial-information-filters/public-test.json"
+      },
+      "run": {
+        "statuses": [
+          "PASS",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        "score": 2,
+        "maxScore": 4,
+        "unavailablePoints": 3,
+        "evidence": "result/partial-information-filters/public-run.json"
+      },
+      "batch-one": {
+        "statuses": [
+          "PASS",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        "score": 2,
+        "maxScore": 4,
+        "unavailablePoints": 3,
+        "evidence": "result/partial-information-filters/public-batch-one.json"
+      },
+      "batch-two": {
+        "statuses": [
+          "FAIL",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        "score": 0,
+        "maxScore": 4,
+        "unavailablePoints": 3,
+        "evidence": "result/partial-information-filters/public-batch-two.json"
+      }
+    },
+    "compatibility93Current": [
+      {
+        "evidence": "result/partial-information-filters/compatibility-93-current.json",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.3",
+          "executionCompatibilityVersion": "current"
+        },
+        "result": {
+          "actions": [
+            null,
+            99,
+            30
+          ]
+        }
+      },
+      {
+        "evidence": "result/partial-information-filters/sql-compatibility-93-current.json",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.3",
+          "executionCompatibilityVersion": "current"
+        },
+        "result": {
+          "actions": [
+            null,
+            99,
+            30
+          ]
+        }
+      }
+    ]
+  },
+  "regression": {
+    "recordSets": {
+      "suite": "tests/test_record_sets.py",
+      "passedTests": 14,
+      "seconds": 240.228,
+      "includes": [
+        "all memory record-set scenarios",
+        "real archive",
+        "full-filter snapshots",
+        "typed union registrar",
+        "mutations",
+        "PostgreSQL failures and recovery"
+      ]
+    },
+    "additionalPassed": [
+      "3 SlicePlanTest tests",
+      "4 StorageQueryPlanTest tests",
+      "3 LifecyclePlanTest tests",
+      "SliceDockerTest.test_reexecution_captured_effects_refs_and_transaction_rollback",
+      "RegisterLifecycleTest.test_register_replacement_multidimension_moment_append_duplicate_rollback"
+    ],
+    "fullRepositoryRegression": "left to existing nightly"
+  },
+  "finalSourcePreparation": {
+    "target": {
+      "namespace": "Товары",
+      "module": "ПоступлениеТоваров.Объект",
+      "method": "ПослеЗаписи"
+    },
+    "partialFilterBlockerRemoved": true,
+    "legacyConfig": {
+      "plan": "ready",
+      "generation": "blocked",
+      "reason": "independent metadata cycle without storage.lifecycle"
+    },
+    "lifecycleConfig": {
+      "plan": "ready",
+      "generation": "ready",
+      "storage.lifecycle": true
+    },
+    "evidence": "result/partial-information-filters/source-preflight-053.json",
+    "execution": "not-checked",
+    "businessAssessment": "not-checked",
+    "businessAcceptanceTask": 56
+  },
+  "documentationEvidence": {
+    "basis": "Task 32 official 9.1 documentation describes API 9.0; links in contract",
+    "currentFetch": "2026-10-11 official pages redirect to authentication; not claimed as fresh native validation",
+    "repeatedSet": "explicit adapter rule: replace predicate"
+  },
+  "boundaries": [
+    "empty table filter",
+    "period in primary filter",
+    "direct filter fields",
+    "register handlers",
+    "subordinated information registers 10.0",
+    "native locks/concurrency",
+    "object reference unions in task 54"
+  ]
+}
