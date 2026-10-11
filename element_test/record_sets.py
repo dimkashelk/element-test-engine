@@ -170,7 +170,7 @@ def attach_register(storage, name):
         'limitations': ['full-filter-only', 'unordered', 'isolated-staging', 'no-balances', 'no-register-handlers']}
 
 
-def register_setup(storage):
+def register_setup(storage, variable_prefix='НачальныйНабор'):
     """Teacher seeds use the same typed write API; never feed read responses."""
     c = storage.contracts
     seeds = storage.config.get('initialRegisters', [])
@@ -210,7 +210,7 @@ def register_setup(storage):
                 raise InvalidTestError('Неуникальные ключи начальных строк')
         args = ', '.join(f['Имя'] + ' = ' + c.literal(filt[f['Имя']], f['Тип']) for f in dims)
         expr = c.literal(rows, 'Массив<' + schema['rowType'] + '>')
-        name = 'НачальныйНабор' + str(i)
+        name = variable_prefix + str(i)
         lines += ['    ТестСессия.Событие("teacher:register-setup")',
                   '    знч ' + name + ' = новый ' + schema['setType'] + '()',
                   '    ' + name + '.Фильтр.Установить(' + args + ')',

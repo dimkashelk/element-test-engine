@@ -380,7 +380,10 @@ def prepare_script(root, model, check, sandbox):
     from .renderer import render_plan
     plan = plan_execution(root, model, check)
     try:
-        if 'formRequirement' in check:
+        if 'querySource' in check:
+            from .source_query import render_source_query
+            script = render_source_query(plan, sandbox)
+        elif 'formRequirement' in check:
             from .declarative_bindings import render_binding
             script = render_binding(plan, sandbox)
         else:

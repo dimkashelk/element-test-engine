@@ -48,11 +48,12 @@ def columns_source(query, c, indent='        '):
     prepare_columns(c)
     lines = [indent+'знч Колонки = новый Массив<'+COLUMN+'>()']
     for index,(field,label) in enumerate(query.projections):
-        base = field.type.rstrip('?')
+        from .generated_types import union_members
+        base = field.type.removesuffix('|?').rstrip('?')
         c.require(base)
         variable = 'ТестТипы'+str(index)
-        lines += [indent+'знч '+variable+' = новый Множество<Тип>()',
-                  indent+variable+'.Добавить(Тип<'+c.sbsl_type(base)+'>)']
+        lines += [indent+'знч '+variable+' = новый Множество<Тип>()']
+        lines += [indent+variable+'.Добавить(Тип<'+c.sbsl_type(member)+'>)' for member in (union_members(base) or [base])]
         if field.type.endswith('?') or getattr(field,'sql_nullable',False):
             lines.append(indent+variable+'.Добавить(Тип<Неопределено>)')
         qualifiers = qualifier_source(field)

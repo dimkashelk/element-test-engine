@@ -1,0 +1,477 @@
+{
+  "schemaVersion": 1,
+  "publicYamlTypesAdded": [],
+  "families": [
+    {
+      "id": "method",
+      "apiDecision": "reuse",
+      "existingContracts": [
+        "runtime"
+      ],
+      "inputs": [
+        "args",
+        "context",
+        "storage"
+      ],
+      "actions": [
+        "call",
+        "sequence"
+      ],
+      "observations": [
+        "return",
+        "state",
+        "effects"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "SBSL independent comparison; retain existing runtime contract",
+      "capabilities": [
+        "method-runtime"
+      ]
+    },
+    {
+      "id": "query",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "runtime"
+      ],
+      "inputs": [
+        "source selector",
+        "typed parameters",
+        "storage"
+      ],
+      "actions": [
+        "execute",
+        "repeat after write"
+      ],
+      "observations": [
+        "typed rows",
+        "NULL",
+        "cardinality",
+        "resources"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Extend runtime with original inline/XBQL selector; no new YAML type yet",
+      "capabilities": [
+        "query-source",
+        "query-entry"
+      ]
+    },
+    {
+      "id": "time-event",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "runtime"
+      ],
+      "inputs": [
+        "clock",
+        "timezone",
+        "locale"
+      ],
+      "actions": [
+        "register",
+        "cancel",
+        "advance",
+        "close"
+      ],
+      "observations": [
+        "active callbacks",
+        "clock",
+        "state"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Extend session clock with deterministic queue; original callbacks execute in Script",
+      "capabilities": [
+        "clock",
+        "timer-events"
+      ]
+    },
+    {
+      "id": "interface",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "runtime",
+        "formRequirements"
+      ],
+      "inputs": [
+        "role/type/binding selector",
+        "typed input",
+        "context"
+      ],
+      "actions": [
+        "input",
+        "recalculate",
+        "handler",
+        "open",
+        "write"
+      ],
+      "observations": [
+        "structure",
+        "bindings",
+        "state",
+        "saved effects"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Extend form context/actions; structure and behavior observed separately",
+      "capabilities": [
+        "ui-state",
+        "ui-binding",
+        "ui-action",
+        "dynamic-ui",
+        "application-ui"
+      ]
+    },
+    {
+      "id": "metadata-lifecycle",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "element",
+        "field",
+        "method",
+        "runtime"
+      ],
+      "inputs": [
+        "metadata selector",
+        "new/existing state",
+        "write parameters"
+      ],
+      "actions": [
+        "validate",
+        "write",
+        "reload",
+        "rollback"
+      ],
+      "observations": [
+        "constraint declaration",
+        "rejection",
+        "fresh state",
+        "register audit"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Reuse structural checks/storage; enforce constraints and lifecycle explicitly",
+      "capabilities": [
+        "metadata-structure",
+        "metadata-validation",
+        "storage-lifecycle"
+      ]
+    },
+    {
+      "id": "report",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "element",
+        "runtime"
+      ],
+      "inputs": [
+        "report selector",
+        "typed parameters",
+        "storage"
+      ],
+      "actions": [
+        "query",
+        "evaluate layout"
+      ],
+      "observations": [
+        "data",
+        "formula values",
+        "roles",
+        "hierarchy",
+        "sorting"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Separate report formula IR from XBSL; add report selector after implementation",
+      "capabilities": [
+        "report-layout"
+      ]
+    },
+    {
+      "id": "navigation-panel",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "element",
+        "runtime"
+      ],
+      "inputs": [
+        "fragment/panel selector",
+        "visibility context"
+      ],
+      "actions": [
+        "resolve",
+        "open",
+        "refresh"
+      ],
+      "observations": [
+        "routes",
+        "availability",
+        "widgets",
+        "positions",
+        "refresh"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Model navigation and panel observations; native rendering outside contract",
+      "capabilities": [
+        "navigation",
+        "report-panel"
+      ]
+    },
+    {
+      "id": "branches-invariants",
+      "apiDecision": "extend",
+      "existingContracts": [
+        "runtime"
+      ],
+      "inputs": [
+        "seed",
+        "typed domains",
+        "independent relation"
+      ],
+      "actions": [
+        "instrument",
+        "generate",
+        "shrink"
+      ],
+      "observations": [
+        "branch outcomes",
+        "counterexample",
+        "seed"
+      ],
+      "comparison": "independent author oracle in SBSL",
+      "decision": "Technical coverage has no business points; oracle must be independent",
+      "capabilities": [
+        "branch-measurement",
+        "generated-invariants"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "method-runtime",
+      "family": "method",
+      "stage": 46,
+      "readiness": "scoped",
+      "implementation": "element_test.execution_plan",
+      "dependencies": [],
+      "firstGap": null,
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "query-source",
+      "family": "query",
+      "stage": 47,
+      "readiness": "scoped",
+      "implementation": "element_test.storage_queries",
+      "dependencies": [
+        "method-runtime"
+      ],
+      "firstGap": null,
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "query-entry",
+      "family": "query",
+      "stage": 47,
+      "readiness": "scoped",
+      "implementation": "element_test.source_query",
+      "dependencies": [
+        "query-source"
+      ],
+      "firstGap": null,
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "clock",
+      "family": "time-event",
+      "stage": 48,
+      "readiness": "scoped",
+      "implementation": "element_test.platform_mocks",
+      "dependencies": [
+        "method-runtime"
+      ],
+      "firstGap": null,
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "timer-events",
+      "family": "time-event",
+      "stage": 48,
+      "readiness": "extension-required",
+      "implementation": "element_test.platform_mocks",
+      "dependencies": [
+        "clock"
+      ],
+      "firstGap": "Registration, cancellation, deterministic event queue and session shutdown",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "ui-state",
+      "family": "interface",
+      "stage": 49,
+      "readiness": "scoped",
+      "implementation": "element_test.form_context",
+      "dependencies": [
+        "method-runtime"
+      ],
+      "firstGap": "Arbitrary/section applications and input actions",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "ui-binding",
+      "family": "interface",
+      "stage": 49,
+      "readiness": "scoped",
+      "implementation": "element_test.declarative_bindings",
+      "dependencies": [
+        "ui-state"
+      ],
+      "firstGap": "Two-way input and dependent binding recalculation",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "ui-action",
+      "family": "interface",
+      "stage": 49,
+      "readiness": "scoped",
+      "implementation": "element_test.form_effects",
+      "dependencies": [
+        "ui-state"
+      ],
+      "firstGap": "Built-in table actions and selected-row selectors",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "dynamic-ui",
+      "family": "interface",
+      "stage": 49,
+      "readiness": "extension-required",
+      "implementation": "element_test.form_context",
+      "dependencies": [
+        "ui-state"
+      ],
+      "firstGap": "Runtime component creation and tree insertion",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "application-ui",
+      "family": "interface",
+      "stage": 49,
+      "readiness": "extension-required",
+      "implementation": "element_test.form_context",
+      "dependencies": [
+        "ui-state"
+      ],
+      "firstGap": "Arbitrary client application and section application contexts",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "metadata-structure",
+      "family": "metadata-lifecycle",
+      "stage": 50,
+      "readiness": "scoped",
+      "implementation": "element_test.model",
+      "dependencies": [],
+      "firstGap": null,
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "metadata-validation",
+      "family": "metadata-lifecycle",
+      "stage": 50,
+      "readiness": "extension-required",
+      "implementation": "element_test.storage",
+      "dependencies": [
+        "metadata-structure"
+      ],
+      "firstGap": "Enforcement of declared constraints at write time",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "storage-lifecycle",
+      "family": "metadata-lifecycle",
+      "stage": 50,
+      "readiness": "scoped",
+      "implementation": "element_test.storage",
+      "dependencies": [
+        "method-runtime",
+        "query-source"
+      ],
+      "firstGap": "Before/after snapshots, write parameters and extended register effects",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "report-layout",
+      "family": "report",
+      "stage": 51,
+      "readiness": "extension-required",
+      "implementation": "element_test.model",
+      "dependencies": [
+        "query-source",
+        "metadata-structure"
+      ],
+      "firstGap": "Dedicated report formula language and layout roles",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "navigation",
+      "family": "navigation-panel",
+      "stage": 51,
+      "readiness": "extension-required",
+      "implementation": "element_test.model",
+      "dependencies": [
+        "ui-action"
+      ],
+      "firstGap": "Resolve fragments, visibility, routes and model opening",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "report-panel",
+      "family": "navigation-panel",
+      "stage": 51,
+      "readiness": "extension-required",
+      "implementation": "element_test.model",
+      "dependencies": [
+        "report-layout",
+        "navigation",
+        "timer-events"
+      ],
+      "firstGap": "Widget data, layout and interval refresh",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "branch-measurement",
+      "family": "branches-invariants",
+      "stage": 52,
+      "readiness": "extension-required",
+      "implementation": "element_test.observations",
+      "dependencies": [
+        "method-runtime"
+      ],
+      "firstGap": "Outcome instrumentation preserving short circuit and effects",
+      "technicalAcceptance": "not-checked-for-this-source"
+    },
+    {
+      "id": "generated-invariants",
+      "family": "branches-invariants",
+      "stage": 52,
+      "readiness": "extension-required",
+      "implementation": "element_test.observations",
+      "dependencies": [
+        "branch-measurement"
+      ],
+      "firstGap": "Typed generators, seed, independent relations and shrinking",
+      "technicalAcceptance": "not-checked-for-this-source"
+    }
+  ],
+  "reasonCodes": [
+    "CAPABILITY_EXTENSION_REQUIRED",
+    "SOURCE_PARSE_BLOCKED",
+    "QUERY_PLAN_BLOCKED",
+    "METHOD_PLAN_BLOCKED",
+    "AUTHOR_CONTEXT_REQUIRED",
+    "AUTHOR_SCENARIO_ABSENT",
+    "STANDALONE_QUERY_ENTRY_REQUIRED",
+    "ADAPTER_NOT_CHECKED",
+    "ACCEPTANCE_NOT_CHECKED",
+    "REFERENCE_UNRESOLVED",
+    "EXTERNAL_NATIVE_UI",
+    "VERSION_APPLICABILITY_NOT_CHECKED"
+  ]
+}

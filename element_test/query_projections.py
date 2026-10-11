@@ -183,14 +183,21 @@ class ComputedParser(Parser):
             typ=next((v.type.rstrip('?') for v in typed if v is not None),expected)
             if not typ: self.fail('Неизвестный тип ветвей ВЫБОР',e.range[0])
             typed=[v if v is not None else self.bind(r,visible,typ) for r,v in zip(values,typed)]
-            if any(v.type.rstrip('?')!=typ for v in typed): self.fail('Несовместимые типы ветвей ВЫБОР',e.range[0])
+            variants = sorted({v.type.rstrip('?') for v in typed})
+            if len(variants) > 1:
+                if not set(variants) <= {'Число', 'Строка', 'Булево', 'Дата', 'ДатаВремя', 'Момент', 'Ууид'}:
+                    self.fail('Несовместимые типы ветвей ВЫБОР',e.range[0])
+                typ = '|'.join(variants)
             children=[]
             for i in range(0,len(raw)-1,2):
                 cond=self.bind(raw[i],visible)
                 if cond.type!='Булево': self.fail('КОГДА требует Булево',e.range[0])
                 children.extend((cond,typed[i//2]))
             children.append(typed[-1]); nullable=any(v.sql_nullable for v in typed)
-            return replace(e,type=typ+('?' if nullable or any(v.type.endswith('?') for v in typed) else ''),sql_nullable=nullable,children=tuple(children))
+            optional = nullable or any(v.type.endswith('?') for v in typed)
+            from .generated_types import union_members
+            result_type = typ + (('|?' if union_members(typ) else '?') if optional else '')
+            return replace(e,type=result_type,sql_nullable=nullable,children=tuple(children))
         if e.kind=='cast':
             typ=self.contracts.canonical_type(e.value[0]);child=self.bind(e.children[0],visible,typ)
             if child.type.rstrip('?')!=typ: self.fail('ВЫРАЗИТЬ не преобразует несовместимые типы',e.range[0])

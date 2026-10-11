@@ -501,7 +501,7 @@ class MetadataStorage:
 {calls_after};
 ''', ['ТестСессия.Записи', data])
 
-    def setup(self):
+    def setup(self, *, variable_prefix='НачальныйНабор'):
         c = self.contracts
         initial = self.config.get('initial', [])
         if not isinstance(initial, list) or len(initial) > 100:
@@ -528,5 +528,5 @@ class MetadataStorage:
             lines.append('    ТестСессия.Записать(' + c.literal(qualified(matches[0]), 'Строка') + ', '
                          + c.literal(identifier, 'Строка') + ', СериализацияJson.ЗаписатьОбъект(' + obj + '))')
         from .record_sets import register_setup
-        lines.extend(register_setup(self))
+        lines.extend(register_setup(self, variable_prefix))
         return '\n'.join(lines) + ('\n' if lines else '')

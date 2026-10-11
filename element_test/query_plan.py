@@ -277,8 +277,6 @@ def parse_simple_storage_query(text, contracts):
             schema = source_schema(contracts, owner, member, totals_periodicity)
     elif source_kind=='saved' and schema['parameters']:
         raise UnsupportedSyntaxError('Сохранённый источник требует параметры')
-    elif source_kind in {'slice-last','slice-first'}:
-        raise UnsupportedSyntaxError('Срез требует скобки параметров')
     source_range = (source_start, tokens[pos-1][3])
     alias = identifier() if accept('КАК') else owner.split('::')[-1]
     identity, fields = schema['owner'], {f.name:f for f in schema['fields']}

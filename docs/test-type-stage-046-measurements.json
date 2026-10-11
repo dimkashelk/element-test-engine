@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-11",
+  "task": 46,
+  "archive": "Dvizhok-final.xdump",
+  "archiveSha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+  "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+  "profile": {
+    "sourceCompatibilityVersion": "9.0",
+    "adapterProfile": "current",
+    "queryReferenceVersion": "9.3",
+    "versionApplicability": "not-checked"
+  },
+  "counts": {
+    "method": 58,
+    "branch": 42,
+    "platform-call": 23,
+    "dynamic-component": 1,
+    "source-query": 5,
+    "metadata-constraint": 47,
+    "ui-declaration": 19,
+    "binding": 163,
+    "system-action": 101,
+    "navigation": 6,
+    "navigation-link": 28,
+    "handler": 17,
+    "panel": 1,
+    "panel-refresh": 1,
+    "panel-widget": 6,
+    "report": 6,
+    "report-source": 9,
+    "report-field": 16,
+    "report-formula": 16,
+    "items": 565,
+    "plannedMethods": 43,
+    "plannedQueries": 3,
+    "technicallyAccepted": 0
+  },
+  "families": 8,
+  "capabilities": 18,
+  "tests": {
+    "command": "python3 -m unittest tests.test_capability_map tests.test_query_catalog_refresh -v",
+    "passed": 15,
+    "failed": 0
+  },
+  "checks": {
+    "knownInventoryComplete": true,
+    "allSourcePositionsAndHashesVerified": true,
+    "reproducibleMap": true,
+    "schemaArtifactsMatchImplementation": true,
+    "archiveUnchanged": true,
+    "protectedTrackedFilesUnchanged": true
+  },
+  "protectedPaths": [
+    "assignments",
+    "config",
+    ".github",
+    "src",
+    "docs/query-contract-catalog.json"
+  ],
+  "execution": "not performed; infrastructure discovery and query generation only",
+  "methodPlanningBasis": "sourceHash-matched result/dvizhok-final-assessment/coverage/coverage.json; historical executions ignored",
+  "primaryQueryBlockers": [
+    {
+      "file": "Администрирование/ФормаПриветствие.xbsl",
+      "position": {
+        "range": [
+          4453,
+          4827
+        ],
+        "line": 134,
+        "column": 28,
+        "yamlPath": []
+      },
+      "reason": {
+        "status": "blocked",
+        "basis": "element_test.query_catalog_refresh.inspect_query",
+        "reasonCode": "SOURCE_PARSE_BLOCKED",
+        "detail": "Срез требует скобки параметров"
+      }
+    },
+    {
+      "file": "Товары/ОтчетЦеныНоменклатуры.xbql",
+      "position": {
+        "range": [
+          0,
+          460
+        ],
+        "line": 1,
+        "column": 1,
+        "yamlPath": []
+      },
+      "reason": {
+        "status": "blocked",
+        "basis": "element_test.query_catalog_refresh.inspect_query",
+        "reasonCode": "SOURCE_PARSE_BLOCKED",
+        "detail": "Срез требует скобки параметров"
+      }
+    }
+  ],
+  "nextTask": 47,
+  "newPublicYamlTypes": [],
+  "newDumpAssignments": 0
+}

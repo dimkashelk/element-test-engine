@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "family": {
+      "enum": [
+        "method",
+        "query",
+        "time-event",
+        "interface",
+        "metadata-lifecycle",
+        "report",
+        "navigation-panel",
+        "branches-invariants"
+      ]
+    },
+    "selector": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "projectSourceHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "owner": {
+          "type": "object",
+          "properties": {
+            "namespace": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "namespace",
+            "name",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "range": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "column": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "yamlPath": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "range",
+            "line",
+            "column",
+            "yamlPath"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "file",
+        "fileHash",
+        "projectSourceHash",
+        "owner",
+        "position"
+      ],
+      "additionalProperties": false
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "sourceCompatibilityVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapterProfile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "queryReferenceVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionApplicability": {
+          "enum": [
+            "not-checked",
+            "verified"
+          ]
+        }
+      },
+      "required": [
+        "sourceCompatibilityVersion",
+        "adapterProfile",
+        "queryReferenceVersion",
+        "versionApplicability"
+      ],
+      "additionalProperties": false
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "operation",
+          "inputs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "technicalOnly": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "technicalOnly"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "independent"
+          ]
+        },
+        "oracle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "engine": {
+          "enum": [
+            "SBSL"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "oracle",
+        "engine"
+      ],
+      "additionalProperties": false
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "method-runtime",
+          "query-source",
+          "query-entry",
+          "clock",
+          "timer-events",
+          "ui-state",
+          "ui-binding",
+          "ui-action",
+          "dynamic-ui",
+          "application-ui",
+          "metadata-structure",
+          "metadata-validation",
+          "storage-lifecycle",
+          "report-layout",
+          "navigation",
+          "report-panel",
+          "branch-measurement",
+          "generated-invariants"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "unavailableReasonCodes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "CAPABILITY_EXTENSION_REQUIRED",
+          "SOURCE_PARSE_BLOCKED",
+          "QUERY_PLAN_BLOCKED",
+          "METHOD_PLAN_BLOCKED",
+          "AUTHOR_CONTEXT_REQUIRED",
+          "AUTHOR_SCENARIO_ABSENT",
+          "STANDALONE_QUERY_ENTRY_REQUIRED",
+          "ADAPTER_NOT_CHECKED",
+          "ACCEPTANCE_NOT_CHECKED",
+          "REFERENCE_UNRESOLVED",
+          "EXTERNAL_NATIVE_UI",
+          "VERSION_APPLICABILITY_NOT_CHECKED"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "isolation": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "enum": [
+            "check-session"
+          ]
+        },
+        "clock": {
+          "enum": [
+            "explicit"
+          ]
+        },
+        "storage": {
+          "enum": [
+            "fresh"
+          ]
+        },
+        "callbacksOnClose": {
+          "enum": [
+            "cancel"
+          ]
+        }
+      },
+      "required": [
+        "scope",
+        "clock",
+        "storage",
+        "callbacksOnClose"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sourceHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "origin": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stage": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "sourceHash",
+          "origin",
+          "stage"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "family",
+    "selector",
+    "profile",
+    "inputs",
+    "actions",
+    "observations",
+    "comparison",
+    "dependencies",
+    "unavailableReasonCodes",
+    "isolation",
+    "evidence"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-11",
+  "task": 47,
+  "status": "implemented",
+  "archive": "Dvizhok-final.xdump",
+  "archiveSha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+  "archiveUnchanged": true,
+  "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+  "profile": {
+    "sourceCompatibilityVersion": "9.0",
+    "adapterProfile": "current",
+    "queryReferenceVersion": "9.3",
+    "versionApplicability": "not-checked"
+  },
+  "newPublicYamlTypes": [],
+  "runtimeExtension": "querySource/queryParameters/queryActions",
+  "newDumpAssignments": 0,
+  "finalDumpSourcePreparation": {
+    "discovered": 5,
+    "validated": 5,
+    "planned": 5,
+    "generated": 5,
+    "compiled": 0,
+    "executed": 0,
+    "independentlyAssessed": 0,
+    "authorCriteriaCreated": 0,
+    "basis": "tests/test_source_query.py::SourceQueryPlanTest.test_all_five_final_dump_forms_validate_plan_and_generate_without_execution",
+    "queries": [
+      {
+        "source": {
+          "file": "Администрирование/ФормаПриветствие.xbsl",
+          "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+          "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+          "owner": {
+            "namespace": "Администрирование",
+            "name": "ФормаПриветствие",
+            "kind": "literal"
+          },
+          "position": {
+            "range": [
+              3757,
+              3940
+            ],
+            "line": 112,
+            "column": 28,
+            "yamlPath": []
+          }
+        },
+        "stages": {
+          "discovery": {
+            "status": "ready",
+            "basis": "source inventory",
+            "reasonCode": null,
+            "detail": null
+          },
+          "parsing": {
+            "status": "ready",
+            "basis": "element_test.query_catalog_refresh.inspect_query",
+            "reasonCode": null,
+            "detail": null
+          },
+          "planning": {
+            "status": "ready",
+            "basis": "typed AST and generation; no Script execution",
+            "reasonCode": null,
+            "detail": null
+          },
+          "adapter": {
+            "status": "not-checked",
+            "basis": "registry scope is not source acceptance",
+            "reasonCode": "ADAPTER_NOT_CHECKED",
+            "detail": null
+          },
+          "technicalAcceptance": {
+            "status": "not-checked",
+            "basis": "no source execution in this command",
+            "reasonCode": "ACCEPTANCE_NOT_CHECKED",
+            "detail": null
+          }
+        },
+        "firstBlocker": null
+      },
+      {
+        "source": {
+          "file": "Администрирование/ФормаПриветствие.xbsl",
+          "fileHash": "b8863168a3268cabc266148f787220cfcdc30eedbe64930db04c5a5ce89a6837",
+          "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+          "owner": {
+            "namespace": "Администрирование",
+            "name": "ФормаПриветствие",
+            "kind": "literal"
+          },
+          "position": {
+            "range": [
+              4453,
+              4827
+            ],
+            "line": 134,
+            "column": 28,
+            "yamlPath": []
+          }
+        },
+        "stages": {
+          "discovery": {
+            "status": "ready",
+            "basis": "source inventory",
+            "reasonCode": null,
+            "detail": null
+          },
+          "parsing": {
+            "status": "ready",
+            "basis": "element_test.query_catalog_refresh.inspect_query",
+            "reasonCode": null,
+            "detail": null
+          },
+          "planning": {
+            "status": "ready",
+            "basis": "typed AST and generation; no Script execution",
+            "reasonCode": null,
+            "detail": null
+          },
+          "adapter": {
+            "status": "not-checked",
+            "basis": "registry scope is not source acceptance",
+            "reasonCode": "ADAPTER_NOT_CHECKED",
+            "detail": null
+          },
+          "technicalAcceptance": {
+            "status": "not-checked",
+            "basis": "no source execution in this command",
+            "reasonCode": "ACCEPTANCE_NOT_CHECKED",
+            "detail": null
+          }
+        },
+        "firstBlocker": null
+      },
+      {
+        "source": {
+          "file": "Товары/Отгрузка.Объект.xbsl",
+          "fileHash": "3527cca2d8addb2dc89fb1f5d12993174731670f5e63891ff240fd48258d02d0",
+          "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+          "owner": {
+            "namespace": "Товары",
+            "name": "Отгрузка.Объект",
+            "kind": "literal"
+          },
+          "position": {
+            "range": [
+              326,
+              644
+            ],
+            "line": 10,
+            "column": 18,
+            "yamlPath": []
+          }
+        },
+        "stages": {
+          "discovery": {
+            "status": "ready",
+            "basis": "source inventory",
+            "reasonCode": null,
+            "detail": null
+          },
+          "parsing": {
+            "status": "ready",
+            "basis": "element_test.query_catalog_refresh.inspect_query",
+            "reasonCode": null,
+            "detail": null
+          },
+          "planning": {
+            "status": "ready",
+            "basis": "typed AST and generation; no Script execution",
+            "reasonCode": null,
+            "detail": null
+          },
+          "adapter": {
+            "status": "not-checked",
+            "basis": "registry scope is not source acceptance",
+            "reasonCode": "ADAPTER_NOT_CHECKED",
+            "detail": null
+          },
+          "technicalAcceptance": {
+            "status": "not-checked",
+            "basis": "no source execution in this command",
+            "reasonCode": "ACCEPTANCE_NOT_CHECKED",
+            "detail": null
+          }
+        },
+        "firstBlocker": null
+      },
+      {
+        "source": {
+          "file": "Товары/ОтчетЦеныНоменклатуры.xbql",
+          "fileHash": "b7a6efdaf41a4542ca3a0650e922922e9df76c864260ae151ffe64ed84bd70cb",
+          "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+          "owner": {
+            "namespace": "Товары",
+            "name": "ОтчетЦеныНоменклатуры",
+            "kind": "xbql-file"
+          },
+          "position": {
+            "range": [
+              0,
+              460
+            ],
+            "line": 1,
+            "column": 1,
+            "yamlPath": []
+          }
+        },
+        "stages": {
+          "discovery": {
+            "status": "ready",
+            "basis": "source inventory",
+            "reasonCode": null,
+            "detail": null
+          },
+          "parsing": {
+            "status": "ready",
+            "basis": "element_test.query_catalog_refresh.inspect_query",
+            "reasonCode": null,
+            "detail": null
+          },
+          "planning": {
+            "status": "ready",
+            "basis": "typed AST and generation; no Script execution",
+            "reasonCode": null,
+            "detail": null
+          },
+          "adapter": {
+            "status": "not-checked",
+            "basis": "registry scope is not source acceptance",
+            "reasonCode": "ADAPTER_NOT_CHECKED",
+            "detail": null
+          },
+          "technicalAcceptance": {
+            "status": "not-checked",
+            "basis": "no source execution in this command",
+            "reasonCode": "ACCEPTANCE_NOT_CHECKED",
+            "detail": null
+          }
+        },
+        "firstBlocker": null
+      },
+      {
+        "source": {
+          "file": "Финансы/РасходДенежныхСредств.Объект.xbsl",
+          "fileHash": "d0165279e54906f47a50dc945273a0215e6004e72f843ccba0c63f6bae03b430",
+          "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+          "owner": {
+            "namespace": "Финансы",
+            "name": "РасходДенежныхСредств.Объект",
+            "kind": "literal"
+          },
+          "position": {
+            "range": [
+              344,
+              507
+            ],
+            "line": 11,
+            "column": 18,
+            "yamlPath": []
+          }
+        },
+        "stages": {
+          "discovery": {
+            "status": "ready",
+            "basis": "source inventory",
+            "reasonCode": null,
+            "detail": null
+          },
+          "parsing": {
+            "status": "ready",
+            "basis": "element_test.query_catalog_refresh.inspect_query",
+            "reasonCode": null,
+            "detail": null
+          },
+          "planning": {
+            "status": "ready",
+            "basis": "typed AST and generation; no Script execution",
+            "reasonCode": null,
+            "detail": null
+          },
+          "adapter": {
+            "status": "not-checked",
+            "basis": "registry scope is not source acceptance",
+            "reasonCode": "ADAPTER_NOT_CHECKED",
+            "detail": null
+          },
+          "technicalAcceptance": {
+            "status": "not-checked",
+            "basis": "no source execution in this command",
+            "reasonCode": "ACCEPTANCE_NOT_CHECKED",
+            "detail": null
+          }
+        },
+        "firstBlocker": null
+      }
+    ]
+  },
+  "mechanismAcceptance": {
+    "suite": "tests/test_source_query.py",
+    "testsRun": 16,
+    "passed": 16,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "elapsedSeconds": 72.459,
+    "backends": [
+      "memory",
+      "postgres"
+    ],
+    "sourceCompatibilityVersion": "9.0",
+    "executionCompatibilityVersion": "current",
+    "executorVersion": "10.0.2-1",
+    "command": "ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_SQL_TESTS=1 PYTHONPATH=tests python3 -m unittest test_source_query (ELEMENT_TEST_INTEGRATION_PASSWORD supplied from a generated ephemeral secret)",
+    "observations": [
+      "original source selection and hashes",
+      "5 exact final-dump forms: preparation only",
+      "bare slice matches empty argument semantics",
+      "typed arrays and literal captures",
+      "scalar CASE union / LEFT JOIN / NULL",
+      "local fill without a fake method",
+      "fixed clock for day, second, instant",
+      "repeat after typed write and detached snapshots",
+      "session isolation",
+      "resource closure and inactive storage locks",
+      "transaction action snapshots",
+      "PostgreSQL result and independent SQL audit",
+      "SBSL multiset: duplicates and action order preserved",
+      "public test/run export complete evidence",
+      "batch: 2 submissions, 2 intentional FAILs, 0 unavailable/worker errors"
+    ]
+  },
+  "publicGrading": {
+    "testAndRun": {
+      "checks": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "exitCode": 1
+    },
+    "batch": {
+      "submissions": 2,
+      "passed": 0,
+      "failed": 2,
+      "incomplete": 0,
+      "inputError": 0,
+      "firstChecks": [
+        "PASS",
+        "FAIL"
+      ],
+      "secondChecks": [
+        "FAIL",
+        "FAIL"
+      ],
+      "cacheHits": 0
+    },
+    "oracle": "independent fixture contract in SBSL; never source output"
+  },
+  "affectedRegression": {
+    "testsDiscovered": 106,
+    "testsRunWithoutSkips": 43,
+    "passed": 43,
+    "failures": 0,
+    "errors": 0,
+    "skippedOptIn": 63,
+    "elapsedSeconds": 14.914,
+    "modules": [
+      "test_capability_map",
+      "test_query_catalog_refresh",
+      "test_query_parameters",
+      "test_query_projections",
+      "test_query_composites",
+      "test_query_results",
+      "test_query_results_completion",
+      "test_information_register_slices",
+      "test_query_sources",
+      "test_grading"
+    ],
+    "fullDiscoveryRun": false
+  },
+  "validation": {
+    "capabilityMapSchema": "passed",
+    "registryMatchesImplementation": true,
+    "diffWhitespace": "passed",
+    "nestedUnionTypeGrammar": "passed"
+  },
+  "codeSha256": {
+    "element_test/source_query.py": "6fac1e17f3d3a8c2573a3afd0c6436e25367eaf16e8fb0be0c29a542f2e1f8ac",
+    "element_test/execution_plan.py": "388fa025510720c617531068e64cf7220183ae7d88832f950c7cf7fe703bde9d",
+    "element_test/runtime.py": "1083800744b1c9cdb6af8710eecdbd4f958bd372dc9cdd278c344c9f442eb8a4",
+    "element_test/bridge.py": "964c4ddbfdeb56821da2fad335b97397edc66150d8d2d2e3990d6c6e435b3879",
+    "element_test/query_plan.py": "675403928a403ce52d562b92d31d5063b37bd13117c3b957cde9cbbf9cc6431c",
+    "element_test/query_projections.py": "099ed4adab4f76693a733d6268272ac2160c43613da960054ecd88f7d6722a31",
+    "element_test/query_composites.py": "2f4be57209f98ed5704f6578473e083e01343df9113865336428eb8ee39cbd21",
+    "element_test/query_columns.py": "ab7603c5715e87ab242e87f2f3acf15e99ddd7ed0e8d1544161cd25b5c17f3e6",
+    "element_test/storage_queries.py": "eed04d99ce2da6105855f5034224f3b8256553f7ba881ac30b2aed2cfb424e02",
+    "element_test/storage.py": "5db8eaf1bbe194b40098313323d61116d3a8c6e15cd1e7665d52c94dad69488c",
+    "element_test/record_sets.py": "96296ee69191626299e0506560211368f3c75fa0b4ceabafacbe4c29f0f1507d",
+    "element_test/query_catalog.py": "91dd3f49fad24ac2cc53a540af69fa44e9601b76538ac04b494e276051170b3a",
+    "element_test/test_contracts.py": "d49e666c31e623de163839600778bd7d9ab5308ae49820e9e80cb792a3ba62dd",
+    "tests/test_source_query.py": "935f5d2f9120eac850ef1f7e30d6503c46ce8b3f1deaff5e463372cdd10f36d5",
+    "tests/test_query_projections.py": "b1dda053dbb46bfd70544914cddf9d3470c99b1e6736b5af0a97e1592ae8212b",
+    "tests/test_capability_map.py": "74f0bb94c4b4a088e1566cb4f2bb1595e905b8568e3540b40c5c5612d5b93bb4",
+    "src/ДвижокТестирования.sbsl": "4349d303b22d6f663fb94a2ffac1aed44e6e71d3b52e484b066242b86070b9a9"
+  },
+  "limits": [
+    "executor emulation; native XBQL/ACL/RLS not verified",
+    "final dump source execution and business criteria remain not-checked",
+    "Moment slice with docker clock needs explicit boundary",
+    "queryActions.write uses typed fixture storage API; metadata lifecycle and constraint enforcement belong to stage 50",
+    "report layout/formulas/navigation belong to stage 51"
+  ],
+  "preserved": [
+    "source archives",
+    "existing assignments and expected",
+    "historical execution/catalog evidence",
+    "nightly schedule"
+  ],
+  "nextTask": 48
+}

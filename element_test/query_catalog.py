@@ -22,7 +22,7 @@ OPERATIONS={'source':r'\bИЗ\b','alias':r'\bКАК\b','parameter':r'%', 'projec
  'predicate':r'\bГДЕ\b','null':r'\bNULL\b|ЗаменитьNull|ЕСТЬ\s+NULL','join':r'\bСОЕДИНЕНИЕ\b',
  'aggregate':r'\b(СУММА|КОЛИЧЕСТВО|МИНИМУМ|МАКСИМУМ|СРЕДНЕЕ)\s*\(', 'group':r'\bСГРУППИРОВАТЬ\b',
  'having':r'\bИМЕЮЩИЕ\b','distinct':r'\bРАЗЛИЧНЫЕ\b','union':r'\bОБЪЕДИНИТЬ\b','order':r'\bУПОРЯДОЧИТЬ\b',
- 'limit':r'\bПЕРВЫЕ\b','slice-last':r'СрезПоследних\s*\(', 'slice-first':r'СрезПервых\s*\(',
+ 'limit':r'\bПЕРВЫЕ\b','slice-last':r'СрезПоследних\b', 'slice-first':r'СрезПервых\b',
  'balance':r'\.Остатки\b','turnover':r'\.Обороты\b','fill':r'\bЗАПОЛНИТЬ\b','generate':r'\bПОРОДИТЬ\b',
  'compound':r';','nested':r'\(\s*ВЫБРАТЬ\b','update':r'\bИЗМЕНИТЬ\b','insert':r'\bВСТАВИТЬ\b','delete':r'\bУДАЛИТЬ\b',
  'temporary':r'\b(ПОМЕСТИТЬ|УНИЧТОЖИТЬ|ОБРЕЗАТЬ)\b|СОЗДАТЬ\s+ВРЕМЕННУЮ', 'index':r'ИНДЕКСИРОВАТЬ\s+ПО|СОЗДАТЬ\s+ИНДЕКС',
@@ -132,9 +132,12 @@ def attach_evidence(records,directories):
       direct=plan.get('target',{})=={k:record['target'][k] for k in ('namespace','module','method')} if record['target'] else False
       entry=plan.get('entry',{})
       direct=direct or (entry.get('declaration')==record['target']['method'] and entry.get('source_file')==record['file'] if record['target'] else False)
+      query_entry=plan.get('queryEntry',{})
+      direct=direct or (query_entry.get('sourceFile')==record['file'] and query_entry.get('range')==record['range']
+                       and query_entry.get('sourceHash')==record.get('sourceHash'))
       record['executed']|=executed
       record['independentlyAssessed']|=bool(executed and direct and check.get('status') in ('PASS','FAIL'))
-      origin = ('fresh-042' if query.get('ast',{}).get('mode')=='storage-unions-nesting-v1' else 'fresh-041' if query.get('ast', {}).get('mode') == 'storage-projections-aggregates-v1' else 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039')
+      origin = ('fresh-047' if query_entry else 'fresh-042' if query.get('ast',{}).get('mode')=='storage-unions-nesting-v1' else 'fresh-041' if query.get('ast', {}).get('mode') == 'storage-projections-aggregates-v1' else 'fresh-040' if query.get('ast', {}).get('mode') == 'storage-relational-joins-null-v1' else 'fresh-039')
       record['criteria'].append({'criterionId':criterion,'direct':direct,'status':check.get('status'),'origin':origin})
       record['evidence'].append(str(folder.relative_to(REPO)) if folder.is_relative_to(REPO) else str(folder))
 

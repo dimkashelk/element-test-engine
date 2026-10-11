@@ -108,7 +108,8 @@ def null_column(columns,index):
 
 
 def column_type(e):
-    return e.type + ('?' if getattr(e,'sql_nullable',False) and not e.type.endswith('?') else '')
+    from .generated_types import union_members
+    return e.type + (('|?' if union_members(e.type) else '?') if getattr(e,'sql_nullable',False) and not e.type.endswith('?') else '')
 
 
 def nodes(query):

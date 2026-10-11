@@ -150,6 +150,17 @@ def generate_query(query, contracts):
         period = 'П' + str(query.period_slot) if query.period_slot is not None else 'Неопределено'
         strict_period = next((p.type == period_type for p in parameters if p.slot == query.period_slot),False)
         default = period_type+'{Минимум}' if query.source_kind=='slice-first' else period_type+'.Сейчас('+('' if period_type=='Момент' else 'новый ЧасовойПояс("UTC")')+')'
+        if query.source_kind == 'slice-last' and not strict_period and getattr(contracts, 'query_slice_clock', False):
+            clock = contracts.query_slice_clock
+            if period_type == 'Момент':
+                if clock['mode'] != 'fixed':
+                    raise UnsupportedSyntaxError('Срез Момент с docker clock требует явную границу параметром')
+                from datetime import datetime, timezone
+                from zoneinfo import ZoneInfo
+                instant = datetime.fromisoformat(clock['date'] + 'T' + clock['time']).replace(tzinfo=ZoneInfo(clock['timezone']))
+                default = contracts.literal(instant.astimezone(timezone.utc).isoformat().replace('+00:00', 'Z'), 'Момент')
+            else:
+                default = 'ТестЧасы.Дата()' if period_type == 'Дата' else 'ТестЧасы.Снимок()'
         boundary = period if strict_period else period + ' ?? '+default
         prelude = ('    знч ДатаГраницы = ' + boundary + '\n'
                    '    ТестСессия.Событие("query:slice-boundary:" + ДатаГраницы.ВСтроку())\n')
@@ -158,6 +169,8 @@ def generate_query(query, contracts):
     text += ''.join(body for _,body in source_helpers.values())
     contracts.definitions[name] = text
     contracts.method_dependencies[name] = ['ТестСессия.Записи'] + [f.type for f in required.values()]
+    if 'ТестЧасы.' in text:
+        contracts.method_dependencies[name].append('ТестЧасы.Метка')
     if 'ТестДоступ.' in text:
         contracts.method_dependencies[name].append('ТестДоступ.Проверить')
     if 'ТестШаблоны.' in text:

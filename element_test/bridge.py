@@ -1,6 +1,7 @@
 """CLI transport: format conversion, Script invocation and report rendering."""
 import argparse
 from contextlib import nullcontext
+from hashlib import sha256
 import html
 import json
 from pathlib import Path
@@ -149,7 +150,6 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
     # Technical preparation evidence stays separate from the v1 grading transport.
     for item in plans:
         for symbol in item.get('plan', {}).get('symbols', []):
-            from hashlib import sha256
             source = symbol.pop('source')
             symbol['sourceHash'] = sha256(source.encode()).hexdigest()
         for query in item.get('plan', {}).get('queries', []):

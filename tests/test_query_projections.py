@@ -48,7 +48,7 @@ class ProjectionPlanTest(unittest.TestCase):
        'ВЫБРАТЬ РАЗЛИЧНЫЕ Key ИЗ Data::Item УПОРЯДОЧИТЬ ПО Amount',
        'ВЫБРАТЬ СУММА(Amount) КАК Total ИЗ Data::Item ГДЕ СУММА(Amount) > 0',
        'ВЫБРАТЬ СУММА(Amount) КАК Total ИЗ Data::Item СГРУППИРОВАТЬ ПО СУММА(Amount)',
-       'ВЫБРАТЬ ВЫБОР КОГДА Flag ТОГДА Amount ИНАЧЕ Label КОНЕЦ КАК Total ИЗ Data::Item',
+       'ВЫБРАТЬ ВЫБОР КОГДА Flag ТОГДА Amount ИНАЧЕ Label КОНЕЦ + 1 КАК Total ИЗ Data::Item',
        'ВЫБРАТЬ ВЫРАЗИТЬ(Peer КАК Other::Item.Ссылка) КАК Total ИЗ Data::Item']
   for text in bad:
    with self.subTest(text=text),self.assertRaises(InputError):parse_storage_query(text,c)

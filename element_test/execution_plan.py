@@ -134,6 +134,7 @@ class ExecutionPlan:
     constants: dict = field(default_factory=dict)
     clock: dict = field(default_factory=dict)
     executor_locale: str = None
+    query_entry: dict = field(default_factory=dict)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.check.get("runtimeProfile", self.model.get("compatibilityVersion", "9.0")),
@@ -152,6 +153,7 @@ class ExecutionPlan:
                 "resources": [asdict(r) for r in self.resources],
                 "exceptionContracts": sorted(self.exception_types),
                 "queries": self.queries,
+                "queryEntry": self.query_entry,
                 "recordSets": self.record_sets,
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
@@ -163,6 +165,9 @@ class ExecutionPlan:
 
 
 def plan_execution(root, source_model, check):
+    if 'querySource' in check:
+        from .source_query import plan_source_query
+        return plan_source_query(root, source_model, check)
     if 'formRequirement' in check:
         from .declarative_bindings import plan_binding
         return plan_binding(root, source_model, check)
@@ -479,6 +484,7 @@ def bind_types(plan):
     from .runtime import constructor_types, body_type_references, _project_body_type, RUNTIME_CONSTRUCTORS
     c = ProjectTypes(plan.model, plan.module['namespace'], plan.module.get('imports', []))
     c.declarative_read = plan.check.get('_declarativeBindings', False)
+    c.query_slice_clock = plan.clock
     if plan.form:
         c.reference_id_type = 'Ууид'
     c.rename_collisions = True
