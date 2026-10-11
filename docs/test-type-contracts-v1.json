@@ -306,11 +306,11 @@
       "family": "interface",
       "stage": 49,
       "readiness": "scoped",
-      "implementation": "element_test.form_context",
+      "implementation": "element_test.interface_runtime",
       "dependencies": [
         "method-runtime"
       ],
-      "firstGap": "Arbitrary/section applications and input actions",
+      "firstGap": "Nested custom components/native surfaces are declaration-only",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -318,11 +318,11 @@
       "family": "interface",
       "stage": 49,
       "readiness": "scoped",
-      "implementation": "element_test.declarative_bindings",
+      "implementation": "element_test.interface_runtime",
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Two-way input and dependent binding recalculation",
+      "firstGap": "Computed expressions are read-only; cyclic or unsupported AST remains unavailable",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -330,35 +330,35 @@
       "family": "interface",
       "stage": 49,
       "readiness": "scoped",
-      "implementation": "element_test.form_effects",
+      "implementation": "element_test.interface_runtime",
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Built-in table actions and selected-row selectors",
+      "firstGap": "Full metadata enforcement/write parameters require stage 50; navigation requires stage 51",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
       "id": "dynamic-ui",
       "family": "interface",
       "stage": 49,
-      "readiness": "extension-required",
-      "implementation": "element_test.form_context",
+      "readiness": "scoped",
+      "implementation": "element_test.interface_runtime",
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Runtime component creation and tree insertion",
+      "firstGap": "Only Надпись/АбсолютныйШрифт and insertion into named group contents",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
       "id": "application-ui",
       "family": "interface",
       "stage": 49,
-      "readiness": "extension-required",
-      "implementation": "element_test.form_context",
+      "readiness": "scoped",
+      "implementation": "element_test.interface_runtime",
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Arbitrary client application and section application contexts",
+      "firstGap": "Section navigation and report surfaces require stage 51",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {

@@ -1047,3 +1047,12 @@ python3 -m element_test.query_catalog
 bin/element-test test --project Demo-SRM-dev-2026-09-28-21-38.xdump \
   --assignment assignments/storage-query-fill-real --output result/storage-query-fill/public-test
 ```
+
+## Интерфейсные состояния и действия без браузера (№49)
+
+`runtime.interface` принимает селектор UI-декларации без обязательного исходного метода.
+Поддержаны контексты форм/приложений, ввод и пересчёт привязок, исходные обработчики,
+отмеченные строки и команды таблиц, динамическая Надпись и явная запись/открытие.
+[Исполняемый контракт и точные границы](docs/interface-actions.md),
+[приёмка №49](docs/tasks/049-interface-state-and-actions.md). Все 19 финальных
+UI-деклараций проходят подготовку; бизнес-методы дампа этим этапом не оценивались.

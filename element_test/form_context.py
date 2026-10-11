@@ -32,16 +32,18 @@ def form_declaration(model, module):
     return candidates[0] if len(candidates) == 1 else None
 
 
-def describe_form(element):
+def describe_form(element, extended=False):
     props = element['properties']
     base = props.get('Наследует', {})
     match = re.fullmatch(r'ФормаОбъекта<(.+\.Объект)>', base.get('Тип', ''))
-    if not match and base.get('Тип') != 'Форма':
+    record = re.fullmatch(r'ФормаЗаписиНабораКонстант<(.+\.Запись)>', base.get('Тип', ''))
+    extra = extended and (record or base.get('Тип') in {'ПроизвольноеКлиентскоеПриложение', 'СтандартноеКлиентскоеПриложениеСРазделами'})
+    if not match and base.get('Тип') != 'Форма' and not extra:
         raise UnsupportedSyntaxError('Контекст формы требует Наследует.Тип: Форма или ФормаОбъекта<T.Объект>')
     fields = props.get('Свойства', [])
     if not isinstance(fields, list):
         raise UnsupportedSyntaxError('Свойства формы должны быть списком')
-    names = {'Объект', 'Компоненты'}
+    names = {'Объект', 'Компоненты'} | ({'Запись'} if extended else set())
     for f in fields:
         if (not isinstance(f, dict) or not re.fullmatch(IDENT, str(f.get('Имя', '')))
                 or f['Имя'] in names or not isinstance(f.get('Тип'), str)):
@@ -49,7 +51,7 @@ def describe_form(element):
         names.add(f['Имя'])
     components, handlers = {}, []
     for path, item in tree_values(base):
-        if 'Имя' in item and 'Тип' in item:
+        if 'Имя' in item and 'Тип' in item and item['Тип'] != 'АбсолютныйШрифт':
             name = item['Имя']
             if not isinstance(name, str) or not re.fullmatch(IDENT, name) or name in components:
                 raise UnsupportedSyntaxError('Некорректное или повторное имя компонента: ' + str(name))
@@ -60,7 +62,11 @@ def describe_form(element):
         for key, value in item.items():
             if key == 'Обработчик' or key == 'ПриНажатии' and item.get('Тип') == 'Кнопка':
                 handlers.append({'name': value, 'type': item.get('Тип'), 'yamlPath': list(path) + [key]})
-    return {'identity': {k: element.get(k) for k in ('name','namespace','sourceFile')},
+    if extended:
+        from .interface_runtime import component_properties
+        for item in components.values():
+            item['properties'] = component_properties(item['declaration'])
+    return {'extended': extended, 'recordType': record[1] if record else None, 'baseType': base.get('Тип'), 'identity': {k: element.get(k) for k in ('name','namespace','sourceFile')},
             'objectType': match[1] if match else None, 'fields': fields, 'components': components,
             'handlers': handlers, 'expressions': list(expression_values(base)),
             'executorLocale': 'en-US',
@@ -74,7 +80,9 @@ def prepare_form(plan):
     element = form_declaration(plan.model, plan.module)
     if not element:
         return
-    plan.form = describe_form(element)
+    plan.form = describe_form(element, extended=plan.check.get("_interface", False))
+    if plan.form.get('extended'):
+        plan.form['limitations'] = ['Declaration model only; no DOM/native rendering', 'Constraints and full lifecycle enforcement require stage 50', 'Navigation/report surfaces require stage 51']
     if 'formEffects' in plan.check:
         plan.form['limitations'] = [v for v in plan.form['limitations'] if v != 'No form write/open effects']
         plan.form['limitations'].append('Only explicitly allowed formEffects; synchronous storage adapter and detached open requests')
@@ -84,12 +92,12 @@ def prepare_form(plan):
     if not plan.form['objectType'] and 'lifecycle' in plan.check:
         raise InvalidTestError('Обычная Форма не принимает lifecycle')
     for handler in plan.form['handlers']:
-        if handler['type'] == 'Кнопка':
+        if handler['type'] == 'Кнопка' and not plan.form.get('extended'):
             methods = [n for n in parse_module(plan.original)[0] if n.name == handler['name']]
             if len(methods) != 1 or [p.partition(':')[2].strip() for p in methods[0].parameters(plan.original)] != ['Кнопка', 'СобытиеПриНажатии'] or methods[0].return_span:
                 raise UnsupportedSyntaxError('ПриНажатии требует собственный метод (Кнопка, СобытиеПриНажатии) без результата')
             handler['status'] = 'SIGNATURE_CHECKED_NO_UI_EVENT'
-    if ('storage' in plan.check or 'mocks' in plan.check) and 'formEffects' not in plan.check:
+    if ('storage' in plan.check or 'mocks' in plan.check) and 'formEffects' not in plan.check and not plan.check.get('_interface'):
         raise InvalidTestError('Контекст формы не поддерживает storage/mocks')
 
 
@@ -115,7 +123,7 @@ def rooted_path(path, bindings, offset, fields):
 def passive_argument_names(source, node):
     return {p.partition(':')[0].strip() for p in node.parameters(source)
             if p.partition(':')[2].strip() in {'ОбычнаяКоманда', 'Кнопка', 'СобытиеПриНажатии'}
-            or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', p.partition(':')[2].strip())}
+            or re.fullmatch(r'КомандаСПараметром<.+>', p.partition(':')[2].strip())}
 
 
 def bind_form_call(plan, symbol, node, call):
@@ -185,11 +193,14 @@ def generate_form_types(plan, c, *, form=None):
     c.imports = next((m.get('imports', []) for m in plan.model['modules'] if m['sourceFile'] == form['identity']['sourceFile'].removesuffix('.yaml') + '.xbsl'), [])
     alias = 'ТестФорма' + sha256(str(form['identity']).encode()).hexdigest()[:16]
     # Use a separate technical module per form; canonical metadata owners keep their identity.
+    if form.get('extended'):
+        from .interface_runtime import generate_components
+        components = generate_components(plan, c, form, alias)
     label = alias + '.Надпись'
     add_structure(c, label, [{'Имя':'Значение','Тип':'Строка'}])
     components = alias + '.Компоненты'
     available = []
-    for item in form['components'].values():
+    for item in ([] if form.get('extended') else form['components'].values()):
         if item['properties']:
             value_type = item['properties']['Значение']
             d = item['declaration'].get('Значение', '' if value_type == 'Строка' else '0001-01-01')
@@ -199,7 +210,8 @@ def generate_form_types(plan, c, *, form=None):
             typ = alias + '.К' + sha256(item['name'].encode()).hexdigest()[:12]
             add_structure(c, typ, [{'Имя':'Значение','Тип':value_type,'ЗначениеПоУмолчанию':d}])
             available.append({'Имя':item['name'],'Тип':typ})
-    add_structure(c, components, available)
+    if not form.get('extended'):
+        add_structure(c, components, available)
     object_fields = []
     if form['objectType']:
         c.require(form['objectType'])
@@ -215,6 +227,14 @@ def generate_form_types(plan, c, *, form=None):
             '        выбросить новый ИсключениеНеподдерживаемаяОперация("Не объявлено состояние объекта")\n    ;\n'
             '    возврат ТестСостояниеНовизны как Булево\n;\n', [])
         object_fields = [{'Имя':'Объект','Тип':obj}]
+    if form.get('extended') and form.get('recordType'):
+        owners = c.resolve(form['recordType'].removesuffix('.Запись'))
+        if len(owners) != 1 or owners[0]['elementType'] != 'НаборКонстант':
+            raise UnsupportedSyntaxError('Неоднозначный owner Запись формы констант')
+        record_type = alias + '.Запись'
+        add_structure(c, record_type, owners[0]['properties'].get('Константы', []))
+        form['recordOwner'] = owners[0]
+        object_fields = [{'Имя': 'Запись', 'Тип': record_type}]
     form_type = alias + '.Экземпляр'
     add_structure(c, form_type, object_fields + form['fields'] + [{'Имя':'Компоненты','Тип':components}])
     form['canonical'] = form_type

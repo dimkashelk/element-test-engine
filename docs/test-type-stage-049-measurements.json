@@ -1,0 +1,600 @@
+{
+  "schemaVersion": 1,
+  "stage": 49,
+  "date": "2026-10-11",
+  "scope": "Reusable interface mechanism, not dump business scenarios",
+  "archive": {
+    "file": "Dvizhok-final.xdump",
+    "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+    "unchanged": true
+  },
+  "sourceCompatibilityVersion": "9.0",
+  "adapter": "Script 10.0.2-1, executor-emulation",
+  "declarationPreparation": [
+    {
+      "owner": "CRM::КонтрагентыФормаОбъекта",
+      "sourceFile": "CRM/КонтрагентыФормаОбъекта.yaml",
+      "sourceHash": "22424b41bfaa99a27a0fd4d0368aad6015fbfd346a5b514fbf4a91d54f5c24ef",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Контрагенты.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 6,
+      "declaredComponentCount": 7,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "CRM::СделкаФормаОбъекта",
+      "sourceFile": "CRM/СделкаФормаОбъекта.yaml",
+      "sourceHash": "a8f89225ec28924b6abc7f861918ef0550021f686e518271358a9c6cafaa267f",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Сделка.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 20,
+      "declaredComponentCount": 21,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "CRM::ФизическиеЛицаФормаОбъекта",
+      "sourceFile": "CRM/ФизическиеЛицаФормаОбъекта.yaml",
+      "sourceHash": "9252aae365bea1f964189b14e16495fba12a57d7f75bc651d08ea73618a7ff58",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<ФизическиеЛица.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 9,
+      "declaredComponentCount": 10,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::ДанныеКомпанииФормаЗаписи",
+      "sourceFile": "Администрирование/ДанныеКомпанииФормаЗаписи.yaml",
+      "sourceHash": "de2a236efb5fe8e95c9ad5a42f1adbe5440edca734d01a781206c6a8bc547b91",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаЗаписиНабораКонстант<ДанныеКомпании.Запись>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 4,
+      "declaredComponentCount": 5,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::НастройкиФормаЗаписи",
+      "sourceFile": "Администрирование/НастройкиФормаЗаписи.yaml",
+      "sourceHash": "52ff00dd9abc19866064ab17b6d6bec7c280b6bb427a828a20a7fc2c4c48e530",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаЗаписиНабораКонстант<Настройки.Запись>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 2,
+      "declaredComponentCount": 3,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::ПроизвольноеПриветствие",
+      "sourceFile": "Администрирование/ПроизвольноеПриветствие.yaml",
+      "sourceHash": "1f1b846999cc8d3f83319e6c34650cbf679a132fbc1bae6a5f720774c1784e55",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ПроизвольноеКлиентскоеПриложение",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 0,
+      "declaredComponentCount": 5,
+      "remaining": [],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::РабочиеДниФормаЗаписи",
+      "sourceFile": "Администрирование/РабочиеДниФормаЗаписи.yaml",
+      "sourceHash": "ab4d96d181b0de962d973c61ad270b5689356a3d41ba8c02fc30eb9d433f2b76",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаЗаписиНабораКонстант<РабочиеДни.Запись>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 7,
+      "declaredComponentCount": 8,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::СтандартноеБазовое",
+      "sourceFile": "Администрирование/СтандартноеБазовое.yaml",
+      "sourceHash": "1d0e2cc978fcda6ed608b59578528495f909401bf1eb709217591f8da97a14fc",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "СтандартноеКлиентскоеПриложениеСРазделами",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 0,
+      "declaredComponentCount": 0,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "КомандныйИнтерфейсПанелиНавигации"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::СтандартноеНастройки",
+      "sourceFile": "Администрирование/СтандартноеНастройки.yaml",
+      "sourceHash": "5bfb51110826a85276b5376d2b6647912beab4ab48256fc24eb462de6c32e501",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "СтандартноеКлиентскоеПриложениеСРазделами",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 0,
+      "declaredComponentCount": 0,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "КомандныйИнтерфейсПанелиНавигации"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Администрирование::ФормаПриветствие",
+      "sourceFile": "Администрирование/ФормаПриветствие.yaml",
+      "sourceHash": "d046f5be1fe9119f7ffe1c343bcb71630c4156b329481f7278540883179d3625",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "Форма",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 1,
+      "declaredComponentCount": 26,
+      "remaining": [],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Продажи::ЗаказФормаОбъекта",
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.yaml",
+      "sourceHash": "93faf7bcb19fb0bc173f2ae9d3edf4e11a4cfff936724392a0cc25ccff24ea00",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Заказ.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 17,
+      "declaredComponentCount": 15,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Товары::ЕдиницыИзмеренияФормаОбъекта",
+      "sourceFile": "Товары/ЕдиницыИзмеренияФормаОбъекта.yaml",
+      "sourceHash": "81c89872df05551dc779ab318c4d76c2b2c7e9933bfe4f6b9f82ccae7c165fa8",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<ЕдиницыИзмерения.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 2,
+      "declaredComponentCount": 3,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Товары::НоменклатураФормаОбъекта",
+      "sourceFile": "Товары/НоменклатураФормаОбъекта.yaml",
+      "sourceHash": "83c5bdd210101fbbb522a1b19f4285de17d926f9ec90e77e4bc05ec9d8576fb2",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Номенклатура.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 4,
+      "declaredComponentCount": 5,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Товары::ОтгрузкаФормаОбъекта",
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.yaml",
+      "sourceHash": "bc0d2f2308fb883d8fff77ade3ef3364005ac987ca0bee75dd0978c0ae210ed0",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Отгрузка.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 13,
+      "declaredComponentCount": 10,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Товары::ПоступлениеТоваровФормаОбъекта",
+      "sourceFile": "Товары/ПоступлениеТоваровФормаОбъекта.yaml",
+      "sourceHash": "8721a0003034be64178fd97ed878574f99a1041ad40247cd0ee40aa641d0f346",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<ПоступлениеТоваров.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 12,
+      "declaredComponentCount": 10,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Товары::СкладыФормаОбъекта",
+      "sourceFile": "Товары/СкладыФормаОбъекта.yaml",
+      "sourceHash": "9e2001b325aa755c3b38424b35435b1596c5176bb056f499bf71a666c25ef402",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<Склады.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 2,
+      "declaredComponentCount": 3,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Финансы::ПоступлениеДенежныхСредствФормаОбъекта",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.yaml",
+      "sourceHash": "d3f7b06fee69c7bf7ee046fa4e846b25399ae10bef64b28cc606831ccb07d20a",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<ПоступлениеДенежныхСредств.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 10,
+      "declaredComponentCount": 7,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Финансы::РасходДенежныхСредствФормаОбъекта",
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.yaml",
+      "sourceHash": "10f7c1ee4ea2acbd80f7a8003626bbca51c2caf9531d2ce5af5559278a9d6496",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<РасходДенежныхСредств.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 10,
+      "declaredComponentCount": 7,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    },
+    {
+      "owner": "Финансы::СчетНаОплатуФормаОбъекта",
+      "sourceFile": "Финансы/СчетНаОплатуФормаОбъекта.yaml",
+      "sourceHash": "5c141e9748740ab063eaf8b07b9c0e8e7b5978301de34ee31e1f5fe4b9eb6fdb",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "baseType": "ФормаОбъекта<СчетНаОплату.Объект>",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "bindingCount": 10,
+      "declaredComponentCount": 7,
+      "remaining": [
+        {
+          "yamlPath": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "reason": "Command/navigation/report declaration; evaluated only by its explicit action contract"
+        }
+      ],
+      "limitations": [
+        "Declaration model only; no DOM/native rendering",
+        "Constraints and full lifecycle enforcement require stage 50",
+        "Navigation/report surfaces require stage 51"
+      ]
+    }
+  ],
+  "declarationCounts": {
+    "total": 19,
+    "validationReady": 19,
+    "planningReady": 19,
+    "generationReady": 19,
+    "businessExecuted": 0
+  },
+  "technicalAcceptance": {
+    "suite": "tests/test_interface_actions.py",
+    "planTests": 5,
+    "scriptTests": 9,
+    "uniquePassingTests": 14,
+    "checks": [
+      "typed input and rejection",
+      "role/binding selection and renamed handler",
+      "original hashes/ranges and no expected in IR",
+      "all 19 declarations without artificial methods",
+      "binding dependency cycles",
+      "gates and session isolation",
+      "live columns, selected arrays and single rows",
+      "equal row preservation and table commands",
+      "dynamic label/font and tree insertion",
+      "timer callback and recalculated state",
+      "detached constants and session write",
+      "original object write/open and independent snapshots",
+      "original query handler reading controlled storage",
+      "PostgreSQL independent read and snapshot history",
+      "test/run/batch SBSL and handler mutation",
+      "Live unbound availability changed by source prevents subsequent invocation"
+    ],
+    "public": {
+      "test": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "run": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "batch": [
+        [
+          "PASS",
+          "FAIL",
+          "UNSUPPORTED"
+        ],
+        [
+          "FAIL",
+          "FAIL",
+          "UNSUPPORTED"
+        ]
+      ]
+    }
+  },
+  "regression": {
+    "ordinarySuites": [
+      "test_form_context.py",
+      "test_form_effects.py",
+      "test_declarative_bindings.py",
+      "test_timer_events.py",
+      "test_capability_map.py"
+    ],
+    "passed": 40,
+    "optInSkipped": 31,
+    "dockerSelectedPassed": 3,
+    "fullSuite": "existing nightly, not executed"
+  },
+  "boundaries": [
+    "No DOM/rendering/browser event delivery",
+    "Custom nested/native surfaces are declaration-only",
+    "Dynamic creation limited to label/font",
+    "Full constraints and lifecycle enforcement: stage 50",
+    "No external storage.transaction in interface v1",
+    "Constants persistence is a typed session file, not native/SQL enforcement",
+    "Source-free object write with hooks requires original method entry",
+    "Native constants opening/lifecycle and navigation/report surfaces remain unavailable",
+    "RowData-dependent column flags are observable; per-cell actions with such flags remain unavailable"
+  ],
+  "preserved": [
+    "assignments and dump expected",
+    "historical capability map/evidence",
+    "input archives",
+    "nightly configuration"
+  ]
+}

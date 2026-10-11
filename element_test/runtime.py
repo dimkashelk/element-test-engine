@@ -385,7 +385,10 @@ def prepare_script(root, model, check, sandbox):
     from .renderer import render_plan
     plan = plan_execution(root, model, check)
     try:
-        if 'querySource' in check:
+        if 'interface' in check:
+            from .interface_runtime import render_interface
+            script = render_interface(plan, sandbox)
+        elif 'querySource' in check:
             from .source_query import render_source_query
             script = render_source_query(plan, sandbox)
         elif 'formRequirement' in check:

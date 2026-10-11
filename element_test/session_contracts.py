@@ -142,9 +142,22 @@ def render_session(plan, sandbox):
     for state in plan.constants.values():
         path = sandbox / (state['alias'] + '.sbsl')
         with path.open('a', encoding='utf-8') as f:
-            f.write('\n@Глобально\nметод Получить(): ' + state['type'] + '\n    возврат '
-                    + c.literal(state['values'], state['type']) + '\n;\n')
+            if plan.check.get('_interface'):
+                path_literal = c.literal('/tmp/interface-constants-' + sha256(state['owner'].encode()).hexdigest()[:16] + '.json', 'Строка')
+                f.write('\nконст Путь = ' + path_literal + '\n@Глобально\nметод Получить(): ' + state['type'] + '\n'
+                    '    знч Начальные = ' + c.literal(state['values'], state['type']) + '\n'
+                    '    знч Ф = новый Файл(Путь)\n    если не Ф.Существует()\n        возврат Начальные\n    ;\n'
+                    '    исп Поток = Ф.ОткрытьПотокЧтения()\n'
+                    '    возврат СериализацияJson.ПрочитатьОбъект<' + state['type'] + '>(Поток, Начальные.ПолучитьТип())\n;\n'
+                    '@Глобально\nметод ТестЗаписать(Данные: ' + state['type'] + ')\n'
+                    '    исп Поток = новый Файл(Путь).ОткрытьПотокЗаписи()\n'
+                    '    СериализацияJson.ЗаписатьОбъект(Поток, Данные)\n;\n')
+            else:
+                f.write('\n@Глобально\nметод Получить(): ' + state['type'] + '\n    возврат '
+                        + c.literal(state['values'], state['type']) + '\n;\n')
     setup, metadata = '', ''
+    if plan.check.get('_interface'):
+        setup += ''.join('    ' + state['alias'] + '.ТестЗаписать(' + c.literal(state['values'], state['type']) + ')\n' for state in plan.constants.values())
     if plan.clock:
         clock = plan.clock
         instant = ('новый ДатаВремя(' + sbsl_literal(clock['date'] + 'T' + clock['time'], 'Строка') + ')'
@@ -185,7 +198,7 @@ def render_session(plan, sandbox):
     возврат Снимок().ВМомент(новый ЧасовойПояс(''' + sbsl_literal(clock['timezone'], 'Строка') + '''))
 ;
 ''')
-        setup = '    ТестЧасы.Инициализировать(' + instant + ')\n'
+        setup += '    ТестЧасы.Инициализировать(' + instant + ')\n'
         metadata = ', "clock": {"date": ТестЧасы.Дата(), "time": ТестЧасы.Время(), "snapshot": ТестЧасы.Снимок(), "timezone": ' + sbsl_literal(clock['timezone'], 'Строка') + ', "locale": ' + sbsl_literal(plan.executor_locale or '', 'Строка') + ', "mode": ' + sbsl_literal(clock['mode'], 'Строка') + '}'
     from .timer_events import render_timers
     setup += render_timers(plan, sandbox)

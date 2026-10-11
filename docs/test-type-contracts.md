@@ -2,7 +2,7 @@
 
 №46 реализует спецификацию и read-only карту инфраструктуры.
 №47 реализует [исходный query entry](source-query-execution.md), №48 —
-[управляемые часы и таймеры](timer-events.md); №49–52 остаются в очереди.
+[управляемые часы и таймеры](timer-events.md); №49 — [состояния и действия UI](interface-actions.md). №50–52 остаются в очереди.
 Семейства не добавляются в YAML `type`.
 Результаты исполнения/баллы по Dvizhok-final не формируются.
 
@@ -51,7 +51,7 @@ callback; порядок событий, равные моменты, повто
 | method | Переиспользовать runtime | Типизированные args/context/storage; исходный вызов/sequence | Возврат, состояние, эффекты; независимое сравнение SBSL |
 | query | Runtime с querySource (№47 реализовано) | Литерал или XBQL, типизированные параметры, storage; execute/repeat after write | Типизированные строки, NULL, cardinality, колонки и ресурсы; точная исходная идентичность |
 | time-event | Runtime с timers (№48 реализовано) | Фиксированные часы, зона, локаль; исходные register/cancel, advance/next/close | Активные callbacks, снимки состояния и закрытие; динамические/чужие callbacks за границей |
-| interface | Расширить runtime/formRequirements | Селектор роли/типа/привязки, ввод, контекст; input/recalculate/handler/open/write | Структура, значения привязок, состояние, сохранённые эффекты раздельно; browser DOM за границей |
+| interface | runtime.interface и formRequirements (№49 scoped) | Селектор роли/типа/привязки, ввод, контекст; input/recalculate/handler/open/write | Структура, значения привязок, состояние, сохранённые эффекты раздельно; browser DOM за границей |
 | metadata-lifecycle | Расширить element/field/method/runtime и storage | Метаданные, новое/существующее состояние, write-параметры; validate/write/reload/rollback | Декларация ограничения, отказ, свежий снимок объекта/регистров; enforcement требует №50 |
 | report | Расширить element/runtime, добавить report IR | Селектор отчёта, параметры, storage; query/evaluate layout | Данные, формулы, роли, иерархия и сортировка; формулы не считаются XBSL-привязками |
 | navigation-panel | Расширить element/runtime | Фрагмент/панель, контекст видимости; resolve/open/refresh | Маршрут, доступность, виджеты, расположение, refresh; встроенные native формы/рендеринг отдельно |
@@ -147,4 +147,6 @@ python3 -m element_test.capability_map --project Dvizhok-final.xdump \
 подготовку и ограничения. [№47 реализовано](tasks/047-source-query-entry.md),
 [измерения механизма](test-type-stage-047-measurements.json) отделены от исходной приёмки.
 [№48 реализовано](tasks/048-managed-timer-events.md); [измерения механизма](test-type-stage-048-measurements.json).
-Очередь №49–52 сохраняет зависимости и первые блокировки. Следующий этап — P1 №49.
+[№49 реализовано в ограниченном контракте](tasks/049-interface-state-and-actions.md);
+[измерения механизма](test-type-stage-049-measurements.json).
+Очередь №50–52 сохраняет зависимости и первые блокировки. Следующий этап — P1 №50.

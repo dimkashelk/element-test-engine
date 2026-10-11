@@ -136,6 +136,7 @@ class ExecutionPlan:
     executor_locale: str = None
     query_entry: dict = field(default_factory=dict)
     timers: dict = field(default_factory=dict)
+    interface: dict = field(default_factory=dict)
 
     def to_dict(self):
         return {"schemaVersion": 1, "executorProfile": self.check.get("runtimeProfile", self.model.get("compatibilityVersion", "9.0")),
@@ -158,7 +159,7 @@ class ExecutionPlan:
                 "recordSets": self.record_sets,
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
-                "timers": self.timers,
+                "timers": self.timers, "interface": self.interface,
                 "observations": self.observations, "instanceProbes": self.probes, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -167,6 +168,9 @@ class ExecutionPlan:
 
 
 def plan_execution(root, source_model, check):
+    if 'interface' in check:
+        from .interface_runtime import plan_interface
+        return plan_interface(root, source_model, check)
     if 'querySource' in check:
         from .source_query import plan_source_query
         return plan_source_query(root, source_model, check)
@@ -223,6 +227,8 @@ def plan_execution(root, source_model, check):
         all_reachable = {(o['sourceFile'], parse_module(t)[0][0].name): (o,t,p) for o,t,p in reachable}
         from .timer_events import validate_step
         for step in sequence:
+            if check.get('_interface') and isinstance(step, dict) and len(step) == 1 and 'method' not in step:
+                continue
             if validate_step(step, check):
                 continue
             if not isinstance(step, dict) or set(step) != {'method', 'args'} or not isinstance(step['args'], list):
@@ -265,6 +271,11 @@ def plan_execution(root, source_model, check):
             from .indexer import method_local_bindings
             locals_ = method_local_bindings(text, node)
             requirement_types = []
+            if check.get('_interface') and check.get('formEffects', {}).get('write') and owner['sourceFile'] == module['sourceFile']:
+                from .form_context import describe_form
+                obj_type = describe_form(form_declaration(runtime_model, module), extended=True)['objectType']
+                if obj_type:
+                    requirement_types.append(obj_type)
             for call in method_call_expressions(text, node):
                 if call.name != 'Записать':
                     continue
@@ -510,10 +521,13 @@ def bind_types(plan):
         c.definitions[canonical] = '@Глобально\nисключение ' + typ + '\n;\n'
         c.platform_type_aliases['Стд::' + typ] = canonical
     if plan.form:
+        if plan.form.get('extended'):
+            from .interface_runtime import prepare_ui_aliases
+            prepare_ui_aliases(plan, c)
         for symbol in plan.symbols:
             c.namespace, c.imports = symbol.owner['namespace'], symbol.owner.get('imports', [])
             for typ in symbol.parameter_types:
-                if typ in {'ОбычнаяКоманда', 'Кнопка', 'СобытиеПриНажатии'} or re.fullmatch(r'КомандаСПараметром<Массив<.+>>', typ):
+                if typ in {'ОбычнаяКоманда', 'Кнопка', 'СобытиеПриНажатии'} or re.fullmatch(r'КомандаСПараметром<.+>', typ):
                     if c.resolve(typ.split('<')[0]):
                         raise UnsupportedSyntaxError('Конфликт проектного и системного типа команды')
                     if '<' in typ:

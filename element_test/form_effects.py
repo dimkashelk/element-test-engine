@@ -15,7 +15,7 @@ def contract(check, model, module):
     value = check['formEffects']
     if not form_declaration(model, module) or 'context' not in check:
         raise InvalidTestError('formEffects требует context формы')
-    if form_declaration(model,module) and not describe_form(form_declaration(model,module))['objectType']:
+    if not check.get('_interface') and form_declaration(model,module) and not describe_form(form_declaration(model,module), extended=check.get('_interface', False))['objectType']:
         raise InvalidTestError('formEffects требует ФормаОбъекта<T.Объект>')
     if not isinstance(value, dict) or not value or set(value) - {'write', 'open', 'lifecycle'}:
         raise InvalidTestError('formEffects принимает write, open, lifecycle')
@@ -55,6 +55,8 @@ def contract(check, model, module):
                     validate_type(binding['outputType'])
                 except ValueError as exc:
                     raise InvalidTestError(str(exc)) from exc
+    if check.get('_interface') and describe_form(form_declaration(model,module), extended=True).get('recordType') and value == {'write': True}:
+        return value
     if 'storage' not in check or check['storage'].get('idType') != 'Ууид':
         raise InvalidTestError('formEffects требует storage с idType: Ууид')
     if 'mocks' in check:
@@ -148,7 +150,7 @@ def bind_effect(plan, symbol, node, call, path, bindings):
 
 def generate_effects(plan,c):
     from .form_context import generate_form_types,validate_path,form_observation
-    if 'formEffects' not in plan.check:
+    if 'formEffects' not in plan.check or plan.form.get('recordType'):
         return
     if plan.form['objectType']:
         obj=plan.form['objectCanonical']

@@ -81,7 +81,7 @@ def render_plan(plan, sandbox):
             replacements.append((*declaration.return_span, contracts.sbsl_type(declaration.return_type(dependency))))
         replacements.extend((start, end, contracts.sbsl_type(type_name))
                             for start, end, type_name in constructor_types(dependency)
-                            if type_name not in contracts.platform_type_aliases
+                            if type_name not in contracts.platform_type_aliases or plan.form.get('extended') and type_name in {'Надпись', 'АбсолютныйШрифт'}
                             if contracts.sbsl_type(type_name) != dependency[start:end])
         replacements.extend((start, end, contracts.sbsl_type(dependency[start:end]))
                             for start, end, type_name in body_type_references(dependency)
@@ -328,7 +328,7 @@ def render_plan(plan, sandbox):
         if check.get('snapshotConstants', False):
             from .session_contracts import constants_observation
             actual = '{"result": ' + actual + ', "constants": ' + constants_observation(plan) + '}'
-        if 'formEffects' in check:
+        if 'formEffects' in check and plan.form.get('objectType'):
             actual = '{"result": ' + actual + ', "openings": ТестЗапросыФорм.Читать(), "lifecycle": Контекст.Объект.ЭтоНовый(), "storage": ТестСессия.Аудит()}'
         if storage and storage.config.get('transaction', False):
             fact = 'Факты' + index
