@@ -384,7 +384,7 @@ def generate_relational_query(query, contracts):
     from .query_composites import internal, row_type as child_row_type, needs_context, public_result, null_column
     row_types=[child_row_type(s,n,private=True) for s,n in zip(query.sources,names)]
     def declaration(structure,fields):
-        return '@Глобально\nструктура '+structure+'\n'+''.join('    знч '+label+': '+contracts.sbsl_type(typ)+'\n' for label,typ in fields)+';\n'
+        return '@Глобально\nструктура '+structure+'\n'+''.join('    '+('обз ' if '|' in typ and not typ.endswith('?') else '')+'знч '+label+': '+contracts.sbsl_type(typ)+'\n' for label,typ in fields)+';\n'
     text=declaration('Комбинация',[('С'+str(i),typ+'?') for i,typ in enumerate(row_types)])
     row_type='СтрокаДанных'
     text+=declaration(row_type,[(label,e.type+('?' if e.sql_nullable and not e.type.endswith('?') else '')) for e,label in query.projections]+[(null_column(query.projections,i),'Булево') for i in range(len(query.projections))])

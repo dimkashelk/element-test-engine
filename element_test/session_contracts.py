@@ -125,14 +125,15 @@ def bind_session_call(plan, symbol, node, call, *, project):
     return None
 
 
-def generate_session_types(plan, c):
+def generate_session_types(plan, c, *, reuse=False):
     from .form_context import add_structure
     for state in plan.constants.values():
-        add_structure(c, state['type'], state['fields'])
+        if not reuse or state['type'] not in c.fields:
+            add_structure(c, state['type'], state['fields'])
         c.literal(state['values'], state['type'])
         if plan.storage and plan.storage.config.get('lifecycle'):
             c.method_dependencies.setdefault(state['type'], []).append('ТестСессия.Записи')
-    if plan.clock:
+    if plan.clock and (not reuse or 'ТестЧасы.Метка' not in c.fields):
         add_structure(c, 'ТестЧасы.Метка', [])
     from .timer_events import generate_timer_types
     generate_timer_types(plan, c)

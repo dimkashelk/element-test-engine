@@ -254,7 +254,10 @@ def generate_source_query(q,c):
     lit=lambda v:c.literal(v,'Строка')
     helpers={}
     required={f.name:f for f,_ in q.projections+q.predicates+q.ordering}
-    fields=''.join('    пер '+f.name+': '+c.sbsl_type(f.type)+'\n' for f in required.values())
+    union_refs = [f for f in required.values() if '|' in f.type]
+    if any(f.name != 'Регистратор' or not q.register_kind or any(not t.endswith('.Ссылка') for t in f.type.rstrip('?').rstrip('|').split('|')) for f in union_refs):
+        raise UnsupportedSyntaxError('Union источника требует типизированный ключ регистратора')
+    fields=''.join('    пер '+f.name+': '+c.sbsl_type(f.type + ('|?' if '|' in f.type and not f.type.endswith('?') else ''))+'\n' for f in required.values())
     a=text.index('структура Данные\n')+len('структура Данные\n'); b=text.index(';\n',a)
     text=text[:a]+fields+text[b:]
     read=('        знч Состояние = ТестСессия.ЧитатьВсе()\n'
@@ -283,6 +286,16 @@ def generate_source_query(q,c):
         read+='                пер Индекс = 0\n                для Элемент из (Значение как Массив<Объект?>)\n                    знч Снимок = Элемент как Соответствие<Строка, Объект?>\n'
         if q.register_kind:read+='                    Снимок.Вставить("Индекс", Индекс)\n                    Снимок.Вставить("НомерСтроки", Индекс + 1)\n'
         read+='                    Индекс += 1\n                    Исходные.Добавить(Снимок)\n                ;\n'
+    if union_refs:
+        read=read.replace('            для JSON из Состояние['+lit(q.owner)+'].Значения()\n',
+            '            для Bucket из Состояние['+lit(q.owner)+']\n'
+            '                знч JSON = Bucket.Значение\n'
+            '                знч Key = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Bucket.Ключ, Тип<Соответствие<Строка, Объект?>>)\n'
+            '                знч Registrar = Key["Регистратор"] как Соответствие<Строка, Объект?>\n')
+        read=read.replace('                    Исходные.Добавить(Снимок)',
+            '                    Снимок.Вставить("__RegistrarTag", Registrar["type"])\n'
+            '                    Снимок.Вставить("__RegistrarValue", Registrar["value"])\n'
+            '                    Исходные.Добавить(Снимок)')
     if q.source_kind not in {'users','constants','saved','custom-collection'}:read+='            ;\n        ;\n'
     if q.source_filter:
         read += ('        знч Отфильтрованные = новый Массив<Соответствие<Строка, Объект?>>()\n'
@@ -295,7 +308,21 @@ def generate_source_query(q,c):
         read+=period_totals_loader(q,c,required) if expanded else totals_loader(q,c,required)
     else:
         projected='{'+', '.join(lit(f.name)+': Снимок['+lit(f.name)+']' for f in required.values())+'}'
-        read+='        для Снимок из Исходные\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип())\n            Все.Добавить(СтрокаДанных)\n        ;\n'
+        read+='        для Снимок из Исходные\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>)\n            Все.Добавить(СтрокаДанных)\n        ;\n'
+    if union_refs:
+        union_code = ''
+        for f in union_refs:
+            tag = 'Снимок["__RegistrarTag"]'
+            union_code += '            пер Matched = Ложь\n'
+            for variant in f.type.rstrip('?').rstrip('|').split('|'):
+                emitted = c.sbsl_type(variant)
+                union_code += ('            если '+tag+' == Тип<'+emitted+'>.ВСтроку()\n'
+                    '                СтрокаДанных.'+f.name+' = СериализацияJson.ПрочитатьОбъект<'+emitted+'>(СериализацияJson.ЗаписатьОбъект(Снимок["__RegistrarValue"]), Тип<'+emitted+'>)\n'
+                    '                Matched = Истина\n            ;\n')
+            union_code += '            если не Matched\n                выбросить новый ИсключениеНеподдерживаемаяОперация("Неизвестный тип регистратора источника")\n            ;\n'
+        read = read.replace('            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')',
+                            '            Снимок.Вставить("Регистратор", Неопределено)\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')')
+        read = read.replace('            Все.Добавить(СтрокаДанных)', union_code+'            Все.Добавить(СтрокаДанных)')
     # Replace only the loading/filtering loops; keep the common output renderer.
     a=text.index('        знч Состояние ='); b=text.index('                если ',a)
     text=text[:a]+'        знч Все = новый Массив<Данные>()\n'+read+'        для СтрокаДанных из Все\n'+text[b:]
@@ -441,7 +468,7 @@ def period_totals_loader(q,c,required):
                 s+='            Снимок['+lit(r.name+base+'Положительный')+'] = '+v+' > 0 ? '+v+' : 0\n'
                 s+='            Снимок['+lit(r.name+base+'Отрицательный')+'] = '+v+' < 0 ? -'+v+' : 0\n'
     projected='{'+', '.join(lit(f.name)+': Снимок['+lit(f.name)+']' for f in required.values())+'}'
-    s+='            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            Все.Добавить(СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип()))\n        ;\n'
+    s+='            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            Все.Добавить(СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>))\n        ;\n'
     return s
 
 
@@ -492,4 +519,4 @@ def totals_loader(q,c,required):
     if q.source_kind=='balance':
         s+='            если '+(' и '.join('(Снимок['+lit(r.name+'Остаток')+'] как Число) == 0' for r in q.resources) or 'Истина')+'\n                продолжить\n            ;\n'
     projected='{'+', '.join(lit(f.name)+': Снимок['+lit(f.name)+']' for f in required.values())+'}'
-    return s+'            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            Все.Добавить(СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип()))\n        ;\n'
+    return s+'            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            Все.Добавить(СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>))\n        ;\n'

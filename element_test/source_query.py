@@ -59,7 +59,7 @@ def select_source(root, model, selector):
     return source, module, candidates[0], digest
 
 
-def plan_source_query(root, source_model, check):
+def plan_source_query(root, source_model, check, *, metadata_source=None, shared=None):
     root, selected = select_check_project(root, source_model, check)
     conflicts = {'target', 'args', 'context', 'sequence', 'timers', 'formRequirement', 'mocks', 'captureCalls',
                  'captureException', 'observeFailure', 'observe', 'snapshotArgs', 'instanceProbes', 'queryResults',
@@ -69,8 +69,12 @@ def plan_source_query(root, source_model, check):
     if type(check.get('trace', False)) is not bool:
         raise InvalidTestError('trace требует Булево')
     model = combined_library_symbols(root, selected, source_model)
-    source, module, (start, end, body, text), digest = select_source(root, model, check['querySource'])
-    c = ProjectTypes(model, module['namespace'], module.get('imports', []))
+    if metadata_source is None:
+        source, module, (start, end, body, text), digest = select_source(root, model, check['querySource'])
+    else:
+        source, module, (start, end, body, text), digest = metadata_source
+    c = shared.contracts if shared else ProjectTypes(model, module['namespace'], module.get('imports', []))
+    c.namespace, c.imports = module['namespace'], module.get('imports', [])
     c.rename_collisions = True
     c.inline_locals = False
     c.local_source = c.current_source = module['sourceFile']
@@ -97,7 +101,7 @@ def plan_source_query(root, source_model, check):
     prepare_query_access(plan, c)
     if not isinstance(check.get('storage'), dict):
         raise InvalidTestError('querySource требует явный storage')
-    plan.storage = MetadataStorage(c, check['storage'])
+    plan.storage = shared.storage if shared else MetadataStorage(c, check['storage'])
     parameters = check.get('queryParameters', {})
     if not isinstance(parameters, dict):
         raise InvalidTestError('queryParameters требует словарь expression → {type, value}')
@@ -144,7 +148,7 @@ def plan_source_query(root, source_model, check):
             state = add_constants(plan, c.resolve(leaf.owner)[0])
             c.query_constants = getattr(c, 'query_constants', {})
             c.query_constants[leaf.owner] = state
-    generate_session_types(plan, c)
+    generate_session_types(plan, c, reuse=shared is not None)
     plan.contracts = c
     name = generate_public_query(query, c)
     # Validate and generate writes now, while all referenced types are available.

@@ -432,7 +432,7 @@ def validate_index(name,fields,tables,indices):
 
 def declaration(name,columns,contracts,flags=False):
     text='@Глобально\nструктура '+name+'\n'
-    text+=''.join('    знч '+label+': '+contracts.sbsl_type(column_type(e))+'\n' for e,label in columns)
+    text+=''.join('    '+('обз ' if '|' in column_type(e) and not column_type(e).endswith('?') else '')+'знч '+label+': '+contracts.sbsl_type(column_type(e))+'\n' for e,label in columns)
     if flags:text+=''.join('    знч '+null_column(columns,i)+': Булево\n' for i in range(len(columns)))
     return text+';\n'
 

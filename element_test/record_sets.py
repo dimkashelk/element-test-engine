@@ -191,7 +191,8 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
             raise InvalidTestError('Начальный набор требует type, filter и rows')
         from .generated_types import ProjectTypes
         raw = seed['type']
-        matches = (ProjectTypes(c.model, c.namespace, c.imports).resolve(raw) if isinstance(raw, str) and '::' in raw
+        matches = ([e for e in c.model['elements'] if qualified(e) == raw] if isinstance(raw, str) and raw in storage.register_schemas
+                   else ProjectTypes(c.model, c.namespace, c.imports).resolve(raw) if isinstance(raw, str) and '::' in raw
                    else [e for e in c.model['elements'] if e['name'] == raw] if isinstance(raw, str) else [])
         if len(matches) != 1 or qualified(matches[0]) not in storage.register_schemas:
             raise InvalidTestError('Начальный набор требует однозначный owner из storage.registers')

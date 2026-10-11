@@ -58,7 +58,7 @@ def generate_query(query, contracts):
     next_period = sliced and 'СледующийПериод' in required
     def declaration(structure, fields, readonly=False):
         return '@Глобально\nструктура ' + structure + '\n' + ''.join(
-            '    ' + ('знч' if readonly else 'пер') + ' ' + label + ': ' + contracts.sbsl_type(f.type) + '\n'
+            '    ' + ('обз ' if '|' in f.type and not f.type.endswith('?') else '') + ('знч' if readonly else 'пер') + ' ' + label + ': ' + contracts.sbsl_type(f.type) + '\n'
             for f,label in fields) + ';\n'
     text = declaration('Данные', [(f,f.name) for f in required.values()])
     row_type = query.fill['type'] if query.fill else 'СтрокаРезультата'
@@ -85,7 +85,7 @@ def generate_query(query, contracts):
     projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': '+(period_type+'{Максимум}' if next_period and f.name=='СледующийПериод' else 'Снимок[' + contracts.literal(f.name,'Строка') + ']')
                               for f in required.values()) + '}'
     text += ('                знч Проекция = СериализацияJson.ЗаписатьОбъект(' + projected + ')\n'
-             '                знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, новый Данные().ПолучитьТип())\n')
+             '                знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>)\n')
     if query.source_filter:
         text += '                если не ('+filter_condition(query,contracts,helpers=source_helpers)+')\n                    продолжить\n                ;\n'
     if sliced:
@@ -126,10 +126,9 @@ def generate_query(query, contracts):
     # sourced from the same field. Native scalars/enums are immutable.
     def projection(field):
         value = 'С.' + field.name
-        if field.type.rstrip('?').endswith('.Ссылка'):
-            base = field.type.rstrip('?')
-            copied = 'новый ' + base + '(Идентификатор = ' + value + '.Идентификатор)'
-            return '(' + value + ' == Неопределено ? Неопределено : ' + copied + ')' if field.type.endswith('?') else copied
+        if field.type.rstrip('?').rstrip('|').endswith('.Ссылка'):
+            from .generated_types import clone_reference
+            return clone_reference(contracts, field.type, value)
         return value
     from .query_construction import constructor_args
     text += '            Результат.Добавить(новый ' + row_type + '(' + constructor_args(query, [projection(f) for f,label in query.projections]) + '))\n'

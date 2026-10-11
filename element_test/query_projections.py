@@ -393,9 +393,9 @@ class ExpressionRenderer:
     def projection(self,e,row='С',group='Группа'):
         v=self.value(e,row,group)
         if e.sql_nullable:v='(('+self.null(e,row,group)+') ? Неопределено : '+v+')'
-        if e.type.rstrip('?').endswith('.Ссылка'):
-            copy='новый '+e.type.rstrip('?')+'(Идентификатор = ('+v+').Идентификатор)'
-            v='('+v+' == Неопределено ? Неопределено : '+copy+')' if e.type.endswith('?') or e.sql_nullable else copy
+        if e.type.rstrip('?').rstrip('|').endswith('.Ссылка'):
+            from .generated_types import clone_reference
+            v=clone_reference(self.contracts, e.type + ('?' if e.sql_nullable and not e.type.endswith('?') else ''), v)
         return v
 
     def equal(self,e,a,b):

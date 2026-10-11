@@ -178,7 +178,7 @@
         "sorting"
       ],
       "comparison": "independent author oracle in SBSL",
-      "decision": "Separate report formula IR from XBSL; add report selector after implementation",
+      "decision": "runtime.report selects metadata/XBQL sources; separate report formula IR executes in Script",
       "capabilities": [
         "report-layout"
       ]
@@ -207,7 +207,7 @@
         "refresh"
       ],
       "comparison": "independent author oracle in SBSL",
-      "decision": "Model navigation and panel observations; native rendering outside contract",
+      "decision": "runtime.navigation and runtime.panel model routes/opening and timer refresh; native rendering outside contract",
       "capabilities": [
         "navigation",
         "report-panel"
@@ -334,7 +334,7 @@
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Metadata lifecycle is opt-in storage.lifecycle; navigation requires stage 51",
+      "firstGap": "Metadata lifecycle is opt-in storage.lifecycle; model navigation has a separate runtime.navigation entry",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -358,7 +358,7 @@
       "dependencies": [
         "ui-state"
       ],
-      "firstGap": "Section navigation and report surfaces require stage 51",
+      "firstGap": "Nested UI/native rendering remains declaration-only; section routes use runtime.navigation",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -400,39 +400,39 @@
       "id": "report-layout",
       "family": "report",
       "stage": 51,
-      "readiness": "extension-required",
-      "implementation": "element_test.model",
+      "readiness": "scoped",
+      "implementation": "element_test.report_runtime",
       "dependencies": [
         "query-source",
         "metadata-structure"
       ],
-      "firstGap": "Dedicated report formula language and layout roles",
+      "firstGap": "Typed row formulas, roles and stable sorting; native pivot/aggregation UI remains external",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
       "id": "navigation",
       "family": "navigation-panel",
       "stage": 51,
-      "readiness": "extension-required",
-      "implementation": "element_test.model",
+      "readiness": "scoped",
+      "implementation": "element_test.navigation",
       "dependencies": [
         "ui-action"
       ],
-      "firstGap": "Resolve fragments, visibility, routes and model opening",
+      "firstGap": "Declaration-resolved model opening; custom form handlers and native rendering remain external",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
       "id": "report-panel",
       "family": "navigation-panel",
       "stage": 51,
-      "readiness": "extension-required",
-      "implementation": "element_test.model",
+      "readiness": "scoped",
+      "implementation": "element_test.report_runtime",
       "dependencies": [
         "report-layout",
         "navigation",
         "timer-events"
       ],
-      "firstGap": "Widget data, layout and interval refresh",
+      "firstGap": "Shared storage and fixed-rate full refresh; native dashboard rendering remains external",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {

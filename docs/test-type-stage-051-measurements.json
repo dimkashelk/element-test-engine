@@ -1,0 +1,467 @@
+{
+  "schemaVersion": 1,
+  "stage": 51,
+  "date": "2026-10-11",
+  "scope": "Reusable report/navigation/panel mechanisms; no final-dump business scenarios",
+  "entries": [
+    "runtime.report",
+    "runtime.navigation",
+    "runtime.panel"
+  ],
+  "publicYamlTypesAdded": [],
+  "sourceCompatibilityVersion": "9.0",
+  "executorProfile": "9.3",
+  "adapter": "Script 10.0.2-1; executor-emulation and declaration-model",
+  "archives": [
+    {
+      "file": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "sha256": "450797f73b4a93ee88f7c35cc05d0a8237e6c207bb57745a7284ac8dd090ff04",
+      "unchanged": true,
+      "comparison": "stage 50 measured bytes"
+    },
+    {
+      "file": "Dvizhok-final.xdump",
+      "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+      "unchanged": true,
+      "comparison": "stage 50 measured bytes"
+    },
+    {
+      "file": "Prakticheskie-primery-2026-09-30-15-20.xdump",
+      "sha256": "476b6702dfd61d957688b6acb361a9b7ed1324e92a97f2960911f5bc9dac85dc",
+      "unchanged": true,
+      "comparison": "stage 50 measured bytes"
+    },
+    {
+      "file": "autocheck-2026-09-24-16-14.xdump",
+      "sha256": "3068fd47af327d3063effaa2a3b29b8830fc6fdadf8476213956e99f25e35135",
+      "unchanged": true,
+      "comparison": "stage 50 measured bytes"
+    },
+    {
+      "file": "Dvizhok.xdump",
+      "sha256": "c69ddf9247d0508207e3ab80c4ae87c782e8d876503487ee6fcc01105bccec97",
+      "unchanged": true,
+      "comparison": "stage 50 measured bytes"
+    }
+  ],
+  "declarationPreparation": [
+    {
+      "kind": "navigation",
+      "owner": "CRM::НавигацияCRM",
+      "sourceFile": "CRM/НавигацияCRM.yaml",
+      "sourceHash": "f6579de9a717f9c9ab0ea205dd45be85d1d6eaeba57bcf548484da4d46a9817a",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 3,
+      "sectionCount": 0,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "navigation",
+      "owner": "Администрирование::КомандныйИнтерфейсБазовое",
+      "sourceFile": "Администрирование/КомандныйИнтерфейсБазовое.yaml",
+      "sourceHash": "ed9b8fa549ea07795efb7b380516050f5752eb4baaf3e6af809bdee2b3a3f39e",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 19,
+      "sectionCount": 7,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "navigation",
+      "owner": "Администрирование::КомандныйИнтерфейсНастройки",
+      "sourceFile": "Администрирование/КомандныйИнтерфейсНастройки.yaml",
+      "sourceHash": "c57cfc04f1d774ac6f10363f7eb727827b126eae60cde68899d76cc5b0b752be",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 5,
+      "sectionCount": 1,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "panel",
+      "owner": "Администрирование::ПанельОтчетовГлавная",
+      "sourceFile": "Администрирование/ПанельОтчетовГлавная.yaml",
+      "sourceHash": "fc334694f7f81d9887123e75c8c9efd9b3d824b6105775004f424fdd15f0fffb",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "widgetCount": 6,
+      "refresh": {
+        "intervalMs": 30000,
+        "policy": "fixed-rate-full-refresh"
+      },
+      "remaining": [
+        "Native dashboard rendering and pivot UI are external"
+      ]
+    },
+    {
+      "kind": "navigation",
+      "owner": "Продажи::НавигацияПродажи",
+      "sourceFile": "Продажи/НавигацияПродажи.yaml",
+      "sourceHash": "782d13f22fb0dd085bb0764c819b8a113c625d843f45d7b6b11fb52457de423d",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 2,
+      "sectionCount": 1,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Продажи::ОтчетСтатусыЗаказов",
+      "sourceFile": "Продажи/ОтчетСтатусыЗаказов.yaml",
+      "sourceHash": "ffe03a19511f72489b411e24303ac10f77edfb7bebc544db5245fd4dcab8f297",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Таблица",
+      "fieldCount": 4,
+      "formulaOutputTypes": [
+        "СтатусЗаказа?",
+        "Строка",
+        "ДатаВремя",
+        "Контрагенты.Ссылка?"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    },
+    {
+      "kind": "navigation",
+      "owner": "Товары::НавигацияТовары",
+      "sourceFile": "Товары/НавигацияТовары.yaml",
+      "sourceHash": "3b783aafb9a96695a4385b553b6efbb2c11d9529da6d399fa9685afe8ef0a9a0",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 8,
+      "sectionCount": 1,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Товары::ОтчетОстаткиТоваров",
+      "sourceFile": "Товары/ОтчетОстаткиТоваров.yaml",
+      "sourceHash": "cf35af5411b2a6a97bd7c23a7da7322c025ef3ccb5683819dc9004024492252a",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Таблица",
+      "fieldCount": 3,
+      "formulaOutputTypes": [
+        "Склады.Ссылка?",
+        "Номенклатура.Ссылка?",
+        "Число"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Товары::ОтчетПоставщикиНоменклатуры",
+      "sourceFile": "Товары/ОтчетПоставщикиНоменклатуры.yaml",
+      "sourceHash": "d5498077fcf6a3246b6eb817416afe95a9978da462e4497ff66a152b6b471c87",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Таблица",
+      "fieldCount": 4,
+      "formulaOutputTypes": [
+        "Номенклатура.Ссылка?",
+        "Контрагенты.Ссылка?",
+        "Момент",
+        "Число"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Товары::ОтчетЦеныНоменклатуры",
+      "sourceFile": "Товары/ОтчетЦеныНоменклатуры.yaml",
+      "sourceHash": "00ed73573367967ad9b7acd31cc9b9e832fefffbfd619fd600913463c1b5b0ba",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Запрос",
+      "fieldCount": 1,
+      "formulaOutputTypes": [
+        "Номенклатура.Ссылка"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    },
+    {
+      "kind": "navigation",
+      "owner": "Финансы::НавигацияФинансы",
+      "sourceFile": "Финансы/НавигацияФинансы.yaml",
+      "sourceHash": "872656989b337cc7f739de6aafc07d45d249ae21fcf632cc779a0f2bb3df3d87",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "declaration-model",
+      "routeCount": 5,
+      "sectionCount": 1,
+      "remaining": [
+        "Native surfaces and custom form handlers are not executed by model opening"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Финансы::ОтчетДвижениеДенежныхСредств",
+      "sourceFile": "Финансы/ОтчетДвижениеДенежныхСредств.yaml",
+      "sourceHash": "4872130fc27ef2d1f35ab3b74b296dbea2077e713e86ddca0c6c66ec28925807",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Таблица",
+      "fieldCount": 3,
+      "formulaOutputTypes": [
+        "Строка?",
+        "Число|Строка",
+        "Число|Строка"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    },
+    {
+      "kind": "report",
+      "owner": "Финансы::ОтчетОстаткиДенежныхСредств",
+      "sourceFile": "Финансы/ОтчетОстаткиДенежныхСредств.yaml",
+      "sourceHash": "d40f0d518fa964831c419c744c57a075c6ddfdceaf0491925d78db53ac9b3ce8",
+      "projectSourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "validation": "ready",
+      "planning": "ready",
+      "generation": "ready",
+      "execution": "not-checked",
+      "support": "executor-emulation",
+      "sourceKind": "Таблица",
+      "fieldCount": 1,
+      "formulaOutputTypes": [
+        "Число"
+      ],
+      "remaining": [
+        "Native pivot rendering, hierarchy expansion and aggregate measures are external",
+        "Reference sorting uses stable identifiers, not native presentations"
+      ]
+    }
+  ],
+  "technicalAcceptance": {
+    "suite": "tests/test_report_navigation_panel.py",
+    "planTests": 7,
+    "localScriptTests": 6,
+    "postgresTests": 2,
+    "publicCliTests": 1,
+    "uniquePassingTests": 16,
+    "passed": [
+      "test_report_navigation_panel.SurfaceExecutionTest.test_formula_if_is_lazy_and_missing_reference_is_unavailable",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_metadata_formulas_sorting_null_empty_write_repeat_isolation",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_navigation_open_blocked_and_external_native",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_original_xbql_and_union_registrar_formulas",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_panel_duplicate_report_and_private_cross_namespace_seed",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_panel_refresh_boundary_multiple_events_storage_writes_close_and_relocation",
+      "test_report_navigation_panel.SurfacePlanTest.test_all_final_dump_surfaces_prepare_without_business_execution",
+      "test_report_navigation_panel.SurfacePlanTest.test_formula_ir_is_distinct_and_rejects_unknown_language",
+      "test_report_navigation_panel.SurfacePlanTest.test_invalid_selectors_actions_schema_and_unsupported_formulas",
+      "test_report_navigation_panel.SurfacePlanTest.test_navigation_recurses_gates_routes_native_and_ambiguity",
+      "test_report_navigation_panel.SurfacePlanTest.test_panel_layout_dependencies_interval_and_preparation",
+      "test_report_navigation_panel.SurfacePlanTest.test_repeated_fragment_occurrences_and_duplicate_widget_data_sources",
+      "test_report_navigation_panel.SurfacePlanTest.test_report_plan_has_source_provenance_types_and_no_oracle",
+      "test_report_navigation_panel.SurfacePublicTest.test_public_test_run_batch_pass_fail_unavailable_and_formula_mutation",
+      "test_report_navigation_panel.SurfaceSqlTest.test_panel_postgres_timer_refresh_audit",
+      "test_report_navigation_panel.SurfaceSqlTest.test_report_postgres_independent_audit"
+    ],
+    "checks": [
+      "typed metadata/XBQL data and independent formula values",
+      "lazy ЕСЛИ and unavailable missing references",
+      "nullable/union registrar type and fresh loads",
+      "stable layout sorting and roles",
+      "recursive navigation, inherited gates and blocked/native model opening",
+      "distinct repeated fragment/widget occurrences",
+      "cross-namespace private fixture ownership and same-name types",
+      "30-second exact boundary, multiple fixed-rate events, write/reload and close",
+      "independent PostgreSQL audit",
+      "public test/run/batch PASS/FAIL/UNSUPPORTED, formula mutation and unavailablePoints"
+    ]
+  },
+  "regression": {
+    "withoutDocker": {
+      "discovered": 165,
+      "passed": 62,
+      "skipped": 103,
+      "modules": [
+        "test_generated_types",
+        "test_capability_map",
+        "test_query_composites",
+        "test_query_joins",
+        "test_query_projections",
+        "test_query_sources",
+        "test_storage_queries",
+        "test_source_query",
+        "test_query_results",
+        "test_timer_events",
+        "test_interface_actions",
+        "test_metadata_lifecycle"
+      ],
+      "passedTests": [
+        "test_generated_types.GeneratedTypesTest.test_ambiguous_and_unsupported_types_are_not_guessed",
+        "test_generated_types.GeneratedTypesTest.test_lazy_rows_references_and_invalid_inputs",
+        "test_generated_types.GeneratedTypesTest.test_minimal_object_data_reference_and_row_operations_in_executor",
+        "test_generated_types.GeneratedTypesTest.test_module_cycles_are_rejected_before_writing_files",
+        "test_generated_types.GeneratedTypesTest.test_nested_blocks_preserve_exact_body_and_next_method",
+        "test_generated_types.GeneratedTypesTest.test_private_type_in_package_is_visible_within_subsystem",
+        "test_generated_types.GeneratedTypesTest.test_runtime_time_argument_compiles_in_9_0",
+        "test_generated_types.GeneratedTypesTest.test_time_generated_object_compiles_in_9_0",
+        "test_generated_types.GeneratedTypesTest.test_time_input_and_generated_object_field",
+        "test_generated_types.GeneratedTypesTest.test_union_variants_dates_and_strict_inputs",
+        "test_capability_map.CapabilityMapTest.test_all_families_have_api_decisions_and_capability_dependencies",
+        "test_capability_map.CapabilityMapTest.test_contract_validation_rejects_invalid_versions_oracle_types_and_inputs",
+        "test_capability_map.CapabilityMapTest.test_external_query_has_original_position_without_claiming_execution",
+        "test_capability_map.CapabilityMapTest.test_inventory_keeps_positions_categories_and_unknown_acceptance",
+        "test_capability_map.CapabilityMapTest.test_map_rejects_false_statuses_mixed_sources_and_dangling_links",
+        "test_capability_map.CapabilityMapTest.test_query_parse_failure_keeps_later_stages_unknown",
+        "test_capability_map.CapabilityMapTest.test_source_hash_and_occurrence_completeness_guard_reused_plans",
+        "test_capability_map.CapabilityMapTest.test_timer_is_scoped_without_source_acceptance_and_shadowing_is_respected",
+        "test_query_composites.CompositePlanTest.test_invalid_columns_scopes_correlations_and_indices",
+        "test_query_composites.CompositePlanTest.test_nested_capture_ranges_and_teacher_data_excluded",
+        "test_query_joins.JoinPlanTest.test_parameter_order_reuse_and_source_boundary_slots",
+        "test_query_joins.JoinPlanTest.test_sbsl_bag_comparison_preserves_multiplicity_and_storage_audit",
+        "test_query_joins.JoinPlanTest.test_scope_ambiguity_types_shadowing_and_required_slice_storage",
+        "test_query_joins.JoinPlanTest.test_typed_sources_aliases_ranges_lifts_fill_and_no_teacher_answers",
+        "test_query_projections.ProjectionPlanTest.test_decimal_source_precision_parameter_types_and_capture_order",
+        "test_query_projections.ProjectionPlanTest.test_invalid_group_types_aggregates_casts_and_distinct_are_unavailable",
+        "test_query_projections.ProjectionPlanTest.test_portable_typed_ast_ranges_group_aliases_and_no_teacher_answers",
+        "test_query_sources.SourcePlanTest.test_invalid_sources_fields_periods_shadowing_and_saved_cycles",
+        "test_query_sources.SourcePlanTest.test_metadata_types_source_ranges_and_expected_excluded",
+        "test_query_sources.SourcePlanTest.test_system_fixture_validation_and_nominal_refs",
+        "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes",
+        "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations",
+        "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges",
+        "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections",
+        "test_source_query.SourceQueryPlanTest.test_all_five_final_dump_forms_validate_plan_and_generate_without_execution",
+        "test_source_query.SourceQueryPlanTest.test_bare_slice_equals_empty_arguments_and_keeps_original_ranges",
+        "test_source_query.SourceQueryPlanTest.test_entry_is_original_query_with_no_method_or_expected",
+        "test_source_query.SourceQueryPlanTest.test_invalid_selectors_hashes_and_contracts",
+        "test_source_query.SourceQueryPlanTest.test_literal_occurrences_are_selected_without_running_containing_method",
+        "test_source_query.SourceQueryPlanTest.test_parameter_types_arrays_and_xbql_normalization",
+        "test_source_query.SourceQueryPlanTest.test_sbsl_multiset_keeps_duplicates_resources_and_action_order",
+        "test_source_query.SourceQueryPlanTest.test_union_case_is_typed_and_union_arithmetic_remains_unavailable",
+        "test_query_results.ResultPlanTest.test_dynamic_original_text_and_deferred_bindings",
+        "test_query_results.ResultPlanTest.test_local_project_constructor_spelling_is_excluded",
+        "test_query_results.ResultPlanTest.test_produced_nominal_rows_constructor_mapping_ranges_no_answers",
+        "test_query_results.ResultPlanTest.test_shadowing_reassignment_visibility_generated_public_constructor",
+        "test_query_results.ResultPlanTest.test_unrelated_project_execute_and_parameter_methods_are_not_query_api",
+        "test_timer_events.TimerPlanTest.test_action_reference_cannot_address_time_action",
+        "test_timer_events.TimerPlanTest.test_callback_closure_identity_ranges_and_no_teacher_answer",
+        "test_timer_events.TimerPlanTest.test_clock_date_time_moment_and_local_shadowing",
+        "test_timer_events.TimerPlanTest.test_dynamic_callbacks_and_bad_signatures_refused",
+        "test_timer_events.TimerPlanTest.test_invalid_contracts_and_steps",
+        "test_timer_events.TimerPlanTest.test_original_welcome_registration_plans_without_dump_execution",
+        "test_timer_events.TimerPlanTest.test_shadowed_api_is_original_project_code",
+        "test_interface_actions.InterfacePlanTest.test_computed_inputs_and_cyclic_component_bindings_refused",
+        "test_interface_actions.InterfacePlanTest.test_invalid_inputs_and_unsupported_actions_are_explicit",
+        "test_interface_actions.InterfacePlanTest.test_nineteen_final_declarations_prepare_without_business_execution",
+        "test_interface_actions.InterfacePlanTest.test_no_module_required_and_all_base_types",
+        "test_interface_actions.InterfacePlanTest.test_semantic_handler_and_full_source_identity_without_expected",
+        "test_metadata_lifecycle.LifecyclePlanTest.test_constraints_identity_params_and_no_expected",
+        "test_metadata_lifecycle.LifecyclePlanTest.test_invalid_options_and_unsupported_constraints",
+        "test_metadata_lifecycle.LifecyclePlanTest.test_storage_schema_matches_published_contract"
+      ]
+    },
+    "focused": {
+      "passed": 14,
+      "scriptRuntime": 10,
+      "recordSetPlans": 4,
+      "passedTests": [
+        "test_source_query.SourceQueryDockerTest.test_bare_slice_fixed_clock_empty_repeat_write_and_isolation",
+        "test_source_query.SourceQueryDockerTest.test_left_join_union_case_null_and_columns",
+        "test_source_query.SourceQueryDockerTest.test_transaction_actions_keep_detached_results",
+        "test_source_query.SourceQueryDockerTest.test_seconds_and_moment_slices_use_fixed_clock",
+        "test_query_joins.JoinDockerTest.test_fresh_reference_projections_capture_reexecute_write_and_rollback",
+        "test_query_projections.ProjectionDockerTest.test_portable_computed_aggregate_group_distinct_case_cast_fill_and_params",
+        "test_query_sources.SourceDockerTest.test_multiple_dimensions_resources_and_raw_inactive_rows",
+        "test_record_sets.RecordSetDockerTest.test_owner_registrar_collisions_and_computed_dependency_loop",
+        "test_timer_events.TimerDockerTest.test_portability_same_name_other_namespace_timezone_and_clock_types",
+        "test_interface_actions.InterfaceDockerTest.test_dynamic_label_tree_insertion_and_timer_binding",
+        "test_record_sets.RecordSetPlanTest.test_binding_spans_aliases_parameters_dependencies_and_unordered_grading",
+        "test_record_sets.RecordSetPlanTest.test_full_filter_required_and_teacher_input_errors",
+        "test_record_sets.RecordSetPlanTest.test_project_name_collision_shadowing_and_no_spy_reads",
+        "test_record_sets.RecordSetPlanTest.test_unconfirmed_period_and_filter_fields_are_unsupported"
+      ]
+    },
+    "uniquePassingTests": 76
+  },
+  "totalUniquePassingTests": 92,
+  "boundaries": [
+    "native pivot rendering/aggregate measures and hierarchy expansion",
+    "native dashboard placement and surface behavior",
+    "custom form handlers during navigation model opening",
+    "report reference ordering by identity rather than presentation",
+    "unsupported formula functions, union sorting, complex navigation conditions",
+    "external transaction for panel"
+  ],
+  "preserved": [
+    "all source archives",
+    "historical readiness maps and measurements",
+    "final-dump business assignments and expected values not created",
+    "CI schedule"
+  ]
+}

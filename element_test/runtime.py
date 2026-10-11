@@ -76,6 +76,20 @@ def decode_output(text):
         for action in observation.get('actions', []) if isinstance(observation, dict) else []:
             if 'events' in action:
                 action['events'] = [json.loads(event) for event in action['events']]
+    report_mode = value.pop('_reportSnapshots', None)
+    if report_mode:
+        observation = value['actual']['result'] if raw_storage else value['actual']
+        def decode_report(report):
+            report['values'] = [json.loads(row) for row in report['values']]
+        for action in observation.get('actions', []):
+            if report_mode == 'report':
+                decode_report(action)
+            else:
+                for report in action['observation']['widgets'].values():
+                    decode_report(report)
+                for event in action.get('events', []):
+                    for report in event['state']['widgets'].values():
+                        decode_report(report)
     value = neutralize_types(value, identities)
     if identities:
         value['typeIdentities'] = identities
@@ -385,7 +399,10 @@ def prepare_script(root, model, check, sandbox):
     from .renderer import render_plan
     plan = plan_execution(root, model, check)
     try:
-        if 'interface' in check:
+        if {'report', 'navigation', 'panel'} & check.keys():
+            from .report_runtime import render_surface
+            script = render_surface(plan, sandbox)
+        elif 'interface' in check:
             from .interface_runtime import render_interface
             script = render_interface(plan, sandbox)
         elif 'querySource' in check:

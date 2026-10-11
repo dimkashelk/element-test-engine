@@ -137,6 +137,9 @@ class ExecutionPlan:
     query_entry: dict = field(default_factory=dict)
     timers: dict = field(default_factory=dict)
     interface: dict = field(default_factory=dict)
+    report: dict = field(default_factory=dict)
+    navigation: dict = field(default_factory=dict)
+    panel: dict = field(default_factory=dict)
 
     def to_dict(self):
         lifecycle_contracts = self.storage.lifecycle_contracts if self.storage else []
@@ -169,6 +172,7 @@ class ExecutionPlan:
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,
                 "timers": self.timers, "interface": self.interface,
+                "report": self.report, "navigation": self.navigation, "panel": self.panel,
                 "observations": self.observations, "instanceProbes": self.probes, "declarations": self.declarations,
                 "typeRequirements": self.type_requirements, "unavailable": self.unavailable}
 
@@ -177,6 +181,12 @@ class ExecutionPlan:
 
 
 def plan_execution(root, source_model, check):
+    entries = {'report', 'navigation', 'panel', 'interface', 'querySource', 'formRequirement'} & check.keys()
+    if len(entries) > 1:
+        raise InvalidTestError('runtime требует один декларативный вход')
+    if entries & {'report', 'navigation', 'panel'}:
+        from .report_runtime import plan_surface
+        return plan_surface(root, source_model, check)
     if 'interface' in check:
         from .interface_runtime import plan_interface
         return plan_interface(root, source_model, check)

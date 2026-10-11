@@ -19,6 +19,18 @@ def union_members(type_name):
     return parts + [type_name[start:]] if parts else []
 
 
+def clone_reference(c, typ, value):
+    variants = [v for v in (union_members(typ) or [typ]) if v != '?']
+    if any(not v.rstrip('?').endswith('.Ссылка') for v in variants):
+        from .yaml_io import UnsupportedSyntaxError
+        raise UnsupportedSyntaxError('Копирование ссылки требует ссылочные варианты union')
+    variants = [c.sbsl_type(v.rstrip('?')) for v in variants]
+    result = 'новый ' + variants[-1] + '(Идентификатор = (' + value + ' как ' + variants[-1] + ').Идентификатор)'
+    for variant in reversed(variants[:-1]):
+        result = '(' + value + ' это ' + variant + ' ? новый ' + variant + '(Идентификатор = (' + value + ' как ' + variant + ').Идентификатор) : ' + result + ')'
+    return '(' + value + ' == Неопределено ? Неопределено : ' + result + ')' if typ.endswith('?') else result
+
+
 class ProjectTypes:
     def __init__(self, model, namespace="", imports=()):
         self.model, self.namespace, self.imports = model, namespace, imports

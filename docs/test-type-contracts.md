@@ -2,7 +2,7 @@
 
 №46 реализует спецификацию и read-only карту инфраструктуры.
 №47 реализует [исходный query entry](source-query-execution.md), №48 —
-[управляемые часы и таймеры](timer-events.md); №49 — [состояния и действия UI](interface-actions.md). №50 — [ограничения и lifecycle](metadata-lifecycle.md). №51–52 остаются в очереди.
+[управляемые часы и таймеры](timer-events.md); №49 — [состояния и действия UI](interface-actions.md). №50 — [ограничения и lifecycle](metadata-lifecycle.md). №51 — [отчёты, навигация и панель](report-navigation-panel.md). №52 остаётся в очереди.
 Семейства не добавляются в YAML `type`.
 Результаты исполнения/баллы по Dvizhok-final не формируются.
 
@@ -151,4 +151,5 @@ python3 -m element_test.capability_map --project Dvizhok-final.xdump \
 [измерения механизма](test-type-stage-049-measurements.json).
 [№50 реализовано в ограниченном контракте](tasks/050-metadata-lifecycle-and-storage.md);
 [измерения механизма](test-type-stage-050-measurements.json).
-Очередь №51–52 сохраняет зависимости и первые блокировки. Следующий этап — P1 №51.
+№51 реализован в ограниченном [runtime-контракте](report-navigation-panel.md).
+Очередь №52 сохраняет зависимости и первые блокировки. Следующий этап — P2 №52.
