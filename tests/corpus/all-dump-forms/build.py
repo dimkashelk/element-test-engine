@@ -1,4 +1,5 @@
 """Offline fixture authoring; grading never derives expected from a submission."""
+import argparse
 from copy import deepcopy
 from hashlib import sha256
 import json
@@ -119,9 +120,18 @@ def runtime_requirement(root,model,form,expression,index):
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--dump', action='append', help='Author only selected archives; preserve other frozen fixtures')
+    args=parser.parse_args()
+    dumps=sorted(REPO.glob('*.xdump'))
+    if args.dump:
+        unknown=set(args.dump)-{p.name for p in dumps}
+        if unknown:parser.error('Unknown archive: '+', '.join(sorted(unknown)))
+        dumps=[p for p in dumps if p.name in args.dump]
     dvizhok=load_assignment(REPO/'assignments/dvizhok-declarative-bindings')['checks']
-    projects=[]
-    for dump in sorted(REPO.glob('*.xdump')):
+    projects=([p for p in json.loads((OUT/'manifest.json').read_text())['projects'] if p['dump'] not in args.dump]
+              if args.dump else [])
+    for dump in dumps:
         with TemporaryDirectory() as directory:
             for root in extract_project(dump,Path(directory)):
                 meta=load_yaml(root/'Проект.yaml',metadata=True);model=analyze(root)
@@ -153,6 +163,7 @@ def main():
                 projects.append({'dump':dump.name,'project':identity,'archiveSha256':sha256(dump.read_bytes()).hexdigest(),
                                  'sourceHash':model['sourceHash'],'forms':files})
                 print(identity,len(forms),'forms')
+    projects.sort(key=lambda p:(p['dump'], p['project']))
     write(OUT/'manifest.json',{'schemaVersion':1,'projects':projects,'forms':sum(len(p['forms']) for p in projects)})
 
 if __name__=='__main__':main()

@@ -1,5 +1,6 @@
 """Full unittest regression with durable progress and strict skip accounting."""
 import argparse
+from importlib.util import find_spec
 from datetime import datetime, timezone
 import json
 import os
@@ -16,7 +17,7 @@ from tools.ci.sharding import aggregate_reports, shard_suites
 OUTPUT = ROOT / 'result/nightly/result.json'
 WEIGHTS = ROOT / 'config/nightly-module-timings.json'
 REQUIRED_DUMPS = (
-    'Dvizhok.xdump', 'Demo-SRM-dev-2026-09-28-21-38.xdump',
+    'Dvizhok.xdump', 'Dvizhok-final.xdump', 'Demo-SRM-dev-2026-09-28-21-38.xdump',
     'Prakticheskie-primery-2026-09-30-15-20.xdump', 'autocheck-2026-09-24-16-14.xdump',
 )
 
@@ -42,6 +43,8 @@ def preflight():
     for key in ('ELEMENT_TEST_DOCKER_TESTS', 'ELEMENT_TEST_INTEGRATION_TESTS'):
         if os.environ.get(key) != '1':
             raise RuntimeError(key + '=1 is required for a full regression')
+    if find_spec('jsonschema') is None:
+        raise RuntimeError("jsonschema is required for a full regression; install '.[test]'")
     for name in REQUIRED_DUMPS:
         if not (ROOT / name).is_file():
             raise RuntimeError('Required fixture missing: ' + name)

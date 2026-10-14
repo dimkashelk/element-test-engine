@@ -33,12 +33,12 @@ class FormCorpusTest(unittest.TestCase):
                         plan=json.loads((output/'execution-plan.json').read_text())
                         self.assertIsNone(plan['entry']);self.assertNotIn('expected',plan)
                         planned+=1
-        self.assertEqual(planned,153)
+        self.assertEqual(planned,308)
 
     def test_complete_manifest_and_contracts(self):
         self.assertEqual({p['dump'] for p in MANIFEST['projects']},{p.name for p in REPO.glob('*.xdump')})
-        self.assertEqual(len(MANIFEST['projects']),5)
-        self.assertEqual(MANIFEST['forms'],303)
+        self.assertEqual(len(MANIFEST['projects']),6)
+        self.assertEqual(MANIFEST['forms'],322)
         identities=set();criteria=0
         for project in MANIFEST['projects']:
             self.assertEqual(sha256((REPO/project['dump']).read_bytes()).hexdigest(),project['archiveSha256'])
@@ -56,9 +56,9 @@ class FormCorpusTest(unittest.TestCase):
                 if project['dump']!='Dvizhok.xdump':
                     self.assertEqual(len(data['expressions']),len(covered)+len(data['unavailable']))
                 criteria+=len(ids)
-        self.assertEqual(len(identities),303);self.assertGreater(criteria,485)
+        self.assertEqual(len(identities),322);self.assertGreater(criteria,485)
         cases=[v for v in globals().values() if isinstance(v,type) and issubclass(v,NightlyFormCase) and v is not NightlyFormCase]
-        self.assertEqual(sum(unittest.defaultTestLoader.loadTestsFromTestCase(case).countTestCases() for case in cases),303)
+        self.assertEqual(sum(unittest.defaultTestLoader.loadTestsFromTestCase(case).countTestCases() for case in cases),322)
         write_json(REPO/'result/all-dump-forms/prepared-coverage.json',coverage_summary())
 
     def test_declaration_mutations_are_scored_by_sbsl(self):

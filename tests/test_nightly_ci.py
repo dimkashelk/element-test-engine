@@ -10,9 +10,21 @@ from unittest.mock import patch
 
 from tools.ci.assets import digest, package, unpack
 from tools.ci.run_nightly import form_corpus_summary, run_suite, summary
+from tools.ci import run_nightly as nightly
 
 
 class NightlyCiTest(unittest.TestCase):
+    def test_preflight_rejects_missing_schema_validator_before_running_tests(self):
+        with patch.dict(os.environ, {'ELEMENT_TEST_DOCKER_TESTS': '1', 'ELEMENT_TEST_INTEGRATION_TESTS': '1'}), \
+                patch.object(nightly, 'find_spec', return_value=None):
+            with self.assertRaisesRegex(RuntimeError, 'jsonschema is required'):
+                nightly.preflight()
+
+    def test_source_query_uses_standard_integration_opt_in(self):
+        import test_source_query
+        sql_test = test_source_query.SourceQueryDockerTest.test_postgres_uses_same_source_entry_and_independent_audit
+        self.assertEqual(getattr(sql_test, '__unittest_skip__', False), os.getenv('ELEMENT_TEST_INTEGRATION_TESTS') != '1')
+
     def test_form_summary_preserves_missing_and_unavailable_coverage(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);manifest=root/'manifest.json'

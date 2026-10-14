@@ -289,7 +289,7 @@ class SourceQueryDockerTest(SourceQueryFixture):
         first = json.loads((base / 'batch' / batch['submissions'][0]['result']).read_text())
         self.assertEqual([c['status'] for c in first['checks']], ['PASS', 'FAIL'])
 
-    @unittest.skipUnless(os.getenv('ELEMENT_TEST_SQL_TESTS') == '1', 'PostgreSQL opt-in')
+    @unittest.skipUnless(os.getenv('ELEMENT_TEST_INTEGRATION_TESTS') == '1', 'PostgreSQL opt-in')
     def test_postgres_uses_same_source_entry_and_independent_audit(self):
         c = config(); c['storage']['backend'] = 'postgres'
         c['integration'] = {'backend': 'postgres', 'operation': 'metadata-storage'}
