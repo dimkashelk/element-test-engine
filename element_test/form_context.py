@@ -37,9 +37,10 @@ def describe_form(element, extended=False):
     base = props.get('Наследует', {})
     match = re.fullmatch(r'ФормаОбъекта<(.+\.Объект)>', base.get('Тип', ''))
     record = re.fullmatch(r'ФормаЗаписиНабораКонстант<(.+\.Запись)>', base.get('Тип', ''))
+    client_application = base.get('Тип') == 'ПроизвольноеКлиентскоеПриложение'
     extra = extended and (record or base.get('Тип') in {'ПроизвольноеКлиентскоеПриложение', 'СтандартноеКлиентскоеПриложениеСРазделами'})
-    if not match and base.get('Тип') != 'Форма' and not extra:
-        raise UnsupportedSyntaxError('Контекст формы требует Наследует.Тип: Форма или ФормаОбъекта<T.Объект>')
+    if not match and base.get('Тип') != 'Форма' and not client_application and not extra:
+        raise UnsupportedSyntaxError('Контекст формы требует Наследует.Тип: Форма, ФормаОбъекта<T.Объект> или ПроизвольноеКлиентскоеПриложение')
     fields = props.get('Свойства', [])
     if not isinstance(fields, list):
         raise UnsupportedSyntaxError('Свойства формы должны быть списком')
