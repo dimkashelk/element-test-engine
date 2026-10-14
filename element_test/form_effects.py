@@ -239,7 +239,8 @@ def generate_effects(plan,c):
             while initial_name in {a['name'] for a in args}:initial_name+='_'
             while target_name in {a['name'] for a in args}:target_name+='_'
             body+='    знч '+initial_name+' = новый '+form['canonical']+'('+', '.join(a['name']+' = '+a['name'] for a in args)+')\n'
-            body+='    знч '+target_name+' = СериализацияJson.ПрочитатьОбъект<'+form['canonical']+'>(СериализацияJson.ЗаписатьОбъект('+initial_name+'), '+initial_name+'.ПолучитьТип())\n'
+            from .reference_codec import encode, decode
+            body+='    знч '+target_name+' = '+decode(c, 'СериализацияJson.ПрочитатьОбъект(СериализацияJson.ЗаписатьОбъект('+encode(c, initial_name, form['canonical'])+'))', form['canonical'])+'\n'
             if form['objectType']:
                 body+='    '+target_name+'.Объект.ТестСостояниеНовизны = '+c.literal(lifecycle['isNew'],'Булево')+'\n'
             body+='    '+target_name+'.'+lifecycle['method']+'()\n'

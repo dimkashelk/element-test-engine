@@ -208,7 +208,11 @@ def render_source_query(plan, sandbox):
         result, rows = 'Выборка' + str(index), 'Строки' + str(index)
         invocation += ('    знч ' + result + ' = ЗапросДанных.Выполнить()\n'
                        '    знч ' + rows + ' = ' + result + '.ВМассив()\n')
-        observation = '{"rows": ' + rows + ', "cardinality": ' + rows + '.Размер(), "columns": ' + result + '.ПолучитьОписанияКолонок(), "resource": ' + result + '.ТестНаблюдение()}'
+        from .reference_codec import encode
+        row_observation = encode(c, rows, 'Массив<' + plan.queries[0]['rowType'] + '>')
+        observation = '{"rows": ' + row_observation + ', "cardinality": ' + rows + '.Размер(), "columns": ' + result + '.ПолучитьОписанияКолонок(), "resource": ' + result + '.ТестНаблюдение()}'
+        if plan.report:
+            observation = plan._report_read.replace('.Read()', '.Evaluate(' + rows + ')')
         if multiple:
             invocation += '    Действия.Добавить(СериализацияJson.ЗаписатьОбъект(' + observation + '))\n'
     actual = '{"actions": Действия}' if multiple else observation

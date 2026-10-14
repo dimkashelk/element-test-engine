@@ -143,6 +143,7 @@ class ExecutionPlan:
     branches: list = field(default_factory=list)
 
     def to_dict(self):
+        from .reference_codec import describe as describe_reference_codec
         lifecycle_contracts = self.storage.lifecycle_contracts if self.storage else []
         if self.storage and self.storage.config.get('lifecycle'):
             from .metadata_lifecycle import describe
@@ -169,6 +170,7 @@ class ExecutionPlan:
                 "queryEntry": self.query_entry,
                 "recordSets": self.record_sets,
                 "metadataLifecycle": lifecycle_contracts,
+                "referenceCodec": describe_reference_codec(self.contracts),
                 "metadataCompilation": getattr(self.contracts, 'storage_module_names', {}),
                 "formContext": self.form, "formOpenings": self.openings, "openFormContexts": self.open_forms,
                 "constants": self.constants, "clock": self.clock, "executorLocale": self.executor_locale,

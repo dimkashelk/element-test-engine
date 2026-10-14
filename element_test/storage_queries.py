@@ -30,7 +30,7 @@ def generate_public_query(query, contracts):
     return name
 
 
-def generate_query(query, contracts):
+def generate_query(query, contracts, *, native_loader=False):
     """Only metadata/AST become code; no rows, expected values or Python filter."""
     if query.source_kind in ('union','batch','temporary'):
         from .query_composites import generate_composite_query
@@ -41,7 +41,7 @@ def generate_query(query, contracts):
     if query.source_kind not in {'ordinary','slice-last','slice-first'}:
         from .query_sources import generate_source_query
         return generate_source_query(query,contracts)
-    name = query_name(query)
+    name = query_name(query) + ('Native' if native_loader else '')
     if name in contracts.definitions:
         return name
     parameters = unique_parameters(query)
@@ -64,6 +64,7 @@ def generate_query(query, contracts):
     row_type = query.fill['type'] if query.fill else 'СтрокаРезультата'
     if not query.fill:
         text += declaration('СтрокаРезультата', query.projections, readonly=True)
+        contracts.fields[name + '.СтрокаРезультата'] = [{'Имя': label, 'Тип': f.type} for f, label in query.projections]
     text += '@Глобально\nструктура Запрос\n'
     text += ''.join('    знч П' + str(p.slot) + ': ' + contracts.sbsl_type(p.type) + '\n' for p in parameters)
     if sliced:
@@ -84,8 +85,10 @@ def generate_query(query, contracts):
     text += row_guard(query,contracts)
     projected = '{' + ', '.join(contracts.literal(f.name,'Строка') + ': '+(period_type+'{Максимум}' if next_period and f.name=='СледующийПериод' else 'Снимок[' + contracts.literal(f.name,'Строка') + ']')
                               for f in required.values()) + '}'
-    text += ('                знч Проекция = СериализацияJson.ЗаписатьОбъект(' + projected + ')\n'
-             '                знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>)\n')
+    from .reference_codec import materialize
+    row_decode = ('СериализацияJson.ПрочитатьОбъект<Данные>(СериализацияJson.ЗаписатьОбъект(' + projected + '), Тип<Данные>)'
+                  if native_loader else materialize(contracts, name + '.Данные', required.values(), projected))
+    text += '                знч СтрокаДанных = ' + row_decode + '\n'
     if query.source_filter:
         text += '                если не ('+filter_condition(query,contracts,helpers=source_helpers)+')\n                    продолжить\n                ;\n'
     if sliced:

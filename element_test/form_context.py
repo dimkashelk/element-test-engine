@@ -321,7 +321,8 @@ def form_observation(plan, *, form=None, paths=None, variable='Контекст'
         if typ in c.fields:
             return '{' + ', '.join(sbsl_literal(f['Имя'],'Строка') + ': ' + snapshot(expression+'.'+f['Имя'],f['Тип'])
                                    for f in c.fields[typ]) + '}'
-        return expression
+        from .reference_codec import encode
+        return encode(c, expression, typ)
     paths = paths or plan.check.get('observe') or [f['Имя'] for f in c.fields[form['canonical']]]
     return '{' + ', '.join(sbsl_literal(p,'Строка') + ': ' + snapshot(variable+'.'+p,
                             validate_path(c,form['canonical'],p.split('.'),teacher=True)) for p in paths) + '}'

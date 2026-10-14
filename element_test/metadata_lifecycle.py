@@ -95,10 +95,16 @@ def validation(c, fields, prefix, *, indent='    ', unique=False, identity=None,
                 reject(expr + ' == Неопределено', 'required')
             if base == 'Строка':
                 reject((expr + ' != Неопределено и ' if nullable else '') + value + '.Пусто()', 'required')
-            elif base.endswith('.Ссылка'):
+            elif base.endswith('.Ссылка') and not members:
                 identifier = value + '.Идентификатор'
                 default = c.literal('00000000-0000-0000-0000-000000000000', 'Ууид') if c.reference_id_type == 'Ууид' else lit('')
                 reject((expr + ' != Неопределено и ' if nullable else '') + identifier + ' == ' + default, 'required')
+        if empty == 'ЗапретитьВсегда' and members:
+            from .reference_codec import reference_union
+            for variant in reference_union(base):
+                identifier = '(' + expr + ' как ' + c.sbsl_type(variant) + ').Идентификатор'
+                default = c.literal('00000000-0000-0000-0000-000000000000', 'Ууид') if c.reference_id_type == 'Ууид' else lit('')
+                reject(expr + ' это ' + c.sbsl_type(variant) + ' и ' + identifier + ' == ' + default, 'required')
         inner = indent
         if nullable:
             lines.append(indent + 'если ' + expr + ' != Неопределено')
@@ -249,11 +255,13 @@ def numbering(c, element, owner):
 def object_validation(storage, element, owner, id_text):
     c = storage.contracts
     from .generated_types import union_members
-    for fields in [c.fields[owner + '.Данные']] + [c.fields[owner + '.' + t['Имя']] for t in element['properties'].get('ТабличныеЧасти', [])]:
+    from .reference_codec import reference_union
+    field_groups = [c.fields[owner + '.Данные']] + [c.fields[owner + '.' + t['Имя']] for t in element['properties'].get('ТабличныеЧасти', [])]
+    for fields in field_groups:
         for field in fields:
             members = union_members(field['Тип']) or []
-            if sum(t.rstrip('?').endswith('.Ссылка') for t in members) > 1:
-                raise UnsupportedSyntaxError('Объектный union нескольких ссылок требует тегированное хранение: ' + field['Имя'])
+            if sum(t.endswith('.Ссылка') for t in members) > 1 and not reference_union(field['Тип']):
+                raise UnsupportedSyntaxError('Смешанный union нескольких ссылок вне контракта тегированного хранения: ' + field['Имя'])
     code = numbering(c, element, owner)
     code += validation(c, c.fields[owner + '.Данные'], 'этот.', unique=True,
                        identity=qualified(element), id_expression=id_text)

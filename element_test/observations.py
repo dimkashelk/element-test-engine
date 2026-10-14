@@ -30,7 +30,7 @@ def instrument(source, identity, enum_map_value_type=None, parameter_observers=N
         original = source[expression.start:expression.end]
         transported = name
         if return_observer:
-            transported = return_observer.format(value=name)
+            transported = return_observer.replace('{value}', name)
         transport = ''
         if enum_map_value_type:
             transported = name + 'Транспорт'

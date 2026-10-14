@@ -162,9 +162,16 @@ def render_plan(plan, sandbox):
                          for p in parse_module(symbol.source)[0][0].parameters(symbol.source)
                          if contracts.canonical_type(p.partition(':')[2].strip()) in result_types}
             result_return = contracts.canonical_type(parse_module(symbol.source)[0][0].return_type(symbol.source) or 'ничто') in result_types
+            from .reference_codec import encode, needed
+            for p in parse_module(symbol.source)[0][0].parameters(symbol.source):
+                name, _, typ = p.partition(':')
+                if needed(contracts, typ.strip()):
+                    observers[name.strip()] = encode(contracts, name.strip(), typ.strip())
+            source_return = parse_module(symbol.source)[0][0].return_type(symbol.source)
+            return_observer = '{value}.ТестНаблюдение()' if result_return else encode(contracts, '{value}', source_return) if source_return and needed(contracts, source_return) else None
             compiled = instrument(compiled, '::'.join(filter(None, (symbol.identity.project,
                                   symbol.identity.namespace, symbol.identity.owner, declaration.name))), enum_map_value_type=enum_value,
-                                  parameter_observers=observers, return_observer='{value}.ТестНаблюдение()' if result_return else None)
+                                  parameter_observers=observers, return_observer=return_observer)
         if owner["sourceFile"] == module["sourceFile"]:
             adapted.append(compiled)
             root_compiled[declaration.name] = compiled
@@ -251,7 +258,12 @@ def render_plan(plan, sandbox):
         known = {f["Имя"] for f in contracts.fields[contracts.canonical_type(module["name"])]}
         if len(set(fields)) != len(fields) or set(fields) - known:
             raise InvalidTestError("observe содержит неизвестные или повторяющиеся поля")
-        observed = "{" + ", ".join(sbsl_literal(f, "Строка") + ": Контекст." + f for f in fields) + "}"
+        from .reference_codec import encode
+        declared = {f['Имя']: f['Тип'] for f in contracts.fields[contracts.canonical_type(module['name'])]}
+        observed = '{' + ', '.join(sbsl_literal(f, 'Строка') + ': ' + encode(contracts, 'Контекст.' + f, declared[f]) for f in fields) + '}'
+    elif is_object:
+        from .reference_codec import encode
+        observed = encode(contracts, 'Контекст', contracts.canonical_type(module['name']))
     if is_object:
         object_type = plan.form['canonical'] if plan.form else contracts.canonical_type(module["name"])
         if mocks.get('registers'):
@@ -291,14 +303,15 @@ def render_plan(plan, sandbox):
         argument_setup = ''
         if check.get('snapshotArgs', False):
             variables = ['ТестАргумент' + index + '_' + str(i) for i in range(len(prepared))]
-            argument_setup = ''.join('    знч ' + n + ' = ' + v + '\n' for n, v in zip(variables, prepared))
+            argument_setup = ''.join('    знч ' + n + ': ' + contracts.sbsl_type(t) + ' = ' + v + '\n' for n, v, t in zip(variables, prepared, parameter_types))
             prepared = variables
         arguments = ', '.join(prepared)
         expression = ('Контекст.' if is_object else '') + name + '(' + arguments + ')'
         result = 'Результат' + index
         if result_type and result_type != 'ничто':
             invocation = '    знч ' + result + ' = ' + expression + '\n'
-            transported = result
+            from .reference_codec import encode
+            transported = encode(contracts, '(' + result + ' как ' + contracts.sbsl_type(result_type) + ')', result_type)
             mapping = re.fullmatch(r'(?:Читаемое)?Соответствие<(.+)>', contracts.canonical_type(result_type))
             if mapping:
                 from .indexer import split_parameters
@@ -331,7 +344,9 @@ def render_plan(plan, sandbox):
                           + '    ;\n')
             actual = '{"result": ' + actual + ', "exception": ' + exception + '}'
         if check.get('snapshotArgs', False):
-            actual = '{"result": ' + actual + ', "args": ' + ('[' + arguments + ']' if arguments else 'новый Массив<Объект?>()') + '}'
+            from .reference_codec import encode
+            observed_args = ', '.join(encode(contracts, v, t) for v, t in zip(prepared, parameter_types))
+            actual = '{"result": ' + actual + ', "args": ' + ('[' + observed_args + ']' if arguments else 'новый Массив<Объект?>()') + '}'
         if check.get('snapshotConstants', False):
             from .session_contracts import constants_observation
             actual = '{"result": ' + actual + ', "constants": ' + constants_observation(plan) + '}'

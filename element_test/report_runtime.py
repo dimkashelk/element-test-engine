@@ -196,12 +196,14 @@ def _report(root, model, plain, e, selector=None, shared=None):
                  '            знч V = Values[J]\n            Values[J] = Values[J - 1]\n            Values[J - 1] = V\n            J -= 1\n        ;\n        I += 1\n    ;\n')
     body += '    знч Rows = новый Массив<Строка>()\n    для Value из Values\n'
     # The report snapshot decoder preserves typed union/reference values.
-    values = ', '.join(c.literal(f['id'],'Строка') + ': Value.F'+str(i) for i,f in enabled)
+    from .reference_codec import encode
+    values = ', '.join(c.literal(f['id'],'Строка') + ': ' + encode(c, 'Value.F'+str(i), compiled[i][1]) for i,f in enabled)
     body += '        Rows.Добавить(СериализацияJson.ЗаписатьОбъект({' + values + '}))\n    ;\n'
     structure = {'fields': [{k:v for k,v in f.items() if k not in {'formula','position','yamlPath'}} for f in layout_fields],
                  'display': layout.get('ВидОтображения','СводнаяТаблица'),
                  'hierarchy': [f['id'] for _,f in enabled if 'Иерархия' in f['roles']]}
-    body += '    возврат {"data": Data, "values": Rows, "layout": ' + c.literal(structure,'Объект') + ', "cardinality": Data.Размер()}\n'
+    observed_data = encode(c, 'Data', 'Массив<' + row_type + '>')
+    body += '    возврат {"data": ' + observed_data + ', "values": Rows, "layout": ' + c.literal(structure,'Объект') + ', "cardinality": Data.Размер()}\n'
     for method in compiler.methods: _method(c, helper, method, compiler.types)
     _method(c, helper, 'метод Evaluate(Data: Массив<'+c.sbsl_type(row_type)+'>): Соответствие<Строка, Объект?>\n'+body+';', [row_type, value_type])
     query_name, query_values, _, _ = plan._query_driver
@@ -364,9 +366,6 @@ def render_surface(plan, sandbox):
         # Reuse query execution, write sequencing, resources and SQL publication.
         script = render_source_query(plan, sandbox)
         text = script.read_text()
-        import re
-        text = re.sub(r'\{"rows": (Строки\d+), "cardinality": \1\.Размер\(\), "columns": Выборка\d+\.ПолучитьОписанияКолонок\(\), "resource": Выборка\d+\.ТестНаблюдение\(\)\}',
-                      lambda m: plan._report_read.replace('.Read()', '.Evaluate('+m[1]+')'), text)
         text = text.replace(', \"_snapshotMode\": \"sequence\"', ', \"_snapshotMode\": \"sequence\", \"_reportSnapshots\": \"report\"')
         script.write_text(text)
         return script

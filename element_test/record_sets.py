@@ -45,13 +45,18 @@ def attach_register(storage, name):
         raise InputError('Набор хранения требует полный фильтр измерений/регистратора')
     ft, st, row = owner + '.ФильтрНабора', owner + '.НаборЗаписей', owner + '.Запись'
     rows = 'Массив<' + row + '>'
+    from .reference_codec import encode, decode
+    if accumulation:
+        c.reference_codec_raw_fields = getattr(c, 'reference_codec_raw_fields', {})
+        c.reference_codec_raw_fields[row] = {'Регистратор'}
     literal = lambda v: c.literal(v, 'Строка')
     # Field order comes from metadata. Tagged union values preserve registrar
     # types even when their reference UUIDs and serialized fields are identical.
     def values(fs, prefix=''):
+        from .reference_codec import encode, reference_union
         return '{' + ', '.join(literal(f['Имя']) + ': ' +
-            ('{"type": (' + prefix + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + prefix + f['Имя'] + '}'
-             if '|' in f['Тип'] else prefix + f['Имя']) for f in fs) + '}'
+            (encode(c, prefix + f['Имя'], f['Тип']) if reference_union(f['Тип']) else
+             '{"type": (' + prefix + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + prefix + f['Имя'] + '}' if '|' in f['Тип'] else prefix + f['Имя']) for f in fs) + '}'
     signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in dims)
     key = values(dims)
     def clone_ref(expr, typ):
@@ -99,6 +104,7 @@ def attach_register(storage, name):
         from .metadata_lifecycle import validation, describe
         checks = validation(c, c.fields[row], 'СтрокаНабора.', indent='            ') + checks
         storage.lifecycle_contracts.append(describe(e))
+    encoded_rows = encode(c, 'Результат', rows)
     definition = definition[:start] + f'''    @Глобально
     метод Прочитать()
         если Фильтр.Ключ == Неопределено
@@ -140,7 +146,7 @@ def attach_register(storage, name):
         знч Ключи = новый Соответствие<Строка, Булево>()
         для СтрокаНабора из Результат
 {checks}        ;
-        ТестСессия.Записать({literal(identity)}, Ключ, СериализацияJson.ЗаписатьОбъект(Результат))
+        ТестСессия.Записать({literal(identity)}, Ключ, СериализацияJson.ЗаписатьОбъект({encoded_rows}))
         если не Замещать
             Записи.Очистить()
         ;
@@ -159,17 +165,19 @@ def attach_register(storage, name):
         # Reference JSON alone cannot disambiguate equal-shaped union members.
         # The typed filter supplies the concrete registrar identity for every
         # row in this full-filter bucket; each row receives a fresh reference.
+        decoded_row = decode(c, 'Снимок', row)
         materialize += f'''        знч Сырые: Объект? = СериализацияJson.ПрочитатьОбъект(JSON)
         для Значение из (Сырые как Массив<Объект?>)
             знч Снимок = Значение как Соответствие<Строка, Объект?>
             Снимок.Удалить("Регистратор")
-            знч СтрокаНабора = СериализацияJson.ПрочитатьОбъект<{row}>(СериализацияJson.ЗаписатьОбъект(Снимок), новый {row}().ПолучитьТип())
+            знч СтрокаНабора = {decoded_row}
             СтрокаНабора.Регистратор = {clone_ref('(Фильтр.ЗначениеРегистратора как ' + registrar_type + ')', registrar_type)}
             Результат.Добавить(СтрокаНабора)
         ;
 '''
     else:
-        materialize += f'        Результат.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<{rows}>(JSON, Результат.ПолучитьТип()))\n'
+        decoded_rows = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON)', rows)
+        materialize += f'        Результат.ДобавитьВсе({decoded_rows})\n'
     materialize += '        возврат Результат\n    ;\n'
     definition = definition.rsplit(';', 1)[0] + materialize + ';\n'
     c.definitions[st] = definition
@@ -219,7 +227,11 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
     """
     lit = lambda v: c.literal(v, 'Строка')
     rows = 'Массив<' + row + '>'
+    from .reference_codec import encode, decode
     unique = dims + [f for f in c.fields[row] if f['Имя'] == 'Период']
+    encoded_bucket = encode(c, 'Группы[Ключ]', rows)
+    decoded_full = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON как Строка)', rows)
+    decoded_all = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON)', rows)
     definition = c.definitions[st]
     start = definition.index('    @Глобально\n    метод Прочитать()')
     validation = ''
@@ -271,7 +283,7 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
         ;
         знч Таблица = новый Соответствие<Строка, Строка>()
         для Ключ из Группы.Ключи()
-            Таблица.Вставить(Ключ, СериализацияJson.ЗаписатьОбъект(Группы[Ключ]))
+            Таблица.Вставить(Ключ, СериализацияJson.ЗаписатьОбъект({encoded_bucket}))
         ;
         ТестСессия.ЗаписатьТаблицу({lit(identity)}, Таблица)
         если не Замещать
@@ -291,7 +303,7 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
         если Отбор.Размер() == {len(dims)}
             знч JSON = ТестСессия.Прочитать({lit(identity)}, Фильтр.Ключ как Строка)
             если JSON != Неопределено
-                Новые.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<{rows}>(JSON как Строка, Новые.ПолучитьТип()))
+                Новые.ДобавитьВсе({decoded_full})
             ;
             Записи = Новые
             возврат
@@ -323,7 +335,7 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
         знч Состояние = ТестСессия.ЧитатьВсе()
         если Состояние.СодержитКлюч({lit(identity)})
             для JSON из Состояние[{lit(identity)}].Значения()
-                Результат.ДобавитьВсе(СериализацияJson.ПрочитатьОбъект<{rows}>(JSON, Результат.ПолучитьТип()))
+                Результат.ДобавитьВсе({decoded_all})
             ;
         ;
         возврат Результат

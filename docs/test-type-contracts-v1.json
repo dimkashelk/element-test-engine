@@ -380,7 +380,7 @@
       "dependencies": [
         "metadata-structure"
       ],
-      "firstGap": "Declared scalar constraints; dynamic numbering prefixes and ambiguous object reference unions remain unsupported",
+      "firstGap": "Declared constraints and tagged nominal reference unions; dynamic numbering prefixes and arbitrary object unions remain unsupported",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {
@@ -393,7 +393,7 @@
         "method-runtime",
         "query-source"
       ],
-      "firstGap": "Atomic object/register/constant staging; partial register filters, register handlers and concurrent native lifecycle remain unsupported",
+      "firstGap": "Atomic object/register/constant staging and partial independent-register filters; empty filters, register handlers and concurrent native lifecycle remain unsupported",
       "technicalAcceptance": "not-checked-for-this-source"
     },
     {

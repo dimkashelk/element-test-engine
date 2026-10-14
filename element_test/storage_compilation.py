@@ -80,8 +80,8 @@ def definition(c, name, text):
         # Each generated type is prefixed by its original technical owner.
         for match in re.finditer(rf'(?<=структура ){IDENT}|(?<=перечисление ){IDENT}|(?<=исключение ){IDENT}', code):
             edits.append((match.start(), match.end(), owner + match[0]))
-        # Manager operations are the only global methods generated for entities.
-        if variant == 'Менеджер':
+        # Entity managers and codec adapters expose global methods.
+        if variant == 'Менеджер' or variant.startswith('ТестCodec'):
             for match in re.finditer(rf'(?<=метод ){IDENT}(?=\()', code):
                 edits.append((match.start(), match.end(), owner + match[0]))
         variants = {key.partition('.')[2] for key in c.fields if key.startswith(owner + '.')}

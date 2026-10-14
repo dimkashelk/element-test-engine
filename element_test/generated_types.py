@@ -301,7 +301,7 @@ class ProjectTypes:
                 raise InputError(f"Некорректное поле сгенерированного типа {type_name}: {name}")
             names.add(name)
             previous = self.namespace, self.imports
-            self.namespace, self.imports = element['namespace'], ()
+            self.namespace, self.imports = element['namespace'], element['properties'].get('Импорт', ())
             try:
                 self.require(field_type, element['namespace'])
                 field_type = self.canonical_type(field_type)
@@ -309,11 +309,14 @@ class ProjectTypes:
                 self.namespace, self.imports = previous
             field = {**field, 'Тип': field_type}
             fields[fields.index(next(f for f in fields if f['Имя'] == name))] = field
+            required_union = bool(union_members(field_type)) and not field_type.endswith('?') and 'ЗначениеПоУмолчанию' not in field
+            if required_union:
+                field['constructorRequired'] = True
             default = ""
             if "ЗначениеПоУмолчанию" in field:
                 default = " = " + self.literal(field["ЗначениеПоУмолчанию"], field_type)
             emitted_type = re.sub(r'(?<![\w:.])Объект(?![\w.])', 'Стд::Объект', self.sbsl_type(field_type))
-            lines.append(f"    пер {name}: {emitted_type}{default}")
+            lines.append(f"    {'обз ' if required_union else ''}пер {name}: {emitted_type}{default}")
         self.active.remove(type_name)
         self.fields[type_name] = fields
         self.definitions[type_name] = "\n".join(lines + [";", ""])
@@ -362,6 +365,8 @@ class ProjectTypes:
                 return 'Неопределено'
             variants = [m for m in members if m != '?']
             if isinstance(value, dict) and set(value) == {'type', 'value'}:
+                if not isinstance(value['type'], str):
+                    raise InvalidTestError('Тег union требует строковый type')
                 selected = self.canonical_type(value['type'])
                 if selected not in variants:
                     raise InvalidTestError(f'Вариант {selected} не входит в {type_name}')
@@ -385,7 +390,7 @@ class ProjectTypes:
                 text=json.dumps(value,ensure_ascii=False,allow_nan=False)
             except (ValueError,TypeError) as exc:
                 raise InvalidTestError('Объект требует конечное JSON-значение') from exc
-            return 'СериализацияJson.ПрочитатьОбъект<Объект>('+sbsl_literal(text,'Строка')+')'
+            return 'СериализацияJson.ПрочитатьОбъект<Объект>('+sbsl_literal(text,'Строка')+', Тип<Объект>)'
         if type_name == 'Ууид':
             import uuid
             if not isinstance(value, str) or not re.fullmatch(

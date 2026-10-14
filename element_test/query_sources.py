@@ -97,7 +97,8 @@ def filter_condition(q, c, snapshot=False, helpers=None):
         def value(self, e, row='С', group='Группа'):
             if e.kind=='field':
                 if snapshot:
-                    value='СериализацияJson.ПрочитатьОбъект<'+c.sbsl_type(e.type)+'>(СериализацияJson.ЗаписатьОбъект(Снимок['+c.literal(e.name,'Строка')+']), Тип<'+c.sbsl_type(e.type)+'>)'
+                    from .reference_codec import decode
+                    value=decode(c, 'Снимок['+c.literal(e.name,'Строка')+']', e.type)
                     return '('+value+')'
                 return 'СтрокаДанных.'+e.name
             return super().value(e,row,group)
@@ -247,16 +248,22 @@ def generate_source_query(q,c):
     name=query_name(q)
     if name in c.definitions:return name
     plain=replace(q, source_kind='ordinary',period_slot=None,end_slot=None,source_filter=None)
-    existed=query_name(plain) in c.definitions
-    other=generate_query(plain,c); text=c.definitions[other].replace(other,name)
+    existed=query_name(plain)+'Native' in c.definitions
+    other=generate_query(plain,c,native_loader=True); text=c.definitions[other].replace(other,name)
+    for typ in list(c.fields):
+        if typ.startswith(other + '.'):
+            c.fields[name + typ[len(other):]] = c.fields[typ]
+            if not existed:del c.fields[typ]
     dependencies=c.method_dependencies[other]
     if not existed:del c.definitions[other];del c.method_dependencies[other]
     lit=lambda v:c.literal(v,'Строка')
     helpers={}
     required={f.name:f for f,_ in q.projections+q.predicates+q.ordering}
-    union_refs = [f for f in required.values() if '|' in f.type]
-    if any(f.name != 'Регистратор' or not q.register_kind or any(not t.endswith('.Ссылка') for t in f.type.rstrip('?').rstrip('|').split('|')) for f in union_refs):
-        raise UnsupportedSyntaxError('Union источника требует типизированный ключ регистратора')
+    from .reference_codec import reference_union
+    union_fields = [f for f in required.values() if '|' in f.type]
+    if any(not reference_union(f.type) for f in union_fields):
+        raise UnsupportedSyntaxError('Union источника требует ссылочные варианты')
+    union_refs = [f for f in union_fields if f.name == 'Регистратор' and q.register_kind]
     fields=''.join('    пер '+f.name+': '+c.sbsl_type(f.type + ('|?' if '|' in f.type and not f.type.endswith('?') else ''))+'\n' for f in required.values())
     a=text.index('структура Данные\n')+len('структура Данные\n'); b=text.index(';\n',a)
     text=text[:a]+fields+text[b:]
@@ -308,15 +315,19 @@ def generate_source_query(q,c):
         read+=period_totals_loader(q,c,required) if expanded else totals_loader(q,c,required)
     else:
         projected='{'+', '.join(lit(f.name)+': Снимок['+lit(f.name)+']' for f in required.values())+'}'
-        read+='        для Снимок из Исходные\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            знч СтрокаДанных = СериализацияJson.ПрочитатьОбъект<Данные>(Проекция, Тип<Данные>)\n            Все.Добавить(СтрокаДанных)\n        ;\n'
+        from .reference_codec import materialize
+        dto_fields = [replace(f, type=f.type + ('|?' if '|' in f.type and not f.type.endswith('?') else '')) for f in required.values()]
+        row_decode = materialize(c, name + '.Данные', dto_fields, 'СериализацияJson.ПрочитатьОбъект(Проекция)')
+        read+='        для Снимок из Исходные\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')\n            знч СтрокаДанных = '+row_decode+'\n            Все.Добавить(СтрокаДанных)\n        ;\n'
     if union_refs:
+        from .reference_codec import identity
         union_code = ''
         for f in union_refs:
             tag = 'Снимок["__RegistrarTag"]'
             union_code += '            пер Matched = Ложь\n'
             for variant in f.type.rstrip('?').rstrip('|').split('|'):
                 emitted = c.sbsl_type(variant)
-                union_code += ('            если '+tag+' == Тип<'+emitted+'>.ВСтроку()\n'
+                union_code += ('            если '+tag+' == Тип<'+emitted+'>.ВСтроку() или '+tag+' == '+c.literal(identity(c,variant),'Строка')+'\n'
                     '                СтрокаДанных.'+f.name+' = СериализацияJson.ПрочитатьОбъект<'+emitted+'>(СериализацияJson.ЗаписатьОбъект(Снимок["__RegistrarValue"]), Тип<'+emitted+'>)\n'
                     '                Matched = Истина\n            ;\n')
             union_code += '            если не Matched\n                выбросить новый ИсключениеНеподдерживаемаяОперация("Неизвестный тип регистратора источника")\n            ;\n'

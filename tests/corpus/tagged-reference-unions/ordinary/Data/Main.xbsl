@@ -1,0 +1,48 @@
+метод Persist(Value: Data::Item.Ссылка|Other::Item.Ссылка|?, Rows: Массив<Card.Rows>, Fail: Булево): Card.Объект?
+    знч O = новый Card.Объект(Ссылка = Card.ПолучитьСсылку("11111111-1111-4111-8111-111111111111"), Choice = Value, Rows = Rows, Scalar = "text")
+    O.Записать(новый Card.ПараметрыЗаписи(Fail = Fail))
+    возврат O.Ссылка.ЗагрузитьОбъект()
+;
+метод Read(): Card.Объект?
+    возврат Card.ПолучитьСсылку("11111111-1111-4111-8111-111111111111").ЗагрузитьОбъект()
+;
+метод Load(Value: Data::Item.Ссылка|Other::Item.Ссылка|?): Строка
+    если Value это Data::Item.Ссылка
+        знч O = (Value как Data::Item.Ссылка).ЗагрузитьОбъект()
+        возврат O == Неопределено ? "missing-A" : (O как Data::Item.Объект).Label
+    иначе если Value это Other::Item.Ссылка
+        знч O = (Value как Other::Item.Ссылка).ЗагрузитьОбъект()
+        возврат O == Неопределено ? "missing-B" : (O как Other::Item.Объект).Label
+    ;
+    возврат "NULL"
+;
+метод Equal(A: Data::Item.Ссылка|Other::Item.Ссылка|?, B: Data::Item.Ссылка|Other::Item.Ссылка|?): Булево
+    возврат A == B
+;
+метод Query(): Массив<Result>
+    возврат Запрос{ВЫБРАТЬ Choice КАК Ref ЗАПОЛНИТЬ Result ИЗ Card}.Выполнить()
+;
+
+метод LoadStored(): Строка
+    знч O = Read()
+    возврат O == Неопределено ? "missing" : Load((O как Card.Объект).Choice)
+;
+метод Fresh(): Строка
+    знч R: Data::Item.Ссылка = Data::Item.ПолучитьСсылку("22222222-2222-4222-8222-222222222222")
+    знч O = R.ЗагрузитьОбъект() как Data::Item.Объект
+    O.Label = "updated-A"
+    O.Записать()
+    возврат LoadStored()
+;
+метод DetachedReferences(): Булево
+    знч O = Read() как Card.Объект
+    знч Again = Read() как Card.Объект
+    (O.Rows[0].Choice как Data::Item.Ссылка).Идентификатор = "33333333-3333-4333-8333-333333333333"
+    O.Rows[0].Index = 900
+    возврат O.Rows[3].Choice == O.Choice и Again.Rows[0].Choice == O.Choice и Again.Rows[0].Index == 0
+;
+метод Unavailable(): Строка
+    знч R = новый Flow.НаборЗаписей()
+    R.Фильтр.Установить()
+    возврат "unavailable"
+;

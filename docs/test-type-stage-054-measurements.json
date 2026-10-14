@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "stage": 54,
+  "date": "2026-10-11",
+  "scope": "nominal tagged reference union transport for isolated metadata storage; technical fixtures, not final business acceptance",
+  "contract": "tagged-reference-union-v1",
+  "observationContract": "nominal-reference-union-v1",
+  "contractDocument": "docs/tagged-reference-union-storage.md",
+  "publicYamlTypesAdded": [],
+  "optionsChanged": false,
+  "irAddition": "referenceCodec: contract, observationContract, full owner tag, nullable, resolved field variants",
+  "archive": {
+    "file": "Dvizhok-final.xdump",
+    "sha256": "47a37b2dff3364d7965ba90459eaacad8001549311c308e5ab4e41e659cad520",
+    "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+    "unchanged": true,
+    "comparison": "HEAD bytes"
+  },
+  "technicalAcceptance": {
+    "uniquePassingTests": 9,
+    "tests": [
+      "test_tagged_reference_unions.ReferenceUnionPlanTest.test_contract_resolved_full_owners_no_expected_and_invalid_tags",
+      "test_tagged_reference_unions.ReferenceUnionPlanTest.test_final_declarative_money_source_preparation",
+      "test_tagged_reference_unions.ReferenceUnionPlanTest.test_metadata_imports_and_union_order_do_not_guess_identity",
+      "test_tagged_reference_unions.ReferenceUnionPlanTest.test_mixed_reference_scalar_union_is_explicitly_unavailable",
+      "test_tagged_reference_unions.ReferenceUnionPublicTest.test_test_run_batch_independent_expected_mutation_and_invalid_tag",
+      "test_tagged_reference_unions.ReferenceUnionRuntimeTest.test_catalog_form_snapshots_and_register_union_resource",
+      "test_tagged_reference_unions.ReferenceUnionRuntimeTest.test_nonnullable_union_requires_explicit_constructor_and_round_trips",
+      "test_tagged_reference_unions.ReferenceUnionRuntimeTest.test_nullable_empty_required_and_report_formula",
+      "test_tagged_reference_unions.ReferenceUnionRuntimeTest.test_transitions_tables_snapshots_identity_query_loading_rollback_and_profiles"
+    ],
+    "suite": "tests/test_tagged_reference_unions.py",
+    "matrix": {
+      "fixtures": [
+        "ordinary",
+        "renamed"
+      ],
+      "backends": [
+        "memory",
+        "postgres"
+      ],
+      "idTypes": [
+        "Строка",
+        "Ууид"
+      ],
+      "transitionCases": 8,
+      "fixtureRuntimeExecutions": 20
+    },
+    "transitions": [
+      {
+        "id": "ordinary-False-Строка-transition",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "9.0"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/ordinary-False-Строка-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test"
+      },
+      {
+        "id": "ordinary-False-Ууид-transition",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "current"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/ordinary-False-Ууид-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test"
+      },
+      {
+        "id": "ordinary-True-Строка-transition",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "9.0"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/ordinary-True-Строка-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "ordinary-True-Ууид-transition",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "current"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/ordinary-True-Ууид-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "renamed-False-Строка-transition",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "9.0"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/renamed-False-Строка-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test"
+      },
+      {
+        "id": "renamed-False-Ууид-transition",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "current"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/renamed-False-Ууид-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test"
+      },
+      {
+        "id": "renamed-True-Строка-transition",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "9.0"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/renamed-True-Строка-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "renamed-True-Ууид-transition",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "runtime": {
+          "executorVersion": "10.0.2-1",
+          "sourceCompatibilityVersion": "9.0",
+          "executionCompatibilityVersion": "current"
+        },
+        "actions": 16,
+        "evidence": "result/tagged-reference-unions/renamed-True-Ууид-transition.json",
+        "independentSqlAudit": "asserted against teacher state in test",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      }
+    ],
+    "otherScenarios": [
+      {
+        "id": "empty-null-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/empty-null-False.json"
+      },
+      {
+        "id": "empty-null-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/empty-null-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "required-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/required-False.json"
+      },
+      {
+        "id": "required-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/required-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "report-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/report-False.json"
+      },
+      {
+        "id": "report-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/report-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "catalog-form-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/catalog-form-False.json"
+      },
+      {
+        "id": "catalog-form-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/catalog-form-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "register-union-report-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/register-union-report-False.json"
+      },
+      {
+        "id": "register-union-report-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/register-union-report-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      },
+      {
+        "id": "nonnullable-False",
+        "backend": "memory",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/nonnullable-False.json"
+      },
+      {
+        "id": "nonnullable-True",
+        "backend": "postgres",
+        "status": "EXECUTED",
+        "evidence": "result/tagged-reference-unions/nonnullable-True.json",
+        "independentSqlAuditEvidence": "independentSqlAudit field in evidence"
+      }
+    ],
+    "independentOracle": "teacher card/rows/register state and public assignment expected; expected values never drive execution plan",
+    "sqlAudit": "PostgresSession.audit SELECT is captured independently, normalized and compared to teacher state; raw independentSqlAudit saved in SQL fixture evidence",
+    "assertions": [
+      "A to B to NULL to A; same UUID distinct full owners",
+      "equal refs of same owner; unequal refs of different owners; NULL equality",
+      "ordered repeated nullable table rows; detached reference and table copies; independent До",
+      "typed arguments and return trace; snapshotArgs",
+      "zero UUID versus NULL; declared required rule; explicit nonnullable constructor",
+      "fresh owner loading after write; query union and report Ref/Ref.Label",
+      "atomic after-hook failure: previous variant/ID and movement survive",
+      "catalog form state and SQL snapshots; accumulation union resource",
+      "imports and reversed union order; ambiguous/foreign/unknown/invalid-ID rejected",
+      "mixed multiple-reference/scalar union explicitly unsupported"
+    ]
+  },
+  "publicAcceptance": [
+    {
+      "entry": "public-test",
+      "statuses": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "evidence": "result/tagged-reference-unions/public-test.json"
+    },
+    {
+      "entry": "public-run",
+      "statuses": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "evidence": "result/tagged-reference-unions/public-run.json"
+    },
+    {
+      "entry": "public-batch-one",
+      "statuses": [
+        "PASS",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 2,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "evidence": "result/tagged-reference-unions/public-batch-one.json"
+    },
+    {
+      "entry": "public-batch-two",
+      "statuses": [
+        "FAIL",
+        "FAIL",
+        "UNSUPPORTED"
+      ],
+      "score": 0,
+      "maxScore": 4,
+      "unavailablePoints": 3,
+      "evidence": "result/tagged-reference-unions/public-batch-two.json"
+    }
+  ],
+  "invalidTag": {
+    "status": "UNSUPPORTED",
+    "reasonCode": "invalid_test",
+    "falsePass": false,
+    "evidence": "result/tagged-reference-unions/invalid-tag.json"
+  },
+  "finalSourcePreparation": [
+    {
+      "backend": "memory",
+      "plan": "result/tagged-reference-unions/final-memory-plan.json",
+      "generation": "ready",
+      "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "sourceCompatibility": "9.0",
+      "execution": "not-checked",
+      "businessAcceptanceTask": 56,
+      "evidence": "result/tagged-reference-unions/final-memory-preflight.json",
+      "planStatus": "ready"
+    },
+    {
+      "backend": "postgres",
+      "plan": "result/tagged-reference-unions/final-postgres-plan.json",
+      "generation": "ready",
+      "sourceHash": "a2ba9a8403f38501508286f54375b5d4e26466a4216ad459da610f7d9e8ad93c",
+      "sourceCompatibility": "9.0",
+      "execution": "not-checked",
+      "businessAcceptanceTask": 56,
+      "evidence": "result/tagged-reference-unions/final-postgres-preflight.json",
+      "planStatus": "ready"
+    }
+  ],
+  "businessAcceptance": {
+    "status": "not-checked",
+    "task": 56,
+    "requirementsTask": 55
+  },
+  "regression": {
+    "uniquePassingTests": 51,
+    "tests": [
+      "test_capability_map.CapabilityMapTest.test_all_families_have_api_decisions_and_capability_dependencies",
+      "test_capability_map.CapabilityMapTest.test_contract_validation_rejects_invalid_versions_oracle_types_and_inputs",
+      "test_capability_map.CapabilityMapTest.test_external_query_has_original_position_without_claiming_execution",
+      "test_capability_map.CapabilityMapTest.test_inventory_keeps_positions_categories_and_unknown_acceptance",
+      "test_capability_map.CapabilityMapTest.test_map_rejects_false_statuses_mixed_sources_and_dangling_links",
+      "test_capability_map.CapabilityMapTest.test_query_parse_failure_keeps_later_stages_unknown",
+      "test_capability_map.CapabilityMapTest.test_source_hash_and_occurrence_completeness_guard_reused_plans",
+      "test_capability_map.CapabilityMapTest.test_timer_is_scoped_without_source_acceptance_and_shadowing_is_respected",
+      "test_creation_from_base.CreationPlanTest.test_invalid_probe_paths_values_actions_and_targets",
+      "test_creation_from_base.CreationPlanTest.test_portable_qualified_alias_union_and_same_short_owners",
+      "test_creation_from_base.CreationPlanTest.test_six_roots_types_ranges_closure_and_independent_expected",
+      "test_creation_from_base.CreationPlanTest.test_source_method_without_final_newline_gets_separate_attached_methods",
+      "test_creation_from_base.CreationPlanTest.test_transport_keeps_typed_union_and_raw_storage_without_native_type_loading",
+      "test_creation_from_base.CreationPlanTest.test_wrong_base_reference_fixture_and_sequence_rejected",
+      "test_metadata_lifecycle.DomainsLifecycleTest.test_before_creation_update_detachment_nullable_enum_and_scalar_union",
+      "test_metadata_lifecycle.LifecycleExecutionTest.test_normalization_required_bounds_unique_tables_and_after_rollback",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_constraints_identity_params_and_no_expected",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_invalid_options_and_unsupported_constraints",
+      "test_metadata_lifecycle.LifecyclePlanTest.test_storage_schema_matches_published_contract",
+      "test_record_sets.RecordSetDockerTest.test_owner_registrar_collisions_and_computed_dependency_loop",
+      "test_record_sets.RecordSetPlanTest.test_binding_spans_aliases_parameters_dependencies_and_unordered_grading",
+      "test_record_sets.RecordSetPlanTest.test_partial_filter_and_teacher_input_errors",
+      "test_record_sets.RecordSetPlanTest.test_project_name_collision_shadowing_and_no_spy_reads",
+      "test_record_sets.RecordSetPlanTest.test_unconfirmed_period_and_filter_fields_are_unsupported",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_formula_if_is_lazy_and_missing_reference_is_unavailable",
+      "test_report_navigation_panel.SurfaceExecutionTest.test_original_xbql_and_union_registrar_formulas",
+      "test_report_navigation_panel.SurfacePlanTest.test_all_final_dump_surfaces_prepare_without_business_execution",
+      "test_report_navigation_panel.SurfacePlanTest.test_formula_ir_is_distinct_and_rejects_unknown_language",
+      "test_report_navigation_panel.SurfacePlanTest.test_invalid_selectors_actions_schema_and_unsupported_formulas",
+      "test_report_navigation_panel.SurfacePlanTest.test_navigation_recurses_gates_routes_native_and_ambiguity",
+      "test_report_navigation_panel.SurfacePlanTest.test_panel_layout_dependencies_interval_and_preparation",
+      "test_report_navigation_panel.SurfacePlanTest.test_repeated_fragment_occurrences_and_duplicate_widget_data_sources",
+      "test_report_navigation_panel.SurfacePlanTest.test_report_plan_has_source_provenance_types_and_no_oracle",
+      "test_storage_queries.StorageQueryPlanTest.test_ambiguous_sources_wrong_parameter_type_shadow_and_modes",
+      "test_storage_queries.StorageQueryPlanTest.test_plan_binding_original_spans_aliases_and_no_expectations",
+      "test_storage_queries.StorageQueryPlanTest.test_reused_parameter_has_one_slot_and_all_source_ranges",
+      "test_storage_queries.StorageQueryPlanTest.test_token_boundaries_nested_parameters_comments_and_rejections",
+      "test_storage_query_fill.FillDockerTest.test_business_mutations_are_sbsl_fail_and_recovery",
+      "test_storage_query_fill.FillDockerTest.test_captured_order_reexecution_write_mutation_rollback_and_old_snapshots",
+      "test_storage_query_fill.FillDockerTest.test_invalid_fixture_timeout_unsupported_and_next_supported",
+      "test_storage_query_fill.FillDockerTest.test_nominal_structure_input_uses_helper_constructor_and_rejects_missing_required_field",
+      "test_storage_query_fill.FillDockerTest.test_portable_defaults_nominal_helper_new_array_fresh_and_collision",
+      "test_storage_query_fill.FillDockerTest.test_real_both_direct_roots_and_independent_rounding_history",
+      "test_storage_query_fill.FillDockerTest.test_sticky_backend_error_after_catch_and_recovery",
+      "test_storage_query_fill.FillDockerTest.test_unknown_alias_uses_positional_constructor",
+      "test_storage_query_fill.FillPlanTest.test_catalog_all_projects_stable_ids_and_visible_malformed_candidates",
+      "test_storage_query_fill.FillPlanTest.test_catalog_evidence_is_per_occurrence_and_requires_runtime_and_direct_root",
+      "test_storage_query_fill.FillPlanTest.test_ir_nominal_identity_spans_mapping_defaults_and_no_expected",
+      "test_storage_query_fill.FillPlanTest.test_ordinary_readonly_and_literal_strings_comments_nested_parameters",
+      "test_storage_query_fill.FillPlanTest.test_type_rejections_have_ranges_and_unreachable_types_are_lazy",
+      "test_storage_query_fill.FillPlanTest.test_visibility_fully_qualified_and_alias_same_nominal_type"
+    ],
+    "totalUniquePassingIncludingTechnical": 60,
+    "completeRepositoryRun": false,
+    "timingAndReruns": [
+      {
+        "group": "main targeted 29",
+        "seconds": 161.792,
+        "result": "28 pass; public test had nonempty reused batch-output error"
+      },
+      {
+        "group": "public rerun after temp-output correction",
+        "seconds": 23.552,
+        "result": "1 pass"
+      },
+      {
+        "group": "plans metadata/creation/record set",
+        "seconds": 10.954,
+        "result": "13 pass; overlaps main"
+      },
+      {
+        "group": "query/fill/report/metadata/record plans",
+        "seconds": 14.71,
+        "result": "24 pass; 13 beyond main"
+      },
+      {
+        "group": "legacy union registrar and lazy report formulas",
+        "seconds": 15.765,
+        "result": "2 pass"
+      },
+      {
+        "group": "final technical plus scalar-union and capability-map regression",
+        "seconds": 122.661,
+        "result": "16 pass; transition test failed 4 renamed subcases because trace assertion used old Rows parameter name"
+      },
+      {
+        "group": "mixed-union boundary",
+        "seconds": 0.075,
+        "result": "1 pass"
+      },
+      {
+        "group": "transition rerun with portable trace parameter",
+        "result": "1 pass, all 8 backend/fixture/id-profile subcases; explicit trace and independent SQL assertions",
+        "seconds": 54.328
+      }
+    ],
+    "earlierFillDockerTests": "8 test methods passed during development; combined run also had two report-loader failures, resolved and rerun separately",
+    "remaining": "complete repository/nightly regression and final business scenarios are separate"
+  }
+}

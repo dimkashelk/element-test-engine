@@ -558,6 +558,9 @@ def render_binding(plan, sandbox):
 
 def observation_value(c, expression, typ):
     """Preserve union ownership even when Script serializes equal-shaped refs."""
+    from .reference_codec import encode, needed
+    if needed(c, typ):
+        return encode(c, expression, typ)
     variants = union_members(typ)
     if not variants:
         return expression

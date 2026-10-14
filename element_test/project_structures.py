@@ -40,8 +40,9 @@ def generate_structure(c, name, element):
                     raise UnsupportedSyntaxError('Модификатор структуры должен быть Булево: ' + modifier)
             typ = c.canonical_type(typ)
             base = typ.rstrip('?')
+            from .reference_codec import reference_union
             enum = c.canonical_elements.get(base)
-            if base not in SCALARS and not base.endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
+            if not reference_union(typ) and base not in SCALARS and not base.endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
                 raise UnsupportedSyntaxError('Тип поля YAML-структуры вне скалярного контракта: ' + typ)
             c.require(typ)
             default = ''

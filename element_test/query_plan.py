@@ -292,7 +292,8 @@ def parse_simple_storage_query(text, contracts):
             raise UnsupportedSyntaxError('Union-поле среза требует отдельного типизированного контракта')
         scalars = {'Строка', 'Число', 'Булево', 'Ууид', 'Дата', 'ДатаВремя', 'Момент'}
         enum = contracts.canonical_elements.get(field.type.rstrip('?'))
-        if field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
+        from .reference_codec import reference_union
+        if not reference_union(field.type) and field.type.rstrip('?') not in scalars and not field.type.rstrip('?').endswith('.Ссылка') and not (enum and enum['elementType'] == 'Перечисление'):
             raise UnsupportedSyntaxError('Тип поля запроса вне контракта: ' + field.type)
         contracts.require(field.type)
         return field

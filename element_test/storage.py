@@ -468,7 +468,9 @@ class MetadataStorage:
         obj, ref, data = owner + '.Объект', owner + '.Ссылка', owner + '.Данные'
         for typ in (obj, ref, data):
             c.require(typ)
+        from .reference_codec import encode, decode, needed
         literal = lambda v: c.literal(v, 'Строка')
+        loaded = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON как Строка)', obj)
         id_type = c.reference_id_type
         id_text = 'Идентификатор.ВСтроку()' if id_type == 'Ууид' else 'Идентификатор'
         c.attach_method(ref, f'''метод ЗагрузитьОбъект(Заблокировать: Булево = Ложь): {obj}?
@@ -479,16 +481,19 @@ class MetadataStorage:
     если JSON == Неопределено
         возврат Неопределено
     ;
-    возврат СериализацияJson.ПрочитатьОбъект<{obj}>(JSON как Строка, новый {obj}().ПолучитьТип())
+    возврат {loaded}
 ;
 ''', ['ТестСессия.Записи'])
+        required = [f for f in c.fields[obj] if f.get('constructorRequired')]
+        create = ('выбросить новый ИсключениеНеподдерживаемаяОперация("Обязательные union-поля требуют явный конструктор объекта")'
+                  if required else f'возврат новый {obj}()')
         c.definitions[owner + '.Менеджер'] = f'''@Глобально
 метод ПолучитьСсылку(Ид: {id_type}): {ref}
     возврат новый {ref}(Идентификатор = Ид)
 ;
 @Глобально
 метод СоздатьОбъект(): {obj}
-    возврат новый {obj}()
+    {create}
 ;
 '''
         if id_type == 'Ууид':
@@ -499,9 +504,8 @@ class MetadataStorage:
 '''
         projection = ', '.join(f['Имя'] + ' = этот.' + f['Имя'] for f in c.fields[data])
         previous_projection = ', '.join(f['Имя'] + ' = Снимок.' + f['Имя'] for f in c.fields[data])
-        before = (f'    знч Старый = Ссылка.ЗагрузитьОбъект()\n    пер До: {data}\n'
-                  f'    если Старый == Неопределено\n        До = новый {data}({projection})\n'
-                  f'    иначе\n        знч Снимок = Старый как {obj}\n'
+        before = (f'    знч Старый = Ссылка.ЗагрузитьОбъект()\n    пер До = новый {data}({projection})\n'
+                  f'    если Старый != Неопределено\n        знч Снимок = Старый как {obj}\n'
                   f'        До = новый {data}({previous_projection})\n    ;\n')
         handlers = c.methods.get(obj, '')
         calls_before = '    ПередЗаписью(До, Параметры)\n' if 'метод ПередЗаписью(' in handlers else ''
@@ -519,7 +523,8 @@ class MetadataStorage:
             if not any(item['owner'] == schema.identity for item in self.lifecycle_contracts):
                 self.lifecycle_contracts.append(describe(element))
             # The handler sees a detached pre-write value, including all tables.
-            before += f'    До = СериализацияJson.ПрочитатьОбъект<{data}>(СериализацияJson.ЗаписатьОбъект(До), До.ПолучитьТип())\n'
+            before += '    До = ' + decode(c, 'СериализацияJson.ПрочитатьОбъект(СериализацияJson.ЗаписатьОбъект(' + encode(c, 'До', data) + '))', data) + '\n'
+        stored = encode(c, 'этот', obj) if needed(c, obj) else stored
         parameters = f'    знч Параметры = ПараметрыЗаписи == Неопределено ? новый {owner}.ПараметрыЗаписи() : ПараметрыЗаписи как {owner}.ПараметрыЗаписи\n'
         body = f'{parameters}{before}{calls_before}{validation}    ТестСессия.Записать({literal(schema.identity)}, {id_text}, СериализацияJson.ЗаписатьОбъект({stored}))\n{calls_after}'
         if self.config.get('lifecycle'):
@@ -549,7 +554,10 @@ class MetadataStorage:
             from .resolution import qualified
             typ = self.query_snapshot_types.get(qualified(matches[0])) or c.canonical_type(owner + '.Объект')
             obj = c.literal(value, typ)
-            if 'ТестСостояниеНовизны' in c.definitions[typ]:
+            from .reference_codec import encode, needed
+            if needed(c, typ):
+                obj = encode(c, obj, typ)
+            if not needed(c, typ) and 'ТестСостояниеНовизны' in c.definitions[typ]:
                 obj = '{' + ', '.join(c.literal(f['Имя'], 'Строка') + ': (' + obj + ').' + f['Имя'] for f in c.fields[typ]) + '}'
             identifier = value['Ссылка'].get('Идентификатор')
             c.literal(identifier, c.reference_id_type)
