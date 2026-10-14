@@ -21,10 +21,6 @@ def attach_register(storage, name):
     identity = qualified(e)
     if e['elementType'] == 'РегистрСведений' and e['properties'].get('РежимЗаписи') == 'ПодчинениеРегистратору':
         raise UnsupportedSyntaxError('Подчинённый регистр сведений 10.0 вне контракта хранения')
-    if any(m['namespace'] == e['namespace'] and m['name'] == e['name'] + '.НаборЗаписей'
-           and any(n['name'] in {'ПередЗаписью', 'ПослеЗаписи'} for n in m.get('methods', []))
-           for m in c.model.get('modules', [])):
-        raise UnsupportedSyntaxError('Исходные обработчики набора регистра пока не поддержаны')
     if identity in storage.register_schemas:
         return
     if e['properties'].get('ПериодВходитВОсновнойФильтр', False):
@@ -39,6 +35,16 @@ def attach_register(storage, name):
             dims = [f for f in e['properties'].get('Реквизиты', []) if f['Имя'] == 'Регистратор']
         dims = [{**f, 'Тип': c.canonical_type(f['Тип'])} for f in dims]
         owner = c.canonical_type(identity)
+        parameters = owner + '.ПараметрыЗаписи'
+        parameter_fields = [dict(f) for f in e['properties'].get('ПараметрыЗаписи', [])]
+        for field in parameter_fields:
+            c.require(field['Тип'])
+            field['Тип'] = c.canonical_type(field['Тип'])
+        c.fields[parameters] = parameter_fields
+        c.definitions[parameters] = '@Глобально\nструктура ПараметрыЗаписи\n' + ''.join(
+            '    пер ' + f['Имя'] + ': ' + c.sbsl_type(f['Тип']) +
+            (' = ' + c.literal(f['ЗначениеПоУмолчанию'], f['Тип']) if 'ЗначениеПоУмолчанию' in f else '') + '\n'
+            for f in parameter_fields) + ';\n'
     finally:
         c.namespace, c.imports = previous
     if not dims:
@@ -188,10 +194,50 @@ def attach_register(storage, name):
     c.method_dependencies[ft] = [f['Тип'] for f in dims]
     storage.register_schemas[identity] = {'owner': identity, 'kind': e['elementType'],
         'rowType': row, 'setType': st, 'filterType': ft, 'filterFields': dims,
+        'parameterType': parameters,
         'fields': c.fields[row], 'periodicity': e['properties'].get('Периодичность', 'Непериодический'),
         'backend': storage.config.get('backend', 'memory'), 'contract': CONTRACT,
         'limitations': ['full-filter-only' if accumulation else 'nonempty-named-dimension-subset',
-                        'unordered', 'isolated-staging', 'no-balances', 'no-register-handlers']}
+                        'unordered', 'isolated-staging', 'no-balances']}
+
+
+def attach_handlers(storage):
+    """Wrap the generated persistence API after original instance methods attach.
+
+    Teacher setup bypasses callbacks. A savepoint spans both hooks and every
+    nested write, even without the optional metadata validation contract.
+    """
+    from .metadata_lifecycle import atomic
+    c = storage.contracts
+    for schema in storage.register_schemas.values():
+        st = schema['setType']
+        source = c.methods.get(st, '')
+        nodes = {n.name: n for n in parse_module(source)[0]}
+        hooks = [name for name in ('ПередЗаписью', 'ПослеЗаписи') if name in nodes]
+        if not hooks or schema.get('handlers'):
+            continue
+        for name in hooks:
+            node = nodes[name]
+            params = node.parameters(source)
+            if (len(params) not in {1, 2} or params[0].partition(':')[2].partition('=')[0].strip() != 'Булево'
+                    or len(params) == 2 and params[1].partition(':')[2].strip() != schema['parameterType']
+                    or node.return_type(source) not in {None, 'ничто'}):
+                raise UnsupportedSyntaxError('Обработчик набора требует ' + name + '(Замещать: Булево[, ПараметрыЗаписи]) без результата')
+        definition = c.definitions[st].replace('метод Записать(Замещать:', 'метод ТестЗаписатьБезОбработчиков(Замещать:', 1)
+        pt = schema['parameterType']
+        def invoke(name):
+            if name not in hooks:
+                return ''
+            args = 'Замещать' + (', ТестПараметрыЗаписи' if len(nodes[name].parameters(source)) == 2 else '')
+            return '        ' + name + '(' + args + ')\n'
+        body = '        знч ТестПараметрыЗаписи = ПараметрыЗаписи == Неопределено ? новый ' + pt + '() : ПараметрыЗаписи как ' + pt + '\n'
+        body += invoke('ПередЗаписью')
+        body += '        ТестЗаписатьБезОбработчиков(Замещать)\n'
+        body += invoke('ПослеЗаписи')
+        wrapper = '    @Глобально\n    метод Записать(Замещать: Булево = Истина, ПараметрыЗаписи: ' + pt + '? = Неопределено)\n' + atomic(body, indent='        ') + '    ;\n'
+        c.definitions[st] = definition.rsplit(';', 1)[0] + wrapper + ';\n'
+        schema['handlers'] = hooks
+        c.method_dependencies[st].append(pt)
 
 
 def filter_method(c, schema, names):
@@ -411,7 +457,9 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
             # Author setup represents historical inactive rows, without
             # expanding the student's record-set write contract.
             lines += ['    ТестСессия.Записать('+c.literal(schema['owner'],'Строка')+', '+name+'.Фильтр.Ключ как Строка, СериализацияJson.ЗаписатьОбъект('+name+'.Записи))']
-        else:lines += ['    ' + name + '.Записать()']
+        else:
+            write = 'ТестЗаписатьБезОбработчиков' if schema.get('handlers') else 'Записать'
+            lines += ['    ' + name + '.' + write + '()']
     return lines
 
 

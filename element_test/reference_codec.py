@@ -6,8 +6,11 @@ references and scalar unions retain their existing JSON representation.
 from hashlib import sha256
 import re
 
-from .generated_types import union_members
+from .generated_types import union_members, COLLECTIONS
+from .indexer import IDENT, split_parameters
 from .resolution import qualified
+
+ARRAY_PATTERN = r'(?:' + '|'.join(sorted(COLLECTIONS)) + r')<(.+)>'
 
 CONTRACT = 'tagged-reference-union-v1'
 
@@ -24,7 +27,10 @@ def needed(c, typ, seen=None):
         return True
     if typ.endswith('?') and not union_members(typ):
         return needed(c, typ[:-1], seen)
-    array = re.fullmatch(r'(?:Массив|ЧитаемыйМассив|Обходимое)<(.+)>', typ)
+    # Native Script JSON cannot serialize KeyAndValue, including a scalar pair.
+    if re.fullmatch(r'КлючИЗначение<(.+)>', typ):
+        return True
+    array = re.fullmatch(ARRAY_PATTERN, typ)
     if array:
         return needed(c, array[1], seen)
     seen = set(seen or ())
@@ -72,12 +78,19 @@ def decode(c, expr, typ):
 
 
 def _helper(c, typ, operation):
-    array = re.fullmatch(r'(?:Массив|ЧитаемыйМассив|Обходимое)<(.+)>', typ)
+    array = re.fullmatch(ARRAY_PATTERN, typ)
+    pair = re.fullmatch(r'КлючИЗначение<(.+)>', typ)
+    pair_types = [p.strip() for p in split_parameters(pair[1])] if pair else []
     variants = reference_union(typ)
     owner_type = array[1] if array else variants[0] if variants else typ
     if reference_union(owner_type):
         owner_type = reference_union(owner_type)[0]
     owner = owner_type.partition('.')[0]
+    if not re.fullmatch(IDENT, owner):
+        # Keep nominal helpers with their metadata module, including nested
+        # containers. This avoids a needless entity -> helper -> entity cycle.
+        nominal = [o for o in re.findall(rf'({IDENT})\.', typ) if o in c.canonical_elements]
+        owner = nominal[0] if nominal else 'ТестТранспорт' + sha256(typ.encode()).hexdigest()[:16]
     name = 'ТестCodec' + sha256((operation + ':' + typ).encode()).hexdigest()[:16]
     key = owner + '.' + name
     if key in c.definitions:
@@ -89,6 +102,9 @@ def _helper(c, typ, operation):
         code = '@Глобально\nметод ' + name + '(Значение: ' + emitted + '): Стд::Объект?\n'
         if array:
             code += '    знч Результат = новый Массив<Стд::Объект?>()\n    для СтрокаТаблицы из Значение\n        Результат.Добавить(' + encode(c, 'СтрокаТаблицы', array[1]) + ')\n    ;\n    возврат Результат\n'
+        elif pair:
+            code += '    возврат {' + ', '.join(c.literal(f, 'Строка') + ': ' + encode(c, 'Значение.' + f, t)
+                                               for f, t in zip(('Ключ', 'Значение'), pair_types)) + '}\n'
         else:
             raw_fields = getattr(c, 'reference_codec_raw_fields', {}).get(typ, set())
             code += '    возврат {' + ', '.join(c.literal(f['Имя'], 'Строка') + ': ' + ('Значение.' + f['Имя'] if f['Имя'] in raw_fields else encode(c, 'Значение.' + f['Имя'], f['Тип'])) for f in c.fields[typ]) + '}\n'
@@ -103,6 +119,10 @@ def _helper(c, typ, operation):
             code += '    выбросить новый ИсключениеНедопустимоеСостояние("reference-codec:unknown-tag")\n'
         elif array:
             code += '    знч Результат = новый Массив<' + c.sbsl_type(array[1]) + '>()\n    для СтрокаТаблицы из (Значение как Массив<Стд::Объект?>)\n        Результат.Добавить(' + decode(c, 'СтрокаТаблицы', array[1]) + ')\n    ;\n    возврат Результат\n'
+        elif pair:
+            code += '    знч Поля = Значение как ЧитаемоеСоответствие<Строка, Стд::Объект?>\n'
+            code += '    возврат новый ' + emitted + '(' + ', '.join(decode(c, 'Поля[' + c.literal(f, 'Строка') + ']', t)
+                                           for f, t in zip(('Ключ', 'Значение'), pair_types)) + ')\n'
         else:
             required = [f for f in c.fields[typ] if f.get('constructorRequired')]
             arguments = ', '.join(f['Имя'] + ' = ' + decode(c, 'Поля[' + c.literal(f['Имя'], 'Строка') + ']', f['Тип']) for f in required)
@@ -114,7 +134,6 @@ def _helper(c, typ, operation):
                 label = c.literal(f['Имя'], 'Строка')
                 code += '    если Поля.СодержитКлюч(' + label + ')\n        Результат.' + f['Имя'] + ' = ' + decode(c, 'Поля[' + label + ']', f['Тип']) + '\n    ;\n'
             code += '    возврат Результат\n'
-    from .indexer import IDENT
     owners = {k.partition('.')[0] for k in c.definitions}
     c.method_dependencies[key] += [o + '.Значение' for o in set(re.findall(rf'({IDENT})\.', code)) & owners if o != owner]
     c.definitions[key] = code + ';\n'

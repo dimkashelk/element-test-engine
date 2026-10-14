@@ -7,6 +7,8 @@ from .resolution import import_specs, resolve_symbols, visible_from
 from .yaml_io import InputError, InvalidTestError
 
 SCALARS = {"Строка", "Число", "Булево", "Дата", "Время", "ДатаВремя", "Момент", "Ууид"}
+COLLECTIONS = {"Массив", "ЧитаемыйМассив", "Обходимое", "Коллекция", "ЧитаемаяКоллекция"}
+GENERICS = COLLECTIONS | {"Соответствие", "ЧитаемоеСоответствие", "КлючИЗначение"}
 
 
 def union_members(type_name):
@@ -126,7 +128,7 @@ class ProjectTypes:
                     else:
                         self.local_names[key] = "ТестТип" + sha256((str(key)).encode()).hexdigest()[:16] + ".Значение"
                 return self.local_names[key] + (dot + variant if dot else "")
-            if owner in SCALARS or owner in {"Массив", "ЧитаемыйМассив", "Обходимое", "Соответствие", "ЧитаемоеСоответствие", "ничто"}:
+            if owner in SCALARS or owner in GENERICS | {"ничто"}:
                 return token
             matches = self.resolve(owner)
             if len(matches) != 1:
@@ -185,10 +187,10 @@ class ProjectTypes:
             return
         if type_name in {'Исключение', 'ИсключениеНедопустимоеСостояние', 'Объект', 'Тип'}:
             return
-        generic = re.fullmatch(r"(Массив|ЧитаемыйМассив|Обходимое|Соответствие|ЧитаемоеСоответствие)<(.+)>", type_name)
+        generic = re.fullmatch(r"(" + "|".join(sorted(GENERICS)) + r")<(.+)>", type_name)
         if generic:
             arguments = split_parameters(generic[2])
-            if len(arguments) != (2 if generic[1] in {"Соответствие", "ЧитаемоеСоответствие"} else 1):
+            if len(arguments) != (1 if generic[1] in COLLECTIONS else 2):
                 raise InputError(f"Некорректный тип: {type_name}")
             for argument in arguments:
                 self.require(argument.strip(), namespace)
@@ -444,7 +446,16 @@ class ProjectTypes:
                 return 'новый ' + self.sbsl_type(type_name) + '()'
             return 'новый ' + self.sbsl_type(type_name) + '({' + ', '.join(
                 self.literal(k, key_type) + ': ' + self.literal(v, value_type) for k, v in value.items()) + '})'
-        collection = re.fullmatch(r'(Массив|ЧитаемыйМассив|Обходимое)<(.+)>', type_name)
+        pair = re.fullmatch(r'КлючИЗначение<(.+)>', type_name)
+        if pair:
+            if not isinstance(value, dict) or set(value) != {'Ключ', 'Значение'}:
+                raise InvalidTestError('КлючИЗначение fixture требует поля Ключ и Значение')
+            arguments = [p.strip() for p in split_parameters(pair[1])]
+            if len(arguments) != 2:
+                raise InvalidTestError('КлючИЗначение требует два параметра типа')
+            return 'новый ' + self.sbsl_type(type_name) + '(' + ', '.join(
+                self.literal(value[field], typ) for field, typ in zip(('Ключ', 'Значение'), arguments)) + ')'
+        collection = re.fullmatch(r'(' + '|'.join(sorted(COLLECTIONS)) + r')<(.+)>', type_name)
         if collection:
             if not isinstance(value, list):
                 raise InvalidTestError(f"Ожидался массив для {type_name}")

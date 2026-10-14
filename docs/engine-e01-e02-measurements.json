@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-14",
+  "tasks": [
+    "E01",
+    "E02"
+  ],
+  "status": "complete",
+  "executorVersion": "10.0.2-1",
+  "elementReferenceVersion": "9.3",
+  "sourceCompatibility": "9.0 preserved",
+  "runtimeProfiles": [
+    "9.0",
+    "9.3/current"
+  ],
+  "acceptance": {
+    "unittestCases": 8,
+    "status": "PASS",
+    "isolatedExecutions": 26,
+    "postgresExecutions": 10,
+    "memoryExecutions": 16,
+    "independentSBSLGrades": {
+      "correctExpected": "18 PASS",
+      "wrongExpected": "18 FAIL"
+    },
+    "executions": [
+      {
+        "file": "result/engine-e01-e02/accumulation-False-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/accumulation-False-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/accumulation-True-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/accumulation-True-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/collections-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/collections-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-False--1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-False-1-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-False-1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-False-999-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-True--1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-True-1-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-True-1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-False-True-999-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-False--1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-False-1-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-False-1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-False-999-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-True--1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-True-1-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-True-1-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/hooks-True-True-999-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": true
+      },
+      {
+        "file": "result/engine-e01-e02/pair-nominal-owners.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/pair-source-dependency.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/single-hook-False.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      },
+      {
+        "file": "result/engine-e01-e02/single-hook-True.json",
+        "status": "EXECUTED",
+        "independentSqlAudit": false
+      }
+    ]
+  },
+  "regression": {
+    "initialTargetedRun": {
+      "unittestCases": 63,
+      "status": "PASS",
+      "seconds": 403.381
+    },
+    "referenceUnion54": {
+      "unittestCases": 1,
+      "status": "PASS",
+      "portableConfigurations": 8
+    },
+    "finalAfterDependencyImports": {
+      "unittestCases": 19,
+      "status": "PASS",
+      "seconds": 196.777
+    },
+    "distinctTestCases": 72
+  },
+  "commands": [
+    "ELEMENT_TEST_DOCKER_TESTS=1 PYTHONPATH=tests python3 -m unittest test_engine_e01_e02 -v",
+    "ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_INTEGRATION_TESTS=1 PYTHONPATH=tests python3 -m unittest test_generated_types test_expression_calls test_body_types test_metadata_lifecycle test_partial_information_filters test_record_sets.RecordSetPlanTest test_record_sets.RecordSetDockerTest.test_snapshots_repeat_append_replace_and_rollback test_record_sets.RecordSetDockerTest.test_handler_reads_staged_rows_and_atomic_rollback -v",
+    "ELEMENT_TEST_DOCKER_TESTS=1 PYTHONPATH=tests python3 -m unittest test_engine_e01_e02 test_body_types test_tagged_reference_unions.ReferenceUnionRuntimeTest.test_transitions_tables_snapshots_identity_query_loading_rollback_and_profiles test_metadata_lifecycle.DirectLifecycleTest test_record_sets.RecordSetDockerTest.test_handler_reads_staged_rows_and_atomic_rollback -v"
+  ],
+  "checks": {
+    "compileall": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "catalogReview": "engine-e01-e02-catalog-review.json",
+  "fullDiscovery": "not-run; existing nightly retained",
+  "businessAcceptance55to59": "separate queue; not executed by this change"
+}

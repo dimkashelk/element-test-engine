@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-14",
+  "mode": "scoped-read-only-planning",
+  "records": [
+    {
+      "contractId": "query-d724b2b9807becd4b8ab444a",
+      "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "sourceHash": "fe4a5fca065207a133fd05e736d2cfe86c2afa1ea7bf7b832e6514e2859c33d0",
+      "executed": false,
+      "independentlyAssessed": false,
+      "planned": true,
+      "reason": null,
+      "types": [
+        "ЧитаемаяКоллекция<КонтактныеЛица.Ссылка>"
+      ]
+    },
+    {
+      "contractId": "query-3dee8fe78fb60200c0b648a2",
+      "archive": "Demo-SRM-dev-2026-09-28-21-38.xdump",
+      "projectSourceHash": "8ae5eb553c3edc36c1627543b0d31a722218d6e7d3d31ef257a0d4f47797bd99",
+      "sourceHash": "9ceea2f00b8af5509c2d0eb1cd7097ff932ab3b138780b2096a3f0174fe81cd9",
+      "executed": false,
+      "independentlyAssessed": false,
+      "planned": false,
+      "reason": "Неизвестное или неоднозначное поле: Клиент.Регион (60)"
+    },
+    {
+      "contractId": "query-58153017386b47023d017ddc",
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectSourceHash": "59b4cf8a6bb98fa1bb83b198845a06e7decc9fa2b3c5d3018a45c5d8efbd0904",
+      "sourceHash": "49d1d93ede2d300c54ed7666e3b243bf543d48d8f4195369e50c4d1532400d1b",
+      "executed": false,
+      "independentlyAssessed": false,
+      "planned": false,
+      "reason": "Неизвестное или неоднозначное поле: ОписаниеРаботы.ПометкаУдаления (29)"
+    },
+    {
+      "contractId": "query-577523faf3347668261d011d",
+      "archive": "autocheck-2026-09-24-16-14.xdump",
+      "projectSourceHash": "ef153bd04564ae2708002c3e885ebf23fafcb677d05b83e092ed30601b4f02d7",
+      "sourceHash": "2b0b2c37fade1242857236ce93bca49e0bfdc33b855c1b302694b1893fedd137",
+      "executed": false,
+      "independentlyAssessed": false,
+      "planned": false,
+      "reason": "Объект типа ДвоичныйОбъект.Ссылка отсутствует, неоднозначен или не поддерживается"
+    }
+  ]
+}

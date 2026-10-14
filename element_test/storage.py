@@ -421,9 +421,8 @@ class MetadataStorage:
         contracts.definitions.setdefault(failure_type, '@Глобально\nисключение СбойХранилища\n;\n')
         contracts.method_dependencies['ТестСессия'] = [canonical]
         contracts.definitions['ТестСессия'] = session_module(self.path, postgres=config.get('backend') == 'postgres', audit_history=audit_history)
-        if config.get('lifecycle'):
-            from .metadata_lifecycle import session_writes
-            contracts.definitions['ТестСессия'] = session_writes(contracts.definitions['ТестСессия'])
+        from .metadata_lifecycle import session_writes
+        contracts.definitions['ТестСессия'] = session_writes(contracts.definitions['ТестСессия'])
         registers = config.get('registers', [])
         if not isinstance(registers, list) or len(set(str(r) for r in registers)) != len(registers):
             raise InvalidTestError('storage.registers требует список уникальных типов')

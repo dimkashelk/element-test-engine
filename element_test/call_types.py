@@ -54,6 +54,9 @@ def _static_result(prefix, module, model, bindings, offset):
 
 def _local_type(source, method, name, offset, bindings, module, model):
     if not method_binding_visible(bindings, name, offset):
+        if module['name'].endswith('.НаборЗаписей') and name in {'Записи', 'Фильтр'}:
+            return ('Массив<' + module['name'].removesuffix('.НаборЗаписей') + '.Запись>'
+                    if name == 'Записи' else module['name'].removesuffix('.НаборЗаписей') + '.ФильтрНабора')
         # Form context properties are declared in the companion YAML.
         element = _element(model, module['name'], module)
         if element:
@@ -266,7 +269,7 @@ def infer_receiver_type(source, method, call, module, model, declarations, sourc
                 outer = infer(parts[:-2])
                 return _field_type(model, outer.rstrip('?'), last, module) if outer else None
             if len(parts) == 1:
-                if last == 'этот' and module['name'].endswith('.Объект'):
+                if last == 'этот' and module['name'].endswith(('.Объект', '.НаборЗаписей')):
                     return module['name']
                 return _local_type(source, method, last, offset, bindings, module, model)
         return None

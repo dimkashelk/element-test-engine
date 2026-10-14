@@ -172,6 +172,12 @@ def render_plan(plan, sandbox):
             compiled = instrument(compiled, '::'.join(filter(None, (symbol.identity.project,
                                   symbol.identity.namespace, symbol.identity.owner, declaration.name))), enum_map_value_type=enum_value,
                                   parameter_observers=observers, return_observer=return_observer)
+        # Transport may introduce a generated helper module absent from the
+        # source signature (e.g. a scalar KeyAndValue trace in a dependency).
+        referenced = set(re.findall(rf'({IDENT})\.', call_code(compiled)))
+        module_type_dependencies.setdefault(owner['sourceFile'], []).extend(
+            key for key in contracts.definitions if key.partition('.')[0] in referenced
+            and key.partition('.')[2].startswith('ТестCodec'))
         if owner["sourceFile"] == module["sourceFile"]:
             adapted.append(compiled)
             root_compiled[declaration.name] = compiled
@@ -181,7 +187,7 @@ def render_plan(plan, sandbox):
             contracts.method_dependencies[target_form['canonical']].extend(aliases[p] + '.Вызов' for p in module_dependencies.get(owner['sourceFile'], ()))
             if declaration.name in static_form_methods.get(owner['sourceFile'], set()):
                 external.setdefault(aliases[owner['sourceFile']], []).append(compiled)
-        elif owner.get('moduleType') == 'object':
+        elif owner.get('moduleType') == 'object' or owner['name'].endswith('.НаборЗаписей'):
             object_type = '::'.join(filter(None, (owner['namespace'], owner['name'])))
             contracts.attach_method(object_type, compiled, module_type_dependencies.get(owner['sourceFile'], []))
             contracts.method_dependencies[contracts.canonical_type(object_type)].extend(
@@ -320,6 +326,8 @@ def render_plan(plan, sandbox):
                     transported = 'ТестСоответствие' + index
                     invocation += ('    знч ' + transported + ' = новый Соответствие<Строка, ' + contracts.sbsl_type(value_type) + '>()\n'
                                    + '    для Элемент из ' + result + '\n        ' + transported + '.Вставить(Элемент.Ключ.ВСтроку(), Элемент.Значение)\n    ;\n')
+            if check.get('captureException') or check.get('observeFailure'):
+                transported = '(' + result + ' == Неопределено ? Неопределено : ' + transported + ')'
             actual = '{"return": ' + transported + ', "context": ' + observed + '}' if is_object else transported
         else:
             invocation = '    ' + expression + '\n'
@@ -405,6 +413,8 @@ def render_plan(plan, sandbox):
     if storage:
         for element in plan.storage_elements:
             storage.attach(element,query_only=element in plan.query_storage_elements)
+        from .record_sets import attach_handlers
+        attach_handlers(storage)
         setup = storage.setup() + setup
         invocation += '    ТестСессия.ПроверитьСессию()\n'
         if storage.config.get('backend') == 'postgres':

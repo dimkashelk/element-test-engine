@@ -311,26 +311,27 @@ def plan_execution(root, source_model, check):
                     continue
                 typ = infer_receiver_type(text, node, call, owner, runtime_model,
                                           handler_declarations, handler_sources, locals_)
-                if typ and typ.rstrip('?').endswith('.Объект'):
+                if typ and typ.rstrip('?').endswith(('.Объект', '.НаборЗаписей')):
                     requirement_types.append(typ)
                 elif effect_contract and owner['sourceFile'] == module['sourceFile'] and call.receiver in {None, 'этот'} and not any(n.name == 'Записать' for n in handler_declarations[owner['sourceFile']]):
                     element = form_declaration(runtime_model, module)
                     from .form_context import describe_form
                     requirement_types.append(describe_form(element)['objectType'])
-                elif call.receiver is None and owner.get('moduleType') == 'object':
+                elif call.receiver in {None, 'этот'} and owner['name'].endswith(('.Объект', '.НаборЗаписей')):
                     requirement_types.append(owner['name'])
             for requirement in requirement_types:
-                for type_owner in re.findall(r"([^\s<>,|?]+)\.(?:Объект|Данные)", requirement):
+                for type_owner, variant in re.findall(r"([^\s<>,|?]+)\.(Объект|Данные|НаборЗаписей)", requirement):
                     matches = c.resolve(type_owner)
                     if len(matches) != 1:
                         continue
                     element = matches[0]
-                    identity = (element['namespace'], element['name'])
+                    variant = 'НаборЗаписей' if variant == 'НаборЗаписей' else 'Объект'
+                    identity = (element['namespace'], element['name'], variant)
                     if identity in visited_owners:
                         continue
                     visited_owners.add(identity)
                     object_modules = [m for m in runtime_model['modules'] if m['namespace'] == element['namespace']
-                                      and m['name'] == element['name'] + '.Объект']
+                                      and m['name'] == element['name'] + '.' + variant]
                     if len(object_modules) != 1:
                         continue
                     objmod = object_modules[0]
