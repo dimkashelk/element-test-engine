@@ -70,7 +70,7 @@ class PartialPlanTest(unittest.TestCase):
                 prepare_script(root,analyze(root),c,Path(d))
 
     def test_exact_final_source_preparation(self):
-        with open_project(REPO/'Dvizhok-final.xdump') as root, TemporaryDirectory() as d:
+        with open_project(REPO/'Dvizhok-2.xdump') as root, TemporaryDirectory() as d:
             c=copy.deepcopy(FINAL_RECEIPT_CONFIG)
             p=plan_execution(root,analyze(root),c)
             self.assertTrue(any(r.get('filterMask')==['Номенклатура'] for r in p.record_sets))

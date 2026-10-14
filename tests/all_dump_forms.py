@@ -75,8 +75,11 @@ def coverage_summary():
         unavailable=[{'form':f['form'],**e} for f in forms for e in f['unavailable']]
         projects.append({k:project[k] for k in ('dump','project','archiveSha256')} | {
           'forms':len(forms),'declarationChecks':len(forms),
+          'reportDeclarationBaselines':len(project.get('reports',[])),
           'runtimeValueScenarios':sum(c.get('formRequirement',{}).get('requirement',{}).get('kind')=='binding' for c in checks),
           'structuralRequirements':sum(c.get('formRequirement',{}).get('requirement',{}).get('kind')=='structure' for c in checks),
           'expressions':sum(len(f['expressions']) for f in forms),'notRuntimeChecked':unavailable})
-    return {'schemaVersion':1,'forms':sum(p['forms'] for p in projects),'projects':projects,'execution':'NOT_RUN',
+    return {'schemaVersion':1,'forms':sum(p['forms'] for p in projects),
+            'reportDeclarationBaselines':sum(p['reportDeclarationBaselines'] for p in projects),
+            'reportBehavior':'NOT_CHECKED','projects':projects,'execution':'NOT_RUN',
             'nativeBrowserUi':'NOT_CHECKED','sourceOfExpected':'Frozen offline contracts; no reference execution to derive answers'}

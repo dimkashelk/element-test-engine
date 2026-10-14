@@ -174,7 +174,7 @@ class TimerPlanTest(TimerFixture):
     def test_original_welcome_registration_plans_without_dump_execution(self):
         from element_test.assignment import load_assignment
         from element_test.loader import open_project
-        archive = REPO / 'Dvizhok-final.xdump'
+        archive = REPO / 'Dvizhok-2.xdump'
         before = sha256(archive.read_bytes()).hexdigest()
         c = next(c for c in load_assignment(REPO / 'assignments/dvizhok-welcome-calendar')['checks']
                  if c.get('target', {}).get('method') == 'ПослеСоздания')

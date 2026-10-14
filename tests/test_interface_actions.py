@@ -145,7 +145,7 @@ class InterfacePlanTest(InterfaceFixture):
     def test_nineteen_final_declarations_prepare_without_business_execution(self):
         from element_test.loader import open_project
         from hashlib import sha256
-        archive = REPO / 'Dvizhok-final.xdump'; before = sha256(archive.read_bytes()).hexdigest()
+        archive = REPO / 'Dvizhok-2.xdump'; before = sha256(archive.read_bytes()).hexdigest()
         with open_project(archive) as root:
             model = analyze(root); forms = [e for e in model['elements'] if e['elementType'] == 'КомпонентИнтерфейса']
             self.assertEqual(len(forms), 19)

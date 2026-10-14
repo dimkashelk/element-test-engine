@@ -33,12 +33,12 @@ class FormCorpusTest(unittest.TestCase):
                         plan=json.loads((output/'execution-plan.json').read_text())
                         self.assertIsNone(plan['entry']);self.assertNotIn('expected',plan)
                         planned+=1
-        self.assertEqual(planned,308)
+        self.assertEqual(planned,463)
 
     def test_complete_manifest_and_contracts(self):
         self.assertEqual({p['dump'] for p in MANIFEST['projects']},{p.name for p in REPO.glob('*.xdump')})
-        self.assertEqual(len(MANIFEST['projects']),6)
-        self.assertEqual(MANIFEST['forms'],322)
+        self.assertEqual(len(MANIFEST['projects']),7)
+        self.assertEqual(MANIFEST['forms'],341)
         identities=set();criteria=0
         for project in MANIFEST['projects']:
             self.assertEqual(sha256((REPO/project['dump']).read_bytes()).hexdigest(),project['archiveSha256'])
@@ -56,10 +56,35 @@ class FormCorpusTest(unittest.TestCase):
                 if project['dump']!='Dvizhok.xdump':
                     self.assertEqual(len(data['expressions']),len(covered)+len(data['unavailable']))
                 criteria+=len(ids)
-        self.assertEqual(len(identities),322);self.assertGreater(criteria,485)
+        self.assertEqual(len(identities),341);self.assertGreater(criteria,485)
         cases=[v for v in globals().values() if isinstance(v,type) and issubclass(v,NightlyFormCase) and v is not NightlyFormCase]
-        self.assertEqual(sum(unittest.defaultTestLoader.loadTestsFromTestCase(case).countTestCases() for case in cases),322)
+        self.assertEqual(sum(unittest.defaultTestLoader.loadTestsFromTestCase(case).countTestCases() for case in cases),341)
         write_json(REPO/'result/all-dump-forms/prepared-coverage.json',coverage_summary())
+
+    def test_report_declaration_baselines_match_source(self):
+        checked=0
+        for project in MANIFEST['projects']:
+            if not project.get('reports'):continue
+            with TemporaryDirectory() as directory:
+                root=next(root for root in extract_project(REPO/project['dump'],Path(directory))
+                          if root.name==project['project'].split('::')[-1])
+                model=analyze(root)
+                reports={e['sourceFile']:e for e in model['elements'] if e['elementType']=='Отчет'}
+                fixtures=[load_fixture(file) for file in project['reports']]
+                self.assertEqual({f['report']['sourceFile'] for f in fixtures},set(reports))
+                self.assertEqual(len(fixtures),len(reports))
+                for data in fixtures:
+                    with self.subTest(dump=project['dump'],report=data['report']['name']):
+                        report=reports[data['report']['sourceFile']]
+                        self.assertEqual(data['report'],{k:report[k] for k in ('name','namespace','sourceFile')})
+                        self.assertEqual(data['declaration'],report['properties'])
+                        query_path=Path(report['sourceFile']).with_suffix('.xbql')
+                        query_file=root/query_path
+                        actual=({'file':query_path.as_posix(),'sha256':sha256(query_file.read_bytes()).hexdigest(),
+                                 'text':query_file.read_text(encoding='utf-8-sig')} if query_file.is_file() else None)
+                        self.assertEqual(data['query'],actual)
+                        checked+=1
+        self.assertEqual(checked,6)
 
     def test_declaration_mutations_are_scored_by_sbsl(self):
         project=MANIFEST['projects'][0];data=load_fixture(project['forms'][0])

@@ -1,4 +1,4 @@
-"""Task 47 mechanism tests; no Dvizhok-final business assignments or oracles."""
+"""Task 47 mechanism tests; no dump business assignments or oracles."""
 import copy
 import json
 import os
@@ -123,7 +123,7 @@ class SourceQueryPlanTest(SourceQueryFixture):
         from element_test.loader import open_project
         from element_test.query_catalog import source_records
         from element_test.query_catalog_refresh import inspect_query
-        archive = REPO / 'Dvizhok-final.xdump'; before = sha256(archive.read_bytes()).hexdigest()
+        archive = REPO / 'Dvizhok-2.xdump'; before = sha256(archive.read_bytes()).hexdigest()
         with open_project(archive) as root:
             model = analyze(root)
             records = [r for r in source_records(root, model, archive.name, 'Движок') if r['family'] in {'literal', 'xbql-file'}]

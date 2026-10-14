@@ -154,7 +154,7 @@ class SurfacePlanTest(SurfaceFixture):
         self.assertEqual(len(p.panel['widgets']),3)
 
     def test_all_final_dump_surfaces_prepare_without_business_execution(self):
-        archive=REPO/'Dvizhok-final.xdump'; before=sha256(archive.read_bytes()).hexdigest();counts={}
+        archive=REPO/'Dvizhok-2.xdump'; before=sha256(archive.read_bytes()).hexdigest();counts={}
         with open_project(archive) as root:
             model=analyze(root);regs=[e['namespace']+'::'+e['name'] for e in model['elements'] if e['elementType'] in {'РегистрСведений','РегистрНакопления'}]
             for e in model['elements']:

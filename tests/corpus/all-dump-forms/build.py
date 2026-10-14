@@ -160,8 +160,19 @@ def main():
                     # No empty requirements contract is handed to the evaluator.
                     if not requirements:fixture_data['runtimeContract']=None
                     file='forms/'+slug+'/'+str(index).zfill(3)+'.json';write(OUT/file,fixture_data);files.append(file)
+                reports=[]
+                for index,report in enumerate(sorted((e for e in model['elements'] if e['elementType']=='Отчет'),key=lambda e:e['sourceFile'])):
+                    query_path=Path(report['sourceFile']).with_suffix('.xbql')
+                    query_file=root/query_path
+                    query=({'file':query_path.as_posix(),'sha256':sha256(query_file.read_bytes()).hexdigest(),
+                            'text':query_file.read_text(encoding='utf-8-sig')} if query_file.is_file() else None)
+                    file='reports/'+slug+'/'+str(index).zfill(3)+'.json'
+                    write(OUT/file,{'schemaVersion':1,'report':{k:report[k] for k in ('name','namespace','sourceFile')},
+                        'description':'Регрессия декларации и исходного запроса эталонного отчета '+report['name']+'; бизнес-данные проверяются отдельными сценариями.',
+                        'declaration':deepcopy(report['properties']),'query':query})
+                    reports.append(file)
                 projects.append({'dump':dump.name,'project':identity,'archiveSha256':sha256(dump.read_bytes()).hexdigest(),
-                                 'sourceHash':model['sourceHash'],'forms':files})
+                                 'sourceHash':model['sourceHash'],'forms':files,'reports':reports})
                 print(identity,len(forms),'forms')
     projects.sort(key=lambda p:(p['dump'], p['project']))
     write(OUT/'manifest.json',{'schemaVersion':1,'projects':projects,'forms':sum(len(p['forms']) for p in projects)})

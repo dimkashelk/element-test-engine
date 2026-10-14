@@ -21,4 +21,4 @@ ELEMENT_TEST_DOCKER_TESTS=1 ELEMENT_TEST_INTEGRATION_TESTS=1 \
 ```
 
 Контракт и границы: `docs/partial-information-register-filters.md`.
-Бизнес-приёмка Dvizhok-final.xdump относится к №56.
+Бизнес-приёмка `Dvizhok-2.xdump` (прежний `Dvizhok-final.xdump`) относится к №56.

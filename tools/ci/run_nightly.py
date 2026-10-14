@@ -17,7 +17,7 @@ from tools.ci.sharding import aggregate_reports, shard_suites
 OUTPUT = ROOT / 'result/nightly/result.json'
 WEIGHTS = ROOT / 'config/nightly-module-timings.json'
 REQUIRED_DUMPS = (
-    'Dvizhok.xdump', 'Dvizhok-final.xdump', 'Demo-SRM-dev-2026-09-28-21-38.xdump',
+    'Dvizhok.xdump', 'Dvizhok-2.xdump', 'Dvizhok-dev-final.xdump', 'Demo-SRM-dev-2026-09-28-21-38.xdump',
     'Prakticheskie-primery-2026-09-30-15-20.xdump', 'autocheck-2026-09-24-16-14.xdump',
 )
 

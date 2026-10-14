@@ -96,7 +96,7 @@ class ReferenceUnionPlanTest(unittest.TestCase):
 
     def test_final_declarative_money_source_preparation(self):
         EVIDENCE.mkdir(parents=True,exist_ok=True)
-        with open_project(REPO/'Dvizhok-final.xdump') as root, TemporaryDirectory() as d:
+        with open_project(REPO/'Dvizhok-2.xdump') as root, TemporaryDirectory() as d:
             model=analyze(root);before=model['sourceHash']
             for backend in ['memory','postgres']:
                 c={'interface':{'schemaVersion':1,'form':{'name':'ПоступлениеДенежныхСредствФормаОбъекта','namespace':'Финансы'}},
