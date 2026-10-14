@@ -166,29 +166,9 @@ def _report(root, model, plain, e, selector=None, shared=None):
     comparisons = []
     for i,f in enabled:
         if not f['sorting']: continue
-        full_type = compiled[i][1]
-        typ = full_type.rstrip('?'); left, right = 'A.F'+str(i), 'B.F'+str(i)
-        if typ.endswith('.Ссылка') and '|' not in typ:
-            left += '.Идентификатор.ВСтроку()' if c.reference_id_type == 'Ууид' else '.Идентификатор'
-            right += '.Идентификатор.ВСтроку()' if c.reference_id_type == 'Ууид' else '.Идентификатор'
-        elif typ in c.enums:
-            members = c.enums[typ]
-            # Order is the declared enum order, not its serialized caption.
-            def enum_index(expr):
-                result = str(len(members)-1)
-                for n in reversed(range(len(members)-1)):
-                    result = '(' + expr + ' == ' + typ + '.' + members[n] + ' ? ' + str(n) + ' : ' + result + ')'
-                return result
-            left, right = enum_index(left), enum_index(right)
-        elif typ not in {'Число','Строка','Дата','ДатаВремя','Момент'}:
-            raise UnsupportedSyntaxError('Сортировка макета вне контракта: ' + typ)
-        if full_type.endswith('?'):
-            av, bv = 'A.F'+str(i), 'B.F'+str(i)
-            null_after = 'Ложь' if f['sorting']=='ПоВозрастанию' else 'Истина'
-            comparisons.append('    если '+av+' == Неопределено и '+bv+' != Неопределено\n        возврат '+null_after+'\n    ;\n    если '+av+' != Неопределено и '+bv+' == Неопределено\n        возврат '+('Истина' if null_after=='Ложь' else 'Ложь')+'\n    ;\n')
-            comparisons.append('    если '+av+' != Неопределено и '+bv+' != Неопределено\n')
-        comparisons.append('    если ' + left + ' != ' + right + '\n        возврат ' + left + (' > ' if f['sorting']=='ПоВозрастанию' else ' < ') + right + '\n    ;\n')
-        if full_type.endswith('?'): comparisons.append('    ;\n')
+        from .report_sorting import comparison
+        comparisons.append(comparison(c, compiled[i][1], 'A.F'+str(i), 'B.F'+str(i),
+                                      f['sorting'] == 'ПоВозрастанию'))
     if comparisons:
         _method(c, helper, 'метод After(A: '+value_type+', B: '+value_type+'): Булево\n'+''.join(comparisons)+'    возврат Ложь\n;', [value_type])
         body += ('    пер I = 1\n    пока I < Values.Размер()\n        пер J = I\n'
@@ -212,7 +192,8 @@ def _report(root, model, plain, e, selector=None, shared=None):
             '    знч Data = Result.ВМассив()\n    возврат Evaluate(Data)\n;')
     c.definitions.setdefault(query_name+'.Запрос', '')
     _method(c, helper, read, [row_type, query_name+'.Запрос'])
-    plan.report = {**fact, 'schemaVersion': 1, 'sourceKind': source_kind, 'query': plan.query_entry,
+    from .report_sorting import CONTRACT as SORTING_CONTRACT
+    plan.report = {**fact, 'sortingContract': deepcopy(SORTING_CONTRACT), 'schemaVersion': 1, 'sourceKind': source_kind, 'query': plan.query_entry,
                    'fields': layout_fields, 'structure': structure, 'support': 'executor-emulation',
                    'stages': {'validation':'ready','planning':'ready','generation':'ready','execution':'not-checked'},
                    'remaining': ['Native pivot rendering, hierarchy expansion and aggregate measures are external',
@@ -371,7 +352,8 @@ def render_surface(plan, sandbox):
         return script
     else:
         setup = plan.storage.setup()
-        invocation = '    знч Actions = новый Массив<Строка>()\n    пер Revision = 0\n    пер Widgets: Объект? = Неопределено\n'
+        setup += '    знч Actions = новый Массив<Строка>()\n    пер Revision = 0\n    пер Widgets: Объект? = Неопределено\n'
+        invocation = ''
         widget_expr = '{'+', '.join(c.literal(w['id'],'Строка')+': '+rp._report_read for w,rp in zip(plan.panel['widgets'],plan._panel_reports))+'}'
         refresh_code = '    Widgets = '+widget_expr+'\n    Revision += 1\n'
         invocation += refresh_code
@@ -393,8 +375,10 @@ def render_surface(plan, sandbox):
             invocation += '    Actions.Добавить(СериализацияJson.ЗаписатьОбъект('+actual_action+'}))\n'
         actual = '{"structure": '+c.literal({'widgets':[{'id':w['id'],'report':w['report']} for w in plan.panel['widgets']], 'positions':plan.panel['positions'],'refresh':plan.panel['refresh']},'Объект')+', "actions": Actions}'
     if plan.storage:
-        if plan.storage.config.get('transaction'):
-            raise UnsupportedSyntaxError('Panel requires ordinary isolated storage, without external transaction')
+        from .surface_transaction import enabled, render, observation as transaction_observation
+        if enabled(plan):
+            invocation = render(plan, invocation)
+            actual = actual[:-1] + ', "transaction": ' + transaction_observation() + '}'
         if plan.storage.config.get('backend') == 'postgres':
             setup = '    ТестСессия.НастроитьSql(Путь)\n'+setup+'    ТестСессия.Опубликовать(Путь, Истина)\n'
             invocation += '    ТестСессия.Опубликовать(Путь)\n'
@@ -409,7 +393,7 @@ def render_surface(plan, sandbox):
         from .storage_compilation import type_name
         identities = {'Scripts::'+type_name(c,t):qualified(c.canonical_elements[t.split('.')[0]])+'.'+t.partition('.')[2]
                       for t in c.fields if '.' in t and t.split('.')[0] in c.canonical_elements}
-        metadata += ', "_typeIdentities": '+c.literal(identities,'Соответствие<Строка, Строка>')+', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса()'
+        metadata += ', "_typeIdentities": '+c.literal(identities,'Соответствие<Строка, Строка>')+', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса(), "storageDiagnostics": {"active": ТестСессия.ЕстьАктивная(), "locks": ТестСессия.Блокировок()}'
     if plan.timers: invocation += '    ТестТаймеры.Закрыть()\n'
     statements = session_setup+setup+invocation+'    Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"actual": '+actual+metadata+'}))\n'
     body = '    попытка\n'+''.join('    '+line+'\n' for line in statements.splitlines())+'    поймать Недоступно: ИсключениеНеподдерживаемаяОперация\n        Консоль.Записать(СериализацияJson.ЗаписатьОбъект({"status":"UNSUPPORTED","message":Недоступно.Описание}))\n'

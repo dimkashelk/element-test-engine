@@ -131,7 +131,7 @@ def generate_session_types(plan, c, *, reuse=False):
         if not reuse or state['type'] not in c.fields:
             add_structure(c, state['type'], state['fields'])
         c.literal(state['values'], state['type'])
-        if plan.storage and plan.storage.config.get('lifecycle'):
+        if plan.storage and (plan.storage.config.get('lifecycle') or plan.storage.config.get('transaction')):
             c.method_dependencies.setdefault(state['type'], []).append('ТестСессия.Записи')
     if plan.clock and (not reuse or 'ТестЧасы.Метка' not in c.fields):
         add_structure(c, 'ТестЧасы.Метка', [])
@@ -144,13 +144,13 @@ def render_session(plan, sandbox):
     c = plan.contracts
     for state in plan.constants.values():
         path = sandbox / (state['alias'] + '.sbsl')
-        if plan.storage and plan.storage.config.get('lifecycle'):
+        if plan.storage and (plan.storage.config.get('lifecycle') or plan.storage.config.get('transaction')):
             dependency = '#требуется ТестСессия.sbsl\n'
             text = path.read_text(encoding='utf-8')
             if dependency not in text:
                 path.write_text(dependency + text, encoding='utf-8')
         with path.open('a', encoding='utf-8') as f:
-            if plan.storage and plan.storage.config.get('lifecycle'):
+            if plan.storage and (plan.storage.config.get('lifecycle') or plan.storage.config.get('transaction')):
                 from .metadata_lifecycle import validation, describe, atomic
                 element = c.resolve(state['owner'])[0]
                 checks = validation(c, state['fields'], 'Данные.')

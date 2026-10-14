@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-14",
+  "tasks": [
+    "E07",
+    "E08"
+  ],
+  "fullRegression": false,
+  "uniquePassedTests": 70,
+  "uniqueSkippedTests": 6,
+  "runs": [
+    {
+      "command": "ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -p test_engine_e07_e08.py -v",
+      "tests": 13,
+      "passed": 13,
+      "skipped": 0,
+      "seconds": 90.824,
+      "status": "OK",
+      "log": "result/engine-e07-e08/acceptance.log"
+    },
+    {
+      "command": "PYTHONPATH=tests ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest test_report_navigation_panel test_interface_actions test_metadata_lifecycle test_transactions test_engine_e05_e06 -v",
+      "tests": 63,
+      "passed": 57,
+      "skipped": 6,
+      "seconds": 432.775,
+      "status": "OK",
+      "log": "result/engine-e07-e08/regression.log"
+    }
+  ],
+  "notes": [
+    "New acceptance passed completely, including original Script methods, PostgreSQL independent SQL audit, constants, unavailable UI rollback and public batch isolation.",
+    "Six older PostgreSQL opt-in cases were skipped; the new SQL acceptance and E05 SQL regression were executed.",
+    "Pinned local Docker image references were restored with docker pull; repository environment configuration was unchanged.",
+    "Runtime source bodies and comparisons execute in Script/SBSL; native browser rendering and reference presentations are outside these contracts."
+  ]
+}

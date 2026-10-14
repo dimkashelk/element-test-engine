@@ -113,8 +113,6 @@ def plan_interface(root, source_model, check):
         raise InvalidTestError('interface имеет собственный декларативный вход, без target/args/probes')
     if 'storage' in check and not isinstance(check['storage'], dict):
         raise InvalidTestError('interface.storage требует объект')
-    if check.get('storage', {}).get('transaction'):
-        raise UnsupportedSyntaxError('interface не реализует внешнюю storage.transaction; атомарность записи объекта использует formEffects, общий lifecycle — №50')
     root, model = select_check_project(root, source_model, check)
     e = form_element(model, check['interface']['form']); validate_declaration(e)
     c = resolver_for(model, e)
@@ -582,11 +580,15 @@ def render_interface(plan, sandbox):
     if plan.storage and plan.storage.config.get('backend') == 'postgres':
         setup = '    ТестСессия.НастроитьSql(Путь)\n' + setup + '    ТестСессия.Опубликовать(Путь, Истина)\n'
     setup += _recalculate(plan)
-    invocation = '    знч Действия = новый Массив<Строка>()\n'
+    setup += '    знч Действия = новый Массив<Строка>()\n'
+    invocation = ''
+    from .surface_transaction import enabled, render, observation as transaction_observation
     for index, prepared in enumerate(plan._interface_steps):
         step = prepared['step']; op = next(iter(step))
         invocation += '    пер ТестИсход' + str(index) + ' = "applied"\n'
         capture_write = op == 'writeInterface' and plan.storage and plan.storage.config.get('lifecycle')
+        if capture_write and enabled(plan):
+            invocation += '    пер ПричинаОтказа' + str(index) + ': Исключение? = Неопределено\n'
         if capture_write:
             invocation += '    пер ОшибкаЗаписи' + str(index) + ': Объект? = Неопределено\n    попытка\n'
         if op in {'advanceTime', 'timerEvent', 'closeTimers'}:
@@ -602,7 +604,8 @@ def render_interface(plan, sandbox):
         if capture_write:
             validation_type = ' или ОтказЗаписи это ТестБизнесИсключения.ИсключениеВалидации' if 'ИсключениеВалидации' in plan.exception_types else ''
             invocation += ('    поймать ОтказЗаписи: Исключение\n'
-                '        если не (ОтказЗаписи это ИсключениеНедопустимоеСостояние' + validation_type + ')\n'
+                + ('        ПричинаОтказа' + str(index) + ' = ОтказЗаписи\n' if enabled(plan) else '')
+                + '        если не (ОтказЗаписи это ИсключениеНедопустимоеСостояние' + validation_type + ')\n'
                 '            выбросить ОтказЗаписи\n        ;\n'
                 '        ТестИсход' + str(index) + ' = "rejected"\n'
                 '        ОшибкаЗаписи' + str(index) + ' = {"type": ОтказЗаписи.ПолучитьТип().ВСтроку(), "message": ОтказЗаписи.Описание}\n    ;\n')
@@ -617,15 +620,21 @@ def render_interface(plan, sandbox):
             if op in {'advanceTime', 'timerEvent', 'closeTimers'}:
                 actual += ', "events": ' + events
         invocation += '    Действия.Добавить(СериализацияJson.ЗаписатьОбъект(' + actual + '}))\n'
+        if capture_write and enabled(plan):
+            invocation += ('    если ПричинаОтказа' + str(index) + ' != Неопределено\n'
+                           '        выбросить (ПричинаОтказа' + str(index) + ' как Исключение)\n    ;\n')
+    invocation = render(plan, invocation)
     if plan.timers:
         invocation += '    ТестТаймеры.Закрыть()\n'
     actual = '{"actions": Действия}'
+    if enabled(plan):
+        actual = actual[:-1] + ', "transaction": ' + transaction_observation() + '}'
     if plan.storage:
         invocation += '    ТестСессия.ПроверитьСессию()\n'
         if plan.storage.config.get('backend') == 'postgres':
             invocation += '    ТестСессия.Опубликовать(Путь)\n'
         actual = '{"result": ' + actual + ', "storage": ТестСессия.Аудит(Истина)}'
-        metadata += ', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса()'
+        metadata += ', "_rawStorage": Истина, "storageTrace": ТестСессия.Трасса(), "storageDiagnostics": {"active": ТестСессия.ЕстьАктивная(), "locks": ТестСессия.Блокировок()}'
     from .storage_compilation import type_name
     identities = {'Scripts::' + type_name(c, typ): qualified(c.canonical_elements[typ.split('.')[0]]) + '.' + typ.partition('.')[2]
                   for typ in c.fields if '.' in typ and typ.split('.')[0] in c.canonical_elements}
