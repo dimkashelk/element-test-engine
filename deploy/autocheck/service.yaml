@@ -1,0 +1,46 @@
+# Предлагаемый контракт конфигурации, который должен реализовать будущий сервис.
+schemaVersion: "1.0"
+admission:
+  reservationTtlSeconds: 120
+  uploadMaxDurationSeconds: 180
+  uploadIdleTimeoutSeconds: 30
+  uploadHeartbeatSeconds: 5
+  workerHeartbeatSeconds: 5
+  workerStaleAfterSeconds: 20
+  acceptedStartDeadlineSeconds: 10
+  retryAfterSeconds: 5
+limits:
+  maxRequestBytes: 33554432
+  maxDumpBytes: 25165824
+  maxCriteriaBytes: 4194304
+  maxCriteriaExpandedBytes: 16777216
+  maxCriteriaFiles: 256
+  maxExpandedChecks: 1000
+  maxCheckWallSeconds: 900
+  minFreeDiskBytes: 2147483648
+  maxPendingWebhookEvents: 10000
+  maxUndeliveredResultBytes: 268435456
+execution:
+  allowedRunModes: [isolated, integration]
+  allowAutomaticExecutionRetry: false
+  checkHeartbeatSeconds: 5
+  checkLeaseSeconds: 30
+  cleanupIntervalSeconds: 5
+  dockerLabelNamespace: element.autocheck
+delivery:
+  connectTimeoutSeconds: 3
+  requestTimeoutSeconds: 10
+  maxConcurrentRequests: 4
+  retryBaseSeconds: 5
+  retryMaxSeconds: 3600
+  retryWindowSeconds: 604800
+  followRedirects: false
+retention:
+  artifactsDays: 30
+  undeliveredArtifactsDays: 37
+  checkMetadataDays: 180
+  eventPayloadDays: 37
+  idempotencyDays: 180
+  reservationMetadataDays: 7
+  stagingOrphanGraceSeconds: 600
+  cleanupBatchSize: 100

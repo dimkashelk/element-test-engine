@@ -1,0 +1,1798 @@
+# Проект контракта для согласования. Приложение пока не реализовано.
+openapi: 3.0.3
+info:
+  title: Element Autocheck Service
+  version: 1.0.0
+  description: 'Проект, не реализованный API. Очередь принадлежит ЛК; сервис резервирует места, проверяет и доставляет
+    результат. Полная семантика: autocheck-microservice-design.md.'
+servers:
+- url: https://autocheck.example.edu
+  description: Проектный URL за TLS proxy.
+security:
+- bearerAuth: []
+paths:
+  /v1/reservations:
+    post:
+      operationId: createReservation
+      summary: Зарезервировать одно место перед загрузкой
+      x-required-scopes:
+      - checks:write
+      responses:
+        '201':
+          description: Место занято, TTL 120 секунд.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '200':
+          description: Идемпотентный повтор, актуальное состояние исходной резервации.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          description: Некорректные параметры или JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфликт ключа, attempt или состояния.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Невалидный manifest, хеш, multipart или настройка.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Все слоты заняты.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: &id001
+            Retry-After:
+              description: Число секунд до повтора.
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+      parameters:
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+  /v1/reservations/{reservationId}:
+    parameters:
+    - $ref: '#/components/parameters/ReservationId'
+    get:
+      operationId: getReservation
+      summary: Получить состояние своей резервации
+      x-required-scopes:
+      - checks:read
+      responses:
+        '200':
+          description: Текущее состояние.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+    delete:
+      operationId: releaseReservation
+      summary: Освободить reserved место
+      x-required-scopes:
+      - checks:write
+      responses:
+        '204':
+          description: Освобождено либо уже expired/cancelled.
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфликт ключа, attempt или состояния.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+  /v1/checks:
+    post:
+      operationId: uploadCheck
+      summary: Загрузить дамп и критерии в зарезервированное место
+      x-required-scopes:
+      - checks:write
+      responses:
+        '202':
+          description: Входы сохранены и check committed; повтор возвращает то же подтверждение.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAccepted'
+        '400':
+          description: Некорректные параметры или JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфликт ключа, attempt или состояния.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Превышен транспортный лимит; gateway может вернуть text/html.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Невалидный manifest, хеш, multipart или настройка.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+      parameters:
+      - $ref: '#/components/parameters/IdempotencyKey'
+      - $ref: '#/components/parameters/UploadReservation'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                dump:
+                  type: string
+                  format: binary
+                criteria:
+                  type: string
+                  format: binary
+              required:
+              - dump
+              - criteria
+            encoding:
+              dump:
+                contentType: application/octet-stream
+              criteria:
+                contentType: application/yaml, application/zip, application/octet-stream
+      description: Проверка заголовков до чтения multipart. Размеры/хеши обязаны совпасть с manifest reservation.
+        Нет очереди сверх reservation claims. 503 не означает, что ранее committed check потерян.
+    get:
+      operationId: listChecks
+      summary: Сверить проверки конкретной сдачи
+      x-required-scopes:
+      - checks:read
+      responses:
+        '200':
+          description: Keyset page своего клиента.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksPage'
+        '400':
+          description: Некорректные параметры или JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+      parameters:
+      - name: submissionId
+        in: query
+        required: true
+        schema: &id005
+          type: string
+          pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$
+      - name: attempt
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: cursor
+        in: query
+        schema:
+          type: string
+          maxLength: 512
+  /v1/checks/{checkId}:
+    parameters:
+    - $ref: '#/components/parameters/CheckId'
+    get:
+      operationId: getCheck
+      summary: Получить состояние, оценку и доставку
+      x-required-scopes:
+      - checks:read
+      responses:
+        '200':
+          description: Состояние check; scoring и delivery независимы.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Check'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+  /v1/checks/{checkId}/artifacts/{kind}:
+    parameters:
+    - $ref: '#/components/parameters/CheckId'
+    - name: kind
+      in: path
+      required: true
+      schema:
+        type: string
+        enum: &id006
+        - grading.json
+        - result.json
+        - report.html
+        - execution-plans.json
+        - runtime-evidence.json
+    get:
+      operationId: getArtifact
+      summary: Скачать артефакт по фиксированному виду
+      x-required-scopes:
+      - checks:read
+      responses:
+        '200':
+          description: Артефакт attachment. HTML имеет CSP sandbox; nosniff для всех видов.
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+            X-Content-Type-Options:
+              schema:
+                type: string
+                enum:
+                - nosniff
+            Content-Security-Policy:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/html:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+  /v1/capacity:
+    get:
+      operationId: getCapacity
+      summary: Получить снимок свободных мест
+      x-required-scopes:
+      - checks:read
+      responses:
+        '200':
+          description: Снимок; reservation остаётся единственной атомарной гарантией места.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Capacity'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+  /v1/admin/settings:
+    get:
+      operationId: getSettings
+      summary: Получить текущие настройки и ETag
+      x-required-scopes:
+      - settings:read
+      responses:
+        '200':
+          description: Динамические настройки из БД.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+          headers: &id002
+            ETag:
+              description: Quoted revision, например "3".
+              schema:
+                type: string
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+    patch:
+      operationId: patchSettings
+      summary: Изменить cap или pause без перезапуска
+      x-required-scopes:
+      - settings:write
+      responses:
+        '200':
+          description: Настройки сохранены, revision увеличен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+          headers: *id002
+        '400':
+          description: Некорректные параметры или JSON.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '412':
+          description: If-Match не совпал с revision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Невалидный manifest, хеш, multipart или настройка.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '428':
+          description: If-Match обязателен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+      parameters:
+      - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingsPatch'
+      description: HardLimit сверяется с сервером. Снижение cap не прерывает live claims.
+  /v1/admin/checks/{checkId}/delivery/retry:
+    parameters:
+    - $ref: '#/components/parameters/CheckId'
+    post:
+      operationId: retryDelivery
+      summary: Повторно открыть доставку сохранённого события
+      x-required-scopes:
+      - delivery:retry
+      responses:
+        '202':
+          description: Pending переоткрыт или уже pending/delivered; eventId/body сохранены.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryRetry'
+        '401':
+          description: Токен отсутствует или невалиден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостаточно scope или runMode запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс отсутствует или принадлежит другому клиенту.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфликт ключа, attempt или состояния.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Резервация, артефакт или event payload истёк.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Admission или зависимость временно недоступны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: *id001
+      description: Нет повторного исполнения check. Scope позволяет оператору retry любого клиента.
+  /health/live:
+    get:
+      operationId: getLiveness
+      summary: Живость HTTP-процесса
+      x-required-scopes: []
+      responses:
+        '200':
+          description: Готов/жив.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+      security: []
+  /health/ready:
+    get:
+      operationId: getReadiness
+      summary: Готовность зависимостей
+      x-required-scopes: []
+      responses:
+        '200':
+          description: Готов/жив.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: Не готов; без секретных деталей.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+      security: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Opaque токен, clientId/scopes на сервере; не JWT студента.
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Уникален в clientId/operation; повтор с другим manifest возвращает 409.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: ^[ -~]+$
+    ReservationId:
+      name: reservationId
+      in: path
+      required: true
+      schema: &id003
+        type: string
+        format: uuid
+    CheckId:
+      name: checkId
+      in: path
+      required: true
+      schema: *id003
+    UploadReservation:
+      name: X-Reservation-Id
+      in: header
+      required: true
+      schema: *id003
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: ^"[1-9][0-9]*"$
+  schemas:
+    FileManifestDump:
+      type: object
+      additionalProperties: false
+      properties:
+        format:
+          type: string
+          enum:
+          - xdump
+        sizeBytes:
+          type: integer
+          minimum: 1
+          maximum: 25165824
+        sha256: &id004
+          type: string
+          pattern: ^[0-9a-f]{64}$
+      required:
+      - format
+      - sizeBytes
+      - sha256
+    FileManifestCriteria:
+      type: object
+      additionalProperties: false
+      properties:
+        format:
+          type: string
+          enum:
+          - yaml
+          - zip
+        sizeBytes:
+          type: integer
+          minimum: 1
+          maximum: 4194304
+        sha256: *id004
+      required:
+      - format
+      - sizeBytes
+      - sha256
+    ReservationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        submissionId: *id005
+        attempt:
+          type: integer
+          minimum: 1
+        studentId: *id005
+        assignmentId: *id005
+        criteriaVersion:
+          type: string
+          minLength: 1
+          maxLength: 128
+        projectName:
+          type: string
+          minLength: 1
+          maxLength: 256
+        runMode:
+          type: string
+          enum:
+          - isolated
+          - integration
+          default: isolated
+        dump:
+          $ref: '#/components/schemas/FileManifestDump'
+        criteria:
+          $ref: '#/components/schemas/FileManifestCriteria'
+      required:
+      - submissionId
+      - attempt
+      - studentId
+      - assignmentId
+      - criteriaVersion
+      - dump
+      - criteria
+      example:
+        submissionId: submission-4815
+        attempt: 1
+        studentId: student-001
+        assignmentId: demo
+        criteriaVersion: 2026-10-14.1
+        runMode: isolated
+        dump:
+          format: xdump
+          sizeBytes: 20000000
+          sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        criteria:
+          format: yaml
+          sizeBytes: 8000
+          sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    Reservation:
+      type: object
+      additionalProperties: false
+      properties:
+        reservationId: *id003
+        checkId: *id003
+        status:
+          type: string
+          enum:
+          - reserved
+          - uploading
+          - consumed
+          - expired
+          - cancelled
+        expiresAt: &id007
+          type: string
+          format: date-time
+        uploadDeadlineAt:
+          type: string
+          format: date-time
+          nullable: true
+        uploadUrl:
+          type: string
+          enum:
+          - /v1/checks
+      required:
+      - reservationId
+      - checkId
+      - status
+      - expiresAt
+      - uploadDeadlineAt
+      - uploadUrl
+    CheckAccepted:
+      type: object
+      additionalProperties: false
+      properties:
+        checkId: *id003
+        status:
+          type: string
+          enum:
+          - accepted
+        statusUrl:
+          type: string
+          example: /v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe
+      description: Повтор committed upload возвращает исходное подтверждение accepted, даже если работа уже завершена.
+      required:
+      - checkId
+      - status
+      - statusUrl
+    CheckError:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          enum:
+          - invalid_dump
+          - invalid_criteria
+          - unsupported_profile
+          - engine_failure
+          - check_timeout
+          - worker_lost
+          - start_deadline_exceeded
+          - environment_unavailable
+          - result_invalid
+        message:
+          type: string
+        retryable:
+          type: boolean
+      nullable: true
+      required:
+      - code
+      - message
+      - retryable
+    EngineProvenance:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+        revision:
+          type: string
+          pattern: ^[0-9a-f]{40,64}$
+        imageDigest:
+          type: string
+          pattern: ^sha256:[0-9a-f]{64}$
+      nullable: true
+      required:
+      - version
+      - revision
+      - imageDigest
+    InputHashes:
+      type: object
+      additionalProperties: false
+      properties:
+        dumpSha256: *id004
+        criteriaSha256: *id004
+      required:
+      - dumpSha256
+      - criteriaSha256
+    DeliveryStatus:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - not_created
+          - pending
+          - delivered
+          - failed
+          - expired
+        attemptCount:
+          type: integer
+          minimum: 0
+        nextAttemptAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastErrorCode:
+          type: string
+          nullable: true
+      required:
+      - status
+      - attemptCount
+      - nextAttemptAt
+      - lastErrorCode
+    Artifact:
+      type: object
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum: *id006
+        available:
+          type: boolean
+        url:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - kind
+      - available
+      - url
+      - expiresAt
+    GradingIdentifier:
+      type: string
+      pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$
+      nullable: true
+    GradingPoints:
+      type: number
+      minimum: 0
+    GradingFeedback:
+      type: object
+      additionalProperties: false
+      required:
+      - criterionId
+      - status
+      - points
+      - score
+      - expected
+      - actual
+      - message
+      properties:
+        criterionId:
+          type: string
+        group:
+          type: string
+        status:
+          enum:
+          - PASS
+          - FAIL
+          - ERROR
+          - TIMEOUT
+          - UNSUPPORTED
+          - SKIPPED
+        reasonCode:
+          enum:
+          - invalid_test
+          - unsupported_syntax
+          - unsupported_contract
+          - backend_unavailable
+          - execution_error
+          - timeout
+          - result_mismatch
+          - skipped
+        points:
+          $ref: '#/components/schemas/GradingPoints'
+        score:
+          $ref: '#/components/schemas/GradingPoints'
+        expected: {}
+        actual: {}
+        message:
+          type: string
+        failureExplanation:
+          type: string
+          minLength: 1
+    Grading:
+      title: Element Test Engine grading transport v1
+      type: object
+      additionalProperties: false
+      required:
+      - schemaVersion
+      - studentId
+      - assignmentId
+      - runId
+      - assignmentName
+      - project
+      - sourceHash
+      - compatibilityVersion
+      - runMode
+      - status
+      - score
+      - maxScore
+      - unavailablePoints
+      - feedback
+      properties:
+        schemaVersion:
+          enum:
+          - '1.0'
+        studentId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        assignmentId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        runId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        assignmentName:
+          type: string
+        project:
+          type: string
+        projectIdentity:
+          type: object
+          additionalProperties: false
+          properties:
+            Поставщик:
+              type: string
+              nullable: true
+            Имя:
+              type: string
+              nullable: true
+            Версия:
+              type: string
+              nullable: true
+            ВидПроекта:
+              type: string
+              nullable: true
+        libraries:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - provider
+            - name
+            - version
+            - kind
+            - sourceHash
+            properties:
+              provider:
+                type: string
+              name:
+                type: string
+              version:
+                type: string
+              kind:
+                enum:
+                - Библиотека
+              sourceHash:
+                type: string
+                pattern: ^[0-9a-f]{64}$
+        sourceHash:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        compatibilityVersion:
+          type: string
+          pattern: ^[0-9]+\.[0-9]+$
+        runMode:
+          enum:
+          - isolated
+          - integration
+        status:
+          enum:
+          - passed
+          - failed
+          - incomplete
+        score:
+          $ref: '#/components/schemas/GradingPoints'
+        maxScore:
+          $ref: '#/components/schemas/GradingPoints'
+        unavailablePoints:
+          $ref: '#/components/schemas/GradingPoints'
+        feedback:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/GradingFeedback'
+      description: 'Точный grading v1. Оригинальная JSON Schema: docs/grading-v1.schema.json. Баллы определяет SBSL.'
+    NullableGrading:
+      title: Element Test Engine grading transport v1
+      type: object
+      additionalProperties: false
+      required:
+      - schemaVersion
+      - studentId
+      - assignmentId
+      - runId
+      - assignmentName
+      - project
+      - sourceHash
+      - compatibilityVersion
+      - runMode
+      - status
+      - score
+      - maxScore
+      - unavailablePoints
+      - feedback
+      properties:
+        schemaVersion:
+          enum:
+          - '1.0'
+        studentId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        assignmentId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        runId:
+          $ref: '#/components/schemas/GradingIdentifier'
+        assignmentName:
+          type: string
+        project:
+          type: string
+        projectIdentity:
+          type: object
+          additionalProperties: false
+          properties:
+            Поставщик:
+              type: string
+              nullable: true
+            Имя:
+              type: string
+              nullable: true
+            Версия:
+              type: string
+              nullable: true
+            ВидПроекта:
+              type: string
+              nullable: true
+        libraries:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - provider
+            - name
+            - version
+            - kind
+            - sourceHash
+            properties:
+              provider:
+                type: string
+              name:
+                type: string
+              version:
+                type: string
+              kind:
+                enum:
+                - Библиотека
+              sourceHash:
+                type: string
+                pattern: ^[0-9a-f]{64}$
+        sourceHash:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        compatibilityVersion:
+          type: string
+          pattern: ^[0-9]+\.[0-9]+$
+        runMode:
+          enum:
+          - isolated
+          - integration
+        status:
+          enum:
+          - passed
+          - failed
+          - incomplete
+        score:
+          $ref: '#/components/schemas/GradingPoints'
+        maxScore:
+          $ref: '#/components/schemas/GradingPoints'
+        unavailablePoints:
+          $ref: '#/components/schemas/GradingPoints'
+        feedback:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/GradingFeedback'
+      description: 'Точный grading v1. Оригинальная JSON Schema: docs/grading-v1.schema.json. Баллы определяет SBSL.'
+      nullable: true
+    CheckSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        schemaVersion:
+          type: string
+          enum:
+          - '1.0'
+        checkId: *id003
+        submissionId: *id005
+        attempt:
+          type: integer
+          minimum: 1
+        studentId: *id005
+        assignmentId: *id005
+        criteriaVersion:
+          type: string
+          minLength: 1
+          maxLength: 128
+        status:
+          type: string
+          enum:
+          - accepted
+          - running
+          - finalizing
+          - completed
+          - rejected
+          - execution_failed
+        acceptedAt: *id007
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        inputHashes:
+          $ref: '#/components/schemas/InputHashes'
+        engine:
+          $ref: '#/components/schemas/EngineProvenance'
+        normalizedCriteriaSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+          nullable: true
+        grading:
+          $ref: '#/components/schemas/NullableGrading'
+        error:
+          $ref: '#/components/schemas/CheckError'
+      description: 'Для terminal completed требуется grading и error=null; rejected/execution_failed: grading=null
+        и error. Не-terminal: grading/error/finishedAt=null. Условные инварианты проверяются приложением.'
+      required:
+      - schemaVersion
+      - checkId
+      - submissionId
+      - attempt
+      - studentId
+      - assignmentId
+      - criteriaVersion
+      - status
+      - acceptedAt
+      - startedAt
+      - finishedAt
+      - inputHashes
+      - engine
+      - normalizedCriteriaSha256
+      - grading
+      - error
+      example:
+        schemaVersion: '1.0'
+        checkId: 90566acb-77e0-45d6-835f-e74748e89fbe
+        submissionId: submission-4815
+        attempt: 1
+        studentId: student-001
+        assignmentId: demo
+        criteriaVersion: 2026-10-14.1
+        status: completed
+        acceptedAt: '2026-10-14T18:00:20Z'
+        startedAt: '2026-10-14T18:00:21Z'
+        finishedAt: '2026-10-14T18:00:55Z'
+        inputHashes:
+          dumpSha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          criteriaSha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        engine:
+          version: 0.1.0
+          revision: cccccccccccccccccccccccccccccccccccccccc
+          imageDigest: sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        normalizedCriteriaSha256: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        grading:
+          schemaVersion: '1.0'
+          studentId: student-001
+          assignmentId: demo
+          runId: 90566acb-77e0-45d6-835f-e74748e89fbe
+          assignmentName: Движок — проверка первого MVP
+          project: Движок
+          sourceHash: 567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02
+          compatibilityVersion: '9.0'
+          runMode: isolated
+          status: passed
+          score: 6
+          maxScore: 6
+          unavailablePoints: 0
+          feedback:
+          - criterionId: order_exists
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_client
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_table
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_sum_scale
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: fio_handler
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: fio_signature
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+        error: null
+    Check:
+      type: object
+      additionalProperties: false
+      properties:
+        schemaVersion:
+          type: string
+          enum:
+          - '1.0'
+        checkId:
+          type: string
+          format: uuid
+        submissionId: &id008
+          type: string
+          pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$
+        attempt:
+          type: integer
+          minimum: 1
+        studentId: *id008
+        assignmentId: *id008
+        criteriaVersion:
+          type: string
+          minLength: 1
+          maxLength: 128
+        status:
+          type: string
+          enum:
+          - accepted
+          - running
+          - finalizing
+          - completed
+          - rejected
+          - execution_failed
+        acceptedAt:
+          type: string
+          format: date-time
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        inputHashes:
+          $ref: '#/components/schemas/InputHashes'
+        engine:
+          $ref: '#/components/schemas/EngineProvenance'
+        normalizedCriteriaSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+          nullable: true
+        grading:
+          $ref: '#/components/schemas/NullableGrading'
+        error:
+          $ref: '#/components/schemas/CheckError'
+        delivery:
+          $ref: '#/components/schemas/DeliveryStatus'
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artifact'
+      required:
+      - schemaVersion
+      - checkId
+      - submissionId
+      - attempt
+      - studentId
+      - assignmentId
+      - criteriaVersion
+      - status
+      - acceptedAt
+      - startedAt
+      - finishedAt
+      - inputHashes
+      - engine
+      - normalizedCriteriaSha256
+      - grading
+      - error
+      - delivery
+      - artifacts
+      example:
+        schemaVersion: '1.0'
+        checkId: 90566acb-77e0-45d6-835f-e74748e89fbe
+        submissionId: submission-4815
+        attempt: 1
+        studentId: student-001
+        assignmentId: demo
+        criteriaVersion: 2026-10-14.1
+        status: completed
+        acceptedAt: '2026-10-14T18:00:20Z'
+        startedAt: '2026-10-14T18:00:21Z'
+        finishedAt: '2026-10-14T18:00:55Z'
+        inputHashes:
+          dumpSha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          criteriaSha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        engine:
+          version: 0.1.0
+          revision: cccccccccccccccccccccccccccccccccccccccc
+          imageDigest: sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        normalizedCriteriaSha256: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        grading:
+          schemaVersion: '1.0'
+          studentId: student-001
+          assignmentId: demo
+          runId: 90566acb-77e0-45d6-835f-e74748e89fbe
+          assignmentName: Движок — проверка первого MVP
+          project: Движок
+          sourceHash: 567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02
+          compatibilityVersion: '9.0'
+          runMode: isolated
+          status: passed
+          score: 6
+          maxScore: 6
+          unavailablePoints: 0
+          feedback:
+          - criterionId: order_exists
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_client
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_table
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: order_sum_scale
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: fio_handler
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+          - criterionId: fio_signature
+            status: PASS
+            points: 1
+            score: 1
+            expected: null
+            actual: null
+            message: Критерий выполнен
+        error: null
+        delivery:
+          status: pending
+          attemptCount: 0
+          nextAttemptAt: '2026-10-14T18:00:55Z'
+          lastErrorCode: null
+        artifacts:
+        - kind: report.html
+          available: true
+          url: /v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe/artifacts/report.html
+          expiresAt: '2026-11-13T18:00:55Z'
+    ChecksPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Check'
+        nextCursor:
+          type: string
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    Capacity:
+      type: object
+      additionalProperties: false
+      properties:
+        occupiedSlots:
+          type: integer
+          minimum: 0
+        availableSlots:
+          type: integer
+          minimum: 0
+        reserved:
+          type: integer
+          minimum: 0
+        uploading:
+          type: integer
+          minimum: 0
+        accepted:
+          type: integer
+          minimum: 0
+        running:
+          type: integer
+          minimum: 0
+        finalizing:
+          type: integer
+          minimum: 0
+        cleanupBlocked:
+          type: integer
+          minimum: 0
+        maxConcurrentChecks:
+          type: integer
+          minimum: 1
+        hardLimit:
+          type: integer
+          minimum: 1
+        accepting:
+          type: boolean
+        settingsRevision:
+          type: integer
+          minimum: 1
+        observedAt: *id007
+      description: cleanupBlocked — подмножество finalizing, не дополнительное слагаемое occupied. accepting=false
+        означает availableSlots=0.
+      required:
+      - occupiedSlots
+      - availableSlots
+      - reserved
+      - uploading
+      - accepted
+      - running
+      - finalizing
+      - cleanupBlocked
+      - maxConcurrentChecks
+      - hardLimit
+      - accepting
+      - settingsRevision
+      - observedAt
+    SettingsPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        maxConcurrentChecks:
+          type: integer
+          minimum: 1
+        accepting:
+          type: boolean
+      minProperties: 1
+    Settings:
+      type: object
+      additionalProperties: false
+      properties:
+        maxConcurrentChecks:
+          type: integer
+          minimum: 1
+        hardLimit:
+          type: integer
+          minimum: 1
+        accepting:
+          type: boolean
+        revision:
+          type: integer
+          minimum: 1
+        updatedAt: *id007
+      required:
+      - maxConcurrentChecks
+      - hardLimit
+      - accepting
+      - revision
+      - updatedAt
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          properties:
+            code:
+              type: string
+              enum:
+              - invalid_request
+              - unauthorized
+              - forbidden
+              - not_found
+              - idempotency_conflict
+              - attempt_exists
+              - reservation_busy
+              - reservation_expired
+              - upload_in_progress
+              - upload_failed
+              - payload_too_large
+              - manifest_mismatch
+              - artifact_not_found
+              - artifact_expired
+              - event_expired
+              - settings_conflict
+              - precondition_required
+              - invalid_settings
+              - capacity_full
+              - admission_unavailable
+              - dependency_unavailable
+            message:
+              type: string
+            requestId: *id003
+            existingCheckId:
+              type: string
+              format: uuid
+              nullable: true
+          required:
+          - code
+          - message
+          - requestId
+      required:
+      - error
+    Health:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - ok
+          - unavailable
+      required:
+      - status
+    DeliveryRetry:
+      type: object
+      additionalProperties: false
+      properties:
+        checkId: *id003
+        eventId: *id003
+        status:
+          type: string
+          enum:
+          - pending
+          - delivered
+      required:
+      - checkId
+      - eventId
+      - status
+    CheckFinishedEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        schemaVersion:
+          type: string
+          enum:
+          - '1.0'
+        eventId: *id003
+        type:
+          type: string
+          enum:
+          - check.finished
+        occurredAt: *id007
+        check:
+          $ref: '#/components/schemas/CheckSnapshot'
+      description: CheckSnapshot строго terminal. Immutable body/eventId на всех retries; delivery отсутствует.
+      required:
+      - schemaVersion
+      - eventId
+      - type
+      - occurredAt
+      - check
+      example:
+        schemaVersion: '1.0'
+        eventId: fbd2d1e4-4868-4e76-b140-55cfbc12bdc4
+        type: check.finished
+        occurredAt: '2026-10-14T18:00:55Z'
+        check:
+          schemaVersion: '1.0'
+          checkId: 90566acb-77e0-45d6-835f-e74748e89fbe
+          submissionId: submission-4815
+          attempt: 1
+          studentId: student-001
+          assignmentId: demo
+          criteriaVersion: 2026-10-14.1
+          status: completed
+          acceptedAt: '2026-10-14T18:00:20Z'
+          startedAt: '2026-10-14T18:00:21Z'
+          finishedAt: '2026-10-14T18:00:55Z'
+          inputHashes:
+            dumpSha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            criteriaSha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+          engine:
+            version: 0.1.0
+            revision: cccccccccccccccccccccccccccccccccccccccc
+            imageDigest: sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+          normalizedCriteriaSha256: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+          grading:
+            schemaVersion: '1.0'
+            studentId: student-001
+            assignmentId: demo
+            runId: 90566acb-77e0-45d6-835f-e74748e89fbe
+            assignmentName: Движок — проверка первого MVP
+            project: Движок
+            sourceHash: 567ac77f95a819bb9df9b680cc93c37740e80fe0b39f59675052c967079efa02
+            compatibilityVersion: '9.0'
+            runMode: isolated
+            status: passed
+            score: 6
+            maxScore: 6
+            unavailablePoints: 0
+            feedback:
+            - criterionId: order_exists
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+            - criterionId: order_client
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+            - criterionId: order_table
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+            - criterionId: order_sum_scale
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+            - criterionId: fio_handler
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+            - criterionId: fio_signature
+              status: PASS
+              points: 1
+              score: 1
+              expected: null
+              actual: null
+              message: Критерий выполнен
+          error: null

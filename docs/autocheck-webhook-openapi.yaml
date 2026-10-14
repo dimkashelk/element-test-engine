@@ -1,0 +1,66 @@
+# Проект контракта для согласования. Приложение пока не реализовано.
+openapi: 3.0.3
+info:
+  title: 'ЛК: приём события автопроверки'
+  version: 1.0.0
+  description: Этот endpoint реализуется в ЛК, не в микросервисе. Фактический URL настроен оператором по clientId.
+    HMAC, сверка eventId и timestamp проверяются совместно; четыре заголовка обязательны.
+servers:
+- url: https://lk.example.edu
+paths:
+  /internal/autocheck/events:
+    post:
+      operationId: receiveAutocheckEvent
+      summary: Сохранить результат идемпотентно по eventId
+      parameters:
+      - name: X-Autocheck-Event-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Autocheck-Timestamp
+        in: header
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]+$
+        description: Unix seconds текущей доставки, допустимое отклонение 300 сек.
+      - name: X-Autocheck-Key-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      - name: X-Autocheck-Signature
+        in: header
+        required: true
+        schema:
+          type: string
+          pattern: ^v1=[0-9a-f]{64}$
+        description: HMAC-SHA256(timestamp + "." + eventId + "." + exact raw JSON bytes).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./autocheck-openapi.yaml#/components/schemas/CheckFinishedEvent
+      responses:
+        '204':
+          description: Событие и результат durable сохранены, либо eventId уже обработан.
+        '400':
+          description: Некорректный body или несовпадение eventId.
+        '401':
+          description: Подпись/ключ/timestamp невалидны.
+        '429':
+          description: Повторить доставку позднее.
+          headers: &id001
+            Retry-After:
+              description: Число секунд до повтора.
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Событие не сохранено, повторить.
+          headers: *id001

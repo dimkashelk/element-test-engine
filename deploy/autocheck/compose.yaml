@@ -1,0 +1,230 @@
+# Проект развёртывания: модуль element_check_service и SERVICE_IMAGE ещё не реализованы.
+# Проверка без запуска: docker compose --env-file .env.example -f compose.yaml config --quiet
+name: element-autocheck
+
+x-service: &service
+  image: ${SERVICE_IMAGE:-element-checker/service:review-placeholder}
+  init: true
+  read_only: true
+  restart: unless-stopped
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+x-db-env: &db-env
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: autocheck
+  DB_USER: autocheck
+  DB_PASSWORD_FILE: /run/secrets/db_password
+  SERVICE_CONFIG: /etc/autocheck/service.yaml
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:17@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: autocheck
+      POSTGRES_USER: autocheck
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks: [backend]
+    shm_size: 128m
+    mem_limit: 768m
+    cpus: 1.0
+    pids_limit: 128
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U autocheck -d autocheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 15s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  migrate:
+    <<: *service
+    restart: "no"
+    user: "10001:10001"
+    command: [python, -m, element_check_service, migrate]
+    environment:
+      <<: *db-env
+      DEFAULT_MAX_CONCURRENT_CHECKS: ${DEFAULT_MAX_CONCURRENT_CHECKS:-2}
+      MAX_CONCURRENT_CHECKS_HARD_LIMIT: ${MAX_CONCURRENT_CHECKS_HARD_LIMIT:-8}
+    secrets: [db_password]
+    configs:
+      - source: service_config
+        target: /etc/autocheck/service.yaml
+    networks: [backend]
+    depends_on:
+      postgres: {condition: service_healthy}
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+
+  api:
+    <<: *service
+    user: "10001:10001"
+    command: [python, -m, element_check_service, api, --host, 0.0.0.0, --port, "8000"]
+    environment:
+      <<: *db-env
+      SERVICE_DATA_ROOT: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+      API_CLIENTS_FILE: /run/secrets/api_clients
+    secrets: [db_password, api_clients]
+    configs:
+      - source: service_config
+        target: /etc/autocheck/service.yaml
+    volumes:
+      - type: bind
+        source: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+        target: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+        bind: {create_host_path: false}
+    networks: [backend]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    mem_limit: 768m
+    cpus: 1.0
+    pids_limit: 128
+    healthcheck:
+      test: [CMD, python, -m, element_check_service, health, api]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    stop_grace_period: 30s
+
+  worker:
+    <<: *service
+    # Root нужен оркестратору для штатного root-owned Docker socket.
+    # Подготовка доверенным движком — внутри worker; student executor — 65534:65534.
+    user: "0:10001"
+    # Доступ/нормализация прав общих файлов API (UID/GID 10001).
+    cap_add: [DAC_OVERRIDE, FOWNER]
+    command: [python, -m, element_check_service, worker]
+    environment:
+      <<: *db-env
+      SERVICE_DATA_ROOT: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+      TMPDIR: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}/work
+      ELEMENT_SCRIPT_HOME: ${SCRIPT_RUNTIME_ROOT:-/opt/element-script/10.0.2-1}
+      ELEMENT_TEST_RUNTIMES: /opt/element-test/config/runtimes.json
+      ELEMENT_TEST_INTEGRATION_CONFIG: /opt/element-test/config/integration.json
+      INTEGRATION_PASSWORD_FILE: /run/secrets/integration_password
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DEFAULT_MAX_CONCURRENT_CHECKS: ${DEFAULT_MAX_CONCURRENT_CHECKS:-2}
+      MAX_CONCURRENT_CHECKS_HARD_LIMIT: ${MAX_CONCURRENT_CHECKS_HARD_LIMIT:-8}
+    secrets: [db_password, integration_password]
+    configs:
+      - source: service_config
+        target: /etc/autocheck/service.yaml
+    volumes:
+      - type: bind
+        source: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+        target: ${SERVICE_DATA_ROOT:-/srv/element-autocheck/data}
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${SCRIPT_RUNTIME_ROOT:-/opt/element-script/10.0.2-1}
+        target: ${SCRIPT_RUNTIME_ROOT:-/opt/element-script/10.0.2-1}
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${DOCKER_SOCKET_PATH:-/var/run/docker.sock}
+        target: /var/run/docker.sock
+        bind: {create_host_path: false}
+    networks: [backend]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    mem_limit: 3g
+    cpus: 2.0
+    pids_limit: 512
+    healthcheck:
+      test: [CMD, python, -m, element_check_service, health, worker]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 60s
+
+  notifier:
+    <<: *service
+    user: "10001:10001"
+    command: [python, -m, element_check_service, notifier]
+    environment:
+      <<: *db-env
+      WEBHOOK_CLIENTS_FILE: /run/secrets/webhook_clients
+    secrets: [db_password, webhook_clients]
+    configs:
+      - source: service_config
+        target: /etc/autocheck/service.yaml
+    networks: [backend, outbound]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    healthcheck:
+      test: [CMD, python, -m, element_check_service, health, notifier]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    stop_grace_period: 30s
+
+  gateway:
+    image: ${NGINX_IMAGE:-nginx:stable-alpine}
+    restart: unless-stopped
+    user: "101:101"
+    read_only: true
+    entrypoint: [nginx]
+    command: [-g, "daemon off;"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports:
+      - "${GATEWAY_BIND_ADDRESS:-127.0.0.1}:${GATEWAY_PORT:-8088}:8080"
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    networks: [backend, ingress]
+    depends_on:
+      api: {condition: service_healthy}
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 128
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/gateway-health]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+networks:
+  backend: {internal: true}
+  ingress: {}
+  outbound: {}
+
+volumes:
+  postgres_data: {}
+
+configs:
+  service_config: {file: ./service.yaml}
+  nginx_config: {file: ./nginx.conf}
+
+secrets:
+  db_password:
+    file: ${SECRETS_ROOT:-./secrets}/db_password
+  api_clients:
+    file: ${SECRETS_ROOT:-./secrets}/api_clients.json
+  webhook_clients:
+    file: ${SECRETS_ROOT:-./secrets}/webhook_clients.json
+  integration_password:
+    file: ${SECRETS_ROOT:-./secrets}/integration_password
