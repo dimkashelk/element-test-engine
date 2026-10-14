@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-14",
+  "tasks": [
+    "E09",
+    "E10",
+    "E11"
+  ],
+  "fullRegression": false,
+  "uniquePassedTests": 53,
+  "uniqueSkippedTests": 1,
+  "newAcceptancePassed": 13,
+  "regressionPassed": 40,
+  "runs": [
+    {
+      "command": "PYTHONPATH=tests ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest test_engine_e09_e11 -v",
+      "tests": 12,
+      "passed": 12,
+      "skipped": 0,
+      "seconds": 132.22,
+      "status": "OK",
+      "log": "result/engine-e09-e11/acceptance.log"
+    },
+    {
+      "command": "PYTHONPATH=tests ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest test_engine_e07_e08 test_report_navigation_panel.SurfaceExecutionTest test_report_navigation_panel.SurfacePlanTest.test_navigation_recurses_gates_routes_native_and_ambiguity test_report_navigation_panel.SurfacePlanTest.test_repeated_fragment_occurrences_and_duplicate_widget_data_sources test_engine_e03_e04.ExtendedScriptTest.test_register_filters_read_null_omission_period_empty_and_alias test_engine_e03_e04.ExtendedScriptTest.test_register_replace_append_clear_and_rollback_keep_full_history test_engine_e01_e02.EngineExtensionsRuntimeTest.test_hooks_order_replace_append_business_denial_after_error_and_sql test_engine_e01_e02.EngineExtensionsRuntimeTest.test_accumulation_hooks_write_parameters_and_rollback test_virtual_extensions.VirtualArgumentsDockerTest.test_portable_arguments_filters_periods_and_saved_bindings test_virtual_extensions.VirtualArgumentsDockerTest.test_combined_boundaries_records_only_and_hidden_filter_dimension test_virtual_extensions.VirtualArgumentsDockerTest.test_auto_period_intersection_and_default_period_records_only -v",
+      "tests": 28,
+      "passed": 28,
+      "skipped": 0,
+      "seconds": 392.72,
+      "status": "OK",
+      "log": "result/engine-e09-e11/regression.log"
+    },
+    {
+      "command": "PYTHONPATH=tests python3 -m unittest test_integration test_runtime_limits -v",
+      "tests": 13,
+      "passed": 12,
+      "skipped": 1,
+      "seconds": 0.047,
+      "status": "OK",
+      "log": "result/engine-e09-e11/infrastructure.log"
+    },
+    {
+      "command": "PYTHONPATH=tests python3 -m unittest test_engine_e09_e11.SubordinatedInformationTest.test_append_null_registrar_and_inactive_slices -v",
+      "tests": 1,
+      "passed": 1,
+      "skipped": 0,
+      "seconds": 4.112,
+      "status": "OK",
+      "log": "result/engine-e09-e11/raw-register.log"
+    },
+    {
+      "command": "PYTHONPATH=tests python3 -m unittest test_engine_e09_e11.SubordinatedInformationTest.test_imported_and_qualified_same_named_document_owners -v",
+      "tests": 1,
+      "passed": 1,
+      "skipped": 0,
+      "seconds": 1.072,
+      "status": "OK",
+      "log": "result/engine-e09-e11/imports.log"
+    }
+  ],
+  "testedFilesSha256": {
+    "config/runtimes.json": "e493b611b1398df905f570bd1e3eff259dac9d605e0be99ef4d017ba0e07acad",
+    "element_test/navigation.py": "b4555bb2ae5655fe82b2bc1b7dfea339a291e948cd24181f087d734d77a6732b",
+    "element_test/navigation_expressions.py": "7cdc822195f26eae6e35e35273af9778d5802cfdaaf8e4d58ecfb5777565628f",
+    "element_test/query_sources.py": "96392d732acfc7b49e9eef2d0350214c0bc17ace798961d06e761dc9528fd6f9",
+    "element_test/query_detailed_totals.py": "5d3afa508bf15289c074ee216bafdf08efda93f42798946ddb8a6bb30f2feff7",
+    "element_test/record_sets.py": "d4d7fa12e26dd20c023c8d3e1e68c57859dd7438d896169c903ea8ff4410b0bb",
+    "element_test/platform_mocks.py": "4cd41e568256f8c59384ab812818054ac3a3c7a265543c1d4ac45340142d43df",
+    "element_test/report_runtime.py": "6e6e4d977a88c0f2f80e4ed6d20862bf5f0c99a0140221fe74edd13b56b4c9c4",
+    "element_test/session_contracts.py": "1c2dfc8952583fc483ab4a0a42ad6b3cda3d34a6b58a8d79b627e48b7037b746",
+    "element_test/storage_queries.py": "ec3ff93de9de2ccbeb47c0b30a35b977835e22db6ae9114e7a013424060bc467",
+    "element_test/runtime.py": "cf0148af63b40ce6d906809911a6b79eacb72754eb538af3f28050bb2f2e1b58",
+    "element_test/integration.py": "42ecc7e9324ab2f2a2e738c4b7eca23d7df4af85365d09769c441a585227a4a0",
+    "element_test/runtime_images.py": "828b2d2a8f3b6d929951574e6a235a7fade9f9e2cc865b83773982d9e59a8bc0",
+    "tests/test_engine_e09_e11.py": "fa4ff11e1d3bb528798bc1e6acaa4616a46aae8e1688bcd56a585a627937b167"
+  },
+  "notes": [
+    "Script source expressions, storage operations and independent SBSL grading execute in their existing runtimes; Python resolves declarations and generates code.",
+    "The complete initial acceptance ran 12 tests. One additional imported-owner acceptance passed; the strengthened raw-register test was rechecked separately and is counted once.",
+    "Three SQL acceptance tests performed independent SELECT audits, including fresh detailed queries and rollback. PostgreSQL and Script fixtures use the same configured content digests.",
+    "Public test and two-submission batch passed authored PASS/FAIL/UNSUPPORTED expectations for all three tasks. Unavailable points remain separate.",
+    "One older infrastructure Docker smoke test was skipped behind its own opt-in; all newly added SQL acceptance was executed.",
+    "Detailed movement tie order is an explicit model contract, not evidence of native database tie order. Navigation opens model surfaces; native UI and opening callbacks remain outside this contract.",
+    "Source archives and nightly configuration are unchanged. Full discovery and final-dump business acceptance were not run."
+  ]
+}

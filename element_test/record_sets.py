@@ -19,8 +19,12 @@ def attach_register(storage, name):
         raise InputError('Хранение набора требует однозначный регистр')
     e = matches[0]
     identity = qualified(e)
-    if e['elementType'] == 'РегистрСведений' and e['properties'].get('РежимЗаписи') == 'ПодчинениеРегистратору':
-        raise UnsupportedSyntaxError('Подчинённый регистр сведений 10.0 вне контракта хранения')
+    subordinated = e['elementType'] == 'РегистрСведений' and e['properties'].get('РежимЗаписи') == 'ПодчинениеРегистратору'
+    if subordinated:
+        if tuple(map(int, c.model['compatibilityVersion'].split('.'))) < (10, 0):
+            raise UnsupportedSyntaxError('Подчинённый регистр сведений требует профиль исходного проекта 10.0')
+        if any(f.get('Ведущее') for f in e['properties'].get('Измерения', [])) or e['properties'].get('ПериодВходитВОсновнойФильтр'):
+            raise UnsupportedSyntaxError('Подчинённый РС требует фильтр только по регистратору')
     if identity in storage.register_schemas:
         return
     previous = c.namespace, c.imports
@@ -63,7 +67,8 @@ def attach_register(storage, name):
         return '{' + ', '.join(literal(f['Имя']) + ': ' +
             (encode(c, prefix + f['Имя'], f['Тип']) if reference_union(f['Тип']) else
              '{"type": (' + prefix + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + prefix + f['Имя'] + '}' if '|' in f['Тип'] else prefix + f['Имя']) for f in fs) + '}'
-    filter_fields = list(dims)
+    filter_fields = ([{**f, 'Тип': c.canonical_type(f['Тип'])} for f in e['properties'].get('Реквизиты', [])
+                      if f['Имя'] == 'Регистратор'] if subordinated else list(dims))
     if e['properties'].get('ПериодВходитВОсновнойФильтр', False):
         period = [f for f in c.fields[row] if f['Имя'] == 'Период']
         if accumulation or not period:
@@ -83,8 +88,8 @@ def attach_register(storage, name):
             result = expr + ' это ' + t + ' ? ' + part + ' : ' + result
         return '(' + (expr + ' == Неопределено ? Неопределено : ' if '?' in typ else '') + result + ')'
     registrar_field = registrar_set = ''
-    if accumulation:
-        registrar_type = dims[0]['Тип']
+    if accumulation or subordinated:
+        registrar_type = filter_fields[0]['Тип']
         nullable_slot = '?' if '|' in registrar_type and '?' not in registrar_type else ''
         registrar_field = '    пер ЗначениеРегистратора: ' + c.sbsl_type(registrar_type) + nullable_slot + '\n'
         registrar_set = '        ЗначениеРегистратора = ' + clone_ref('Регистратор', registrar_type) + '\n'
@@ -107,7 +112,7 @@ def attach_register(storage, name):
         Отбор.Вставить({literal(name)}, Поле[{literal(name)}])
         Ключ = СериализацияJson.ЗаписатьОбъект(Отбор)
 '''
-        if accumulation:
+        if accumulation or subordinated:
             methods += '        ЗначениеРегистратора = ' + clone_ref('Значение', f['Тип']) + '\n'
         methods += f'''    ;
     @Глобально
@@ -224,14 +229,24 @@ def attach_register(storage, name):
     if not accumulation:
         _information_storage(c, identity, st, row, dims, filter_fields, values,
                              bool(storage.config.get('lifecycle')))
+    if subordinated:
+        activity = '''    @Глобально
+    метод УстановитьАктивность(Активность: Булево)
+        для СтрокаНабора из Записи
+            СтрокаНабора.Активность = Активность
+        ;
+    ;
+'''
+        c.definitions[st] = c.definitions[st].rsplit(';', 1)[0] + activity + ';\n'
     c.method_dependencies[st] = ['ТестСессия.Записи']
     c.method_dependencies[ft] = [f['Тип'] for f in dims]
     storage.register_schemas[identity] = {'owner': identity, 'kind': e['elementType'],
         'rowType': row, 'setType': st, 'filterType': ft, 'filterFields': filter_fields, 'bucketFields': dims,
         'parameterType': parameters,
+        'writingMode': 'ПодчинениеРегистратору' if subordinated else 'Регистратор' if accumulation else 'Независимый',
         'fields': c.fields[row], 'periodicity': e['properties'].get('Периодичность', 'Непериодический'),
         'backend': storage.config.get('backend', 'memory'), 'contract': CONTRACT,
-        'limitations': ['full-filter-only' if accumulation else 'explicit-named-field-subset',
+        'limitations': ['full-filter-only' if accumulation or subordinated else 'explicit-named-field-subset',
                         'unordered', 'isolated-staging', 'no-balances']}
 
 
@@ -281,6 +296,8 @@ def filter_method(c, schema, names):
     lowered by AST to these internal methods; original files remain untouched.
     """
     dims = schema['filterFields']
+    if schema.get('writingMode') == 'ПодчинениеРегистратору' and set(names) != {'Регистратор'}:
+        raise UnsupportedSyntaxError('Подчинённый РС требует полный фильтр Регистратор')
     selected = [f for f in dims if f['Имя'] in names]
     if len(selected) == len(dims):
         return 'Установить'

@@ -80,6 +80,10 @@ def generate_query(query, contracts, *, native_loader=False):
              '                знч Значение: Объект? = СериализацияJson.ПрочитатьОбъект(JSON)\n')
     if sliced:
         text += '                для ЗначениеСтроки из (Значение как Массив<Объект?>)\n                    знч Снимок = ЗначениеСтроки как Соответствие<Строка, Объект?>\n'
+        from .resolution import qualified
+        if any(e['elementType']=='РегистрСведений' and e['properties'].get('РежимЗаписи')=='ПодчинениеРегистратору'
+               and qualified(e)==query.owner for e in contracts.model['elements']):
+            text += '                    если не (Снимок["Активность"] как Булево)\n                        продолжить\n                    ;\n'
     else:
         text += '                знч Снимок = Значение как Соответствие<Строка, Объект?>\n'
     text += row_guard(query,contracts)

@@ -226,14 +226,27 @@ def plan_surface(root, source_model, check):
         if {'storage','timers','queryParameters'} & check.keys():
             raise InvalidTestError('Навигация модели не требует storage/timers/queryParameters')
         plan = _entry(root, model, plain, e)
-        plan.navigation = build_navigation(root, model, e, check.get('navigationContext', {}), check[kind][kind])
+        plan.navigation = build_navigation(root, model, e, check.get('navigationContext', {}), check[kind][kind], plan=plan)
         plan._surface_actions = []
         for action in _actions(check.get('navigationActions',[{'operation':'resolve'}])):
             if action == {'operation':'resolve'}:
                 plan._surface_actions.append(action)
             elif action.get('operation') == 'open' and set(action) == {'operation','selector'}:
                 plan._surface_actions.append({'operation':'open','route': select_route(plan.navigation['routes'], action['selector'])})
-            else: raise InvalidTestError('navigationActions: resolve/open.selector')
+            elif action.get('operation') == 'set' and set(action) == {'operation', 'path', 'value'}:
+                from .navigation_expressions import set_context
+                plan._surface_actions.append({'operation': 'set', 'code': set_context(plan, action)})
+            elif action.get('operation') == 'setConstant' and set(action) == {'operation', 'owner', 'path', 'value'}:
+                from .navigation_expressions import set_constant
+                plan._surface_actions.append({'operation': 'setConstant', 'code': set_constant(plan, action, len(plan._surface_actions))})
+            else: raise InvalidTestError('navigationActions: resolve/open.selector/set.path.value/setConstant')
+        dependencies = {d['sourceFile']: d for d in plan.navigation['dependencies']}
+        for state in plan.constants.values():
+            owner = next(e for e in model['elements'] if e['sourceFile'] == state['sourceFile'])
+            dependencies[owner['sourceFile']] = evidence(root, model, owner)[0]
+        for owner in plan.contracts.canonical_elements.values():
+            dependencies[owner['sourceFile']] = evidence(root, model, owner)[0]
+        plan.navigation['dependencies'] = list(dependencies.values())
     else:
         if 'queryParameters' in check or 'navigationContext' in check:
             raise InvalidTestError('Параметры виджетов задаются в panel.parameters')
@@ -327,20 +340,8 @@ def render_surface(plan, sandbox):
     from .timer_events import render_event_step
     c = plan.contracts
     if plan.navigation:
-        setup = ''
-        invocation = '    знч Actions = новый Массив<Строка>()\n'
-        for action_index, a in enumerate(plan._surface_actions):
-            if a['operation'] == 'resolve':
-                actual = {'operation':'resolve','routes':plan.navigation['routes'],'sections':plan.navigation['sections']}
-                expression = c.literal(actual, 'Объект')
-            else:
-                route = a['route']
-                outcome, target = 'Outcome'+str(action_index), 'Target'+str(action_index)
-                invocation += ('    пер '+outcome+' = "blocked"\n    пер '+target+': Объект? = Неопределено\n'
-                    '    если '+c.literal(route['visible'],'Булево')+' и '+c.literal(route['available'],'Булево')+'\n'
-                    '        '+outcome+' = "opened-model"\n        '+target+' = '+c.literal(route['target'],'Объект')+'\n    ;\n')
-                expression = '{"operation":"open", "outcome":'+outcome+', "routeId":'+c.literal(route['id'],'Строка')+', "target":'+target+'}'
-            invocation += '    Actions.Добавить(СериализацияJson.ЗаписатьОбъект('+expression+'))\n'
+        from .navigation_expressions import render_navigation
+        setup, invocation = render_navigation(plan)
         actual = '{"actions": Actions}'
     elif plan.report:
         from .source_query import render_source_query

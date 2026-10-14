@@ -164,8 +164,11 @@ def render_session(plan, sandbox):
                     '    возврат СериализацияJson.ПрочитатьОбъект<' + state['type'] + '>(JSON как Строка, Начальные.ПолучитьТип())\n;\n'
                     '@Глобально\nметод ТестЗаписать(Данные: ' + state['type'] + ')\n'
                     + atomic(checks + '    ТестСессия.Записать(' + owner_literal + ', "constants", СериализацияJson.ЗаписатьОбъект(Данные))\n') + ';\n')
-            elif plan.check.get('_interface'):
-                path_literal = c.literal('/tmp/interface-constants-' + sha256(state['owner'].encode()).hexdigest()[:16] + '.json', 'Строка')
+            elif plan.check.get('_interface') or plan.navigation:
+                import uuid
+                constants_path = ('/tmp/navigation-constants-' + uuid.uuid4().hex if plan.navigation else
+                                  '/tmp/interface-constants-' + sha256(state['owner'].encode()).hexdigest()[:16]) + '.json'
+                path_literal = c.literal(constants_path, 'Строка')
                 f.write('\nконст Путь = ' + path_literal + '\n@Глобально\nметод Получить(): ' + state['type'] + '\n'
                     '    знч Начальные = ' + c.literal(state['values'], state['type']) + '\n'
                     '    знч Ф = новый Файл(Путь)\n    если не Ф.Существует()\n        возврат Начальные\n    ;\n'
@@ -178,7 +181,7 @@ def render_session(plan, sandbox):
                 f.write('\n@Глобально\nметод Получить(): ' + state['type'] + '\n    возврат '
                         + c.literal(state['values'], state['type']) + '\n;\n')
     setup, metadata = '', ''
-    if plan.check.get('_interface'):
+    if plan.check.get('_interface') or plan.navigation:
         setup += ''.join('    ' + state['alias'] + '.ТестЗаписать(' + c.literal(state['values'], state['type']) + ')\n' for state in plan.constants.values())
     if plan.clock:
         clock = plan.clock

@@ -51,7 +51,7 @@ class PlatformMocks:
         name = self.contracts.canonical_type(name)
         self.contracts.claim_owner(name, element)
         previous = self.contracts.namespace, self.contracts.imports
-        self.contracts.namespace, self.contracts.imports = element['namespace'], ()
+        self.contracts.namespace, self.contracts.imports = element['namespace'], element['properties'].get('Импорт', [])
         try:
             self._register(name, element)
         finally:
@@ -60,6 +60,7 @@ class PlatformMocks:
     def _register(self, name, element):
         properties = element['properties']
         accumulation = element['elementType'] == 'РегистрНакопления'
+        subordinated = element['elementType'] == 'РегистрСведений' and properties.get('РежимЗаписи') == 'ПодчинениеРегистратору'
         dimensions = properties.get('Измерения', [])
         fields = dimensions + [{'Тип':'Число',**f} for f in properties.get('Ресурсы', [])] + properties.get('Реквизиты', [])
         if accumulation:
@@ -89,6 +90,21 @@ class PlatformMocks:
             if periodicity != 'Момент' and not (self.storage_registers and periodicity in {'День', 'Секунда'}):
                 raise InputError('Периодичность мока пока поддерживается только Момент')
             fields = [{'Имя': 'Период', 'Тип': {'День': 'Дата', 'Секунда': 'ДатаВремя', 'Момент':'Момент'}[periodicity]}] + fields
+        if subordinated:
+            registrars = [f for f in properties.get('Реквизиты', []) if f['Имя'] == 'Регистратор']
+            if len(registrars) != 1:
+                raise InputError('Подчинённый РС требует типизированный Регистратор')
+            from .generated_types import union_members
+            variants = union_members(registrars[0]['Тип']) or [registrars[0]['Тип']]
+            for variant in variants:
+                if variant == '?':
+                    continue
+                owner, dot, member = variant.rstrip('?').rpartition('.')
+                matches = self.contracts.resolve(owner)
+                if not dot or member != 'Ссылка' or len(matches) != 1 or matches[0]['elementType'] != 'Документ':
+                    raise InputError('Регистратор подчинённого РС требует номинальную ссылку документа')
+            dimensions = registrars
+            fields += [{'Имя': 'Активность', 'Тип': 'Булево', 'ЗначениеПоУмолчанию': True}]
         names = [f['Имя'] for f in fields]
         if len(set(names)) != len(names) or any(not re.fullmatch(IDENT, n) for n in names):
             raise InputError('Некорректные поля регистра ' + name)
@@ -102,10 +118,11 @@ class PlatformMocks:
         def add_signature():
             parameters = []
             for field in fields:
-                if self.storage_registers and accumulation and field['Имя'] in {'Регистратор', 'Активность'}:
+                if self.storage_registers and ((accumulation or subordinated) and field['Имя'] == 'Регистратор'
+                                              or accumulation and field['Имя'] == 'Активность'):
                     continue
                 declaration = signature([field])
-                if accumulation and field['Имя'] not in {'Период', 'ВидЗаписи'}:
+                if (accumulation or subordinated) and field['Имя'] not in {'Период', 'ВидЗаписи'}:
                     if 'ЗначениеПоУмолчанию' in field:
                         default = self.contracts.literal(field['ЗначениеПоУмолчанию'], field['Тип'])
                     elif field['Тип'].endswith('?'):
@@ -132,10 +149,11 @@ class PlatformMocks:
                                          {'Имя': 'Записи', 'Тип': 'Массив<' + record + '>'}]
         self.contracts.definitions[set_type] = ('@Глобально\nструктура НаборЗаписей\n'
             '    пер Фильтр: ФильтрНабора\n    пер Записи: Массив<Запись>\n'
-            '    @Глобально\n' + ('    @ИменованныеПараметры\n' if accumulation else '')
+            '    @Глобально\n' + ('    @ИменованныеПараметры\n' if accumulation or subordinated else '')
             + '    метод ДобавитьЗапись(' + add_signature() + '): Запись\n'
-            '        знч НоваяЗапись = новый Запись(' + ', '.join(n + ' = ' +
-                ('Фильтр.ЗначениеРегистратора' if self.storage_registers and accumulation and n == 'Регистратор'
+            + ('        если Фильтр.Ключ == Неопределено\n            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")\n        ;\n' if self.storage_registers and subordinated else '')
+            + '        знч НоваяЗапись = новый Запись(' + ', '.join(n + ' = ' +
+                ('Фильтр.ЗначениеРегистратора' if self.storage_registers and (accumulation or subordinated) and n == 'Регистратор'
                  else 'Истина' if self.storage_registers and accumulation and n == 'Активность' else n) for n in names) + ')\n'
             '        Записи.Добавить(НоваяЗапись)\n        ' + self.log(name, 'ДобавитьЗапись', names)
             + '\n        возврат НоваяЗапись\n    ;\n'

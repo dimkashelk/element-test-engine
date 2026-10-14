@@ -79,11 +79,12 @@ def gate(value, context):
     raise UnsupportedSyntaxError('Видимость/доступность навигации требует Булево или =booleanContext')
 
 
-def build_navigation(root, model, e, context, selector=None):
-    if not isinstance(context, dict) or any(not re.fullmatch(IDENT, str(k)) or type(v) is not bool for k,v in context.items()):
-        raise InvalidTestError('navigationContext требует словарь именованных Булево')
+def build_navigation(root, model, e, context, selector=None, *, plan):
+    from .navigation_expressions import prepare_context, compile_gate
+    plan._navigation_values = prepare_context(plan.contracts, context)
     routes, groups, dependencies = [], [], {}
-    def visit(owner, items, path, section, visible=True, enabled=True, stack=()):
+    conditions = {}
+    def visit(owner, items, path, section, visible=True, enabled=True, stack=(), visible_code='Истина', enabled_code='Истина'):
         if len(stack) > 40 or len(routes) > 1000:
             raise UnsupportedSyntaxError('Лимит дерева навигации')
         fact, positions = evidence(root, model, owner)
@@ -98,13 +99,19 @@ def build_navigation(root, model, e, context, selector=None):
                 if dest['sourceFile'] in stack:
                     raise UnsupportedSyntaxError('Цикл фрагментов командного интерфейса')
                 visit(dest, dest['properties'].get('Элементы'), ('Элементы',), section, visible, enabled,
-                      stack + (repr(at), dest['sourceFile']))
+                      stack + (repr(at), dest['sourceFile']), visible_code, enabled_code)
                 continue
             if not isinstance(item, dict): raise UnsupportedSyntaxError('Элемент навигации вне контракта')
-            v = visible and gate(item.get('Видимость', True), context)
-            a = enabled and gate(item.get('Доступность', True), context)
-            # Validate hidden descendants too; short circuit must not mask unsupported declarations.
-            gate(item.get('Видимость', True), context); gate(item.get('Доступность', True), context)
+            v_code = '(' + visible_code + ' и ' + compile_gate(item.get('Видимость', True), plan, owner) + ')'
+            a_code = '(' + enabled_code + ' и ' + compile_gate(item.get('Доступность', True), plan, owner) + ')'
+            # Preserve legacy static plan observations. Dynamic values are only
+            # observed in Script, never evaluated by Python.
+            def static(value):
+                try: return gate(value, context)
+                except UnsupportedSyntaxError: return None
+            v, a = static(item.get('Видимость', True)), static(item.get('Доступность', True))
+            v = False if visible is False or v is False else None if visible is None or v is None else True
+            a = False if enabled is False or a is False else None if enabled is None or a is None else True
             typ = item.get('Тип')
             item_fact = {**fact, 'yamlPath': list(at), 'position': positions.get(at),
                          'section': list(section), 'visible': v, 'available': a,
@@ -112,11 +119,13 @@ def build_navigation(root, model, e, context, selector=None):
             if typ == 'ГруппаКомандногоИнтерфейса':
                 group_id = 'section-' + sha256(repr((stack, at, section)).encode()).hexdigest()[:24]
                 groups.append({**item_fact, 'id': group_id})
-                visit(owner, item.get('Элементы'), at + ('Элементы',), section + (group_id,), v, a, stack)
+                conditions[group_id] = {'visible': v_code, 'available': a_code}
+                visit(owner, item.get('Элементы'), at + ('Элементы',), section + (group_id,), v, a, stack, v_code, a_code)
             elif typ == 'НавигационнаяКоманда':
                 resolved = surface(model, owner, item.get('ТипФормы'))
                 route_id = 'route-' + sha256(repr((stack, at, section, resolved)).encode()).hexdigest()[:24]
                 routes.append({**item_fact, 'id': route_id, 'target': resolved})
+                conditions[route_id] = {'visible': v_code, 'available': a_code}
                 if resolved['sourceFile'] is not None:
                     target = next(x for x in model['elements'] if x['sourceFile'] == resolved['sourceFile'])
                     dependencies[target['sourceFile']] = evidence(root, model, target)[0]
@@ -134,7 +143,7 @@ def build_navigation(root, model, e, context, selector=None):
         visit(e, [raw], ('Наследует', 'КомандныйИнтерфейсПанелиНавигации'), (), stack=(e['sourceFile'],))
         dependencies[e['sourceFile']] = fact
     return {**fact, 'schemaVersion': 1, 'routes': routes, 'sections': groups,
-            'dependencies': list(dependencies.values()), 'context': context,
+            'dependencies': list(dependencies.values()), 'context': context, 'conditions': conditions,
             'support': 'declaration-model', 'execution': 'not-checked',
             'stages': {'validation':'ready','planning':'ready','generation':'ready','execution':'not-checked'},
             'remaining': ['Native surfaces and custom form handlers are not executed by model opening']}

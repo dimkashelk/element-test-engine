@@ -174,6 +174,7 @@ def source_schema(c, name, member='', totals_periodicity='Период'):
     elif kind in {'РегистрСведений','РегистрНакопления'}:
         source_kind='register'; dimensions=list(props.get('Измерения',[])); resources=[{'Тип':'Число',**f} for f in props.get('Ресурсы',[])]
         if kind=='РегистрСведений':
+            subordinated = props.get('РежимЗаписи') == 'ПодчинениеРегистратору'
             if member and member not in {'СрезПоследних','СрезПервых'}:
                 raise UnsupportedSyntaxError('Источник регистра сведений вне executor-контракта: '+member)
             if member:
@@ -181,6 +182,8 @@ def source_schema(c, name, member='', totals_periodicity='Период'):
                     raise UnsupportedSyntaxError('Неизвестная периодичность среза')
                 source_kind='slice-last' if member=='СрезПоследних' else 'slice-first'
             declarations=dimensions+resources+declarations
+            if subordinated:
+                declarations += [{'Имя':'Активность','Тип':'Булево'}]
             if periodicity!='Непериодический':
                 if periodicity not in HISTORY_PERIOD_TYPES:
                     raise UnsupportedSyntaxError('Периодичность источника вне executor-контракта')
@@ -209,11 +212,13 @@ def source_schema(c, name, member='', totals_periodicity='Период'):
                         declarations += [{'Имя':'Период','Тип':'ДатаВремя'}]
                     if totals_periodicity in {'Авто','Регистратор','Запись'}:
                         registrar = [f for f in props.get('Реквизиты',[]) if f['Имя']=='Регистратор']
-                        if len(registrar)!=1 or totals_periodicity!='Авто' and '|' in registrar[0].get('Тип',''):
+                        if len(registrar)!=1 or source_kind!='balance-turnover' and totals_periodicity!='Авто' and '|' in registrar[0].get('Тип',''):
                             raise UnsupportedSyntaxError('Разворот по регистратору требует однозначный тип ссылки')
-                        declarations += registrar
+                        declarations += [{**f, 'Тип': f['Тип'] + ('|?' if '|' in f['Тип'] else '?')
+                                          if source_kind == 'balance-turnover' and not f['Тип'].endswith('?') else f['Тип']} for f in registrar]
                     if totals_periodicity in {'Авто','Запись'}:
-                        declarations += [{'Имя':'Индекс','Тип':'Число'},{'Имя':'НомерСтроки','Тип':'Число'}]
+                        declarations += [{'Имя':'Индекс','Тип':'Число?' if source_kind=='balance-turnover' else 'Число'},
+                                         {'Имя':'НомерСтроки','Тип':'Число?' if source_kind=='balance-turnover' else 'Число'}]
             else:
                 declarations=[{'Имя':'Период','Тип':'ДатаВремя'}, {'Имя':'Активность','Тип':'Булево'}]+dimensions+resources+declarations
                 declarations += [{'Имя':'Индекс','Тип':'Число'},{'Имя':'НомерСтроки','Тип':'Число'}]
@@ -263,6 +268,7 @@ def generate_source_query(q,c):
     union_fields = [f for f in required.values() if '|' in f.type]
     if any(not reference_union(f.type) for f in union_fields):
         raise UnsupportedSyntaxError('Union источника требует ссылочные варианты')
+    registrar_union = next((f for f in q.fields if f.name == 'Регистратор' and reference_union(f.type)), None)
     union_refs = [f for f in union_fields if f.name == 'Регистратор' and q.register_kind]
     fields=''.join('    пер '+f.name+': '+c.sbsl_type(f.type + ('|?' if '|' in f.type and not f.type.endswith('?') else ''))+'\n' for f in required.values())
     a=text.index('структура Данные\n')+len('структура Данные\n'); b=text.index(';\n',a)
@@ -293,7 +299,7 @@ def generate_source_query(q,c):
         read+='                пер Индекс = 0\n                для Элемент из (Значение как Массив<Объект?>)\n                    знч Снимок = Элемент как Соответствие<Строка, Объект?>\n'
         if q.register_kind:read+='                    Снимок.Вставить("Индекс", Индекс)\n                    Снимок.Вставить("НомерСтроки", Индекс + 1)\n'
         read+='                    Индекс += 1\n                    Исходные.Добавить(Снимок)\n                ;\n'
-    if union_refs:
+    if registrar_union and q.register_kind:
         read=read.replace('            для JSON из Состояние['+lit(q.owner)+'].Значения()\n',
             '            для Bucket из Состояние['+lit(q.owner)+']\n'
             '                знч JSON = Bucket.Значение\n'
@@ -310,6 +316,7 @@ def generate_source_query(q,c):
                  '                Отфильтрованные.Добавить(Снимок)\n            ;\n        ;\n')
         read = read.replace('знч Исходные =', 'пер Исходные =')
         read += '        Исходные = Отфильтрованные\n'
+    projected='{'+', '.join(lit(f.name)+': Снимок['+lit(f.name)+']' for f in required.values())+'}'
     if q.source_kind in {'balance','turnover','balance-turnover'}:
         expanded=q.totals_periodicity!='Период' and (q.totals_periodicity!='Авто' or any(f.startswith('Период') or f in {'Регистратор','Индекс','НомерСтроки'} for f in required))
         read+=period_totals_loader(q,c,required) if expanded else totals_loader(q,c,required)
@@ -330,7 +337,7 @@ def generate_source_query(q,c):
                 union_code += ('            если '+tag+' == Тип<'+emitted+'>.ВСтроку() или '+tag+' == '+c.literal(identity(c,variant),'Строка')+'\n'
                     '                СтрокаДанных.'+f.name+' = СериализацияJson.ПрочитатьОбъект<'+emitted+'>(СериализацияJson.ЗаписатьОбъект(Снимок["__RegistrarValue"]), Тип<'+emitted+'>)\n'
                     '                Matched = Истина\n            ;\n')
-            union_code += '            если не Matched\n                выбросить новый ИсключениеНеподдерживаемаяОперация("Неизвестный тип регистратора источника")\n            ;\n'
+            union_code += '            если не Matched и '+tag+' != Неопределено\n                выбросить новый ИсключениеНеподдерживаемаяОперация("Неизвестный тип регистратора источника")\n            ;\n'
         read = read.replace('            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')',
                             '            Снимок.Вставить("Регистратор", Неопределено)\n            знч Проекция = СериализацияJson.ЗаписатьОбъект('+projected+')')
         read = read.replace('            Все.Добавить(СтрокаДанных)', union_code+'            Все.Добавить(СтрокаДанных)')
@@ -393,7 +400,8 @@ def period_totals_loader(q,c,required):
         if q.totals_periodicity in {'Регистратор','Запись'}:extra+=['Регистратор']
         if q.totals_periodicity=='Запись':extra+=['Индекс','НомерСтроки']
     if combined and (q.totals_periodicity in {'Регистратор','Запись'} or any(f in extra for f in ('Регистратор','Индекс','НомерСтроки','ПериодЗаписи'))):
-        raise UnsupportedSyntaxError('ОстаткиИОбороты по записям/регистраторам требуют native порядок движений и nullable границы')
+        from .query_detailed_totals import detailed_totals_loader
+        return detailed_totals_loader(q, c, required, extra)
     periods=[q.totals_periodicity] if q.totals_periodicity in CALENDAR_PERIODS else [f[6:] for f in extra if f.startswith('Период') and f[6:] in CALENDAR_PERIODS]
     finest=next((p for p in reversed(CALENDAR_PERIODS) if p in periods),None)
     start='П'+str(q.period_slot) if q.period_slot is not None else 'Неопределено'

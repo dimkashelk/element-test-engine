@@ -13,6 +13,7 @@ import uuid
 import zipfile
 
 from .runtime import REPO, decode_output, executor_cpu_ulimit
+from .runtime_images import digest_reference
 
 EXECUTOR_TIMEOUT = 30
 
@@ -84,6 +85,8 @@ def preflight(check, model, *, enabled=False):
         docker('info', '--format', '{{.ServerVersion}}')
     except BackendUnavailable:
         raise BackendUnavailable('Docker daemon недоступен; проверьте запуск Docker и доступ к socket') from None
+    config = {**config, 'image': digest_reference(config['image'])}
+    runtime = {**runtime, 'image': digest_reference(runtime['image'])}
     for label, image in (('PostgreSQL', config['image']), ('Script executor', runtime['image'])):
         try:
             docker('image', 'inspect', image, '--format', '{{.Id}}')

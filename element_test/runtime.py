@@ -527,6 +527,8 @@ def run_pure(root, model, check, temporary, *, plan_sink=None, exact_numbers=Fal
                    "-Dlogback.configurationFile=/runtime/config/logback.xml", "-Dexecutor.location=/runtime",
                    "-cp", "/runtime/lib/*", "com.e1c.g5rt.executor.boot.ExecutorBootstrap",
                    "-c", runtime.get("executionCompatibilityVersion", model["compatibilityVersion"]), "/generated/test.sbsl"]
+        from .runtime_images import digest_reference
+        command[command.index(image)] = digest_reference(image)
         prepared_plan = json.loads((generated / 'execution-plan.json').read_text(encoding='utf-8'))
         if prepared_plan.get('executorLocale'):
             # Number interpolation is locale-dependent. The bounded form contract
