@@ -41,17 +41,20 @@ def neutralize_types(value, identities):
     return value
 
 
-def decode_output(text):
+def decode_output(text, *, exact_numbers=False):
     """executor prints the entry method return value after its console output."""
     calls, trace = [], []
+    from decimal import Decimal
+    decoder = json.JSONDecoder(parse_float=lambda v: {'decimal': format(Decimal(v), 'f')}) if exact_numbers else json.JSONDecoder()
+    loads = decoder.decode
     text = text.lstrip()
     while text.startswith(('ELEMENT_CALL ', 'ELEMENT_TRACE ')):
         is_trace = text.startswith('ELEMENT_TRACE ')
         text = text[len('ELEMENT_TRACE ' if is_trace else 'ELEMENT_CALL '):]
-        call, end = json.JSONDecoder().raw_decode(text)
+        call, end = decoder.raw_decode(text)
         (trace if is_trace else calls).append(call)
         text = text[end:].lstrip()
-    value, end = json.JSONDecoder().raw_decode(text.lstrip())
+    value, end = decoder.raw_decode(text.lstrip())
     remainder = text.lstrip()[end:].strip()
     if remainder not in {"", "0", "1"}:
         raise InputError("Runtime вывел посторонние данные после JSON")
@@ -60,16 +63,16 @@ def decode_output(text):
     raw_storage = value.pop('_rawStorage', False)
     if raw_storage:
         for item in value['actual']['storage']:
-            item['value'] = json.loads(item['value'])
+            item['value'] = loads(item['value'])
     snapshot_mode = value.pop('_snapshotMode', None)
     if snapshot_mode:
         observation = value['actual']['result'] if raw_storage else value['actual']
         if snapshot_mode.startswith('probes-'):
-            observation['result'] = json.loads(observation['result'])
-            observation['probes'] = [json.loads(probe) for probe in observation['probes']]
+            observation['result'] = loads(observation['result'])
+            observation['probes'] = [loads(probe) for probe in observation['probes']]
             observation = observation['result']
         if snapshot_mode.endswith('sequence'):
-            observation['actions'] = [json.loads(action) for action in observation['actions']]
+            observation['actions'] = [loads(action) for action in observation['actions']]
     identities = value.pop('_typeIdentities', {})
     if value.pop('_timerActions', False):
         observation = value['actual']['result'] if raw_storage else value['actual']
@@ -450,6 +453,9 @@ def sbsl_literal(value, type_name):
         import math
         if math.isfinite(value):
             return str(value)
+    if type_name == 'Число' and isinstance(value, dict) and set(value) == {'decimal'}:
+        from .generative_values import number
+        return format(number(value), 'f')
     raise InvalidTestError(f"Вход не соответствует типу {type_name}")
 
 
@@ -470,7 +476,7 @@ def executor_cpu_ulimit(timeout):
     return f'cpu={seconds}:{seconds}'
 
 
-def run_pure(root, model, check, temporary, *, plan_sink=None):
+def run_pure(root, model, check, temporary, *, plan_sink=None, exact_numbers=False):
     """Run one standalone method in Docker; return evidence, never award points."""
     if 'generative' in check:
         from .generative import run_generated
@@ -557,7 +563,7 @@ def run_pure(root, model, check, temporary, *, plan_sink=None):
                 failure['branchCoverage'] = summarize(prepared_plan.get('branches', []), failure['trace'])
             return failure
         try:
-            decoded = decode_output(stdout)
+            decoded = decode_output(stdout, exact_numbers=exact_numbers)
         except (InputError, ValueError, KeyError, TypeError):
             return status("ERROR", "Runtime вернул некорректный результат", "execution_error")
         if decoded.get('status') == 'UNSUPPORTED':

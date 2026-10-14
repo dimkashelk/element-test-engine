@@ -62,6 +62,8 @@ def encode(c, expr, typ):
 
 def decode(c, expr, typ):
     typ = c.canonical_type(typ)
+    if typ.endswith('?') and not union_members(typ):
+        return '(' + expr + ' == Неопределено ? Неопределено : ' + decode(c, expr, typ[:-1]) + ')'
     if union_members(typ) and not needed(c, typ):
         name = 'ТестСкалярCodec' + sha256(typ.encode()).hexdigest()[:16]
         key = name + '.Значение'
@@ -72,8 +74,6 @@ def decode(c, expr, typ):
     if not needed(c, typ):
         emitted = c.sbsl_type(typ)
         return 'СериализацияJson.ПрочитатьОбъект<' + emitted + '>(СериализацияJson.ЗаписатьОбъект(' + expr + '), Тип<' + emitted + '>)'
-    if typ.endswith('?') and not union_members(typ):
-        return '(' + expr + ' == Неопределено ? Неопределено : ' + decode(c, expr, typ[:-1]) + ')'
     return _helper(c, typ, 'decode') + '(' + expr + ')'
 
 

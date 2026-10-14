@@ -57,10 +57,10 @@ class PartialPlanTest(unittest.TestCase):
 
     def test_empty_unknown_and_teacher_filter_contract(self):
         root=CORPUS/'ordinary'
-        for method, message in [('EmptyFilter','Пустой фильтр'),('UnknownFilter','Неизвестное измерение'),('WrongType','Неверный тип')]:
+        for method, message in [('UnknownFilter','Неизвестное измерение'),('WrongType','Неверный тип')]:
             with self.assertRaisesRegex(InputError,message):plan_execution(root,analyze(root),check(method))
         with TemporaryDirectory() as d:
-            for filt in ({},{'Unknown':'X'},{'Product':123}):
+            for filt in ({'Unknown':'X'},{'Product':123}):
                 c=check();c['storage']['initialRegisters'][0]['filter']=filt
                 with self.assertRaises(InvalidTestError):prepare_script(root,analyze(root),c,Path(d))
             c=check();c['storage']['initialRegisters']=[{'type':'Ware::Ledger','filter':{'Product':'X'},'rows':[rows()[0],rows()[1],rows()[3]]}]
@@ -155,7 +155,7 @@ class PartialDockerTest(unittest.TestCase):
                         self.assertEqual(grade(r['actual'],wrong,temp),'FAIL')
                     else:
                         self.assertIsNotNone(r['actual']['result']['exception'],case)
-            for method in ('EmptyFilter','UnknownFilter','WrongType'):
+            for method in ('UnknownFilter','WrongType'):
                 r=run_pure(CORPUS/'ordinary',analyze(CORPUS/'ordinary'),check(method),temp)
                 write_json(EVIDENCE/(method+'.json'),r)
                 self.assertEqual(r['status'],'UNSUPPORTED',r)

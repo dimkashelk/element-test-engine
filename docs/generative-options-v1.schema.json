@@ -76,14 +76,23 @@
           "maxItems": 64
         },
         "min": {
-          "type": "integer",
-          "minimum": -1000000,
-          "maximum": 1000000
+          "type": [
+            "number",
+            "string",
+            "object"
+          ]
         },
         "max": {
+          "type": [
+            "number",
+            "string",
+            "object"
+          ]
+        },
+        "scale": {
           "type": "integer",
-          "minimum": -1000000,
-          "maximum": 1000000
+          "minimum": 0,
+          "maximum": 12
         },
         "minLength": {
           "type": "integer",
@@ -102,6 +111,14 @@
         },
         "items": {
           "$ref": "#/$defs/domain"
+        },
+        "fields": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 32,
+          "additionalProperties": {
+            "$ref": "#/$defs/domain"
+          }
         }
       },
       "required": [
@@ -152,14 +169,7 @@
         {
           "type": "object",
           "properties": {
-            "literal": {
-              "type": [
-                "integer",
-                "string",
-                "boolean",
-                "null"
-              ]
-            }
+            "literal": {}
           },
           "required": [
             "literal"
@@ -187,13 +197,20 @@
                 "sum",
                 "get",
                 "at",
-                "reverse"
+                "reverse",
+                "set",
+                "date",
+                "dateTime",
+                "instant",
+                "number",
+                "dateAddDays",
+                "dateAddSeconds"
               ]
             },
             "args": {
               "type": "array",
               "minItems": 1,
-              "maxItems": 2,
+              "maxItems": 3,
               "items": {
                 "$ref": "#/$defs/expression"
               }

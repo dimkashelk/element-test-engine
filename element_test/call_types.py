@@ -126,9 +126,12 @@ def _local_type(source, method, name, offset, bindings, module, model):
                             break
                         prefix.append(part)
                     at = method.header_end + tokens[index + 3].start
-                    found.append(_local_type(source, method, value, at, bindings, module, model)
-                                 if len(prefix) == 1 and value != name else
-                                 _static_result(prefix, module, model, bindings, at))
+                    result = None
+                    if value != name and len(prefix) % 2 == 1 and all(prefix[i].value == '.' for i in range(1, len(prefix), 2)):
+                        result = _local_type(source, method, value, at, bindings, module, model)
+                        for i in range(2, len(prefix), 2):
+                            result = _field_type(model, result, prefix[i].value, module) if result else None
+                    found.append(result or _static_result(prefix, module, model, bindings, at))
         else:
             found.append(None)
     # Reused names and shadowing need a full scoped data-flow proof. A
@@ -153,6 +156,13 @@ def _field_type(model, type_name, field, module):
             return owner + '.ФильтрНабора'
         if field == 'Записи':
             return 'Массив<' + owner + '.Запись>'
+    if element and variant == 'ФильтрНабора':
+        properties = element.get('properties', {})
+        if field == 'Период' and properties.get('ПериодВходитВОсновнойФильтр'):
+            return {'День': 'Дата', 'Секунда': 'ДатаВремя', 'Момент': 'Момент'}.get(properties.get('Периодичность'))
+        fields = properties.get('Измерения', []) if element['elementType'] == 'РегистрСведений' else [
+            f for f in properties.get('Реквизиты', []) if f['Имя'] == 'Регистратор']
+        return next((f['Тип'] for f in fields if f['Имя'] == field), None)
     if element is None or (dot and variant not in {'Объект', 'Данные', 'Ссылка'}):
         return None
     properties = element.get('properties', {})

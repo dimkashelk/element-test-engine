@@ -1,5 +1,9 @@
 # Ветви и генеративные проверки: контракт №52
 
+Расширен 14 октября 2026 года: [E04](engine-extensions-e03-e04.md) добавляет
+дроби, даты, enum, nominal-ссылки и составные объекты. Ниже — исходный контракт
+№52; ограничения типов и операций уточнены в расширении.
+
 Два расширения существующего `type: runtime`: `branches: true` и
 `generative`. Общий путь `test`/`run`/`batch`, новых YAML типов нет.
 Реализация: `element_test.branches`, `element_test.generative`, независимое
@@ -172,8 +176,9 @@ transform и `replaySourceHash`; другой исходник не подмен
 Генеративный вход сейчас ограничен source method и memory runtime.
 `args`, `expected`, `comparison`, `sequence`, интеграционный и самостоятельные
 query/UI/report/navigation/panel входы с ним несовместимы. Домены объектов,
-ссылок, дат, дробных чисел, native enum, произвольные предикаты домена,
-state-machine sequences и генеративный PostgreSQL — точный остаток.
+ссылок, дат, дробных чисел и enum добавлены в [E04](engine-extensions-e03-e04.md).
+Произвольные предикаты домена, state-machine sequences и генеративный
+PostgreSQL остаются вне контракта.
 `branches` не инструментирует формулы отчётов или декларативные surfaces.
 Native платформенная семантика и браузерное поведение не подтверждаются
 результатом Script adapter. Совместимость исходника 9.0 сохранена; профиль

@@ -23,8 +23,6 @@ def attach_register(storage, name):
         raise UnsupportedSyntaxError('Подчинённый регистр сведений 10.0 вне контракта хранения')
     if identity in storage.register_schemas:
         return
-    if e['properties'].get('ПериодВходитВОсновнойФильтр', False):
-        raise InputError('Период в основном фильтре пока не поддержан')
     previous = c.namespace, c.imports
     c.namespace, c.imports = e['namespace'], e['properties'].get('Импорт', [])
     try:
@@ -47,7 +45,7 @@ def attach_register(storage, name):
             for f in parameter_fields) + ';\n'
     finally:
         c.namespace, c.imports = previous
-    if not dims:
+    if not dims and accumulation:
         raise InputError('Набор хранения требует полный фильтр измерений/регистратора')
     ft, st, row = owner + '.ФильтрНабора', owner + '.НаборЗаписей', owner + '.Запись'
     rows = 'Массив<' + row + '>'
@@ -60,11 +58,19 @@ def attach_register(storage, name):
     # types even when their reference UUIDs and serialized fields are identical.
     def values(fs, prefix=''):
         from .reference_codec import encode, reference_union
+        if not fs:
+            return 'новый Соответствие<Строка, Объект?>()'
         return '{' + ', '.join(literal(f['Имя']) + ': ' +
             (encode(c, prefix + f['Имя'], f['Тип']) if reference_union(f['Тип']) else
              '{"type": (' + prefix + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + prefix + f['Имя'] + '}' if '|' in f['Тип'] else prefix + f['Имя']) for f in fs) + '}'
-    signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in dims)
-    key = values(dims)
+    filter_fields = list(dims)
+    if e['properties'].get('ПериодВходитВОсновнойФильтр', False):
+        period = [f for f in c.fields[row] if f['Имя'] == 'Период']
+        if accumulation or not period:
+            raise InputError('ПериодВходитВОсновнойФильтр требует периодический регистр сведений')
+        filter_fields = period + filter_fields
+    signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in filter_fields)
+    key = values(filter_fields)
     def clone_ref(expr, typ):
         from .generated_types import union_members
         variants = union_members(typ) or [typ]
@@ -88,7 +94,35 @@ def attach_register(storage, name):
     c.fields[ft] = [{'Имя': 'Ключ', 'Тип': 'Строка?'}]
     c.definitions[ft] = ('@Глобально\nструктура ФильтрНабора\n    пер Ключ: Строка?\n' + registrar_field +
         '    @Глобально\n    метод Установить(' + signature + ')\n'
-        '        Ключ = СериализацияJson.ЗаписатьОбъект(' + key + ')\n' + registrar_set + '    ;\n;\n')
+        '        этот.Ключ = СериализацияJson.ЗаписатьОбъект(' + key + ')\n' + registrar_set + '    ;\n;\n')
+    # Direct writes extend the explicit mask. A missing field is never a NULL.
+    for f in filter_fields:
+        name, typ = f['Имя'], c.sbsl_type(f['Тип'])
+        encoded = values([f], 'Значение.').replace('Значение.' + name, 'Значение')
+        decoded = decode(c, 'Отбор[' + literal(name) + ']', f['Тип'])
+        methods = f'''    @Глобально
+    метод ТестЗадать{name}(Значение: {typ})
+        знч Отбор = Ключ == Неопределено ? новый Соответствие<Строка, Объект?>() : СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
+        знч Поле = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(СериализацияJson.ЗаписатьОбъект({encoded}), Тип<Соответствие<Строка, Объект?>>)
+        Отбор.Вставить({literal(name)}, Поле[{literal(name)}])
+        Ключ = СериализацияJson.ЗаписатьОбъект(Отбор)
+'''
+        if accumulation:
+            methods += '        ЗначениеРегистратора = ' + clone_ref('Значение', f['Тип']) + '\n'
+        methods += f'''    ;
+    @Глобально
+    метод ТестПолучить{name}(): {typ}
+        если Ключ == Неопределено
+            выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")
+        ;
+        знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
+        если не Отбор.СодержитКлюч({literal(name)})
+            выбросить новый ИсключениеНедопустимоеСостояние("Не задано поле фильтра")
+        ;
+        возврат {decoded}
+    ;
+'''
+        c.definitions[ft] = c.definitions[ft].rsplit(';', 1)[0] + methods + ';\n'
     definition = c.definitions[st]
     definition = re.sub(r'        ТестПлатформа\.ЗаписатьВызов\([^\n]*\)\n', '', definition)
     start = definition.index('    @Глобально\n    метод Записать(')
@@ -188,16 +222,16 @@ def attach_register(storage, name):
     definition = definition.rsplit(';', 1)[0] + materialize + ';\n'
     c.definitions[st] = definition
     if not accumulation:
-        _information_storage(c, identity, st, row, dims, values,
+        _information_storage(c, identity, st, row, dims, filter_fields, values,
                              bool(storage.config.get('lifecycle')))
     c.method_dependencies[st] = ['ТестСессия.Записи']
     c.method_dependencies[ft] = [f['Тип'] for f in dims]
     storage.register_schemas[identity] = {'owner': identity, 'kind': e['elementType'],
-        'rowType': row, 'setType': st, 'filterType': ft, 'filterFields': dims,
+        'rowType': row, 'setType': st, 'filterType': ft, 'filterFields': filter_fields, 'bucketFields': dims,
         'parameterType': parameters,
         'fields': c.fields[row], 'periodicity': e['properties'].get('Периодичность', 'Непериодический'),
         'backend': storage.config.get('backend', 'memory'), 'contract': CONTRACT,
-        'limitations': ['full-filter-only' if accumulation else 'nonempty-named-dimension-subset',
+        'limitations': ['full-filter-only' if accumulation else 'explicit-named-field-subset',
                         'unordered', 'isolated-staging', 'no-balances']}
 
 
@@ -255,16 +289,19 @@ def filter_method(c, schema, names):
     ft = schema['filterType']
     if 'метод ' + name + '(' not in c.definitions[ft]:
         signature = ', '.join(f['Имя'] + ': ' + c.sbsl_type(f['Тип']) for f in selected)
+        from .reference_codec import encode, reference_union
         fields = ', '.join(c.literal(f['Имя'], 'Строка') + ': ' +
-            ('{"type": (' + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + f['Имя'] + '}'
+            (encode(c, f['Имя'], f['Тип']) if reference_union(f['Тип']) else
+             '{"type": (' + f['Имя'] + ' как ' + f['Тип'] + ').ПолучитьТип().ВСтроку(), "value": ' + f['Имя'] + '}'
              if '|' in f['Тип'] else f['Имя']) for f in selected)
+        expression = '{' + fields + '}' if selected else 'новый Соответствие<Строка, Объект?>()'
         method = ('    @Глобально\n    метод ' + name + '(' + signature + ')\n'
-                  '        Ключ = СериализацияJson.ЗаписатьОбъект({' + fields + '})\n    ;\n')
+                  '        этот.Ключ = СериализацияJson.ЗаписатьОбъект(' + expression + ')\n    ;\n')
         c.definitions[ft] = c.definitions[ft].rsplit(';', 1)[0] + method + ';\n'
     return name
 
 
-def _information_storage(c, identity, st, row, dims, values, lifecycle):
+def _information_storage(c, identity, st, row, dims, filter_fields, values, lifecycle):
     """Predicate selection over canonical full-dimension buckets, not filter buckets.
 
     Full dimensions identify a bucket; dimensions + period identify its rows.
@@ -276,8 +313,9 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
     from .reference_codec import encode, decode
     unique = dims + [f for f in c.fields[row] if f['Имя'] == 'Период']
     encoded_bucket = encode(c, 'Группы[Ключ]', rows)
-    decoded_full = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON как Строка)', rows)
     decoded_all = decode(c, 'СериализацияJson.ПрочитатьОбъект(JSON)', rows)
+    full_group = ('{' + ', '.join(lit(f['Имя']) + ': Отбор[' + lit(f['Имя']) + ']' for f in dims) + '}'
+                  if dims else 'новый Соответствие<Строка, Объект?>()')
     definition = c.definitions[st]
     start = definition.index('    @Глобально\n    метод Прочитать()')
     validation = ''
@@ -311,8 +349,11 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
         ;
         // A full empty replacement retains the previous public empty bucket.
         знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
-        если Отбор.Размер() == {len(dims)} и не Группы.СодержитКлюч(Фильтр.Ключ как Строка)
-            Группы.Вставить(Фильтр.Ключ как Строка, новый {rows}())
+        если Отбор.Размер() == {len(dims)} и {' и '.join('Отбор.СодержитКлюч(' + lit(f['Имя']) + ')' for f in dims) or 'Истина'}
+            знч КлючГруппы = СериализацияJson.ЗаписатьОбъект({full_group})
+            если не Группы.СодержитКлюч(КлючГруппы)
+                Группы.Вставить(КлючГруппы, новый {rows}())
+            ;
         ;
         для СтрокаНабора из Результат
             знч Идентичность = СериализацияJson.ЗаписатьОбъект({values(unique, 'СтрокаНабора.')})
@@ -345,15 +386,6 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
             выбросить новый ИсключениеНедопустимоеСостояние("Не установлен фильтр")
         ;
         знч Новые = новый {rows}()
-        знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
-        если Отбор.Размер() == {len(dims)}
-            знч JSON = ТестСессия.Прочитать({lit(identity)}, Фильтр.Ключ как Строка)
-            если JSON != Неопределено
-                Новые.ДобавитьВсе({decoded_full})
-            ;
-            Записи = Новые
-            возврат
-        ;
         для СтрокаНабора из ВсеСтроки()
             если Соответствует(СтрокаНабора)
                 Новые.Добавить(СтрокаНабора)
@@ -388,7 +420,7 @@ def _information_storage(c, identity, st, row, dims, values, lifecycle):
     ;
     метод Соответствует(СтрокаНабора: {row}): Булево
         знч Отбор = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(Фильтр.Ключ как Строка, Тип<Соответствие<Строка, Объект?>>)
-        знч Полный = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(СериализацияJson.ЗаписатьОбъект({values(dims, 'СтрокаНабора.')}), Тип<Соответствие<Строка, Объект?>>)
+        знч Полный = СериализацияJson.ПрочитатьОбъект<Соответствие<Строка, Объект?>>(СериализацияJson.ЗаписатьОбъект({values(filter_fields, 'СтрокаНабора.')}), Тип<Соответствие<Строка, Объект?>>)
         для Имя из Отбор.Ключи()
             если СериализацияJson.ЗаписатьОбъект(Отбор[Имя]) != СериализацияJson.ЗаписатьОбъект(Полный[Имя])
                 возврат Ложь
@@ -423,9 +455,9 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
         dims = schema['filterFields']
         filt, rows = seed['filter'], seed['rows']
         required = {f['Имя'] for f in dims}
-        if (not isinstance(filt, dict) or not filt or not set(filt) <= required or
+        if (not isinstance(filt, dict) or not set(filt) <= required or
                 schema['kind'] == 'РегистрНакопления' and set(filt) != required):
-            raise InvalidTestError('Начальный набор требует непустой фильтр без неизвестных измерений')
+            raise InvalidTestError('Начальный набор требует явный фильтр без неизвестных измерений')
         if not isinstance(rows, list) or len(rows) > 100:
             raise InvalidTestError('Начальный набор требует до 100 строк')
         fields = {f['Имя']: f['Тип'] for f in schema['fields']}
@@ -440,7 +472,7 @@ def register_setup(storage, variable_prefix='НачальныйНабор'):
         # cannot be reported as student failures.
         if schema['kind'] == 'РегистрСведений':
             import json
-            keys = [json.dumps({k: r[k] for k in [f['Имя'] for f in dims] + (['Период'] if 'Период' in fields else [])}, sort_keys=True) for r in rows]
+            keys = [json.dumps({k: r[k] for k in [f['Имя'] for f in schema['bucketFields']] + (['Период'] if 'Период' in fields else [])}, sort_keys=True) for r in rows]
             identities = {(schema['owner'], key) for key in keys}
             if len(set(keys)) != len(keys) or initial_keys & identities:
                 raise InvalidTestError('Неуникальные ключи начальных строк')
@@ -488,6 +520,24 @@ def bind_record_sets(plan):
                 canonical = c.canonical_type(typ)
                 return next((s for s in plan.storage.register_schemas.values()
                     if canonical in {s['setType'], s['filterType']}), None), typ
+            def validate_filter_value(f, expr):
+                from .generated_types import union_members
+                raw = symbol.source[expr.start:expr.end]
+                inferred = ('Строка' if expr.kind == 'string' else
+                            'Число' if expr.kind == 'number' else
+                            'Булево' if raw in {'Истина', 'Ложь'} else
+                            '?' if raw == 'Неопределено' else
+                            infer_receiver_type(symbol.source, node,
+                                SimpleNamespace(receiver_start=expr.start, receiver_end=expr.end),
+                                symbol.owner, plan.model, declarations, sources, bindings))
+                if inferred:
+                    actual = c.canonical_type(inferred)
+                    accepted = union_members(f['Тип']) or [f['Тип'].rstrip('?')] + (['?'] if f['Тип'].endswith('?') else [])
+                    actual_members = (['?'] if actual == '?' else union_members(actual) or
+                                      [actual.rstrip('?')] + (['?'] if actual.endswith('?') else []))
+                    if not set(actual_members) <= set(accepted):
+                        raise InputError('Неверный тип фильтра ' + f['Имя'] + ': ' + actual + ', ожидается ' + f['Тип'])
+
             for call in method_call_expressions(symbol.source, node):
                 if call.receiver_start is None:
                     continue
@@ -521,12 +571,10 @@ def bind_record_sets(plan):
                         raise InputError('Повторное имя измерения фильтра')
                     if not set(names) <= required:
                         raise InputError('Неизвестное измерение фильтра: ' + ', '.join(sorted(set(names) - required)))
-                    if not args:
-                        raise UnsupportedSyntaxError('Пустой фильтр всей таблицы не поддержан')
-                    if (not names and len(args) != len(required) or
+                    if (args and not names and len(args) != len(required) or
                             schema['kind'] == 'РегистрНакопления' and len(args) != len(required)):
                         raise UnsupportedSyntaxError('Поддержан только полный позиционный фильтр/фильтр регистратора')
-                    mask = set(names) if names else required
+                    mask = set(names) if names or not args else required
                     method = filter_method(c, schema, mask)
                     if method != call.name:
                         token = expression.children[0].children[-1]
@@ -535,26 +583,8 @@ def bind_record_sets(plan):
                     selected = [f for f in schema['filterFields'] if f['Имя'] in mask]
                     expressions = ({a.children[0].value: a.children[1] for a in args} if names else
                                    {f['Имя']: a for f, a in zip(selected, args)})
-                    # Reject provably wrong value types as a contract error,
-                    # without attempting to evaluate source expressions.
-                    from .generated_types import union_members
                     for f in selected:
-                        expr = expressions[f['Имя']]
-                        raw = symbol.source[expr.start:expr.end]
-                        inferred = ('Строка' if expr.kind == 'string' else
-                                    'Число' if expr.kind == 'number' else
-                                    'Булево' if raw in {'Истина', 'Ложь'} else
-                                    '?' if raw == 'Неопределено' else
-                                    infer_receiver_type(symbol.source, node,
-                                        SimpleNamespace(receiver_start=expr.start, receiver_end=expr.end),
-                                        symbol.owner, plan.model, declarations, sources, bindings))
-                        if inferred:
-                            actual = c.canonical_type(inferred)
-                            accepted = union_members(f['Тип']) or [f['Тип'].rstrip('?')] + (['?'] if f['Тип'].endswith('?') else [])
-                            actual_members = (['?'] if actual == '?' else union_members(actual) or
-                                              [actual.rstrip('?')] + (['?'] if actual.endswith('?') else []))
-                            if not set(actual_members) <= set(accepted):
-                                raise InputError('Неверный тип фильтра ' + f['Имя'] + ': ' + actual + ', ожидается ' + f['Тип'])
+                        validate_filter_value(f, expressions[f['Имя']])
                     filter_ir = {'filterMask': [f['Имя'] for f in selected],
                         'filterValues': [{'name': f['Имя'], 'type': f['Тип'],
                             'expression': symbol.source[expressions[f['Имя']].start:expressions[f['Имя']].end],
@@ -566,12 +596,40 @@ def bind_record_sets(plan):
                     'receiverType': c.canonical_type(typ), 'start': symbol.start+call.start,
                     'end': symbol.start + next(n.end for n in node.expression_tree.walk()
                         if n.kind == 'call' and n.children[0].start == call.start and n.children[0].end <= call.end)})
+            field_writes = {}
+            for statement in node.expression_tree.walk():
+                if statement.kind not in {'binary', 'assignment'} or statement.value not in {'=', '+=', '-=', '*=', '/=', '??='}:
+                    continue
+                left, right = statement.children
+                if left.kind != 'member':
+                    continue
+                receiver, field = left.children
+                schema, typ = schema_for(receiver.start, receiver.end)
+                if not schema or not typ.endswith('.ФильтрНабора'):
+                    continue
+                if field.value not in {f['Имя'] for f in schema['filterFields']}:
+                    raise InputError('Неизвестное измерение фильтра: ' + field.value)
+                if statement.value != '=':
+                    raise UnsupportedSyntaxError('Поле фильтра поддерживает простое присваивание')
+                validate_filter_value(next(f for f in schema['filterFields'] if f['Имя'] == field.value), right)
+                field_writes[left.start, left.end] = True
+                plan.source_transforms.setdefault((symbol.identity.source_file, symbol.identity.declaration), []).extend([
+                    (field.start, right.start, 'ТестЗадать' + field.value + '('),
+                    (statement.end, statement.end, ')')])
+                plan.record_sets.append({**schema, 'sourceFile': symbol.identity.source_file,
+                    'symbol': symbol.identity.declaration, 'operation': 'filter-field-write',
+                    'field': field.value, 'sourceHash': source_hashes[symbol.identity.source_file],
+                    'start': symbol.start + statement.start, 'end': symbol.start + statement.end})
             for statement in node.expression_tree.walk():
                 if statement.kind == 'member' and statement.value == '.' and len(statement.children) == 2:
                     receiver, field = statement.children
                     schema, typ = schema_for(receiver.start, receiver.end)
                     if schema and typ.endswith('.ФильтрНабора') and field.value != 'Установить':
-                        raise UnsupportedSyntaxError('Поля фильтра набора вне Установить не поддержаны')
+                        if field.value not in {f['Имя'] for f in schema['filterFields']}:
+                            raise InputError('Неизвестное измерение фильтра: ' + field.value)
+                        if (statement.start, statement.end) not in field_writes:
+                            plan.source_transforms.setdefault((symbol.identity.source_file, symbol.identity.declaration), []).append(
+                                (field.start, field.end, 'ТестПолучить' + field.value + '()'))
                 if statement.kind in {'binary', 'assignment'} and statement.value in {'=', '??='}:
                     left = statement.children[0]
                     if left.kind == 'member' and left.children[1].value == 'Фильтр':
