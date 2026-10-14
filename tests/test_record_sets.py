@@ -129,8 +129,14 @@ class RecordSetDockerTest(unittest.TestCase):
                     self.assertEqual(normalized(r['actual']),normalized(expected));self.assertEqual(grade(r['actual'],expected,temp),'PASS')
                     wrong=copy.deepcopy(expected);wrong['storage'][1]['value'].append({'teacher':'independent-wrong'})
                     self.assertEqual(grade(r['actual'],wrong,temp),'FAIL')
-                unsupported=make('EmptyFilter' if name=='information' else 'Недоступно',[])
-                self.assertEqual(run_pure(root,analyze(root),unsupported,temp)['status'],'UNSUPPORTED')
+                c=make('EmptyFilter' if name=='information' else 'Недоступно',[])
+                if name=='information':
+                    r=self.execute(root,c,temp,'explicit-empty-filter')
+                    expected={'result':None,'storage':[audit(s) for s in c['storage']['initialRegisters']]}
+                    self.assertEqual(normalized(r['actual']),normalized(expected))
+                    self.assertEqual(grade(r['actual'],expected,temp),'PASS')
+                else:
+                    self.assertEqual(run_pure(root,analyze(root),c,temp)['status'],'UNSUPPORTED')
                 self.execute(root,make(),temp,name+'-recovery')
 
     def test_snapshots_repeat_append_replace_and_rollback(self):
@@ -310,8 +316,14 @@ class RecordSetDockerTest(unittest.TestCase):
                 # Fail precisely in the read operation, after teacher preparation
                 # and the source transaction snapshot have succeeded.
                 code=adapter.read_text()
-                code=code.replace('    знч Записи = ЧитатьВсе()\n    если не Записи.СодержитКлюч(Тип)',
-                    '    если Тип != ""\n        СбойФайла()\n        выбросить новый ТестБизнесИсключения.СбойХранилища("injected file read failure")\n    ;\n    знч Записи = ЧитатьВсе()\n    если не Записи.СодержитКлюч(Тип)',1)
+                marker='метод ЧитатьВсеВнутренний(): Соответствие<Строка, Соответствие<Строка, Строка>>\n'
+                self.assertEqual(code.count(marker),1,'File read injection must match exactly once')
+                # Information sets now read the whole history. Fail in the
+                # shared file reader and exercise its real sticky-error wrapper.
+                code=code.replace(marker,marker+
+                    '    если новый Файл(Путь + ".source").Существует()\n'
+                    '        выбросить новый ИсключениеНедопустимоеСостояние("injected file read failure")\n'
+                    '    ;\n',1)
                 adapter.write_text(code)
                 return script
             # Deliberate trusted backend fault; source catch cannot hide it.
@@ -328,6 +340,8 @@ class RecordSetDockerTest(unittest.TestCase):
             with patch('element_test.runtime.prepare_script',side_effect=broken):
                 r=run_pure(local,analyze(local),info_check('Swallow',[]),temp)
             write_json(EVIDENCE/'file-failure.json',r);self.assertEqual(r['status'],'ERROR',r)
+            self.assertEqual(r['reasonCode'],'execution_error')
+            self.assertIn('Сбой файла состояния сессии',r['message'])
             timeout=copy.deepcopy(c);timeout['timeout']=0.001
             self.assertEqual(run_pure(root,analyze(root),timeout,temp)['status'],'TIMEOUT')
             invalid=copy.deepcopy(c);invalid['storage']['initialRegisters'][0]['rows'][0]['Price']='wrong'

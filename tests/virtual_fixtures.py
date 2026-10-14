@@ -87,10 +87,12 @@ def real_check(empty=False,sql=False):
  return c
 
 def real_expected(c):
- states=[audit(s) for s in c['storage']['initialRegisters']]
- # Filter keys use the Script nominal registrar identity, whereas the audited
- # row keeps the original qualified project identity (task-32 storage contract).
- for state in states:state['id']=state['id'].replace('Товары::ПоступлениеТоваров.Ссылка','Scripts::ПоступлениеТоваров.Ссылка')
+ # The filter keeps the full metadata owner; registrar rows retain their
+ # untagged reference JSON under the tagged-reference-union-v1 contract.
+ seeds=copy.deepcopy(c['storage']['initialRegisters'])
+ for seed in seeds:
+  for row in seed['rows']:row['Регистратор']=row['Регистратор']['value']
+ states=[audit(s) for s in seeds]
  return {'result':copy.deepcopy(c['context']),'storage':states}
 
 def build():
