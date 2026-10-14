@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-14",
+  "scope": "small planning/validation probes with synthetic inputs; no Script, Docker, SQL or archive discovery",
+  "probes": [
+    {
+      "probe": "type",
+      "input": "ЧитаемаяКоллекция<Строка>",
+      "status": "rejected",
+      "exception": "InputError",
+      "message": "Генерация типа пока не поддерживается: ЧитаемаяКоллекция<Строка>"
+    },
+    {
+      "probe": "type",
+      "input": "Коллекция<Строка>",
+      "status": "rejected",
+      "exception": "InputError",
+      "message": "Генерация типа пока не поддерживается: Коллекция<Строка>"
+    },
+    {
+      "probe": "type",
+      "input": "КлючИЗначение<Строка, Строка>",
+      "status": "rejected",
+      "exception": "InputError",
+      "message": "Генерация типа пока не поддерживается: КлючИЗначение<Строка, Строка>"
+    },
+    {
+      "probe": "type",
+      "input": "Массив<Строка>",
+      "status": "accepted"
+    },
+    {
+      "probe": "generative-domain",
+      "input": {
+        "type": "Дата",
+        "values": [
+          "2026-10-14"
+        ]
+      },
+      "status": "rejected",
+      "exception": "InvalidTestError",
+      "message": "Домен поддерживает Булево, целое Число, Строка и Массив"
+    },
+    {
+      "probe": "generative-domain",
+      "input": {
+        "type": "Число",
+        "values": [
+          1.25
+        ]
+      },
+      "status": "rejected",
+      "exception": "InvalidTestError",
+      "message": "values не соответствует типу или границам домена"
+    },
+    {
+      "probe": "generative-domain",
+      "input": {
+        "type": "Число",
+        "min": 0,
+        "max": 10
+      },
+      "status": "accepted"
+    },
+    {
+      "probe": "register-handlers",
+      "status": "rejected",
+      "exception": "UnsupportedSyntaxError",
+      "message": "Исходные обработчики набора регистра пока не поддержаны"
+    },
+    {
+      "probe": "period-main-filter",
+      "status": "rejected",
+      "exception": "InputError",
+      "message": "Период в основном фильтре пока не поддержан"
+    },
+    {
+      "probe": "subordinated-register",
+      "status": "rejected",
+      "exception": "UnsupportedSyntaxError",
+      "message": "Подчинённый регистр сведений 10.0 вне контракта хранения"
+    }
+  ]
+}
