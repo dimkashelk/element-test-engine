@@ -41,8 +41,13 @@ def canonicalize_model_types(model):
 def report(data, package=None):
     escape = lambda v: html.escape(str(v))
     entries = package["feedback"] if package else data["checks"]
+    def explanation(check):
+        if check["status"] == "FAIL" and check.get("failureExplanation"):
+            return ('<div class="failure-explanation"><strong>Пояснение:</strong><br>'
+                    + escape(check["failureExplanation"]) + '</div>')
+        return ''
     rows = "".join(f'<tr><td>{escape(c["criterionId"] if package else c["id"])}</td><td>{escape(c["status"])}</td>'
-                   f'<td>{escape(c["score"])}</td><td><pre>{escape(json.dumps(c, ensure_ascii=False, indent=2))}</pre></td></tr>'
+                   f'<td>{escape(c["score"])}</td><td>{explanation(c)}<pre>{escape(json.dumps(c, ensure_ascii=False, indent=2))}</pre></td></tr>'
                    for c in entries)
     identity = ''
     if package:
@@ -61,7 +66,8 @@ def report(data, package=None):
                 for library in package["libraries"]) + '</p>'
     return ('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Element Test Engine</title>'
             '<style>body{font:16px system-ui;max-width:1100px;margin:40px auto}table{border-collapse:collapse;width:100%}'
-            'td,th{padding:12px;border:1px solid #ddd;text-align:left}pre{white-space:pre-wrap}h1{color:#21486b}</style>'
+            'td,th{padding:12px;border:1px solid #ddd;text-align:left}pre{white-space:pre-wrap}h1{color:#21486b}'
+            '.failure-explanation{white-space:pre-wrap;padding:12px;background:#fff3e6;border-left:4px solid #b65b00}</style>'
             f'<h1>{escape(package["project"] if package else data["project"])}</h1>' + identity +
             f'<p>{escape(data["status"])}: {escape(data["score"])}/{escape(data["maxScore"])}</p>'
             f'<p>Баллы недоступных/пропущенных проверок: {escape(data["unavailablePoints"])}</p>'

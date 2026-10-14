@@ -10,6 +10,9 @@ checks:
     element: Заказ
     field: Клиент
     expectedType: Контрагенты.Ссылка?
+    failureExplanation: >-
+      У документа Заказ должен быть реквизит Клиент типа Контрагенты.Ссылка?.
+      Проверьте имя реквизита, его ссылочный тип и возможность пустого значения.
     points: 1
   - id: order_table
     type: tableSection

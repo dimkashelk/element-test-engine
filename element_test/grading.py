@@ -46,6 +46,8 @@ def grading_package(result, assignment, model, *, student_id=None, assignment_id
                 }.get(check["status"], "Статус проверки неизвестен"))}
         if "group" in check:
             item["group"] = safe(check["group"])
+        if check["status"] == "FAIL" and "failureExplanation" in check:
+            item["failureExplanation"] = safe(check["failureExplanation"])
         if check.get("reasonCode") in REASON_CODES:
             item["reasonCode"] = check["reasonCode"]
         feedback.append(item)

@@ -37,6 +37,9 @@ def load_assignment(source):
         if check["id"] in seen:
             raise InputError(f"Повторяющийся id проверки: {check['id']}")
         seen.add(check["id"])
+        if "failureExplanation" in check and (not isinstance(check["failureExplanation"], str)
+                                               or not check["failureExplanation"].strip()):
+            raise InputError(f"{check['id']}: failureExplanation должен быть непустой строкой")
         if "group" in check and (not isinstance(check["group"], str) or not check["group"].strip()):
             raise InputError(f"{check['id']}: group должен быть непустой строкой")
         if "library" in check:
