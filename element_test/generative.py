@@ -3,7 +3,9 @@ from copy import deepcopy
 import json
 from decimal import localcontext
 from datetime import timedelta
+from pathlib import Path
 import re
+from tempfile import TemporaryDirectory
 
 from .yaml_io import InvalidTestError, InputError
 from .generative_values import number, packed, temporal, time_text, ticks, from_tick, value_tick, json_value, TEMPORAL
@@ -56,15 +58,25 @@ def options_schema():
         obj({'result': {'const': True}}, ['result']), obj({'pairedResult': {'const': True}}, ['pairedResult']),
         obj({'literal': {}}, ['literal']),
         obj({'op': {'enum': list(OPS)}, 'args': {'type': 'array', 'minItems': 1, 'maxItems': 3, 'items': {'$ref': '#/$defs/expression'}}}, ['op', 'args'])]}
+    state = {'type': 'string', 'minLength': 1, 'maxLength': 64}
+    operation = obj({'name': {'type': 'string'}, 'method': {'type': 'string'},
+        'from': state, 'to': state, 'domains': {'type': 'array', 'maxItems': 8, 'items': {'$ref': '#/$defs/domain'}}},
+        ['name', 'method', 'from', 'to', 'domains'])
     return {'$schema': 'https://json-schema.org/draft/2020-12/schema',
         **obj({'schemaVersion': {'const': 1}, 'seed': {'type': 'integer', 'minimum': 0, 'maximum': 2**32-1},
             'cases': {'type': 'integer', 'minimum': 1, 'maximum': 64},
             'maxShrinks': {'type': 'integer', 'minimum': 0, 'maximum': 64},
             'domains': {'type': 'array', 'minItems': 1, 'maxItems': 8, 'items': {'$ref': '#/$defs/domain'}},
+            'sequence': obj({'initialState': state, 'finalState': state, 'minLength': {'type': 'integer', 'minimum': 1, 'maximum': 40},
+                'maxLength': {'type': 'integer', 'minimum': 1, 'maximum': 40},
+                'operations': {'type': 'array', 'minItems': 1, 'maxItems': 32, 'items': operation}},
+                ['initialState', 'finalState', 'minLength', 'maxLength', 'operations']),
             'relation': {'$ref': '#/$defs/expression'},
             'transform': {'type': 'array', 'minItems': 1, 'maxItems': 8, 'items': {'$ref': '#/$defs/expression'}},
             'replayInputs': {'type': 'array', 'minItems': 1, 'maxItems': 64, 'items': {'type': 'array', 'minItems': 1, 'maxItems': 8}},
-            'replaySourceHash': {'type': 'string', 'pattern': '^[a-f0-9]{64}$'}}, ['schemaVersion', 'seed', 'cases', 'domains', 'relation']),
+            'replaySourceHash': {'type': 'string', 'pattern': '^[a-f0-9]{64}$'}}, ['schemaVersion', 'seed', 'cases', 'relation']),
+        'oneOf': [{'required': ['domains'], 'not': {'required': ['sequence']}},
+                  {'required': ['sequence'], 'not': {'anyOf': [{'required': ['domains']}, {'required': ['transform']}]}}],
         '$defs': {'domain': domain, 'expression': expr}}
 
 
@@ -207,23 +219,35 @@ def validate_expression(expr, arity, paired, depth=0, transform=False):
 
 
 def validate(config):
-    if not isinstance(config, dict) or set(config) - {'schemaVersion', 'seed', 'cases', 'domains', 'relation', 'transform', 'maxShrinks', 'replayInputs', 'replaySourceHash'}:
+    if not isinstance(config, dict) or set(config) - {'schemaVersion', 'seed', 'cases', 'domains', 'sequence', 'relation', 'transform', 'maxShrinks', 'replayInputs', 'replaySourceHash'}:
         raise InvalidTestError('Некорректный generative')
     if type(config.get('schemaVersion')) is not int or config['schemaVersion'] != 1:
         raise InvalidTestError('generative.schemaVersion требует 1')
     integer(config.get('seed'), 0, 2**32 - 1, 'seed')
     integer(config.get('cases'), 1, 64, 'cases')
     integer(config.get('maxShrinks', 32), 0, 64, 'maxShrinks')
-    domains = config.get('domains')
-    if not isinstance(domains, list) or not 1 <= len(domains) <= 8:
+    if 'sequence' in config:
+        from .generative_sequences import validate_sequence, accepts_sequence
+        if 'domains' in config or 'transform' in config:
+            raise InvalidTestError('generative.sequence несовместим с domains/transform')
+        validate_sequence(config['sequence'])
+        domains = None
+    else:
+        domains = config.get('domains')
+    if 'sequence' not in config and (not isinstance(domains, list) or not 1 <= len(domains) <= 8):
         raise InvalidTestError('domains требует 1..8 доменов')
-    for domain in domains:
+    for domain in domains or []:
         validate_domain(domain)
-    if sum(domain_size(d) for d in domains) > 4096:
+    if sum(domain_size(d) for d in domains or []) > 4096:
         raise InvalidTestError('Домены превышают бюджет размера 4096')
     if 'replayInputs' in config:
         replay = config['replayInputs']
-        if not isinstance(replay, list) or len(replay) != config['cases'] or any(not isinstance(v, list) or len(v) != len(domains) or not all(accepts(d, x) for d, x in zip(domains, v)) for v in replay):
+        def valid_inputs(values):
+            if domains is None:
+                return accepts_sequence(config['sequence'], values)
+            return (isinstance(values, list) and len(values) == len(domains)
+                    and all(accepts(d, x) for d, x in zip(domains, values)))
+        if not isinstance(replay, list) or len(replay) != config['cases'] or not all(valid_inputs(v) for v in replay):
             raise InvalidTestError('replayInputs не соответствует cases/domains')
     if 'replaySourceHash' in config:
         import re
@@ -235,7 +259,7 @@ def validate(config):
             raise InvalidTestError('transform требует выражение для каждого аргумента')
         for expr in transform:
             validate_expression(expr, len(domains), False, transform=True)
-    validate_expression(config.get('relation'), len(domains), transform is not None)
+    validate_expression(config.get('relation'), len(domains) if domains is not None else 1, transform is not None)
 
 
 def draw(domain, rng, boundary=None):
@@ -264,6 +288,9 @@ def inputs(config):
     validate(config)
     if 'replayInputs' in config: return deepcopy(config['replayInputs'])
     rng = Generator(config['seed'])
+    if 'sequence' in config:
+        from .generative_sequences import sequence_inputs
+        return sequence_inputs(config, rng)
     return [[draw(d, rng, i if i < 3 else None) for d in config['domains']] for i in range(config['cases'])]
 
 
@@ -312,17 +339,24 @@ def transformed(config, args):
 
 def planning_check(check):
     config = check['generative']; validate(config)
-    forbidden = {'args', 'sequence', 'expected', 'comparison', 'interface', 'querySource', 'formRequirement', 'report', 'navigation', 'panel', 'integration'} & check.keys()
+    forbidden = {'args', 'sequence', 'expected', 'comparison', 'interface', 'querySource', 'formRequirement', 'report', 'navigation', 'panel'} & check.keys()
     if forbidden:
         raise InvalidTestError('generative несовместим с ' + ', '.join(sorted(forbidden)))
     if 'storage' in check and not isinstance(check['storage'], dict):
         raise InvalidTestError('storage требует объект')
-    if check.get('storage', {}).get('backend') == 'postgres':
-        raise InvalidTestError('generative пока требует изолированный memory runtime')
+    if 'integration' in check and (check['integration'] != {'backend': 'postgres', 'operation': 'metadata-storage'}
+                                  or check.get('storage', {}).get('backend') != 'postgres'):
+        raise InvalidTestError('generative поддерживает только integration metadata-storage с PostgreSQL')
+    if check.get('storage', {}).get('backend') == 'postgres' and 'integration' not in check:
+        raise InvalidTestError('generative PostgreSQL требует integration metadata-storage')
     candidates = inputs(config)
     if 'transform' in config:
         for args in candidates: transformed(config, args)
-    return {k: deepcopy(v) for k, v in check.items() if k != 'generative'} | {'args': candidates[0], 'branches': check.get('branches', True)}
+    plain = {k: deepcopy(v) for k, v in check.items() if k != 'generative'} | {'branches': check.get('branches', True)}
+    if 'sequence' in config:
+        from .generative_sequences import sequence_check
+        return sequence_check(plain, config['sequence'], candidates[0])
+    return plain | {'args': candidates[0]}
 
 
 def smaller(domain, value):
@@ -373,6 +407,10 @@ def smaller(domain, value):
 
 
 def shrink_candidates(config, args):
+    if 'sequence' in config:
+        from .generative_sequences import sequence_shrinks
+        yield from sequence_shrinks(config, args)
+        return
     seen = set()
     for i, (domain, value) in enumerate(zip(config['domains'], args)):
         for candidate in smaller(domain, value):
@@ -387,7 +425,7 @@ def shrink_candidates(config, args):
             yield result
 
 
-def run_generated(root, model, check, temporary, *, plan_sink=None):
+def run_generated(root, model, check, temporary, *, plan_sink=None, integration_enabled=False):
     from .runtime import run_pure, execute_engine
     try:
         plain = planning_check(check)
@@ -397,9 +435,23 @@ def run_generated(root, model, check, temporary, *, plan_sink=None):
         # Prepare before any execution; validates every generated value against the signature.
         from .execution_plan import plan_execution
         plan = plan_execution(root, model, plain)
-        if [plan.contracts.canonical_type(d['type']) for d in config['domains']] != [plan.contracts.canonical_type(t) for t in plan.entry.parameter_types]:
-            raise InvalidTestError('Типы доменов не совпадают с сигнатурой метода')
-        validate_project_domains(config['domains'], plan.contracts)
+        if 'sequence' in config:
+            # Include and validate every operation, even one not chosen by this seed.
+            from .generative_sequences import sequence_check
+            prototypes = [{'operation': op['name'], 'args': [draw(d, Generator(0), 0) for d in op['domains']]}
+                          for op in config['sequence']['operations']]
+            prototype_check = sequence_check(plain, config['sequence'], [prototypes])
+            plan = plan_execution(root, model, prototype_check)
+            for op in config['sequence']['operations']:
+                symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == plan.module['sourceFile'] and s.identity.declaration == op['method'])
+                validate_signature_domains(op['domains'], symbol.parameter_types, plan.contracts)
+            if plan_sink is not None:
+                from .runtime import prepare_script
+                with TemporaryDirectory(prefix='generated-plan-', dir=temporary) as plan_dir:
+                    prepare_script(root, model, prototype_check, Path(plan_dir))
+                    plan_sink.append(json.loads((Path(plan_dir)/'execution-plan.json').read_text()))
+        else:
+            validate_signature_domains(config['domains'], plan.entry.parameter_types, plan.contracts)
         evidence = {'schemaVersion': 1, 'seed': config['seed'], 'generatorVersion': 'v1-splitmix64',
                     'requestedCases': config['cases'], 'executedCases': 0, 'runtimeExecutions': 0, 'shrinkExecutions': 0, 'shrinkAttempts': [],
                     'sourceHash': model['sourceHash'], 'counterexample': None}
@@ -414,10 +466,20 @@ def run_generated(root, model, check, temporary, *, plan_sink=None):
             if 'transform' in config:
                 variants.append(('pairedResult', transformed(config, args)))
             for name, values in variants:
-                result = run_pure(root, model, {**plain, 'args': values}, temporary,
-                                  exact_numbers=True,
-                                  plan_sink=plan_sink if not evidence['executedCases'] and name == 'result' else None)
+                actual_check = (sequence_check(plain, config['sequence'], values) if 'sequence' in config
+                                else {**plain, 'args': values})
+                sink = plan_sink if 'sequence' not in config and not evidence['executedCases'] and name == 'result' else None
+                with TemporaryDirectory(prefix='generated-case-', dir=temporary) as case_dir:
+                    if actual_check.get('storage', {}).get('backend') == 'postgres':
+                        from .integration import run_integration
+                        result = run_integration(actual_check, model, Path(case_dir), root=root,
+                            enabled=integration_enabled, exact_numbers=True, plan_sink=sink)
+                    else:
+                        result = run_pure(root, model, actual_check, Path(case_dir),
+                                          exact_numbers=True, plan_sink=sink)
                 trace.extend(result.get('trace', []))
+                if 'integration' in result:
+                    evidence.setdefault('backendRuns', []).append(deepcopy(result['integration']))
                 if result['status'] != 'EXECUTED': return None, result
                 evidence['runtimeExecutions'] += 1
                 results[name] = result['actual']
@@ -469,6 +531,12 @@ def run_generated(root, model, check, temporary, *, plan_sink=None):
         if isinstance(exc, UnsupportedSyntaxError):
             return {'status': 'UNSUPPORTED', 'reasonCode': 'unsupported_syntax', 'message': str(exc)}
         return {'status': 'UNSUPPORTED', 'reasonCode': 'invalid_test', 'message': str(exc)}
+
+
+def validate_signature_domains(domains, types, contracts):
+    if [contracts.canonical_type(d['type']) for d in domains] != [contracts.canonical_type(t) for t in types]:
+        raise InvalidTestError('Типы доменов не совпадают с сигнатурой метода')
+    validate_project_domains(domains, contracts)
 
 
 def validate_project_domains(domains, contracts):

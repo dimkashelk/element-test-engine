@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-14",
+  "tasks": [
+    "E05",
+    "E06"
+  ],
+  "fullRegression": false,
+  "uniquePassedTests": 58,
+  "uniqueSkippedTests": 16,
+  "runs": [
+    {
+      "command": "ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -p test_engine_e05_e06.py -v",
+      "tests": 8,
+      "seconds": 134.437,
+      "skipped": 0,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e05-e06-final.log"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_engine_e05_e06.py -k StatefulScriptTest -v",
+      "tests": 3,
+      "seconds": 34.974,
+      "skipped": 0,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e05-script-final.log"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_engine_e03_e04.py -v",
+      "tests": 13,
+      "seconds": 208.103,
+      "skipped": 2,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e03-e04-regression.log"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_branches_invariants.py -v",
+      "tests": 16,
+      "seconds": 13.586,
+      "skipped": 7,
+      "status": "OK",
+      "log": "result/engine-e05-e06/branches-regression.log"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_declarative_bindings.py -v",
+      "tests": 14,
+      "seconds": 5.772,
+      "skipped": 6,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e06-bindings-regression.log"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_integration.py -v",
+      "tests": 8,
+      "seconds": 0.007,
+      "skipped": 1,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e05-integration-regression.log"
+    },
+    {
+      "command": "ELEMENT_TEST_DOCKER_TESTS=1 python3 -m unittest discover -s tests -p test_interface_actions.py -v",
+      "tests": 14,
+      "seconds": 59.014,
+      "skipped": 0,
+      "status": "OK",
+      "log": "result/engine-e05-e06/e06-interface-regression.log"
+    }
+  ],
+  "notes": [
+    "Main acceptance ran before adding the static inventory test; the later StatefulScriptTest run covers that test and the updated plan sink.",
+    "Optional Docker tests from other suites and the external jsonschema validator were skipped where opt-in/dependency was absent."
+  ]
+}

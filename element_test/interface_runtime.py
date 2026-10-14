@@ -315,8 +315,7 @@ def _table(plan, e, path, item):
     return plan.interface['tables'][key]
 
 
-def _gate(plan, e, path, editing=False):
-    compiler = ExpressionCompiler(plan.contracts, plan.form['canonical'])
+def _gate(plan, e, path, editing=False, row_type=None, row_variable='RowData'):
     conditions = []
     for i in range(1, len(path) + 1):
         item = get_path(e['properties'], path[:i])
@@ -331,6 +330,9 @@ def _gate(plan, e, path, editing=False):
             if item.get('Имя') in plan.form['components'] and not column_formula:
                 expression = 'Контекст.Компоненты.' + item['Имя'] + '.' + prop
             elif isinstance(text, str) and text.startswith('='):
+                # RowData belongs only to a column of the targeted table.
+                compiler = ExpressionCompiler(plan.contracts, plan.form['canonical'],
+                    row_type if column_formula else None, row_variable=row_variable)
                 expression, typ = compiler.compile(text)
                 if typ != 'Булево':
                     raise UnsupportedSyntaxError('Флаг интерфейса требует Булево')
@@ -344,7 +346,7 @@ def _gate(plan, e, path, editing=False):
 
 def _lower_step(plan, e, step, index):
     c, form = plan.contracts, plan.form
-    result = {'code': '', 'gate': 'Истина', 'step': deepcopy(step)}
+    result = {'code': '', 'beforeGate': '', 'gate': 'Истина', 'step': deepcopy(step)}
     if 'method' in step:
         symbol = next(s for s in plan.symbols if s.owner['sourceFile'] == plan.module['sourceFile'] and s.identity.declaration == step['method'])
         args = step['args']
@@ -394,7 +396,18 @@ def _lower_step(plan, e, step, index):
         if op in {'input', 'selectRows', 'tableCommand'}:
             path, item, table = _component(plan, e, value['selector'])
             evidence['yamlPath'] = list(path)
-            result['gate'] = _gate(plan, e, path, editing=op != 'selectRows')
+            cell = op == 'input' and table and 'Колонки' in path[len(table[0]):]
+            if cell:
+                if 'row' not in value:
+                    raise InvalidTestError('Ввод в колонку требует row')
+                t = _table(plan, e, table[0], table[1])
+                row = str(value['row'])
+                # Resolve at execution time, after preceding edits/reordering.
+                result['beforeGate'] = _bounds(t['source'], row)
+                result['beforeGate'] += '    знч ТестСтрокаЯчейки' + str(index) + ' = ' + t['source'] + '[' + row + ']\n'
+            result['gate'] = _gate(plan, e, path, editing=op != 'selectRows',
+                                   row_type=t['rowType'] if cell else None,
+                                   row_variable='ТестСтрокаЯчейки' + str(index))
             if op == 'input':
                 typ = component_value_type(item)
                 if not typ or item['Тип'] == 'Надпись':
@@ -582,6 +595,7 @@ def render_interface(plan, sandbox):
             event_code = event_code.replace('        ' + events + '.Добавить(', _recalculate(plan, '        ') + '        ' + events + '.Добавить(')
             invocation += event_code
         else:
+            invocation += prepared['beforeGate']
             invocation += '    если ' + prepared['gate'] + '\n'
             invocation += ''.join('    ' + line + '\n' for line in prepared['code'].splitlines())
             invocation += '    иначе\n        ТестИсход' + str(index) + ' = "blocked"\n    ;\n'

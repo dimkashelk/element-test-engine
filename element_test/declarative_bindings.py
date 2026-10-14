@@ -274,9 +274,10 @@ def structural_facts(root, model, check):
 
 
 class ExpressionCompiler:
-    def __init__(self,c,context_type,row_type=None,variable='Контекст'):
+    def __init__(self,c,context_type,row_type=None,variable='Контекст',row_variable='RowData'):
         self.c,self.context_type,self.row_type = c,context_type,row_type
         self.variable = variable
+        self.row_variable = row_variable
         self.symbols = []
 
     def compile(self, text):
@@ -305,6 +306,8 @@ class ExpressionCompiler:
             except InputError as exc:
                 raise DeclarationMismatch(str(exc)) from exc
             self.symbols.append({'path':path,'type':result})
+            if root == 'RowData':
+                root = self.row_variable
             return root + ('.'+'.'.join(path_tail) if path_tail else ''), result
         if n.kind == 'group':
             expr,typ = self.visit(n.children[0],source)

@@ -141,8 +141,13 @@ def executor_output(executor, directory):
             process.wait(timeout=10)
 
 
-def run_integration(check, model, temporary, *, enabled=False, inject_failure=False, root=None, plan_sink=None):
+def run_integration(check, model, temporary, *, enabled=False, inject_failure=False, root=None, plan_sink=None, exact_numbers=False):
     """One fresh PostgreSQL and network per check; injection is trusted test-only API."""
+    if 'generative' in check:
+        if root is None:
+            return {'status': 'UNSUPPORTED', 'message': 'generative требует исходный проект', 'reasonCode': 'invalid_test'}
+        from .generative import run_generated
+        return run_generated(root, model, check, temporary, plan_sink=plan_sink, integration_enabled=enabled)
     try:
         config, runtime, home, password = preflight(check, model, enabled=enabled)
     except BackendUnavailable as exc:
@@ -180,7 +185,7 @@ def run_integration(check, model, temporary, *, enabled=False, inject_failure=Fa
                 try:
                     path = prepare_script(root, model, check, directory)
                     path.rename(directory / 'SqlSmoke.sbsl')
-                    session = PostgresSession()
+                    session = PostgresSession(exact_numbers=exact_numbers)
                     SCHEMA = session.schema()
                     audit = session.audit
                     if inject_failure:
@@ -251,7 +256,7 @@ ALTER ROLE smoke SET statement_timeout = '3s';
             if state.get('ExitCode') != 0 or state.get('OOMKilled'):
                 result = {'status': 'ERROR', 'message': 'Интеграция: Script executor завершился с ошибкой', 'reasonCode': 'execution_error'}
             else:
-                decoded = decode_output(stdout)
+                decoded = decode_output(stdout, exact_numbers=exact_numbers)
                 if (decoded.get('status') == 'EXECUTED' or operation == 'metadata-storage' and 'actual' in decoded) and isinstance(decoded.get('actual'), dict):
                     result = {'status': 'EXECUTED', 'actual': decoded['actual'], 'runtime': {'executorVersion': runtime.get('executorVersion'), 'sourceCompatibilityVersion': model['compatibilityVersion'], 'executionCompatibilityVersion': runtime.get('executionCompatibilityVersion', model['compatibilityVersion'])}}
                     if decoded.get('status') == 'ERROR':

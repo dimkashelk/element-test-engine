@@ -37,6 +37,14 @@ class StorageSession(ABC):
 
 
 class PostgresSession(StorageSession):
+    def __init__(self, *, exact_numbers=False):
+        self.exact_numbers = exact_numbers
+
+    def _loads(self, text):
+        import json
+        from decimal import Decimal
+        return json.loads(text, parse_float=lambda v: {'decimal': format(Decimal(v), 'f')}) if self.exact_numbers else json.loads(text)
+
     def schema(self):
         return '''CREATE TABLE smoke.objects(type text NOT NULL, id text NOT NULL, value jsonb NOT NULL,
 PRIMARY KEY(type,id));
@@ -48,21 +56,19 @@ GRANT SELECT,INSERT ON smoke.form_snapshots TO smoke;
 GRANT USAGE ON SEQUENCE smoke.form_snapshots_ordinal_seq TO smoke;'''
 
     def audit(self, database, docker):
-        import json
         result = docker('exec', '-i', database, 'psql', '-U', 'postgres', '-d', 'integration',
                         '-At', '-v', 'ON_ERROR_STOP=1', input='''SELECT COALESCE(json_agg(r ORDER BY type,id),'[]'::json)
 FROM (SELECT type,id,value FROM smoke.objects LIMIT 1001) r;''')
-        values = json.loads(result)
+        values = self._loads(result)
         if len(values) > 1000:
             raise InputError('Превышен лимит аудита хранилища')
         return values
 
 
     def audit_history(self, database, docker):
-        import json
         result = docker('exec', '-i', database, 'psql', '-U', 'postgres', '-d', 'integration',
                         '-At', '-v', 'ON_ERROR_STOP=1', input="SELECT COALESCE(json_agg(value ORDER BY ordinal),'[]'::json) FROM smoke.form_snapshots;")
-        values = json.loads(result)
+        values = self._loads(result)
         if len(values) > 1000:
             raise InputError('Превышен лимит SQL-аудита границ форм')
         return values

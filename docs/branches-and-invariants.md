@@ -1,6 +1,7 @@
 # Ветви и генеративные проверки: контракт №52
 
-Расширен 14 октября 2026 года: [E04](engine-extensions-e03-e04.md) добавляет
+Расширен 14 октября 2026 года: [E05](engine-extensions-e05-e06.md) добавляет
+генерацию завершённых последовательностей операций и PostgreSQL; [E04](engine-extensions-e03-e04.md) добавляет
 дроби, даты, enum, nominal-ссылки и составные объекты. Ниже — исходный контракт
 №52; ограничения типов и операций уточнены в расширении.
 
@@ -148,7 +149,7 @@ checks:
 суммы при перестановке массива. Отношение не передаётся в student executor.
 
 Каждый исходный/преобразованный/shrink вход использует свежий ограниченный
-Docker executor, новый context и memory storage. Часы и callbacks используют
+Docker executor, новый context и storage; PostgreSQL получает отдельную БД. Часы и callbacks используют
 явные контракты №48; initial fixtures не переходят между случаями.
 Доступ к снимкам объекта/хранилища выражается через `get/at`.
 
@@ -173,12 +174,13 @@ transform и `replaySourceHash`; другой исходник не подмен
 
 ## Границы реализации
 
-Генеративный вход сейчас ограничен source method и memory runtime.
-`args`, `expected`, `comparison`, `sequence`, интеграционный и самостоятельные
-query/UI/report/navigation/panel входы с ним несовместимы. Домены объектов,
+Генеративный вход поддерживает source method и последовательности
+`generative.sequence`, memory и PostgreSQL — [расширение E05](engine-extensions-e05-e06.md).
+`args`, `expected`, `comparison`, верхнеуровневый `sequence`, integration-smoke
+и самостоятельные query/UI/report/navigation/panel входы с ним несовместимы. Домены объектов,
 ссылок, дат, дробных чисел и enum добавлены в [E04](engine-extensions-e03-e04.md).
-Произвольные предикаты домена, state-machine sequences и генеративный
-PostgreSQL остаются вне контракта.
+Произвольные предикаты домена и transform целой последовательности
+остаются вне контракта.
 `branches` не инструментирует формулы отчётов или декларативные surfaces.
 Native платформенная семантика и браузерное поведение не подтверждаются
 результатом Script adapter. Совместимость исходника 9.0 сохранена; профиль
