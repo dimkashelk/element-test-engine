@@ -178,16 +178,24 @@ class ComputedParser(Parser):
             nullable=any(c.sql_nullable for c in children)
             return replace(e,children=children,type=typ+('?' if nullable or any(c.type.endswith('?') for c in children) else ''),sql_nullable=nullable)
         if e.kind == 'case':
+            from .generated_types import union_members
             raw=e.children; values=[raw[i] for i in range(1,len(raw),2)]+[raw[-1]]
             typed=[self.bind(v,visible,expected) if v.kind not in ('null','undefined','parameter') else None for v in values]
-            typ=next((v.type.rstrip('?') for v in typed if v is not None),expected)
+            # Infer missing/parameter branches from a concrete member, not an
+            # optional union spelling. Nested CASE and union fields contribute
+            # their members individually to the result type.
+            def members(typ):
+                return [m for m in (union_members(typ) or [typ.rstrip('?')]) if m != '?']
+            typ=next((members(v.type)[0] for v in typed if v is not None),expected)
             if not typ: self.fail('Неизвестный тип ветвей ВЫБОР',e.range[0])
             typed=[v if v is not None else self.bind(r,visible,typ) for r,v in zip(values,typed)]
-            variants = sorted({v.type.rstrip('?') for v in typed})
+            variants = sorted({member for v in typed for member in members(v.type)})
             if len(variants) > 1:
-                if not set(variants) <= {'Число', 'Строка', 'Булево', 'Дата', 'ДатаВремя', 'Момент', 'Ууид'}:
+                scalars = {'Число', 'Строка', 'Булево', 'Дата', 'ДатаВремя', 'Момент', 'Ууид'}
+                if any(t not in scalars and not t.endswith('.Ссылка') for t in variants):
                     self.fail('Несовместимые типы ветвей ВЫБОР',e.range[0])
                 typ = '|'.join(variants)
+                self.contracts.require(typ)
             children=[]
             for i in range(0,len(raw)-1,2):
                 cond=self.bind(raw[i],visible)
@@ -195,7 +203,6 @@ class ComputedParser(Parser):
                 children.extend((cond,typed[i//2]))
             children.append(typed[-1]); nullable=any(v.sql_nullable for v in typed)
             optional = nullable or any(v.type.endswith('?') for v in typed)
-            from .generated_types import union_members
             result_type = typ + (('|?' if union_members(typ) else '?') if optional else '')
             return replace(e,type=result_type,sql_nullable=nullable,children=tuple(children))
         if e.kind=='cast':
@@ -393,9 +400,18 @@ class ExpressionRenderer:
     def projection(self,e,row='С',group='Группа'):
         v=self.value(e,row,group)
         if e.sql_nullable:v='(('+self.null(e,row,group)+') ? Неопределено : '+v+')'
-        if e.type.rstrip('?').rstrip('|').endswith('.Ссылка'):
-            from .generated_types import clone_reference
-            v=clone_reference(self.contracts, e.type + ('?' if e.sql_nullable and not e.type.endswith('?') else ''), v)
+        from .generated_types import clone_reference, union_members
+        members = [m for m in (union_members(e.type) or [e.type.rstrip('?')]) if m != '?']
+        references = [m for m in members if m.endswith('.Ссылка')]
+        if references:
+            if len(references) == len(members):
+                v=clone_reference(self.contracts, e.type + ('?' if e.sql_nullable and not e.type.endswith('?') else ''), v)
+            else:
+                # A mixed result must copy only its nominal reference variant;
+                # scalar values and NULL retain their native representation.
+                original = v
+                for reference in reversed(references):
+                    v = '('+original+' это '+self.contracts.sbsl_type(reference)+' ? '+clone_reference(self.contracts,reference,original)+' : '+v+')'
         return v
 
     def equal(self,e,a,b):
