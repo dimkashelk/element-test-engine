@@ -14,3 +14,7 @@ script_u_*/
 Движок.tar
 Dvizhok.tar
 Dvizhok.xdump
+dimkashelk-vm*
+deploy/autocheck/.env
+deploy/autocheck/secrets/*
+!deploy/autocheck/secrets/README.md

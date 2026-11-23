@@ -1,0 +1,28 @@
+groups:
+  - name: autocheck
+    rules:
+      - alert: AutocheckGatewayUnavailable
+        expr: 'probe_success{job="autocheck-gateway"} == 0 or absent(probe_success{job="autocheck-gateway"})'
+        for: 15s
+        labels: {severity: critical}
+        annotations: {summary: "API недоступен через Nginx"}
+      - alert: AutocheckApiRedundancyLost
+        expr: '(sum(up{job="autocheck-api"}) or vector(0)) < 2'
+        for: 30s
+        labels: {severity: warning}
+        annotations: {summary: "Доступно меньше двух реплик API"}
+      - alert: AutocheckWorkerRedundancyLost
+        expr: 'max(element_autocheck_ready_processes{job="autocheck-api",role="worker"}) < 2'
+        for: 30s
+        labels: {severity: warning}
+        annotations: {summary: "Готово меньше двух воркеров"}
+      - alert: AutocheckExecutionCleanupBlocked
+        expr: 'max(element_autocheck_cleanup_blocked{job="autocheck-api"}) > 0'
+        for: 15s
+        labels: {severity: critical}
+        annotations: {summary: "Очистка ресурсов проверки заблокирована"}
+      - alert: AutocheckDiskFreeLow
+        expr: 'min(element_autocheck_disk_free_bytes{job="autocheck-api"}) < 2 * 1024 * 1024 * 1024'
+        for: 30s
+        labels: {severity: warning}
+        annotations: {summary: "На диске для проверок осталось меньше 2 ГиБ"}

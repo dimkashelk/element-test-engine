@@ -1,0 +1,2348 @@
+name: Константы — полный дамп без интерфейса
+checks:
+- id: criterion_001
+  type: module
+  module: Контрагенты
+  namespace: CRM
+  points: 1
+  failureExplanation: Должен присутствовать модуль CRM::Контрагенты.xbsl.
+- id: criterion_002
+  type: module
+  module: ФизическиеЛица
+  namespace: CRM
+  points: 1
+  failureExplanation: Должен присутствовать модуль CRM::ФизическиеЛица.xbsl.
+- id: criterion_003
+  type: module
+  module: Проект
+  namespace: ''
+  points: 1
+  failureExplanation: Должен присутствовать модуль Проект.xbsl.
+- id: criterion_004
+  type: module
+  module: ЕдиницыИзмерения
+  namespace: Товары
+  points: 1
+  failureExplanation: Должен присутствовать модуль Товары::ЕдиницыИзмерения.xbsl.
+- id: criterion_005
+  type: module
+  module: Номенклатура
+  namespace: Товары
+  points: 1
+  failureExplanation: Должен присутствовать модуль Товары::Номенклатура.xbsl.
+- id: criterion_006
+  type: module
+  module: Склады
+  namespace: Товары
+  points: 1
+  failureExplanation: Должен присутствовать модуль Товары::Склады.xbsl.
+- id: criterion_007
+  type: module
+  module: БанковскийСчет
+  namespace: Финансы
+  points: 1
+  failureExplanation: Должен присутствовать модуль Финансы::БанковскийСчет.xbsl.
+- id: criterion_008
+  type: element
+  name: CRM::Контрагенты
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект CRM::Контрагенты вида Справочник.
+- id: criterion_009
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта CRM::Контрагенты должно быть ОбластьВидимости: "ВПроекте".'
+- id: criterion_010
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У объекта CRM::Контрагенты должно быть Иерархический: true.'
+- id: criterion_011
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  expectedType: Число
+  points: 1
+  failureExplanation: У CRM::Контрагенты должен быть реквизит ИНН типа Число.
+- id: criterion_012
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У CRM::Контрагенты.ИНН должно быть ДлинаЦелойЧасти: 10.'
+- id: criterion_013
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  expectedType: Число
+  points: 1
+  failureExplanation: У CRM::Контрагенты должен быть реквизит КПП типа Число.
+- id: criterion_014
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  properties:
+    ДлинаЦелойЧасти: 9
+  points: 1
+  failureExplanation: 'У CRM::Контрагенты.КПП должно быть ДлинаЦелойЧасти: 9.'
+- id: criterion_015
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: У CRM::Контрагенты должен быть реквизит Наименование.
+- id: criterion_016
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ТипКонтрагента
+  expectedType: ТипКонтрагента
+  points: 1
+  failureExplanation: У CRM::Контрагенты должен быть реквизит ТипКонтрагента типа
+    ТипКонтрагента.
+- id: criterion_017
+  type: element
+  name: CRM::Сделка
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект CRM::Сделка вида Документ.
+- id: criterion_018
+  type: element
+  name: CRM::Сделка
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта CRM::Сделка должно быть ОбластьВидимости: "ВПроекте".'
+- id: criterion_019
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Архивный
+  expectedType: Булево
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит Архивный типа Булево.
+- id: criterion_020
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Архивный
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Архивный должно быть ЗначениеПоУмолчанию: false.'
+- id: criterion_021
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит Дата типа ДатаВремя.
+- id: criterion_022
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: ДатаЗакрытия
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит ДатаЗакрытия типа ДатаВремя.
+- id: criterion_023
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Клиент
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит Клиент типа Контрагенты.Ссылка?.
+- id: criterion_024
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит Номер типа Строка.
+- id: criterion_025
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 12
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Номер должно быть Длина: 12.'
+- id: criterion_026
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Номер должно быть Периодичность: "Год".'
+- id: criterion_027
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Номер должно быть СерииНумерации: ["Префикс",
+    "Постфикс"].'
+- id: criterion_028
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Номер должно быть Уникальность: true.'
+- id: criterion_029
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 5
+      Использовать: true
+      Постфикс: CRM
+      Префикс: СК
+      Формат:
+        ДлинаПостфикса: 3
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Номер должно быть Автонумерация: {"ДлинаНумерации":
+    5, "Использовать": true, "Постфикс": "CRM", "Префикс": "СК", "Формат": {"ДлинаПостфикса":
+    3, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_030
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: СтатусСделки
+  expectedType: СтатусСделки
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит СтатусСделки типа СтатусСделки.
+- id: criterion_031
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У CRM::Сделка должен быть реквизит Сумма типа Число.
+- id: criterion_032
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Сумма должно быть ДлинаДробнойЧасти: 2.'
+- id: criterion_033
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У CRM::Сделка.Сумма должно быть МинимальноеЗначение: 0.'
+- id: criterion_034
+  type: tableSection
+  element: CRM::Сделка
+  name: ПервичныйСпрос
+  points: 1
+  failureExplanation: У CRM::Сделка должна быть табличная часть ПервичныйСпрос.
+- id: criterion_035
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: Комментарий
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::Сделка.ПервичныйСпрос должен быть реквизит Комментарий
+    типа Строка.
+- id: criterion_036
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: ОписаниеПотребностиКлиента
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::Сделка.ПервичныйСпрос должен быть реквизит ОписаниеПотребностиКлиента
+    типа Строка.
+- id: criterion_037
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: ПричинаНеудовлетворения
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::Сделка.ПервичныйСпрос должен быть реквизит ПричинаНеудовлетворения
+    типа Строка.
+- id: criterion_038
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: ПроцентУдовлетворения
+  expectedType: Число
+  points: 1
+  failureExplanation: У CRM::Сделка.ПервичныйСпрос должен быть реквизит ПроцентУдовлетворения
+    типа Число.
+- id: criterion_039
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: ПроцентУдовлетворения
+  properties:
+    МаксимальноеЗначение: 100
+  points: 1
+  failureExplanation: 'У CRM::Сделка.ПервичныйСпрос.ПроцентУдовлетворения должно быть
+    МаксимальноеЗначение: 100.'
+- id: criterion_040
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: ПроцентУдовлетворения
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У CRM::Сделка.ПервичныйСпрос.ПроцентУдовлетворения должно быть
+    МинимальноеЗначение: 0.'
+- id: criterion_041
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У CRM::Сделка.ПервичныйСпрос должен быть реквизит Сумма типа
+    Число.
+- id: criterion_042
+  type: field
+  element: CRM::Сделка.ПервичныйСпрос
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У CRM::Сделка.ПервичныйСпрос.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_043
+  type: tableSection
+  element: CRM::Сделка
+  name: Участники
+  points: 1
+  failureExplanation: У CRM::Сделка должна быть табличная часть Участники.
+- id: criterion_044
+  type: field
+  element: CRM::Сделка.Участники
+  collection: Реквизиты
+  field: ВыигралСделку
+  expectedType: Булево
+  points: 1
+  failureExplanation: У CRM::Сделка.Участники должен быть реквизит ВыигралСделку типа
+    Булево.
+- id: criterion_045
+  type: field
+  element: CRM::Сделка.Участники
+  collection: Реквизиты
+  field: Комментарий
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::Сделка.Участники должен быть реквизит Комментарий типа
+    Строка.
+- id: criterion_046
+  type: field
+  element: CRM::Сделка.Участники
+  collection: Реквизиты
+  field: Партнер
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У CRM::Сделка.Участники должен быть реквизит Партнер типа Контрагенты.Ссылка?.
+- id: criterion_047
+  type: element
+  name: CRM::СтатусСделки
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект CRM::СтатусСделки вида Перечисление.
+- id: criterion_048
+  type: element
+  name: CRM::СтатусСделки
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта CRM::СтатусСделки должно быть ОбластьВидимости: "ВПодсистеме".'
+- id: criterion_049
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: ВРаботе
+  points: 1
+  failureExplanation: В CRM::СтатусСделки должно быть значение ВРаботе.
+- id: criterion_050
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: ВРаботе
+  properties:
+    Представление: В работе
+  points: 1
+  failureExplanation: 'У CRM::СтатусСделки.ВРаботе должно быть Представление: "В работе".'
+- id: criterion_051
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: Выиграна
+  points: 1
+  failureExplanation: В CRM::СтатусСделки должно быть значение Выиграна.
+- id: criterion_052
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: Заморожена
+  points: 1
+  failureExplanation: В CRM::СтатусСделки должно быть значение Заморожена.
+- id: criterion_053
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: Новая
+  points: 1
+  failureExplanation: В CRM::СтатусСделки должно быть значение Новая.
+- id: criterion_054
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: Новая
+  properties:
+    ПоУмолчанию: true
+  points: 1
+  failureExplanation: 'У CRM::СтатусСделки.Новая должно быть ПоУмолчанию: true.'
+- id: criterion_055
+  type: enumValue
+  element: CRM::СтатусСделки
+  name: Проиграна
+  points: 1
+  failureExplanation: В CRM::СтатусСделки должно быть значение Проиграна.
+- id: criterion_056
+  type: element
+  name: CRM::ТипКонтрагента
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект CRM::ТипКонтрагента вида Перечисление.
+- id: criterion_057
+  type: element
+  name: CRM::ТипКонтрагента
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта CRM::ТипКонтрагента должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_058
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ИП
+  points: 1
+  failureExplanation: В CRM::ТипКонтрагента должно быть значение ИП.
+- id: criterion_059
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ИП
+  properties:
+    Представление: Индивидуальный предприниматель
+  points: 1
+  failureExplanation: 'У CRM::ТипКонтрагента.ИП должно быть Представление: "Индивидуальный
+    предприниматель".'
+- id: criterion_060
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: Самозанятый
+  points: 1
+  failureExplanation: В CRM::ТипКонтрагента должно быть значение Самозанятый.
+- id: criterion_061
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: Самозанятый
+  properties:
+    Представление: Самозанятый
+  points: 1
+  failureExplanation: 'У CRM::ТипКонтрагента.Самозанятый должно быть Представление:
+    "Самозанятый".'
+- id: criterion_062
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ФизЛицо
+  points: 1
+  failureExplanation: В CRM::ТипКонтрагента должно быть значение ФизЛицо.
+- id: criterion_063
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ФизЛицо
+  properties:
+    Представление: Физическое лицо
+  points: 1
+  failureExplanation: 'У CRM::ТипКонтрагента.ФизЛицо должно быть Представление: "Физическое
+    лицо".'
+- id: criterion_064
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ФизЛицо
+  properties:
+    ПоУмолчанию: true
+  points: 1
+  failureExplanation: 'У CRM::ТипКонтрагента.ФизЛицо должно быть ПоУмолчанию: true.'
+- id: criterion_065
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ЮрЛицо
+  points: 1
+  failureExplanation: В CRM::ТипКонтрагента должно быть значение ЮрЛицо.
+- id: criterion_066
+  type: enumValue
+  element: CRM::ТипКонтрагента
+  name: ЮрЛицо
+  properties:
+    Представление: Юридическое лицо
+  points: 1
+  failureExplanation: 'У CRM::ТипКонтрагента.ЮрЛицо должно быть Представление: "Юридическое
+    лицо".'
+- id: criterion_067
+  type: element
+  name: CRM::ФизическиеЛица
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект CRM::ФизическиеЛица вида Справочник.
+- id: criterion_068
+  type: element
+  name: CRM::ФизическиеЛица
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта CRM::ФизическиеЛица должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_069
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::ФизическиеЛица должен быть реквизит Имя типа Строка.
+- id: criterion_070
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У CRM::ФизическиеЛица.Имя должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_071
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::ФизическиеЛица должен быть реквизит Отчество типа Строка.
+- id: criterion_072
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  properties:
+    НезаполненноеЗначение: Разрешить
+  points: 1
+  failureExplanation: 'У CRM::ФизическиеЛица.Отчество должно быть НезаполненноеЗначение:
+    "Разрешить".'
+- id: criterion_073
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Почта
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::ФизическиеЛица должен быть реквизит Почта типа Строка.
+- id: criterion_074
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Телефон
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::ФизическиеЛица должен быть реквизит Телефон типа Строка.
+- id: criterion_075
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  expectedType: Строка
+  points: 1
+  failureExplanation: У CRM::ФизическиеЛица должен быть реквизит Фамилия типа Строка.
+- id: criterion_076
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У CRM::ФизическиеЛица.Фамилия должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_077
+  type: element
+  name: Продажи::Заказ
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Продажи::Заказ вида Документ.
+- id: criterion_078
+  type: element
+  name: Продажи::Заказ
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта Продажи::Заказ должно быть ОбластьВидимости: "ВПроекте".'
+- id: criterion_079
+  type: element
+  name: Продажи::Заказ
+  properties:
+    Импорт:
+    - CRM
+    - Товары
+  points: 1
+  failureExplanation: 'У объекта Продажи::Заказ должно быть Импорт: ["CRM", "Товары"].'
+- id: criterion_080
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: АдресДоставки
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит АдресДоставки типа Строка.
+- id: criterion_081
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Архивный
+  expectedType: Булево
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит Архивный типа Булево.
+- id: criterion_082
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Архивный
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Архивный должно быть ЗначениеПоУмолчанию:
+    false.'
+- id: criterion_083
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит Дата типа ДатаВремя.
+- id: criterion_084
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: ДатаДоставки
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит ДатаДоставки типа ДатаВремя.
+- id: criterion_085
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Клиент
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит Клиент типа Контрагенты.Ссылка?.
+- id: criterion_086
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит Номер типа Строка.
+- id: criterion_087
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Номер должно быть Длина: 13.'
+- id: criterion_088
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Номер должно быть Периодичность: "Год".'
+- id: criterion_089
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Номер должно быть СерииНумерации: ["Префикс",
+    "Постфикс"].'
+- id: criterion_090
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Номер должно быть Уникальность: true.'
+- id: criterion_091
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 7
+      Использовать: true
+      Постфикс: ПР
+      Префикс: ЗК
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Номер должно быть Автонумерация: {"ДлинаНумерации":
+    7, "Использовать": true, "Постфикс": "ПР", "Префикс": "ЗК", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_092
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Сделка
+  expectedType: Сделка.Ссылка?
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит Сделка типа Сделка.Ссылка?.
+- id: criterion_093
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: СтатусЗаказа
+  expectedType: СтатусЗаказа?
+  points: 1
+  failureExplanation: У Продажи::Заказ должен быть реквизит СтатусЗаказа типа СтатусЗаказа?.
+- id: criterion_094
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: СтатусЗаказа
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.СтатусЗаказа должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_095
+  type: tableSection
+  element: Продажи::Заказ
+  name: Товары
+  points: 1
+  failureExplanation: У Продажи::Заказ должна быть табличная часть Товары.
+- id: criterion_096
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Количество
+  expectedType: Число
+  points: 1
+  failureExplanation: У Продажи::Заказ.Товары должен быть реквизит Количество типа
+    Число.
+- id: criterion_097
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Номенклатура
+  expectedType: Номенклатура.Ссылка?
+  points: 1
+  failureExplanation: У Продажи::Заказ.Товары должен быть реквизит Номенклатура типа
+    Номенклатура.Ссылка?.
+- id: criterion_098
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Продажи::Заказ.Товары должен быть реквизит Сумма типа Число.
+- id: criterion_099
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Товары.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_100
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Цена
+  expectedType: Число
+  points: 1
+  failureExplanation: У Продажи::Заказ.Товары должен быть реквизит Цена типа Число.
+- id: criterion_101
+  type: field
+  element: Продажи::Заказ.Товары
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Продажи::Заказ.Товары.Цена должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_102
+  type: element
+  name: Продажи::СтатусЗаказа
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект Продажи::СтатусЗаказа вида Перечисление.
+- id: criterion_103
+  type: element
+  name: Продажи::СтатусЗаказа
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Продажи::СтатусЗаказа должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_104
+  type: enumValue
+  element: Продажи::СтатусЗаказа
+  name: ВРаботе
+  points: 1
+  failureExplanation: В Продажи::СтатусЗаказа должно быть значение ВРаботе.
+- id: criterion_105
+  type: enumValue
+  element: Продажи::СтатусЗаказа
+  name: ВРаботе
+  properties:
+    Представление: В работе
+  points: 1
+  failureExplanation: 'У Продажи::СтатусЗаказа.ВРаботе должно быть Представление:
+    "В работе".'
+- id: criterion_106
+  type: enumValue
+  element: Продажи::СтатусЗаказа
+  name: Закрыт
+  points: 1
+  failureExplanation: В Продажи::СтатусЗаказа должно быть значение Закрыт.
+- id: criterion_107
+  type: enumValue
+  element: Продажи::СтатусЗаказа
+  name: Новый
+  points: 1
+  failureExplanation: В Продажи::СтатусЗаказа должно быть значение Новый.
+- id: criterion_108
+  type: element
+  name: Товары::ЕдиницаИзмеренияТип
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::ЕдиницаИзмеренияТип вида
+    Перечисление.
+- id: criterion_109
+  type: element
+  name: Товары::ЕдиницаИзмеренияТип
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::ЕдиницаИзмеренияТип должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_110
+  type: enumValue
+  element: Товары::ЕдиницаИзмеренияТип
+  name: Вес
+  points: 1
+  failureExplanation: В Товары::ЕдиницаИзмеренияТип должно быть значение Вес.
+- id: criterion_111
+  type: enumValue
+  element: Товары::ЕдиницаИзмеренияТип
+  name: Длина
+  points: 1
+  failureExplanation: В Товары::ЕдиницаИзмеренияТип должно быть значение Длина.
+- id: criterion_112
+  type: enumValue
+  element: Товары::ЕдиницаИзмеренияТип
+  name: Объем
+  points: 1
+  failureExplanation: В Товары::ЕдиницаИзмеренияТип должно быть значение Объем.
+- id: criterion_113
+  type: enumValue
+  element: Товары::ЕдиницаИзмеренияТип
+  name: Штуки
+  points: 1
+  failureExplanation: В Товары::ЕдиницаИзмеренияТип должно быть значение Штуки.
+- id: criterion_114
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::ЕдиницыИзмерения вида Справочник.
+- id: criterion_115
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::ЕдиницыИзмерения должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_116
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: У Товары::ЕдиницыИзмерения должен быть реквизит Наименование.
+- id: criterion_117
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: ТипЕдиницыИзмерения
+  expectedType: ЕдиницаИзмеренияТип?
+  points: 1
+  failureExplanation: У Товары::ЕдиницыИзмерения должен быть реквизит ТипЕдиницыИзмерения
+    типа ЕдиницаИзмеренияТип?.
+- id: criterion_118
+  type: element
+  name: Товары::Номенклатура
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::Номенклатура вида Справочник.
+- id: criterion_119
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта Товары::Номенклатура должно быть ОбластьВидимости:
+    "ВПроекте".'
+- id: criterion_120
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У объекта Товары::Номенклатура должно быть Иерархический: true.'
+- id: criterion_121
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  expectedType: ЕдиницыИзмерения.Ссылка?
+  points: 1
+  failureExplanation: У Товары::Номенклатура должен быть реквизит ЕдиницаИзмерения
+    типа ЕдиницыИзмерения.Ссылка?.
+- id: criterion_122
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.ЕдиницаИзмерения должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_123
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: У Товары::Номенклатура должен быть реквизит Наименование.
+- id: criterion_124
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::Номенклатура должен быть реквизит Цена типа Число.
+- id: criterion_125
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.Цена должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_126
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.Цена должно быть ДлинаЦелойЧасти: 10.'
+- id: criterion_127
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МаксимальноеЗначение: 1000000000
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.Цена должно быть МаксимальноеЗначение:
+    1000000000.'
+- id: criterion_128
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.Цена должно быть МинимальноеЗначение:
+    0.'
+- id: criterion_129
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ЗначениеПоУмолчанию: 0
+  points: 1
+  failureExplanation: 'У Товары::Номенклатура.Цена должно быть ЗначениеПоУмолчанию:
+    0.'
+- id: criterion_130
+  type: element
+  name: Товары::Отгрузка
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::Отгрузка вида Документ.
+- id: criterion_131
+  type: element
+  name: Товары::Отгрузка
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::Отгрузка должно быть ОбластьВидимости: "ВПодсистеме".'
+- id: criterion_132
+  type: element
+  name: Товары::Отгрузка
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Товары::Отгрузка должно быть Импорт: ["Продажи",
+    "CRM"].'
+- id: criterion_133
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Товары::Отгрузка должен быть реквизит Дата типа ДатаВремя.
+- id: criterion_134
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Товары::Отгрузка должен быть реквизит Номер типа Строка.
+- id: criterion_135
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Номер должно быть Длина: 13.'
+- id: criterion_136
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Номер должно быть Периодичность: "Год".'
+- id: criterion_137
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Номер должно быть СерииНумерации: ["Префикс",
+    "Постфикс"].'
+- id: criterion_138
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Номер должно быть Уникальность: true.'
+- id: criterion_139
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ТВ
+      Префикс: ОТГ
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Номер должно быть Автонумерация: {"Использовать":
+    true, "Постфикс": "ТВ", "Префикс": "ОТГ", "Формат": {"ДлинаПостфикса": 2, "ДлинаПрефикса":
+    3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_140
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Склад
+  expectedType: Склады.Ссылка?
+  points: 1
+  failureExplanation: У Товары::Отгрузка должен быть реквизит Склад типа Склады.Ссылка?.
+- id: criterion_141
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Склад
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Склад должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_142
+  type: tableSection
+  element: Товары::Отгрузка
+  name: Товары
+  points: 1
+  failureExplanation: У Товары::Отгрузка должна быть табличная часть Товары.
+- id: criterion_143
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Количество
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::Отгрузка.Товары должен быть реквизит Количество типа
+    Число.
+- id: criterion_144
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Номенклатура
+  expectedType: Номенклатура.Ссылка?
+  points: 1
+  failureExplanation: У Товары::Отгрузка.Товары должен быть реквизит Номенклатура
+    типа Номенклатура.Ссылка?.
+- id: criterion_145
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::Отгрузка.Товары должен быть реквизит Сумма типа Число.
+- id: criterion_146
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Товары.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_147
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Цена
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::Отгрузка.Товары должен быть реквизит Цена типа Число.
+- id: criterion_148
+  type: field
+  element: Товары::Отгрузка.Товары
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Товары::Отгрузка.Товары.Цена должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_149
+  type: element
+  name: Товары::ПоступлениеТоваров
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::ПоступлениеТоваров вида
+    Документ.
+- id: criterion_150
+  type: element
+  name: Товары::ПоступлениеТоваров
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::ПоступлениеТоваров должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_151
+  type: element
+  name: Товары::ПоступлениеТоваров
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Товары::ПоступлениеТоваров должно быть Импорт: ["Продажи",
+    "CRM"].'
+- id: criterion_152
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров должен быть реквизит Дата типа
+    ДатаВремя.
+- id: criterion_153
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров должен быть реквизит Номер типа
+    Строка.
+- id: criterion_154
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 12
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Номер должно быть Длина: 12.'
+- id: criterion_155
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Номер должно быть Периодичность:
+    "Год".'
+- id: criterion_156
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Номер должно быть СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: criterion_157
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Номер должно быть Уникальность:
+    true.'
+- id: criterion_158
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ТВ
+      Префикс: ПТ
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Номер должно быть Автонумерация:
+    {"Использовать": true, "Постфикс": "ТВ", "Префикс": "ПТ", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_159
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Склад
+  expectedType: Склады.Ссылка?
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров должен быть реквизит Склад типа
+    Склады.Ссылка?.
+- id: criterion_160
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Склад
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Склад должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_161
+  type: tableSection
+  element: Товары::ПоступлениеТоваров
+  name: Товары
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров должна быть табличная часть Товары.
+- id: criterion_162
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Количество
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров.Товары должен быть реквизит Количество
+    типа Число.
+- id: criterion_163
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Номенклатура
+  expectedType: Номенклатура.Ссылка?
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров.Товары должен быть реквизит Номенклатура
+    типа Номенклатура.Ссылка?.
+- id: criterion_164
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров.Товары должен быть реквизит Сумма
+    типа Число.
+- id: criterion_165
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Товары.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_166
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Цена
+  expectedType: Число
+  points: 1
+  failureExplanation: У Товары::ПоступлениеТоваров.Товары должен быть реквизит Цена
+    типа Число.
+- id: criterion_167
+  type: field
+  element: Товары::ПоступлениеТоваров.Товары
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Товары::ПоступлениеТоваров.Товары.Цена должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_168
+  type: element
+  name: Товары::Склады
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект Товары::Склады вида Справочник.
+- id: criterion_169
+  type: element
+  name: Товары::Склады
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::Склады должно быть ОбластьВидимости: "ВПодсистеме".'
+- id: criterion_170
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: АдресСклада
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Товары::Склады должен быть реквизит АдресСклада типа Строка.
+- id: criterion_171
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: У Товары::Склады должен быть реквизит Наименование.
+- id: criterion_172
+  type: element
+  name: Финансы::БанковскийСчет
+  elementType: Справочник
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::БанковскийСчет вида Справочник.
+- id: criterion_173
+  type: element
+  name: Финансы::БанковскийСчет
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::БанковскийСчет должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_174
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: У Финансы::БанковскийСчет должен быть реквизит Наименование.
+- id: criterion_175
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  expectedType: Число
+  points: 1
+  failureExplanation: У Финансы::БанковскийСчет должен быть реквизит НомерСчета типа
+    Число.
+- id: criterion_176
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  properties:
+    ДлинаЦелойЧасти: 20
+  points: 1
+  failureExplanation: 'У Финансы::БанковскийСчет.НомерСчета должно быть ДлинаЦелойЧасти:
+    20.'
+- id: criterion_177
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::ПоступлениеДенежныхСредств
+    вида Документ.
+- id: criterion_178
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::ПоступлениеДенежныхСредств должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_179
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::ПоступлениеДенежныхСредств должно быть Импорт:
+    ["Продажи", "CRM"].'
+- id: criterion_180
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит Дата
+    типа ДатаВремя.
+- id: criterion_181
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит Клиент
+    типа Контрагенты.Ссылка?.
+- id: criterion_182
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Клиент должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_183
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит Номер
+    типа Строка.
+- id: criterion_184
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Номер должно быть Длина:
+    13.'
+- id: criterion_185
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Номер должно быть Периодичность:
+    "Год".'
+- id: criterion_186
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Номер должно быть СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: criterion_187
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Номер должно быть Уникальность:
+    true.'
+- id: criterion_188
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ФН
+      Префикс: ПДС
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Номер должно быть Автонумерация:
+    {"Использовать": true, "Постфикс": "ФН", "Префикс": "ПДС", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_189
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Основание
+  expectedType: Заказ.Ссылка|СчетНаОплату.Ссылка|?
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит Основание
+    типа Заказ.Ссылка|СчетНаОплату.Ссылка|?.
+- id: criterion_190
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит Сумма
+    типа Число.
+- id: criterion_191
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_192
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.Сумма должно быть МинимальноеЗначение:
+    0.'
+- id: criterion_193
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  expectedType: ТипОплаты?
+  points: 1
+  failureExplanation: У Финансы::ПоступлениеДенежныхСредств должен быть реквизит ТипОплаты
+    типа ТипОплаты?.
+- id: criterion_194
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::ПоступлениеДенежныхСредств.ТипОплаты должно быть
+    НезаполненноеЗначение: "ЗапретитьВсегда".'
+- id: criterion_195
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::РасходДенежныхСредств
+    вида Документ.
+- id: criterion_196
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::РасходДенежныхСредств должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_197
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::РасходДенежныхСредств должно быть Импорт:
+    ["Продажи", "CRM"].'
+- id: criterion_198
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Финансы::РасходДенежныхСредств должен быть реквизит Дата типа
+    ДатаВремя.
+- id: criterion_199
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У Финансы::РасходДенежныхСредств должен быть реквизит Клиент
+    типа Контрагенты.Ссылка?.
+- id: criterion_200
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Клиент должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_201
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Финансы::РасходДенежныхСредств должен быть реквизит Номер
+    типа Строка.
+- id: criterion_202
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Номер должно быть Длина: 13.'
+- id: criterion_203
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Номер должно быть Периодичность:
+    "Год".'
+- id: criterion_204
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Номер должно быть СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: criterion_205
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Номер должно быть Уникальность:
+    true.'
+- id: criterion_206
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ФН
+      Префикс: РДС
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Номер должно быть Автонумерация:
+    {"Использовать": true, "Постфикс": "ФН", "Префикс": "РДС", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_207
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Финансы::РасходДенежныхСредств должен быть реквизит Сумма
+    типа Число.
+- id: criterion_208
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_209
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.Сумма должно быть МинимальноеЗначение:
+    0.'
+- id: criterion_210
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  expectedType: ТипОплаты?
+  points: 1
+  failureExplanation: У Финансы::РасходДенежныхСредств должен быть реквизит ТипОплаты
+    типа ТипОплаты?.
+- id: criterion_211
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::РасходДенежныхСредств.ТипОплаты должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_212
+  type: element
+  name: Финансы::СтатусОплаты
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::СтатусОплаты вида Перечисление.
+- id: criterion_213
+  type: element
+  name: Финансы::СтатусОплаты
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::СтатусОплаты должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_214
+  type: enumValue
+  element: Финансы::СтатусОплаты
+  name: НеОплачено
+  points: 1
+  failureExplanation: В Финансы::СтатусОплаты должно быть значение НеОплачено.
+- id: criterion_215
+  type: enumValue
+  element: Финансы::СтатусОплаты
+  name: НеОплачено
+  properties:
+    Представление: Не оплачено
+  points: 1
+  failureExplanation: 'У Финансы::СтатусОплаты.НеОплачено должно быть Представление:
+    "Не оплачено".'
+- id: criterion_216
+  type: enumValue
+  element: Финансы::СтатусОплаты
+  name: Оплачено
+  points: 1
+  failureExplanation: В Финансы::СтатусОплаты должно быть значение Оплачено.
+- id: criterion_217
+  type: enumValue
+  element: Финансы::СтатусОплаты
+  name: ЧастичноОплачено
+  points: 1
+  failureExplanation: В Финансы::СтатусОплаты должно быть значение ЧастичноОплачено.
+- id: criterion_218
+  type: enumValue
+  element: Финансы::СтатусОплаты
+  name: ЧастичноОплачено
+  properties:
+    Представление: Частично оплачено
+  points: 1
+  failureExplanation: 'У Финансы::СтатусОплаты.ЧастичноОплачено должно быть Представление:
+    "Частично оплачено".'
+- id: criterion_219
+  type: element
+  name: Финансы::СчетНаОплату
+  elementType: Документ
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::СчетНаОплату вида Документ.
+- id: criterion_220
+  type: element
+  name: Финансы::СчетНаОплату
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::СчетНаОплату должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_221
+  type: element
+  name: Финансы::СчетНаОплату
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::СчетНаОплату должно быть Импорт: ["Продажи",
+    "CRM"].'
+- id: criterion_222
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Дата
+  expectedType: ДатаВремя
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит Дата типа ДатаВремя.
+- id: criterion_223
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Контрагент
+  expectedType: Контрагенты.Ссылка?
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит Контрагент типа
+    Контрагенты.Ссылка?.
+- id: criterion_224
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Контрагент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Контрагент должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_225
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  expectedType: Строка
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит Номер типа Строка.
+- id: criterion_226
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Номер должно быть Длина: 13.'
+- id: criterion_227
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Номер должно быть Периодичность: "Год".'
+- id: criterion_228
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Номер должно быть СерииНумерации: ["Префикс",
+    "Постфикс"].'
+- id: criterion_229
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Номер должно быть Уникальность: true.'
+- id: criterion_230
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 6
+      Использовать: true
+      Постфикс: ФН
+      Префикс: СНО
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Номер должно быть Автонумерация: {"ДлинаНумерации":
+    6, "Использовать": true, "Постфикс": "ФН", "Префикс": "СНО", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: criterion_231
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Основание
+  expectedType: Заказ.Ссылка?
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит Основание типа
+    Заказ.Ссылка?.
+- id: criterion_232
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Основание
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Основание должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_233
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: СтатусОплаты
+  expectedType: СтатусОплаты?
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит СтатусОплаты типа
+    СтатусОплаты?.
+- id: criterion_234
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: СтатусОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.СтатусОплаты должно быть НезаполненноеЗначение:
+    "ЗапретитьВсегда".'
+- id: criterion_235
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  expectedType: Число
+  points: 1
+  failureExplanation: У Финансы::СчетНаОплату должен быть реквизит Сумма типа Число.
+- id: criterion_236
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Сумма должно быть ДлинаДробнойЧасти:
+    2.'
+- id: criterion_237
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У Финансы::СчетНаОплату.Сумма должно быть МинимальноеЗначение:
+    0.'
+- id: criterion_238
+  type: element
+  name: Финансы::ТипОплаты
+  elementType: Перечисление
+  points: 1
+  failureExplanation: Должен присутствовать объект Финансы::ТипОплаты вида Перечисление.
+- id: criterion_239
+  type: element
+  name: Финансы::ТипОплаты
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::ТипОплаты должно быть ОбластьВидимости:
+    "ВПодсистеме".'
+- id: criterion_240
+  type: enumValue
+  element: Финансы::ТипОплаты
+  name: Безналичные
+  points: 1
+  failureExplanation: В Финансы::ТипОплаты должно быть значение Безналичные.
+- id: criterion_241
+  type: enumValue
+  element: Финансы::ТипОплаты
+  name: Наличные
+  points: 1
+  failureExplanation: В Финансы::ТипОплаты должно быть значение Наличные.
+- id: criterion_242
+  type: module
+  module: ДанныеКомпании
+  namespace: Администрирование
+  points: 1
+  failureExplanation: Должен присутствовать модуль Администрирование::ДанныеКомпании.xbsl.
+- id: criterion_243
+  type: module
+  module: Настройки
+  namespace: Администрирование
+  points: 1
+  failureExplanation: Должен присутствовать модуль Администрирование::Настройки.xbsl.
+- id: criterion_244
+  type: module
+  module: РабочиеДни
+  namespace: Администрирование
+  points: 1
+  failureExplanation: Должен присутствовать модуль Администрирование::РабочиеДни.xbsl.
+- id: criterion_245
+  type: element
+  name: Администрирование::ДанныеКомпании
+  elementType: НаборКонстант
+  points: 1
+  failureExplanation: Должен присутствовать набор констант Администрирование::ДанныеКомпании.
+- id: criterion_246
+  type: element
+  name: Администрирование::ДанныеКомпании
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: Набор Администрирование::ДанныеКомпании должен иметь видимость
+    ВПодсистеме.
+- id: criterion_247
+  type: field
+  element: Администрирование::ДанныеКомпании
+  collection: Константы
+  field: ПолноеНаименование
+  expectedType: Строка
+  points: 1
+  failureExplanation: В наборе Администрирование::ДанныеКомпании должна быть константа
+    ПолноеНаименование типа Строка.
+- id: criterion_248
+  type: field
+  element: Администрирование::ДанныеКомпании
+  collection: Константы
+  field: СокращенноеНаименование
+  expectedType: Строка
+  points: 1
+  failureExplanation: В наборе Администрирование::ДанныеКомпании должна быть константа
+    СокращенноеНаименование типа Строка.
+- id: criterion_249
+  type: field
+  element: Администрирование::ДанныеКомпании
+  collection: Константы
+  field: Телефон
+  expectedType: Строка
+  points: 1
+  failureExplanation: В наборе Администрирование::ДанныеКомпании должна быть константа
+    Телефон типа Строка.
+- id: criterion_250
+  type: field
+  element: Администрирование::ДанныеКомпании
+  collection: Константы
+  field: ЮрАдрес
+  expectedType: Строка
+  points: 1
+  failureExplanation: В наборе Администрирование::ДанныеКомпании должна быть константа
+    ЮрАдрес типа Строка.
+- id: criterion_251
+  type: element
+  name: Администрирование::Настройки
+  elementType: НаборКонстант
+  points: 1
+  failureExplanation: Должен присутствовать набор констант Администрирование::Настройки.
+- id: criterion_252
+  type: element
+  name: Администрирование::Настройки
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: Набор Администрирование::Настройки должен иметь видимость ВПодсистеме.
+- id: criterion_253
+  type: field
+  element: Администрирование::Настройки
+  collection: Константы
+  field: АвтоматическиАрхивироватьЗавершенныеПроцессы
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::Настройки должна быть константа
+    АвтоматическиАрхивироватьЗавершенныеПроцессы типа Булево.
+- id: criterion_254
+  type: field
+  element: Администрирование::Настройки
+  collection: Константы
+  field: АвтоматическиАрхивироватьЗавершенныеПроцессы
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::Настройки.АвтоматическиАрхивироватьЗавершенныеПроцессы
+    должна иметь явное значение по умолчанию Ложь.
+- id: criterion_255
+  type: field
+  element: Администрирование::Настройки
+  collection: Константы
+  field: РазрешитьОтрицательныеОстатки
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::Настройки должна быть константа
+    РазрешитьОтрицательныеОстатки типа Булево.
+- id: criterion_256
+  type: field
+  element: Администрирование::Настройки
+  collection: Константы
+  field: РазрешитьОтрицательныеОстатки
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::Настройки.РазрешитьОтрицательныеОстатки
+    должна иметь явное значение по умолчанию Ложь.
+- id: criterion_257
+  type: element
+  name: Администрирование::РабочиеДни
+  elementType: НаборКонстант
+  points: 1
+  failureExplanation: Должен присутствовать набор констант Администрирование::РабочиеДни.
+- id: criterion_258
+  type: element
+  name: Администрирование::РабочиеДни
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: Набор Администрирование::РабочиеДни должен иметь видимость ВПодсистеме.
+- id: criterion_259
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Воскресенье
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Воскресенье типа Булево.
+- id: criterion_260
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Воскресенье
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Воскресенье должна иметь
+    явное значение по умолчанию Ложь.
+- id: criterion_261
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Вторник
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Вторник типа Булево.
+- id: criterion_262
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Вторник
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Вторник должна иметь
+    явное значение по умолчанию Ложь.
+- id: criterion_263
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Понедельник
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Понедельник типа Булево.
+- id: criterion_264
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Понедельник
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Понедельник должна иметь
+    явное значение по умолчанию Ложь.
+- id: criterion_265
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Пятница
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Пятница типа Булево.
+- id: criterion_266
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Пятница
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Пятница должна иметь
+    явное значение по умолчанию Ложь.
+- id: criterion_267
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Среда
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Среда типа Булево.
+- id: criterion_268
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Среда
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Среда должна иметь явное
+    значение по умолчанию Ложь.
+- id: criterion_269
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Суббота
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Суббота типа Булево.
+- id: criterion_270
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Суббота
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Суббота должна иметь
+    явное значение по умолчанию Ложь.
+- id: criterion_271
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Четверг
+  expectedType: Булево
+  points: 1
+  failureExplanation: В наборе Администрирование::РабочиеДни должна быть константа
+    Четверг типа Булево.
+- id: criterion_272
+  type: field
+  element: Администрирование::РабочиеДни
+  collection: Константы
+  field: Четверг
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: Константа Администрирование::РабочиеДни.Четверг должна иметь
+    явное значение по умолчанию Ложь.

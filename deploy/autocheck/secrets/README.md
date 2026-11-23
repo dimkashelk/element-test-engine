@@ -1,7 +1,7 @@
 # Контракты секретов
 
 В Git хранится только этот документ. Реальные файлы создаёт оператор при
-реализации и развёртывании. Здесь нет рабочих паролей и токенов.
+развёртывании. Здесь нет рабочих паролей и токенов.
 
 - `db_password`: одна непустая строка. Compose secret читает PostgreSQL и сервис.
 - `integration_password`: одна непустая строка. Worker передаёт значение только
@@ -10,8 +10,8 @@
   не пароль управляющей БД `autocheck`.
 - `api_clients.json`: описанные ниже клиентские записи. Токены — случайные
   256-битные значения; сохраняются только SHA-256 токенов, сравнение constant-time.
-- `webhook_clients.json`: фиксированные URL и HMAC-ключи доставки по `clientId`.
-  Клиент не выбирает URL callback в запросе. HTTPS, проверка сертификата, без
+- `webhook_clients.json`: HMAC-ключи доставки по `clientId` и необязательный legacy URL.
+  Адрес получателя передаётся в `webhookUrl` запроса reservation. HTTPS, проверка сертификата, без
   redirects. Доступ к этому секрету есть только у notifier.
 
 Структура `api_clients.json` (значения в угловых скобках — описания, не секреты):
@@ -54,7 +54,6 @@
   "clients": [
     {
       "clientId": "lk-main",
-      "url": "https://lk.example.edu/internal/autocheck/events",
       "currentKeyId": "callback-2026-01",
       "keys": {
         "callback-2026-01": "<random HMAC secret>"

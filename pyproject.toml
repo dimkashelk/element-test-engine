@@ -11,9 +11,11 @@ dependencies = ["PyYAML>=6.0,<7"]
 
 [project.optional-dependencies]
 test = ["jsonschema>=4.18,<5"]
+service = ["starlette>=1.8,<2", "uvicorn>=0.54,<1", "psycopg[binary]>=3.3.6,<4", "httpx>=0.28.1,<1", "python-multipart>=0.0.32,<1", "jsonschema>=4.18,<5"]
 
 [tool.setuptools.packages.find]
-include = ["element_test*"]
+include = ["element_test*", "element_check_service*"]
 
 [tool.setuptools.package-data]
 element_test = ["query_text.sbsl", "timer_queue.sbsl"]
+element_check_service = ["migrations/*.sql"]

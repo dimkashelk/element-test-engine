@@ -1,13 +1,13 @@
-# Проект контракта для согласования. Приложение пока не реализовано.
+# HTTP contract implemented by element_check_service.
 openapi: 3.0.3
 info:
   title: Element Autocheck Service
   version: 1.0.0
-  description: 'Проект, не реализованный API. Очередь принадлежит ЛК; сервис резервирует места, проверяет и доставляет
+  description: 'API автопроверки. Очередь принадлежит ЛК; сервис резервирует места, проверяет и доставляет
     результат. Полная семантика: autocheck-microservice-design.md.'
 servers:
-- url: https://autocheck.example.edu
-  description: Проектный URL за TLS proxy.
+- url: https://autocheck.example.com/autocheck
+  description: Пример внешнего HTTPS API с префиксом для проксирования.
 security:
 - bearerAuth: []
 paths:
@@ -228,7 +228,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '413':
-          description: Превышен транспортный лимит; gateway может вернуть text/html.
+          description: Превышен транспортный лимит; API и gateway возвращают JSON.
           content:
             application/json:
               schema:
@@ -391,7 +391,6 @@ paths:
         enum: &id006
         - grading.json
         - result.json
-        - report.html
         - execution-plans.json
         - runtime-evidence.json
     get:
@@ -401,7 +400,7 @@ paths:
       - checks:read
       responses:
         '200':
-          description: Артефакт attachment. HTML имеет CSP sandbox; nosniff для всех видов.
+          description: JSON-артефакт attachment с nosniff. Отображение выполняет ЛК.
           headers:
             Content-Disposition:
               schema:
@@ -411,18 +410,12 @@ paths:
                 type: string
                 enum:
                 - nosniff
-            Content-Security-Policy:
-              schema:
-                type: string
           content:
             application/json:
               schema:
-                type: string
-                format: binary
-            text/html:
-              schema:
-                type: string
-                format: binary
+                anyOf:
+                - type: object
+                - type: array
         '401':
           description: Токен отсутствует или невалиден.
           content:
@@ -746,7 +739,7 @@ components:
         sizeBytes:
           type: integer
           minimum: 1
-          maximum: 4194304
+          maximum: 10485760
         sha256: *id004
       required:
       - format
@@ -756,6 +749,12 @@ components:
       type: object
       additionalProperties: false
       properties:
+        webhookUrl:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          format: uri
+          description: HTTPS-адрес получателя этой проверки. Сохраняется в manifest и входит в idempotency fingerprint. Публичный IP/DNS, без credentials и fragment; redirects запрещены. Если отсутствует, используется legacy URL клиента; без обоих адресов delivery завершается с delivery_url_missing. Для новых интеграций передавайте всегда.
         submissionId: *id005
         attempt:
           type: integer
@@ -766,6 +765,8 @@ components:
           type: string
           minLength: 1
           maxLength: 128
+          deprecated: true
+          description: Необязательное поле для совместимости. Критерии определяются загруженным файлом.
         projectName:
           type: string
           minLength: 1
@@ -785,15 +786,14 @@ components:
       - attempt
       - studentId
       - assignmentId
-      - criteriaVersion
       - dump
       - criteria
       example:
+        webhookUrl: https://lk.example.edu/internal/autocheck/events
         submissionId: submission-4815
         attempt: 1
         studentId: student-001
         assignmentId: demo
-        criteriaVersion: 2026-10-14.1
         runMode: isolated
         dump:
           format: xdump
@@ -1222,6 +1222,8 @@ components:
           type: string
           minLength: 1
           maxLength: 128
+          deprecated: true
+          description: Необязательное поле для совместимости. Критерии определяются загруженным файлом.
         status:
           type: string
           enum:
@@ -1261,7 +1263,6 @@ components:
       - attempt
       - studentId
       - assignmentId
-      - criteriaVersion
       - status
       - acceptedAt
       - startedAt
@@ -1278,7 +1279,6 @@ components:
         attempt: 1
         studentId: student-001
         assignmentId: demo
-        criteriaVersion: 2026-10-14.1
         status: completed
         acceptedAt: '2026-10-14T18:00:20Z'
         startedAt: '2026-10-14T18:00:21Z'
@@ -1372,6 +1372,8 @@ components:
           type: string
           minLength: 1
           maxLength: 128
+          deprecated: true
+          description: Необязательное поле для совместимости. Критерии определяются загруженным файлом.
         status:
           type: string
           enum:
@@ -1417,7 +1419,6 @@ components:
       - attempt
       - studentId
       - assignmentId
-      - criteriaVersion
       - status
       - acceptedAt
       - startedAt
@@ -1436,7 +1437,6 @@ components:
         attempt: 1
         studentId: student-001
         assignmentId: demo
-        criteriaVersion: 2026-10-14.1
         status: completed
         acceptedAt: '2026-10-14T18:00:20Z'
         startedAt: '2026-10-14T18:00:21Z'
@@ -1513,9 +1513,9 @@ components:
           nextAttemptAt: '2026-10-14T18:00:55Z'
           lastErrorCode: null
         artifacts:
-        - kind: report.html
+        - kind: grading.json
           available: true
-          url: /v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe/artifacts/report.html
+          url: /v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe/artifacts/grading.json
           expiresAt: '2026-11-13T18:00:55Z'
     ChecksPage:
       type: object
@@ -1725,7 +1725,6 @@ components:
           attempt: 1
           studentId: student-001
           assignmentId: demo
-          criteriaVersion: 2026-10-14.1
           status: completed
           acceptedAt: '2026-10-14T18:00:20Z'
           startedAt: '2026-10-14T18:00:21Z'

@@ -40,9 +40,9 @@ Loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, mapping)
 Loader.add_constructor("tag:yaml.org,2002:timestamp", lambda loader, node: loader.construct_scalar(node))
 
 
-def load_yaml(path: Path, *, metadata=False):
+def load_yaml(path: Path, *, metadata=False, max_bytes=4 * 1024 * 1024):
     try:
-        if path.stat().st_size > 4 * 1024 * 1024:
+        if path.stat().st_size > max_bytes:
             raise InputError(f"Слишком большой YAML: {path.name}")
         text = path.read_text(encoding="utf-8-sig")
         # Metadata may contain aliases; reject them to avoid cycles and expansion bombs.

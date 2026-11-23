@@ -1,10 +1,9 @@
-# Проект развёртывания: модуль element_check_service и SERVICE_IMAGE ещё не реализованы.
+# Single-host deployment. Build and pin SERVICE_IMAGE before production use.
 # Проверка без запуска: docker compose --env-file .env.example -f compose.yaml config --quiet
 name: element-autocheck
 
 x-service: &service
-  image: ${SERVICE_IMAGE:-element-checker/service:review-placeholder}
-  init: true
+  image: ${SERVICE_IMAGE:-element-checker/service:local}
   read_only: true
   restart: unless-stopped
   cap_drop: [ALL]
@@ -22,6 +21,8 @@ x-db-env: &db-env
   DB_USER: autocheck
   DB_PASSWORD_FILE: /run/secrets/db_password
   SERVICE_CONFIG: /etc/autocheck/service.yaml
+  DEFAULT_MAX_CONCURRENT_CHECKS: ${DEFAULT_MAX_CONCURRENT_CHECKS:-2}
+  MAX_CONCURRENT_CHECKS_HARD_LIMIT: ${MAX_CONCURRENT_CHECKS_HARD_LIMIT:-8}
 
 services:
   postgres:
@@ -117,6 +118,7 @@ services:
       ELEMENT_TEST_INTEGRATION_CONFIG: /opt/element-test/config/integration.json
       INTEGRATION_PASSWORD_FILE: /run/secrets/integration_password
       DOCKER_HOST: unix:///var/run/docker.sock
+      ENGINE_IMAGE_DIGEST: ${ENGINE_IMAGE_DIGEST:-}
       DEFAULT_MAX_CONCURRENT_CHECKS: ${DEFAULT_MAX_CONCURRENT_CHECKS:-2}
       MAX_CONCURRENT_CHECKS_HARD_LIMIT: ${MAX_CONCURRENT_CHECKS_HARD_LIMIT:-8}
     secrets: [db_password, integration_password]
@@ -177,7 +179,7 @@ services:
     stop_grace_period: 30s
 
   gateway:
-    image: ${NGINX_IMAGE:-nginx:stable-alpine}
+    image: ${NGINX_IMAGE:-nginx:stable-alpine@sha256:ed84151ed2d47ef93c0939eb9b9754c6990db6092cd2081e11988a47a83d47ea}
     restart: unless-stopped
     user: "101:101"
     read_only: true
@@ -199,7 +201,7 @@ services:
     cpus: 0.5
     pids_limit: 128
     healthcheck:
-      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/gateway-health]
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/health/ready]
       interval: 10s
       timeout: 3s
       retries: 3

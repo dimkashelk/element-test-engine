@@ -1,0 +1,56 @@
+# Linux/systemd shared host. All services AND transient executors share one slice.
+# Use together with compose.yaml; create autocheck.slice before starting containers.
+x-budget: &budget
+  cgroup_parent: autocheck.slice
+  cpu_shares: 128
+  oom_score_adj: 500
+
+services:
+  postgres:
+    <<: *budget
+    command: [postgres, -c, shared_buffers=32MB, -c, max_connections=30, -c, work_mem=2MB, -c, maintenance_work_mem=32MB]
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.35
+  migrate:
+    <<: *budget
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.25
+  api:
+    <<: *budget
+    mem_limit: 160m
+    memswap_limit: 160m
+    cpus: 0.35
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+  worker:
+    <<: *budget
+    environment:
+      AUTOCHECK_CGROUP_PARENT: autocheck.slice
+      DEFAULT_MAX_CONCURRENT_CHECKS: "1"
+      MAX_CONCURRENT_CHECKS_HARD_LIMIT: "1"
+      ELEMENT_TEST_RUNTIME_TIMEOUT: 30s
+    mem_limit: 768m
+    memswap_limit: 768m
+    cpus: 0.70
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+  notifier:
+    <<: *budget
+    mem_limit: 96m
+    memswap_limit: 96m
+    cpus: 0.15
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+  gateway:
+    <<: *budget
+    mem_limit: 32m
+    memswap_limit: 32m
+    cpus: 0.15
+    healthcheck:
+      interval: 30s
+      timeout: 10s

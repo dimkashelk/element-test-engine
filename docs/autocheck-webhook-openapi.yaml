@@ -1,9 +1,9 @@
-# Проект контракта для согласования. Приложение пока не реализовано.
+# Contract for the receiving LK endpoint. Sender is implemented in element_check_service.
 openapi: 3.0.3
 info:
   title: 'ЛК: приём события автопроверки'
   version: 1.0.0
-  description: Этот endpoint реализуется в ЛК, не в микросервисе. Фактический URL настроен оператором по clientId.
+  description: Этот endpoint реализуется в ЛК, не в микросервисе. Фактический URL передаётся в webhookUrl запроса reservation; HMAC-ключ настроен по clientId.
     HMAC, сверка eventId и timestamp проверяются совместно; четыре заголовка обязательны.
 servers:
 - url: https://lk.example.edu

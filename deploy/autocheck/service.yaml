@@ -1,4 +1,4 @@
-# Предлагаемый контракт конфигурации, который должен реализовать будущий сервис.
+# Static service configuration; dynamic concurrency/pause live in PostgreSQL.
 schemaVersion: "1.0"
 admission:
   reservationTtlSeconds: 120
@@ -10,9 +10,9 @@ admission:
   acceptedStartDeadlineSeconds: 10
   retryAfterSeconds: 5
 limits:
-  maxRequestBytes: 33554432
+  maxRequestBytes: 41943040
   maxDumpBytes: 25165824
-  maxCriteriaBytes: 4194304
+  maxCriteriaBytes: 10485760
   maxCriteriaExpandedBytes: 16777216
   maxCriteriaFiles: 256
   maxExpandedChecks: 1000
@@ -28,6 +28,7 @@ execution:
   cleanupIntervalSeconds: 5
   dockerLabelNamespace: element.autocheck
 delivery:
+  enabled: true
   connectTimeoutSeconds: 3
   requestTimeoutSeconds: 10
   maxConcurrentRequests: 4

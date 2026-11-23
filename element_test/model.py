@@ -55,7 +55,8 @@ def _analyze_single(root):
     diagnostics, elements, modules, subsystems, service_files = [], [], [], [], []
     digest = sha256()
     for path in paths:
-        relative = path.relative_to(root).as_posix()
+        relative_path = path.relative_to(root)
+        relative = relative_path.as_posix()
         content = path.read_bytes()
         digest.update(relative.encode() + b"\0" + content + b"\0")
         if path.suffix not in {".yaml", ".xbsl"}:
@@ -72,16 +73,21 @@ def _analyze_single(root):
             data = load_yaml(path, metadata=True)
         except InputError as exc:
             raise InputError(f"{relative}: {exc}") from exc
-        namespace = "::".join(path.relative_to(root).parts[:-1])
+        namespace = "::".join(relative_path.parts[:-1])
         if path.name == "Подсистема.yaml":
             subsystems.append({"name": path.parent.name, "namespace": namespace, "properties": data,
                                "sourceFile": relative})
             continue
-        if path.name in {"Ресурсы.yaml", "ЛокализованныеСтроки.yaml"}:
-            service_files.append({"kind": path.stem, "sourceFile": relative, "properties": data})
-        if path.name == "Ресурсы.yaml" or (path.name == "ЛокализованныеСтроки.yaml"
-                                            and "ВидЭлемента" not in data):
-            continue
+        is_translation = (
+            relative_path.parts[-3:-2] == ("Локализация",)
+            and bool(data)
+            and data.keys() <= {"Строки", "Шаблоны"}
+        )
+        if is_translation or path.name in {"Ресурсы.yaml", "ЛокализованныеСтроки.yaml"}:
+            service_kind = "ЛокализованныеСтроки" if is_translation else path.stem
+            service_files.append({"kind": service_kind, "sourceFile": relative, "properties": data})
+            if is_translation or path.name == "Ресурсы.yaml" or "ВидЭлемента" not in data:
+                continue
         name, kind = data.get("Имя"), data.get("ВидЭлемента")
         if not isinstance(name, str) or not isinstance(kind, str):
             raise InputError(f"{relative}: требуются Имя и ВидЭлемента")

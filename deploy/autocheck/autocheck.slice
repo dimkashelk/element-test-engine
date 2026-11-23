@@ -1,0 +1,17 @@
+[Unit]
+Description=Autocheck aggregate resource budget (Moodle remains outside)
+
+[Slice]
+CPUAccounting=yes
+CPUQuota=100%
+CPUWeight=20
+MemoryAccounting=yes
+MemoryHigh=1792M
+MemoryMax=2048M
+MemorySwapMax=0
+IOAccounting=yes
+IOWeight=10
+TasksMax=768
+
+[Install]
+WantedBy=multi-user.target

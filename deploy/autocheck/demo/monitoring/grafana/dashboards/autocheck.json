@@ -1,0 +1,393 @@
+{
+  "title": "Автопроверка 1С:Элемент",
+  "uid": "autocheck-demo",
+  "tags": [
+    "autocheck"
+  ],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "refresh": "5s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Шлюз Nginx",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "probe_success{job=\"autocheck-gateway\"} or vector(0)",
+          "legendFormat": "Доступность",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Реплики API",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(up{job=\"autocheck-api\"}) or vector(0)",
+          "legendFormat": "Готово",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Воркеры",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max(element_autocheck_ready_processes{role=\"worker\"}) or vector(0)",
+          "legendFormat": "Готово",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Приём работ",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max(element_autocheck_admission_open) or vector(0)",
+          "legendFormat": "Открыт",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 5,
+      "title": "HTTP-запросы по кодам",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (status) (rate(element_autocheck_http_requests_total{route!~\"/metrics|/health/.*\"}[1m]))",
+          "legendFormat": "{{status}}",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Запросы к /v1/capacity по репликам",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (instance) (rate(element_autocheck_http_requests_total{route=\"/v1/capacity\"}[1m]))",
+          "legendFormat": "{{instance}}",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Слоты автопроверки",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(max by (state) (element_autocheck_slots))",
+          "legendFormat": "Занято",
+          "instant": false,
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "max(element_autocheck_slot_limit)",
+          "legendFormat": "Лимит",
+          "instant": false,
+          "range": true
+        },
+        {
+          "refId": "C",
+          "expr": "max by (state) (element_autocheck_slots{state=~\"running|finalizing\"})",
+          "legendFormat": "{{state}}",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Задержка HTTP по маршрутам, средняя",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (route) (rate(element_autocheck_http_duration_seconds_sum{route!~\"/metrics|/health/.*\"}[1m])) / sum by (route) (rate(element_autocheck_http_requests_total{route!~\"/metrics|/health/.*\"}[1m])) > 0",
+          "legendFormat": "{{route}}",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Результаты работ по состояниям",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (state) (element_autocheck_checks)",
+          "legendFormat": "{{state}}",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Свободное место для артефактов",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "autocheck-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 20,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "min(element_autocheck_disk_free_bytes)",
+          "legendFormat": "Доступно",
+          "instant": false,
+          "range": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1625 @@
+name: Документы — полная структура эталона
+checks:
+- id: counterparties_module
+  type: module
+  module: Контрагенты
+  namespace: CRM
+  points: 1
+  failureExplanation: В пространстве CRM должен присутствовать модуль Контрагенты.xbsl.
+- id: persons_module
+  type: module
+  module: ФизическиеЛица
+  namespace: CRM
+  points: 1
+  failureExplanation: В пространстве CRM должен присутствовать модуль ФизическиеЛица.xbsl.
+- id: project_module
+  type: module
+  module: Проект
+  namespace: ''
+  points: 1
+  failureExplanation: В пространстве корня проекта должен присутствовать модуль Проект.xbsl.
+- id: units_module
+  type: module
+  module: ЕдиницыИзмерения
+  namespace: Товары
+  points: 1
+  failureExplanation: В пространстве Товары должен присутствовать модуль ЕдиницыИзмерения.xbsl.
+- id: products_module
+  type: module
+  module: Номенклатура
+  namespace: Товары
+  points: 1
+  failureExplanation: В пространстве Товары должен присутствовать модуль Номенклатура.xbsl.
+- id: warehouses_module
+  type: module
+  module: Склады
+  namespace: Товары
+  points: 1
+  failureExplanation: В пространстве Товары должен присутствовать модуль Склады.xbsl.
+- id: bank_account_module
+  type: module
+  module: БанковскийСчет
+  namespace: Финансы
+  points: 1
+  failureExplanation: В пространстве Финансы должен присутствовать модуль БанковскийСчет.xbsl.
+- id: counterparties_exists
+  type: element
+  name: CRM::Контрагенты
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме CRM должен быть объект Контрагенты вида Справочник.
+- id: counterparties_visibility
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта CRM::Контрагенты задайте ОбластьВидимости: ВПроекте.'
+- id: counterparties_hierarchy
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У объекта CRM::Контрагенты задайте Иерархический: Истина.'
+- id: counterparties_field_1
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В объекте CRM::Контрагенты должен быть реквизит Наименование.
+- id: counterparties_field_2
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  points: 1
+  failureExplanation: В объекте CRM::Контрагенты должен быть реквизит ИНН типа Число.
+  expectedType: Число
+- id: counterparties_field_2_precision
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У реквизита CRM::Контрагенты.ИНН задайте ДлинаЦелойЧасти: 10.'
+- id: counterparties_field_3
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  points: 1
+  failureExplanation: В объекте CRM::Контрагенты должен быть реквизит КПП типа Число.
+  expectedType: Число
+- id: counterparties_field_3_precision
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  properties:
+    ДлинаЦелойЧасти: 9
+  points: 1
+  failureExplanation: 'У реквизита CRM::Контрагенты.КПП задайте ДлинаЦелойЧасти: 9.'
+- id: counterparties_field_4
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ТипКонтрагента
+  points: 1
+  failureExplanation: В объекте CRM::Контрагенты должен быть реквизит ТипКонтрагента
+    типа Строка.
+  expectedType: Строка
+- id: deal_exists
+  type: element
+  name: CRM::Сделка
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме CRM должен быть объект Сделка вида Документ.
+- id: deal_visibility
+  type: element
+  name: CRM::Сделка
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта CRM::Сделка задайте ОбластьВидимости: ВПроекте.'
+- id: deal_field_1
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит Дата типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: deal_field_2
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит Номер типа Строка.
+  expectedType: Строка
+- id: deal_field_2_length
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 12
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Номер задайте Длина: 12.'
+- id: deal_field_2_periodicity
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Номер задайте Периодичность: Год.'
+- id: deal_field_2_unique
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Номер задайте Уникальность: Истина.'
+- id: deal_field_2_numbering
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 5
+      Использовать: true
+      Постфикс: CRM
+      Префикс: СК
+      Формат:
+        ДлинаПостфикса: 3
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Номер задайте Автонумерация: {"ДлинаНумерации":
+    5, "Использовать": true, "Постфикс": "CRM", "Префикс": "СК", "Формат": {"ДлинаПостфикса":
+    3, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: deal_field_3
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Клиент
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит Клиент типа Контрагенты.Ссылка?.
+  expectedType: Контрагенты.Ссылка?
+- id: deal_field_4
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: СтатусСделки
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит СтатусСделки типа
+    Строка.
+  expectedType: Строка
+- id: deal_field_4_default
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: СтатусСделки
+  properties:
+    ЗначениеПоУмолчанию: Новая
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.СтатусСделки задайте ЗначениеПоУмолчанию:
+    Новая.'
+- id: deal_field_5
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит Сумма типа Число.
+  expectedType: Число
+- id: deal_field_5_scale
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Сумма задайте ДлинаДробнойЧасти: 2.'
+- id: deal_field_5_minimum
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Сумма задайте МинимальноеЗначение:
+    0.'
+- id: deal_field_6
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: ДатаЗакрытия
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит ДатаЗакрытия типа
+    ДатаВремя.
+  expectedType: ДатаВремя
+- id: deal_field_7
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Архивный
+  points: 1
+  failureExplanation: В объекте CRM::Сделка должен быть реквизит Архивный типа Булево.
+  expectedType: Булево
+- id: deal_field_7_default
+  type: field
+  element: CRM::Сделка
+  collection: Реквизиты
+  field: Архивный
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: 'У реквизита CRM::Сделка.Архивный задайте ЗначениеПоУмолчанию:
+    Ложь.'
+- id: persons_exists
+  type: element
+  name: CRM::ФизическиеЛица
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме CRM должен быть объект ФизическиеЛица вида Справочник.
+- id: persons_visibility
+  type: element
+  name: CRM::ФизическиеЛица
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта CRM::ФизическиеЛица задайте ОбластьВидимости: ВПодсистеме.'
+- id: persons_field_1
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  points: 1
+  failureExplanation: В объекте CRM::ФизическиеЛица должен быть реквизит Фамилия типа
+    Строка.
+  expectedType: Строка
+- id: persons_field_1_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Фамилия задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: persons_field_2
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  points: 1
+  failureExplanation: В объекте CRM::ФизическиеЛица должен быть реквизит Имя типа
+    Строка.
+  expectedType: Строка
+- id: persons_field_2_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Имя задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: persons_field_3
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  points: 1
+  failureExplanation: В объекте CRM::ФизическиеЛица должен быть реквизит Отчество
+    типа Строка.
+  expectedType: Строка
+- id: persons_field_3_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  properties:
+    НезаполненноеЗначение: Разрешить
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Отчество задайте НезаполненноеЗначение:
+    Разрешить.'
+- id: persons_field_4
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Телефон
+  points: 1
+  failureExplanation: В объекте CRM::ФизическиеЛица должен быть реквизит Телефон типа
+    Строка.
+  expectedType: Строка
+- id: persons_field_5
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Почта
+  points: 1
+  failureExplanation: В объекте CRM::ФизическиеЛица должен быть реквизит Почта типа
+    Строка.
+  expectedType: Строка
+- id: order_exists
+  type: element
+  name: Продажи::Заказ
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Продажи должен быть объект Заказ вида Документ.
+- id: order_visibility
+  type: element
+  name: Продажи::Заказ
+  properties:
+    ОбластьВидимости: ВПроекте
+  points: 1
+  failureExplanation: 'У объекта Продажи::Заказ задайте ОбластьВидимости: ВПроекте.'
+- id: order_imports
+  type: element
+  name: Продажи::Заказ
+  properties:
+    Импорт:
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Продажи::Заказ задайте Импорт: ["CRM"].'
+- id: order_field_1
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит Дата типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: order_field_2
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит Номер типа Строка.
+  expectedType: Строка
+- id: order_field_2_length
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.Номер задайте Длина: 13.'
+- id: order_field_2_periodicity
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.Номер задайте Периодичность: Год.'
+- id: order_field_2_unique
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.Номер задайте Уникальность: Истина.'
+- id: order_field_2_numbering
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 7
+      Использовать: true
+      Постфикс: ПР
+      Префикс: ЗК
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.Номер задайте Автонумерация: {"ДлинаНумерации":
+    7, "Использовать": true, "Постфикс": "ПР", "Префикс": "ЗК", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: order_field_3
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Клиент
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит Клиент типа Контрагенты.Ссылка?.
+  expectedType: Контрагенты.Ссылка?
+- id: order_field_4
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: СтатусЗаказа
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит СтатусЗаказа типа
+    Строка.
+  expectedType: Строка
+- id: order_field_4_required
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: СтатусЗаказа
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.СтатусЗаказа задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: order_field_5
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: ДатаДоставки
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит ДатаДоставки типа
+    ДатаВремя.
+  expectedType: ДатаВремя
+- id: order_field_6
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: АдресДоставки
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит АдресДоставки
+    типа Строка.
+  expectedType: Строка
+- id: order_field_7
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Сделка
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит Сделка типа Сделка.Ссылка?.
+  expectedType: Сделка.Ссылка?
+- id: order_field_8
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Архивный
+  points: 1
+  failureExplanation: В объекте Продажи::Заказ должен быть реквизит Архивный типа
+    Булево.
+  expectedType: Булево
+- id: order_field_8_default
+  type: field
+  element: Продажи::Заказ
+  collection: Реквизиты
+  field: Архивный
+  properties:
+    ЗначениеПоУмолчанию: false
+  points: 1
+  failureExplanation: 'У реквизита Продажи::Заказ.Архивный задайте ЗначениеПоУмолчанию:
+    Ложь.'
+- id: units_exists
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть объект ЕдиницыИзмерения вида
+    Справочник.
+- id: units_visibility
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::ЕдиницыИзмерения задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: units_field_1
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В объекте Товары::ЕдиницыИзмерения должен быть реквизит Наименование.
+- id: units_field_2
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: ТипЕдиницыИзмерения
+  points: 1
+  failureExplanation: В объекте Товары::ЕдиницыИзмерения должен быть реквизит ТипЕдиницыИзмерения
+    типа Строка.
+  expectedType: Строка
+- id: products_exists
+  type: element
+  name: Товары::Номенклатура
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть объект Номенклатура вида Справочник.
+- id: products_visibility
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::Номенклатура задайте ОбластьВидимости: ВПодсистеме.'
+- id: products_hierarchy
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У объекта Товары::Номенклатура задайте Иерархический: Истина.'
+- id: products_field_1
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В объекте Товары::Номенклатура должен быть реквизит Наименование.
+- id: products_field_2
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  points: 1
+  failureExplanation: В объекте Товары::Номенклатура должен быть реквизит Цена типа
+    Число.
+  expectedType: Число
+- id: products_field_2_scale
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ДлинаДробнойЧасти:
+    2.'
+- id: products_field_2_precision
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ДлинаЦелойЧасти:
+    10.'
+- id: products_field_2_maximum
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МаксимальноеЗначение: 1000000000
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте МаксимальноеЗначение:
+    1000000000.'
+- id: products_field_2_minimum
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте МинимальноеЗначение:
+    0.'
+- id: products_field_2_default
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ЗначениеПоУмолчанию: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ЗначениеПоУмолчанию:
+    0.'
+- id: products_field_3
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  points: 1
+  failureExplanation: В объекте Товары::Номенклатура должен быть реквизит ЕдиницаИзмерения
+    типа ЕдиницыИзмерения.Ссылка?.
+  expectedType: ЕдиницыИзмерения.Ссылка?
+- id: products_field_3_required
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.ЕдиницаИзмерения задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: shipment_exists
+  type: element
+  name: Товары::Отгрузка
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть объект Отгрузка вида Документ.
+- id: shipment_visibility
+  type: element
+  name: Товары::Отгрузка
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::Отгрузка задайте ОбластьВидимости: ВПодсистеме.'
+- id: shipment_imports
+  type: element
+  name: Товары::Отгрузка
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Товары::Отгрузка задайте Импорт: ["Продажи", "CRM"].'
+- id: shipment_interface
+  type: element
+  name: Товары::Отгрузка
+  properties:
+    Интерфейс:
+      ВключатьВАвтоИнтерфейс: true
+      ИспользоватьСозданиеПриВводе: true
+  points: 1
+  failureExplanation: 'У объекта Товары::Отгрузка задайте Интерфейс: {"ВключатьВАвтоИнтерфейс":
+    true, "ИспользоватьСозданиеПриВводе": true}.'
+- id: shipment_field_1
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Товары::Отгрузка должен быть реквизит Дата типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: shipment_field_2
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Товары::Отгрузка должен быть реквизит Номер типа Строка.
+  expectedType: Строка
+- id: shipment_field_2_length
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номер задайте Длина: 13.'
+- id: shipment_field_2_periodicity
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номер задайте Периодичность: Год.'
+- id: shipment_field_2_number_series
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номер задайте СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: shipment_field_2_unique
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номер задайте Уникальность: Истина.'
+- id: shipment_field_2_numbering
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ТВ
+      Префикс: ОТГ
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номер задайте Автонумерация: {"Использовать":
+    true, "Постфикс": "ТВ", "Префикс": "ОТГ", "Формат": {"ДлинаПостфикса": 2, "ДлинаПрефикса":
+    3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: shipment_field_3
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Склад
+  points: 1
+  failureExplanation: В объекте Товары::Отгрузка должен быть реквизит Склад типа Склады.Ссылка?.
+  expectedType: Склады.Ссылка?
+- id: shipment_field_3_required
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Склад
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Склад задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: shipment_field_4
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номенклатура
+  points: 1
+  failureExplanation: В объекте Товары::Отгрузка должен быть реквизит Номенклатура
+    типа Номенклатура.Ссылка?.
+  expectedType: Номенклатура.Ссылка?
+- id: shipment_field_4_required
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Номенклатура
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Номенклатура задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: shipment_field_5
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Количество
+  points: 1
+  failureExplanation: В объекте Товары::Отгрузка должен быть реквизит Количество типа
+    Число.
+  expectedType: Число
+- id: shipment_field_5_required
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Количество
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Количество задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: shipment_field_5_minimum
+  type: field
+  element: Товары::Отгрузка
+  collection: Реквизиты
+  field: Количество
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::Отгрузка.Количество задайте МинимальноеЗначение:
+    0.'
+- id: receipt_exists
+  type: element
+  name: Товары::ПоступлениеТоваров
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть объект ПоступлениеТоваров вида
+    Документ.
+- id: receipt_visibility
+  type: element
+  name: Товары::ПоступлениеТоваров
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::ПоступлениеТоваров задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: receipt_imports
+  type: element
+  name: Товары::ПоступлениеТоваров
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Товары::ПоступлениеТоваров задайте Импорт: ["Продажи",
+    "CRM"].'
+- id: receipt_interface
+  type: element
+  name: Товары::ПоступлениеТоваров
+  properties:
+    Интерфейс:
+      ВключатьВАвтоИнтерфейс: true
+      ИспользоватьСозданиеПриВводе: true
+  points: 1
+  failureExplanation: 'У объекта Товары::ПоступлениеТоваров задайте Интерфейс: {"ВключатьВАвтоИнтерфейс":
+    true, "ИспользоватьСозданиеПриВводе": true}.'
+- id: receipt_field_1
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Товары::ПоступлениеТоваров должен быть реквизит Дата
+    типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: receipt_field_2
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Товары::ПоступлениеТоваров должен быть реквизит Номер
+    типа Строка.
+  expectedType: Строка
+- id: receipt_field_2_length
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 12
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номер задайте Длина:
+    12.'
+- id: receipt_field_2_periodicity
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номер задайте Периодичность:
+    Год.'
+- id: receipt_field_2_number_series
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номер задайте СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: receipt_field_2_unique
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номер задайте Уникальность:
+    Истина.'
+- id: receipt_field_2_numbering
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ТВ
+      Префикс: ПТ
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 2
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номер задайте Автонумерация:
+    {"Использовать": true, "Постфикс": "ТВ", "Префикс": "ПТ", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 2, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: receipt_field_3
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Склад
+  points: 1
+  failureExplanation: В объекте Товары::ПоступлениеТоваров должен быть реквизит Склад
+    типа Склады.Ссылка?.
+  expectedType: Склады.Ссылка?
+- id: receipt_field_3_required
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Склад
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Склад задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: receipt_field_4
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номенклатура
+  points: 1
+  failureExplanation: В объекте Товары::ПоступлениеТоваров должен быть реквизит Номенклатура
+    типа Номенклатура.Ссылка?.
+  expectedType: Номенклатура.Ссылка?
+- id: receipt_field_4_required
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Номенклатура
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Номенклатура задайте
+    НезаполненноеЗначение: ЗапретитьВсегда.'
+- id: receipt_field_5
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Количество
+  points: 1
+  failureExplanation: В объекте Товары::ПоступлениеТоваров должен быть реквизит Количество
+    типа Число.
+  expectedType: Число
+- id: receipt_field_5_required
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Количество
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Количество задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: receipt_field_5_minimum
+  type: field
+  element: Товары::ПоступлениеТоваров
+  collection: Реквизиты
+  field: Количество
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::ПоступлениеТоваров.Количество задайте МинимальноеЗначение:
+    0.'
+- id: warehouses_exists
+  type: element
+  name: Товары::Склады
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть объект Склады вида Справочник.
+- id: warehouses_visibility
+  type: element
+  name: Товары::Склады
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Товары::Склады задайте ОбластьВидимости: ВПодсистеме.'
+- id: warehouses_field_1
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В объекте Товары::Склады должен быть реквизит Наименование.
+- id: warehouses_field_2
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: АдресСклада
+  points: 1
+  failureExplanation: В объекте Товары::Склады должен быть реквизит АдресСклада типа
+    Строка.
+  expectedType: Строка
+- id: bank_account_exists
+  type: element
+  name: Финансы::БанковскийСчет
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Финансы должен быть объект БанковскийСчет вида
+    Справочник.
+- id: bank_account_visibility
+  type: element
+  name: Финансы::БанковскийСчет
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::БанковскийСчет задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: bank_account_field_1
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В объекте Финансы::БанковскийСчет должен быть реквизит Наименование.
+- id: bank_account_field_2
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  points: 1
+  failureExplanation: В объекте Финансы::БанковскийСчет должен быть реквизит НомерСчета
+    типа Число.
+  expectedType: Число
+- id: bank_account_field_2_precision
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  properties:
+    ДлинаЦелойЧасти: 20
+  points: 1
+  failureExplanation: 'У реквизита Финансы::БанковскийСчет.НомерСчета задайте ДлинаЦелойЧасти:
+    20.'
+- id: cash_receipt_exists
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Финансы должен быть объект ПоступлениеДенежныхСредств
+    вида Документ.
+- id: cash_receipt_visibility
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::ПоступлениеДенежныхСредств задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: cash_receipt_imports
+  type: element
+  name: Финансы::ПоступлениеДенежныхСредств
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::ПоступлениеДенежныхСредств задайте Импорт:
+    ["Продажи", "CRM"].'
+- id: cash_receipt_field_1
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    Дата типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: cash_receipt_field_2
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    Номер типа Строка.
+  expectedType: Строка
+- id: cash_receipt_field_2_length
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Номер задайте
+    Длина: 13.'
+- id: cash_receipt_field_2_periodicity
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Номер задайте
+    Периодичность: Год.'
+- id: cash_receipt_field_2_number_series
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Номер задайте
+    СерииНумерации: ["Префикс", "Постфикс"].'
+- id: cash_receipt_field_2_unique
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Номер задайте
+    Уникальность: Истина.'
+- id: cash_receipt_field_2_numbering
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ФН
+      Префикс: ПДС
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Номер задайте
+    Автонумерация: {"Использовать": true, "Постфикс": "ФН", "Префикс": "ПДС", "Формат":
+    {"ДлинаПостфикса": 2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/", "РазделительПрефикса":
+    "-"}}.'
+- id: cash_receipt_field_3
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Основание
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    Основание типа Заказ.Ссылка|СчетНаОплату.Ссылка|?.
+  expectedType: Заказ.Ссылка|СчетНаОплату.Ссылка|?
+- id: cash_receipt_field_4
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    Клиент типа Контрагенты.Ссылка?.
+  expectedType: Контрагенты.Ссылка?
+- id: cash_receipt_field_4_required
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Клиент задайте
+    НезаполненноеЗначение: ЗапретитьВсегда.'
+- id: cash_receipt_field_5
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    Сумма типа Число.
+  expectedType: Число
+- id: cash_receipt_field_5_scale
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Сумма задайте
+    ДлинаДробнойЧасти: 2.'
+- id: cash_receipt_field_5_minimum
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.Сумма задайте
+    МинимальноеЗначение: 0.'
+- id: cash_receipt_field_6
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  points: 1
+  failureExplanation: В объекте Финансы::ПоступлениеДенежныхСредств должен быть реквизит
+    ТипОплаты типа Строка.
+  expectedType: Строка
+- id: cash_receipt_field_6_required
+  type: field
+  element: Финансы::ПоступлениеДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::ПоступлениеДенежныхСредств.ТипОплаты задайте
+    НезаполненноеЗначение: ЗапретитьВсегда.'
+- id: cash_expense_exists
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Финансы должен быть объект РасходДенежныхСредств
+    вида Документ.
+- id: cash_expense_visibility
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::РасходДенежныхСредств задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: cash_expense_imports
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::РасходДенежныхСредств задайте Импорт: ["Продажи",
+    "CRM"].'
+- id: cash_expense_interface
+  type: element
+  name: Финансы::РасходДенежныхСредств
+  properties:
+    Интерфейс:
+      ВключатьВАвтоИнтерфейс: true
+      ИспользоватьСозданиеПриВводе: true
+  points: 1
+  failureExplanation: 'У объекта Финансы::РасходДенежныхСредств задайте Интерфейс:
+    {"ВключатьВАвтоИнтерфейс": true, "ИспользоватьСозданиеПриВводе": true}.'
+- id: cash_expense_field_1
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Финансы::РасходДенежныхСредств должен быть реквизит
+    Дата типа ДатаВремя.
+  expectedType: ДатаВремя
+- id: cash_expense_field_2
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Финансы::РасходДенежныхСредств должен быть реквизит
+    Номер типа Строка.
+  expectedType: Строка
+- id: cash_expense_field_2_length
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Номер задайте Длина:
+    13.'
+- id: cash_expense_field_2_periodicity
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Номер задайте Периодичность:
+    Год.'
+- id: cash_expense_field_2_number_series
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Номер задайте СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: cash_expense_field_2_unique
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Номер задайте Уникальность:
+    Истина.'
+- id: cash_expense_field_2_numbering
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      Использовать: true
+      Постфикс: ФН
+      Префикс: РДС
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Номер задайте Автонумерация:
+    {"Использовать": true, "Постфикс": "ФН", "Префикс": "РДС", "Формат": {"ДлинаПостфикса":
+    2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/", "РазделительПрефикса": "-"}}.'
+- id: cash_expense_field_3
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  points: 1
+  failureExplanation: В объекте Финансы::РасходДенежныхСредств должен быть реквизит
+    Клиент типа Контрагенты.Ссылка?.
+  expectedType: Контрагенты.Ссылка?
+- id: cash_expense_field_3_required
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Клиент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Клиент задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: cash_expense_field_4
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  points: 1
+  failureExplanation: В объекте Финансы::РасходДенежныхСредств должен быть реквизит
+    Сумма типа Число.
+  expectedType: Число
+- id: cash_expense_field_4_scale
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Сумма задайте ДлинаДробнойЧасти:
+    2.'
+- id: cash_expense_field_4_minimum
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.Сумма задайте МинимальноеЗначение:
+    0.'
+- id: cash_expense_field_5
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  points: 1
+  failureExplanation: В объекте Финансы::РасходДенежныхСредств должен быть реквизит
+    ТипОплаты типа Строка.
+  expectedType: Строка
+- id: cash_expense_field_5_required
+  type: field
+  element: Финансы::РасходДенежныхСредств
+  collection: Реквизиты
+  field: ТипОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::РасходДенежныхСредств.ТипОплаты задайте
+    НезаполненноеЗначение: ЗапретитьВсегда.'
+- id: invoice_exists
+  type: element
+  name: Финансы::СчетНаОплату
+  elementType: Документ
+  points: 1
+  failureExplanation: В подсистеме Финансы должен быть объект СчетНаОплату вида Документ.
+- id: invoice_visibility
+  type: element
+  name: Финансы::СчетНаОплату
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У объекта Финансы::СчетНаОплату задайте ОбластьВидимости: ВПодсистеме.'
+- id: invoice_imports
+  type: element
+  name: Финансы::СчетНаОплату
+  properties:
+    Импорт:
+    - Продажи
+    - CRM
+  points: 1
+  failureExplanation: 'У объекта Финансы::СчетНаОплату задайте Импорт: ["Продажи",
+    "CRM"].'
+- id: invoice_field_1
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Дата
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит Дата типа
+    ДатаВремя.
+  expectedType: ДатаВремя
+- id: invoice_field_2
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит Номер типа
+    Строка.
+  expectedType: Строка
+- id: invoice_field_2_length
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Длина: 13
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Номер задайте Длина: 13.'
+- id: invoice_field_2_periodicity
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Периодичность: Год
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Номер задайте Периодичность:
+    Год.'
+- id: invoice_field_2_number_series
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    СерииНумерации:
+    - Префикс
+    - Постфикс
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Номер задайте СерииНумерации:
+    ["Префикс", "Постфикс"].'
+- id: invoice_field_2_unique
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Уникальность: true
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Номер задайте Уникальность:
+    Истина.'
+- id: invoice_field_2_numbering
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Номер
+  properties:
+    Автонумерация:
+      ДлинаНумерации: 6
+      Использовать: true
+      Постфикс: ФН
+      Префикс: СНО
+      Формат:
+        ДлинаПостфикса: 2
+        ДлинаПрефикса: 3
+        РазделительПостфикса: /
+        РазделительПрефикса: '-'
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Номер задайте Автонумерация:
+    {"ДлинаНумерации": 6, "Использовать": true, "Постфикс": "ФН", "Префикс": "СНО",
+    "Формат": {"ДлинаПостфикса": 2, "ДлинаПрефикса": 3, "РазделительПостфикса": "/",
+    "РазделительПрефикса": "-"}}.'
+- id: invoice_field_3
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Основание
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит Основание
+    типа Заказ.Ссылка?.
+  expectedType: Заказ.Ссылка?
+- id: invoice_field_3_required
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Основание
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Основание задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: invoice_field_4
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Контрагент
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит Контрагент
+    типа Контрагенты.Ссылка?.
+  expectedType: Контрагенты.Ссылка?
+- id: invoice_field_4_required
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Контрагент
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Контрагент задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: invoice_field_5
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит Сумма типа
+    Число.
+  expectedType: Число
+- id: invoice_field_5_scale
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Сумма задайте ДлинаДробнойЧасти:
+    2.'
+- id: invoice_field_5_minimum
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: Сумма
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.Сумма задайте МинимальноеЗначение:
+    0.'
+- id: invoice_field_6
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: СтатусОплаты
+  points: 1
+  failureExplanation: В объекте Финансы::СчетНаОплату должен быть реквизит СтатусОплаты
+    типа Строка.
+  expectedType: Строка
+- id: invoice_field_6_required
+  type: field
+  element: Финансы::СчетНаОплату
+  collection: Реквизиты
+  field: СтатусОплаты
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Финансы::СчетНаОплату.СтатусОплаты задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'

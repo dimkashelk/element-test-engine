@@ -1,0 +1,6085 @@
+{
+  "schemaVersion": 1,
+  "referenceDumpSha256": "3945476c3967316fb1968556a0b332c6bd2eff2985d1e17887e8dedeac102e30",
+  "sourceHash": "b4b34ce8656c7d18fb1f4b8a14528fa2ed176452f20af46132b3e283f36b8053",
+  "compatibility": "9.0",
+  "scope": "metadata-and-form-declarations",
+  "excluded": [
+    "browser UI",
+    "application data",
+    "platform runtime",
+    "object-level Интерфейс settings"
+  ],
+  "counts": {
+    "objects": 36,
+    "objectKinds": {
+      "Справочник": 6,
+      "КомпонентИнтерфейса": 14,
+      "Документ": 7,
+      "Перечисление": 6,
+      "НаборКонстант": 3
+    },
+    "modules": 11,
+    "methods": 0,
+    "subsystems": 5,
+    "headerFields": 56,
+    "tableSections": 5,
+    "tableFields": 20,
+    "enumValues": 21,
+    "structuralCriteria": 326,
+    "referenceLeaves": 1144,
+    "constantSets": 3,
+    "constants": 13,
+    "forms": 14,
+    "objectForms": 10,
+    "constantForms": 3,
+    "components": 187,
+    "bindings": 202,
+    "mutationCases": 1049
+  },
+  "strictSections": [
+    "project",
+    "subsystems",
+    "elements",
+    "modules",
+    "serviceFiles",
+    "diagnostics"
+  ],
+  "declarations": [
+    {
+      "identity": "CRM::Контрагенты",
+      "kind": "module",
+      "sourceFile": "CRM/Контрагенты.xbsl",
+      "checks": [
+        "criterion_001"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица",
+      "kind": "module",
+      "sourceFile": "CRM/ФизическиеЛица.xbsl",
+      "checks": [
+        "criterion_002"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Проект",
+      "kind": "module",
+      "sourceFile": "Проект.xbsl",
+      "checks": [
+        "criterion_003"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения",
+      "kind": "module",
+      "sourceFile": "Товары/ЕдиницыИзмерения.xbsl",
+      "checks": [
+        "criterion_004"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::Номенклатура",
+      "kind": "module",
+      "sourceFile": "Товары/Номенклатура.xbsl",
+      "checks": [
+        "criterion_005"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::Склады",
+      "kind": "module",
+      "sourceFile": "Товары/Склады.xbsl",
+      "checks": [
+        "criterion_006"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет",
+      "kind": "module",
+      "sourceFile": "Финансы/БанковскийСчет.xbsl",
+      "checks": [
+        "criterion_007"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "CRM::Контрагенты",
+      "kind": "Справочник",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_008",
+        "criterion_009",
+        "criterion_010"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.ИНН",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_011",
+        "criterion_012"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.КПП",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_013",
+        "criterion_014"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.Наименование",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_015"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.ТипКонтрагента",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_016"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка",
+      "kind": "Документ",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_017",
+        "criterion_018"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Архивный",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_019",
+        "criterion_020"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Дата",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_021"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ДатаЗакрытия",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_022"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Клиент",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_023"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Номер",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_024",
+        "criterion_025",
+        "criterion_026",
+        "criterion_027",
+        "criterion_028",
+        "criterion_029"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.СтатусСделки",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_030"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Сумма",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_031",
+        "criterion_032",
+        "criterion_033"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос",
+      "kind": "tableSection",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_034"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.Комментарий",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_035"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ОписаниеПотребностиКлиента",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_036"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ПричинаНеудовлетворения",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_037"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ПроцентУдовлетворения",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_038",
+        "criterion_039",
+        "criterion_040"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.Сумма",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_041",
+        "criterion_042"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники",
+      "kind": "tableSection",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_043"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.ВыигралСделку",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_044"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.Комментарий",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_045"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.Партнер",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_046"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки",
+      "kind": "Перечисление",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_047",
+        "criterion_048"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.ВРаботе",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_049",
+        "criterion_050"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Выиграна",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_051"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Заморожена",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_052"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Новая",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_053",
+        "criterion_054"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Проиграна",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_055"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента",
+      "kind": "Перечисление",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_056",
+        "criterion_057"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ИП",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_058",
+        "criterion_059"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.Самозанятый",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_060",
+        "criterion_061"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ФизЛицо",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_062",
+        "criterion_063",
+        "criterion_064"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ЮрЛицо",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_065",
+        "criterion_066"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица",
+      "kind": "Справочник",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_067",
+        "criterion_068"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Имя",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_069",
+        "criterion_070"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Отчество",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_071",
+        "criterion_072"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Почта",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_073"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Телефон",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_074"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Фамилия",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_075",
+        "criterion_076"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ",
+      "kind": "Документ",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_077",
+        "criterion_078",
+        "criterion_079"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.АдресДоставки",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_080"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Архивный",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_081",
+        "criterion_082"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Дата",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_083"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.ДатаДоставки",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_084"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Клиент",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_085"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Номер",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_086",
+        "criterion_087",
+        "criterion_088",
+        "criterion_089",
+        "criterion_090",
+        "criterion_091"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Сделка",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_092"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.СтатусЗаказа",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_093",
+        "criterion_094"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_095"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_096"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_097"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_098",
+        "criterion_099"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_100",
+        "criterion_101"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа",
+      "kind": "Перечисление",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_102",
+        "criterion_103"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.ВРаботе",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_104",
+        "criterion_105"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.Закрыт",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_106"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.Новый",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_107"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип",
+      "kind": "Перечисление",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_108",
+        "criterion_109"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Вес",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_110"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Длина",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_111"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Объем",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_112"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Штуки",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_113"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения",
+      "kind": "Справочник",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_114",
+        "criterion_115"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_116"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения.ТипЕдиницыИзмерения",
+      "kind": "field",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_117"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура",
+      "kind": "Справочник",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_118",
+        "criterion_119",
+        "criterion_120"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.ЕдиницаИзмерения",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_121",
+        "criterion_122"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_123"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_124",
+        "criterion_125",
+        "criterion_126",
+        "criterion_127",
+        "criterion_128",
+        "criterion_129"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка",
+      "kind": "Документ",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_130",
+        "criterion_131",
+        "criterion_132"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Дата",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_133"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Номер",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_134",
+        "criterion_135",
+        "criterion_136",
+        "criterion_137",
+        "criterion_138",
+        "criterion_139"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Склад",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_140",
+        "criterion_141"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_142"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_143"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_144"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_145",
+        "criterion_146"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_147",
+        "criterion_148"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров",
+      "kind": "Документ",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_149",
+        "criterion_150",
+        "criterion_151"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Дата",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_152"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Номер",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_153",
+        "criterion_154",
+        "criterion_155",
+        "criterion_156",
+        "criterion_157",
+        "criterion_158"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Склад",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_159",
+        "criterion_160"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_161"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_162"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_163"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_164",
+        "criterion_165"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_166",
+        "criterion_167"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады",
+      "kind": "Справочник",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_168",
+        "criterion_169"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады.АдресСклада",
+      "kind": "field",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_170"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_171"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет",
+      "kind": "Справочник",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_172",
+        "criterion_173"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет.Наименование",
+      "kind": "field",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_174"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет.НомерСчета",
+      "kind": "field",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_175",
+        "criterion_176"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств",
+      "kind": "Документ",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_177",
+        "criterion_178",
+        "criterion_179"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_180"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Клиент",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_181",
+        "criterion_182"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_183",
+        "criterion_184",
+        "criterion_185",
+        "criterion_186",
+        "criterion_187",
+        "criterion_188"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Основание",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_189"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_190",
+        "criterion_191",
+        "criterion_192"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.ТипОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_193",
+        "criterion_194"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств",
+      "kind": "Документ",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_195",
+        "criterion_196",
+        "criterion_197"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_198"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Клиент",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_199",
+        "criterion_200"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_201",
+        "criterion_202",
+        "criterion_203",
+        "criterion_204",
+        "criterion_205",
+        "criterion_206"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_207",
+        "criterion_208",
+        "criterion_209"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.ТипОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_210",
+        "criterion_211"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты",
+      "kind": "Перечисление",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_212",
+        "criterion_213"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.НеОплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_214",
+        "criterion_215"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.Оплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_216"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.ЧастичноОплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_217",
+        "criterion_218"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату",
+      "kind": "Документ",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_219",
+        "criterion_220",
+        "criterion_221"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_222"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Контрагент",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_223",
+        "criterion_224"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_225",
+        "criterion_226",
+        "criterion_227",
+        "criterion_228",
+        "criterion_229",
+        "criterion_230"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Основание",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_231",
+        "criterion_232"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.СтатусОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_233",
+        "criterion_234"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_235",
+        "criterion_236",
+        "criterion_237"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты",
+      "kind": "Перечисление",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_238",
+        "criterion_239"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты.Безналичные",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_240"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты.Наличные",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_241"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Движок",
+      "kind": "project",
+      "sourceFile": "Проект.yaml",
+      "checks": [],
+      "strictSection": "project"
+    },
+    {
+      "identity": "CRM",
+      "kind": "subsystems",
+      "sourceFile": "CRM/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Продажи",
+      "kind": "subsystems",
+      "sourceFile": "Продажи/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Товары",
+      "kind": "subsystems",
+      "sourceFile": "Товары/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Финансы",
+      "kind": "subsystems",
+      "sourceFile": "Финансы/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании",
+      "kind": "module",
+      "sourceFile": "Администрирование/ДанныеКомпании.xbsl",
+      "checks": [
+        "criterion_242"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Администрирование::Настройки",
+      "kind": "module",
+      "sourceFile": "Администрирование/Настройки.xbsl",
+      "checks": [
+        "criterion_243"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни",
+      "kind": "module",
+      "sourceFile": "Администрирование/РабочиеДни.xbsl",
+      "checks": [
+        "criterion_244"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании",
+      "kind": "НаборКонстант",
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "checks": [
+        "criterion_245",
+        "criterion_246"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании.ПолноеНаименование",
+      "kind": "constant",
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "checks": [
+        "criterion_247"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании.СокращенноеНаименование",
+      "kind": "constant",
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "checks": [
+        "criterion_248"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании.Телефон",
+      "kind": "constant",
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "checks": [
+        "criterion_249"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпании.ЮрАдрес",
+      "kind": "constant",
+      "sourceFile": "Администрирование/ДанныеКомпании.yaml",
+      "checks": [
+        "criterion_250"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::Настройки",
+      "kind": "НаборКонстант",
+      "sourceFile": "Администрирование/Настройки.yaml",
+      "checks": [
+        "criterion_251",
+        "criterion_252"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::Настройки.АвтоматическиАрхивироватьЗавершенныеПроцессы",
+      "kind": "constant",
+      "sourceFile": "Администрирование/Настройки.yaml",
+      "checks": [
+        "criterion_253",
+        "criterion_254"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::Настройки.РазрешитьОтрицательныеОстатки",
+      "kind": "constant",
+      "sourceFile": "Администрирование/Настройки.yaml",
+      "checks": [
+        "criterion_255",
+        "criterion_256"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни",
+      "kind": "НаборКонстант",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_257",
+        "criterion_258"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Воскресенье",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_259",
+        "criterion_260"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Вторник",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_261",
+        "criterion_262"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Понедельник",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_263",
+        "criterion_264"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Пятница",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_265",
+        "criterion_266"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Среда",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_267",
+        "criterion_268"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Суббота",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_269",
+        "criterion_270"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДни.Четверг",
+      "kind": "constant",
+      "sourceFile": "Администрирование/РабочиеДни.yaml",
+      "checks": [
+        "criterion_271",
+        "criterion_272"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование",
+      "kind": "subsystems",
+      "sourceFile": "Администрирование/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Администрирование::ФормаПриветствие",
+      "kind": "module",
+      "sourceFile": "Администрирование/ФормаПриветствие.xbsl",
+      "checks": [
+        "criterion_273"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "CRM::КонтрагентыФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "CRM/КонтрагентыФормаОбъекта.yaml",
+      "checks": [
+        "criterion_274",
+        "criterion_275",
+        "criterion_276"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СделкаФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "CRM/СделкаФормаОбъекта.yaml",
+      "checks": [
+        "criterion_277",
+        "criterion_278",
+        "criterion_279",
+        "criterion_280"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛицаФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "CRM/ФизическиеЛицаФормаОбъекта.yaml",
+      "checks": [
+        "criterion_281",
+        "criterion_282",
+        "criterion_283",
+        "criterion_284"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпанииФормаЗаписи",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Администрирование/ДанныеКомпанииФормаЗаписи.yaml",
+      "checks": [
+        "criterion_285",
+        "criterion_286",
+        "criterion_287"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::НастройкиФормаЗаписи",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Администрирование/НастройкиФормаЗаписи.yaml",
+      "checks": [
+        "criterion_288",
+        "criterion_289",
+        "criterion_290"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::РабочиеДниФормаЗаписи",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Администрирование/РабочиеДниФормаЗаписи.yaml",
+      "checks": [
+        "criterion_291",
+        "criterion_292",
+        "criterion_293"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Администрирование::ФормаПриветствие",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Администрирование/ФормаПриветствие.yaml",
+      "checks": [
+        "criterion_294",
+        "criterion_295",
+        "criterion_296",
+        "criterion_297"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::ЗаказФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Продажи/ЗаказФормаОбъекта.yaml",
+      "checks": [
+        "criterion_298",
+        "criterion_299",
+        "criterion_300",
+        "criterion_301",
+        "criterion_302"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмеренияФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Товары/ЕдиницыИзмеренияФормаОбъекта.yaml",
+      "checks": [
+        "criterion_303",
+        "criterion_304",
+        "criterion_305"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::НоменклатураФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Товары/НоменклатураФормаОбъекта.yaml",
+      "checks": [
+        "criterion_306",
+        "criterion_307",
+        "criterion_308"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ОтгрузкаФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Товары/ОтгрузкаФормаОбъекта.yaml",
+      "checks": [
+        "criterion_309",
+        "criterion_310",
+        "criterion_311",
+        "criterion_312",
+        "criterion_313"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::СкладыФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Товары/СкладыФормаОбъекта.yaml",
+      "checks": [
+        "criterion_314",
+        "criterion_315",
+        "criterion_316"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредствФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредствФормаОбъекта.yaml",
+      "checks": [
+        "criterion_317",
+        "criterion_318",
+        "criterion_319",
+        "criterion_320",
+        "criterion_321"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредствФормаОбъекта",
+      "kind": "КомпонентИнтерфейса",
+      "sourceFile": "Финансы/РасходДенежныхСредствФормаОбъекта.yaml",
+      "checks": [
+        "criterion_322",
+        "criterion_323",
+        "criterion_324",
+        "criterion_325",
+        "criterion_326"
+      ],
+      "strictSection": "elements"
+    }
+  ],
+  "forms": [
+    {
+      "identity": "CRM::КонтрагентыФормаОбъекта",
+      "baseType": "ФормаОбъекта<Контрагенты.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Контрагенты.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Родитель",
+          "type": "ПолеВвода<Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Наименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "ИНН",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "КПП",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "ТипКонтрагента",
+          "type": "ПолеВвода<ТипКонтрагента>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            2
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            3
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            4
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Родитель"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Наименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.ИНН"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.КПП"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Объект.ТипКонтрагента"
+        }
+      ]
+    },
+    {
+      "identity": "CRM::СделкаФормаОбъекта",
+      "baseType": "ФормаОбъекта<Сделка.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Сделка.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "name": null,
+          "type": "ГруппаКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Дата",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Номер",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Клиент",
+          "type": "ПолеВвода<Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "Сумма",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "ДатаЗакрытия",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5
+          ],
+          "name": null,
+          "type": "Страницы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое"
+          ],
+          "name": "Участники",
+          "type": "Таблица<ИсточникДанныхМассив<Сделка.Участники>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            0
+          ],
+          "name": "Участники_ВыигралСделку",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.Участники, Булево>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            1
+          ],
+          "name": "Участники_Партнер",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.Участники, Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            2
+          ],
+          "name": "Участники_Комментарий",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.Участники, Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Команды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Массив<Сделка.Участники>>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыСтроки"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Сделка.Участники>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое"
+          ],
+          "name": "ПервичныйСпрос",
+          "type": "Таблица<ИсточникДанныхМассив<Сделка.ПервичныйСпрос>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            0
+          ],
+          "name": "ПервичныйСпрос_ОписаниеПотребностиКлиента",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.ПервичныйСпрос, Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            1
+          ],
+          "name": "ПервичныйСпрос_Сумма",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.ПервичныйСпрос, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            2
+          ],
+          "name": "ПервичныйСпрос_ПроцентУдовлетворения",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.ПервичныйСпрос, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            3
+          ],
+          "name": "ПервичныйСпрос_ПричинаНеудовлетворения",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.ПервичныйСпрос, Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            4
+          ],
+          "name": "ПервичныйСпрос_Комментарий",
+          "type": "СтандартнаяКолонкаТаблицы<Сделка.ПервичныйСпрос, Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Команды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Массив<Сделка.ПервичныйСпрос>>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыСтроки"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Сделка.ПервичныйСпрос>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            2,
+            "Содержимое"
+          ],
+          "name": "ГруппаДополнительно",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            2,
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Архивный",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "СтатусСделки",
+          "type": "ПолеВвода<СтатусСделки>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            0
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            2
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            3
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Дата"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Номер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Клиент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Объект.ДатаЗакрытия"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Источник",
+            "Данные"
+          ],
+          "expression": "=Объект.Участники"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            0,
+            "Значение"
+          ],
+          "expression": "=RowData.ВыигралСделку"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            1,
+            "Значение"
+          ],
+          "expression": "=RowData.Партнер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Колонки",
+            2,
+            "Значение"
+          ],
+          "expression": "=RowData.Комментарий"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "Команды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Участники.ДобавитьСтроку"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Участники.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Участники.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Участники.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Участники.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Участники.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            0,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Участники.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Источник",
+            "Данные"
+          ],
+          "expression": "=Объект.ПервичныйСпрос"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            0,
+            "Значение"
+          ],
+          "expression": "=RowData.ОписаниеПотребностиКлиента"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            1,
+            "Значение"
+          ],
+          "expression": "=RowData.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            2,
+            "Значение"
+          ],
+          "expression": "=RowData.ПроцентУдовлетворения"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            3,
+            "Значение"
+          ],
+          "expression": "=RowData.ПричинаНеудовлетворения"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Колонки",
+            4,
+            "Значение"
+          ],
+          "expression": "=RowData.Комментарий"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "Команды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.ДобавитьСтроку"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            1,
+            "Содержимое",
+            "КомандыСтроки",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.ПервичныйСпрос.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            2,
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Архивный"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Страницы",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.СтатусСделки"
+        }
+      ]
+    },
+    {
+      "identity": "CRM::ФизическиеЛицаФормаОбъекта",
+      "baseType": "ФормаОбъекта<ФизическиеЛица.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<ФизическиеЛица.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Фамилия",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Имя",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Отчество",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "ГруппаТелефон",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            0
+          ],
+          "name": "ФлажокТелефонАктивен",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            1
+          ],
+          "name": "Телефон",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "ГруппаПочта",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Содержимое",
+            0
+          ],
+          "name": "ФлажокПочтаАктивна",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Содержимое",
+            1
+          ],
+          "name": "Почта",
+          "type": "ПолеВвода<Строка>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            2
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            3
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            4
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Фамилия"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Имя"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Отчество"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=ТелефонАктивен"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=ТелефонАктивен"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Телефон"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=ПочтаАктивна"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=ПочтаАктивна"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Почта"
+        }
+      ]
+    },
+    {
+      "identity": "Администрирование::ДанныеКомпанииФормаЗаписи",
+      "baseType": "ФормаЗаписиНабораКонстант<ДанныеКомпании.Запись>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаЗаписиНабораКонстант<ДанныеКомпании.Запись>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "НастройкиМатричнойКомпоновки",
+            "Колонки",
+            0
+          ],
+          "name": null,
+          "type": "КолонкаМатричнойГруппы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "НастройкиМатричнойКомпоновки",
+            "Колонки",
+            1
+          ],
+          "name": null,
+          "type": "КолонкаМатричнойГруппы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "ПолноеНаименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "СокращенноеНаименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Телефон",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "ЮрАдрес",
+          "type": "ПолеВвода<Строка>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Запись.ПолноеНаименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Запись.СокращенноеНаименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Запись.Телефон"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Запись.ЮрАдрес"
+        }
+      ]
+    },
+    {
+      "identity": "Администрирование::НастройкиФормаЗаписи",
+      "baseType": "ФормаЗаписиНабораКонстант<Настройки.Запись>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаЗаписиНабораКонстант<Настройки.Запись>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "РазрешитьОтрицательныеОстатки",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "АвтоматическиАрхивироватьЗавершенныеПроцессы",
+          "type": "Флажок"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Запись.РазрешитьОтрицательныеОстатки"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Запись.АвтоматическиАрхивироватьЗавершенныеПроцессы"
+        }
+      ]
+    },
+    {
+      "identity": "Администрирование::РабочиеДниФормаЗаписи",
+      "baseType": "ФормаЗаписиНабораКонстант<РабочиеДни.Запись>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаЗаписиНабораКонстант<РабочиеДни.Запись>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Понедельник",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Вторник",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Среда",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "Четверг",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "Пятница",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5
+          ],
+          "name": "Суббота",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            6
+          ],
+          "name": "Воскресенье",
+          "type": "Флажок"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Запись.Понедельник"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Запись.Вторник"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Запись.Среда"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Запись.Четверг"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Запись.Пятница"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Значение"
+          ],
+          "expression": "=Запись.Суббота"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            6,
+            "Значение"
+          ],
+          "expression": "=Запись.Воскресенье"
+        }
+      ]
+    },
+    {
+      "identity": "Администрирование::ФормаПриветствие",
+      "baseType": "Форма",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "Форма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": "ПроизвольныйШаблонФормы",
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "Группа",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "НадписьТекущееВремя",
+          "type": "Надпись"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "НадписьТипДня",
+          "type": "Надпись"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "РабочиеДни",
+          "type": "СворачиваемыйКомпонент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое"
+          ],
+          "name": "ГруппаРабочиеДни",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "РабочиеДниФормаЗаписи",
+          "type": "РабочиеДниФормаЗаписи"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "ГруппаРасчетРабочихДней",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Содержимое",
+            0
+          ],
+          "name": "ДатаНачала",
+          "type": "ПолеВвода<Дата>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Содержимое",
+            1
+          ],
+          "name": "ДатаКонца",
+          "type": "ПолеВвода<Дата>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Содержимое",
+            2
+          ],
+          "name": "КнопкаРасчитать",
+          "type": "Кнопка"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Содержимое",
+            3
+          ],
+          "name": "НадписьРезультат",
+          "type": "Надпись"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "ОбщаяИнформация",
+          "type": "СворачиваемыйКомпонент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое"
+          ],
+          "name": "ГруппаОбщаяИнформация",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "ДанныеКомпанииФормаЗаписи",
+          "type": "ДанныеКомпанииФормаЗаписи"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "НастройкиФормаЗаписи",
+          "type": "НастройкиФормаЗаписи"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "Заголовок"
+          ],
+          "expression": "=Приветствие"
+        }
+      ]
+    },
+    {
+      "identity": "Продажи::ЗаказФормаОбъекта",
+      "baseType": "ФормаОбъекта<Заказ.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Заказ.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "name": null,
+          "type": "ГруппаКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Дата",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Номер",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Клиент",
+          "type": "ПолеВвода<Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "СтатусЗаказа",
+          "type": "ПолеВвода<СтатусЗаказа?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "ДатаДоставки",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5
+          ],
+          "name": "АдресДоставки",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            6
+          ],
+          "name": "Сделка",
+          "type": "ПолеВвода<Сделка.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            7
+          ],
+          "name": "Архивный",
+          "type": "Флажок"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8
+          ],
+          "name": "Товары",
+          "type": "Таблица<ИсточникДанныхМассив<Заказ.Товары>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            0
+          ],
+          "name": "Товары_Номенклатура",
+          "type": "СтандартнаяКолонкаТаблицы<Заказ.Товары, Номенклатура.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            1
+          ],
+          "name": "Товары_Количество",
+          "type": "СтандартнаяКолонкаТаблицы<Заказ.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            2
+          ],
+          "name": "Товары_Цена",
+          "type": "СтандартнаяКолонкаТаблицы<Заказ.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            3
+          ],
+          "name": "Товары_Сумма",
+          "type": "СтандартнаяКолонкаТаблицы<Заказ.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Команды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыНадОтмеченнымиСтроками"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Массив<Заказ.Товары>>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыСтроки"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Заказ.Товары>>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            0
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            2
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            3
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Дата"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Номер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Клиент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.СтатусЗаказа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Объект.ДатаДоставки"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Значение"
+          ],
+          "expression": "=Объект.АдресДоставки"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            6,
+            "Значение"
+          ],
+          "expression": "=Объект.Сделка"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            7,
+            "Значение"
+          ],
+          "expression": "=Объект.Архивный"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Источник",
+            "Данные"
+          ],
+          "expression": "=Объект.Товары"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            0,
+            "Значение"
+          ],
+          "expression": "=RowData.Номенклатура"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            1,
+            "Значение"
+          ],
+          "expression": "=RowData.Количество"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            2,
+            "Значение"
+          ],
+          "expression": "=RowData.Цена"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Колонки",
+            3,
+            "Значение"
+          ],
+          "expression": "=RowData.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "Команды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ДобавитьСтроку"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Товары.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыСтроки",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыСтроки",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            8,
+            "КомандыСтроки",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Товары.Удалить"
+        }
+      ]
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмеренияФормаОбъекта",
+      "baseType": "ФормаОбъекта<ЕдиницыИзмерения.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<ЕдиницыИзмерения.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Наименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "ТипЕдиницыИзмерения",
+          "type": "ПолеВвода<ЕдиницаИзмеренияТип?>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            2
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            3
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            4
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Наименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.ТипЕдиницыИзмерения"
+        }
+      ]
+    },
+    {
+      "identity": "Товары::НоменклатураФормаОбъекта",
+      "baseType": "ФормаОбъекта<Номенклатура.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Номенклатура.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Родитель",
+          "type": "ПолеВвода<Номенклатура.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Наименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Цена",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "ЕдиницаИзмерения",
+          "type": "ПолеВвода<ЕдиницыИзмерения.Ссылка?>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            2
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            3
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            4
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Родитель"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Наименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Цена"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.ЕдиницаИзмерения"
+        }
+      ]
+    },
+    {
+      "identity": "Товары::ОтгрузкаФормаОбъекта",
+      "baseType": "ФормаОбъекта<Отгрузка.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Отгрузка.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "name": null,
+          "type": "ГруппаКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Дата",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Номер",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Склад",
+          "type": "ПолеВвода<Склады.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "Товары",
+          "type": "Таблица<ИсточникДанныхМассив<Отгрузка.Товары>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            0
+          ],
+          "name": "Товары_Номенклатура",
+          "type": "СтандартнаяКолонкаТаблицы<Отгрузка.Товары, Номенклатура.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            1
+          ],
+          "name": "Товары_Количество",
+          "type": "СтандартнаяКолонкаТаблицы<Отгрузка.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            2
+          ],
+          "name": "Товары_Цена",
+          "type": "СтандартнаяКолонкаТаблицы<Отгрузка.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            3
+          ],
+          "name": "Товары_Сумма",
+          "type": "СтандартнаяКолонкаТаблицы<Отгрузка.Товары, Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Команды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыНадОтмеченнымиСтроками"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Массив<Отгрузка.Товары>>>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыСтроки"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса<КомандаСПараметром<Отгрузка.Товары>>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            0
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            2
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            3
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Дата"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Номер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Склад"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Источник",
+            "Данные"
+          ],
+          "expression": "=Объект.Товары"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            0,
+            "Значение"
+          ],
+          "expression": "=RowData.Номенклатура"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            1,
+            "Значение"
+          ],
+          "expression": "=RowData.Количество"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            2,
+            "Значение"
+          ],
+          "expression": "=RowData.Цена"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Колонки",
+            3,
+            "Значение"
+          ],
+          "expression": "=RowData.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Команды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ДобавитьСтроку"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыНадОтмеченнымиСтроками",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Товары.Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыСтроки",
+            "Элементы",
+            0
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВверх"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыСтроки",
+            "Элементы",
+            1
+          ],
+          "expression": "=Компоненты.Товары.ПереместитьСтрокуВниз"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "КомандыСтроки",
+            "Элементы",
+            2
+          ],
+          "expression": "=Компоненты.Товары.Удалить"
+        }
+      ]
+    },
+    {
+      "identity": "Товары::СкладыФормаОбъекта",
+      "baseType": "ФормаОбъекта<Склады.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<Склады.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Наименование",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "АдресСклада",
+          "type": "ПолеВвода<Строка>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            2
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            3
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            4
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Наименование"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.АдресСклада"
+        }
+      ]
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредствФормаОбъекта",
+      "baseType": "ФормаОбъекта<ПоступлениеДенежныхСредств.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<ПоступлениеДенежныхСредств.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "name": null,
+          "type": "ГруппаКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Дата",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Номер",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Основание",
+          "type": "ПолеВвода<Заказ.Ссылка|СчетНаОплату.Ссылка|?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "Клиент",
+          "type": "ПолеВвода<Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "Сумма",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5
+          ],
+          "name": "ТипОплаты",
+          "type": "ПолеВвода<ТипОплаты?>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            0
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            2
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            3
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Дата"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Номер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Основание"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.Клиент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Объект.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            5,
+            "Значение"
+          ],
+          "expression": "=Объект.ТипОплаты"
+        }
+      ]
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредствФормаОбъекта",
+      "baseType": "ФормаОбъекта<РасходДенежныхСредств.Объект>",
+      "components": [
+        {
+          "path": [
+            "Наследует"
+          ],
+          "name": null,
+          "type": "ФормаОбъекта<РасходДенежныхСредств.Объект>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1
+          ],
+          "name": null,
+          "type": "ГруппаКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды"
+          ],
+          "name": null,
+          "type": "ФрагментКомандногоИнтерфейса"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое"
+          ],
+          "name": null,
+          "type": "ПроизвольныйШаблонФормы"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое"
+          ],
+          "name": "ГруппаПолей",
+          "type": "Группа"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0
+          ],
+          "name": "Дата",
+          "type": "ПолеВвода<ДатаВремя>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1
+          ],
+          "name": "Номер",
+          "type": "ПолеВвода<Строка>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2
+          ],
+          "name": "Клиент",
+          "type": "ПолеВвода<Контрагенты.Ссылка?>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3
+          ],
+          "name": "Сумма",
+          "type": "ПолеВвода<Число>"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4
+          ],
+          "name": "ТипОплаты",
+          "type": "ПолеВвода<ТипОплаты?>"
+        }
+      ],
+      "bindings": [
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Обновить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            0
+          ],
+          "expression": "=СоздатьКопию"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            1
+          ],
+          "expression": "=СоздатьНаОсновании"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            2
+          ],
+          "expression": "=Удалить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ДополнительныеКоманды",
+            "Элементы",
+            1,
+            "Элементы",
+            3
+          ],
+          "expression": "=Восстановить"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОбычныеКоманды",
+            "Элементы",
+            0
+          ],
+          "expression": "=Записать"
+        },
+        {
+          "path": [
+            "Наследует",
+            "ОсновнаяКоманда"
+          ],
+          "expression": "=ЗаписатьИЗакрыть"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            0,
+            "Значение"
+          ],
+          "expression": "=Объект.Дата"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Доступность"
+          ],
+          "expression": "=РедактированиеДанных"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            1,
+            "Значение"
+          ],
+          "expression": "=Объект.Номер"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            2,
+            "Значение"
+          ],
+          "expression": "=Объект.Клиент"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            3,
+            "Значение"
+          ],
+          "expression": "=Объект.Сумма"
+        },
+        {
+          "path": [
+            "Наследует",
+            "Содержимое",
+            "Содержимое",
+            "Содержимое",
+            4,
+            "Значение"
+          ],
+          "expression": "=Объект.ТипОплаты"
+        }
+      ]
+    }
+  ]
+}

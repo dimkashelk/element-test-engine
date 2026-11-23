@@ -1,0 +1,1340 @@
+{
+  "schemaVersion": 1,
+  "referenceDumpSha256": "c3fbc3c4a866305fc819f6862384cc568183d849e8ac0423a817032c9776e295",
+  "sourceHash": "f0898007481a00698ad222924a131b4a8249b39d7537ef3bcef748151c492463",
+  "compatibility": "9.0",
+  "scope": "non-ui-metadata",
+  "excluded": [
+    "Интерфейс",
+    "browser UI",
+    "application data",
+    "platform runtime"
+  ],
+  "counts": {
+    "objects": 19,
+    "objectKinds": {
+      "Справочник": 6,
+      "Документ": 7,
+      "Перечисление": 6
+    },
+    "modules": 7,
+    "methods": 0,
+    "subsystems": 4,
+    "headerFields": 56,
+    "tableSections": 5,
+    "tableFields": 20,
+    "enumValues": 21,
+    "structuralCriteria": 241,
+    "referenceLeaves": 409
+  },
+  "strictSections": [
+    "project",
+    "subsystems",
+    "elements",
+    "modules",
+    "serviceFiles",
+    "diagnostics"
+  ],
+  "declarations": [
+    {
+      "identity": "CRM::Контрагенты",
+      "kind": "module",
+      "sourceFile": "CRM/Контрагенты.xbsl",
+      "checks": [
+        "criterion_001"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица",
+      "kind": "module",
+      "sourceFile": "CRM/ФизическиеЛица.xbsl",
+      "checks": [
+        "criterion_002"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Проект",
+      "kind": "module",
+      "sourceFile": "Проект.xbsl",
+      "checks": [
+        "criterion_003"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения",
+      "kind": "module",
+      "sourceFile": "Товары/ЕдиницыИзмерения.xbsl",
+      "checks": [
+        "criterion_004"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::Номенклатура",
+      "kind": "module",
+      "sourceFile": "Товары/Номенклатура.xbsl",
+      "checks": [
+        "criterion_005"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Товары::Склады",
+      "kind": "module",
+      "sourceFile": "Товары/Склады.xbsl",
+      "checks": [
+        "criterion_006"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет",
+      "kind": "module",
+      "sourceFile": "Финансы/БанковскийСчет.xbsl",
+      "checks": [
+        "criterion_007"
+      ],
+      "strictSection": "modules"
+    },
+    {
+      "identity": "CRM::Контрагенты",
+      "kind": "Справочник",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_008",
+        "criterion_009",
+        "criterion_010"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.ИНН",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_011",
+        "criterion_012"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.КПП",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_013",
+        "criterion_014"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.Наименование",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_015"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Контрагенты.ТипКонтрагента",
+      "kind": "field",
+      "sourceFile": "CRM/Контрагенты.yaml",
+      "checks": [
+        "criterion_016"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка",
+      "kind": "Документ",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_017",
+        "criterion_018"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Архивный",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_019",
+        "criterion_020"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Дата",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_021"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ДатаЗакрытия",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_022"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Клиент",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_023"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Номер",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_024",
+        "criterion_025",
+        "criterion_026",
+        "criterion_027",
+        "criterion_028",
+        "criterion_029"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.СтатусСделки",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_030"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Сумма",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_031",
+        "criterion_032",
+        "criterion_033"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос",
+      "kind": "tableSection",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_034"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.Комментарий",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_035"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ОписаниеПотребностиКлиента",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_036"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ПричинаНеудовлетворения",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_037"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.ПроцентУдовлетворения",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_038",
+        "criterion_039",
+        "criterion_040"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.ПервичныйСпрос.Сумма",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_041",
+        "criterion_042"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники",
+      "kind": "tableSection",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_043"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.ВыигралСделку",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_044"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.Комментарий",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_045"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::Сделка.Участники.Партнер",
+      "kind": "field",
+      "sourceFile": "CRM/Сделка.yaml",
+      "checks": [
+        "criterion_046"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки",
+      "kind": "Перечисление",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_047",
+        "criterion_048"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.ВРаботе",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_049",
+        "criterion_050"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Выиграна",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_051"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Заморожена",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_052"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Новая",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_053",
+        "criterion_054"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::СтатусСделки.Проиграна",
+      "kind": "enumValue",
+      "sourceFile": "CRM/СтатусСделки.yaml",
+      "checks": [
+        "criterion_055"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента",
+      "kind": "Перечисление",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_056",
+        "criterion_057"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ИП",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_058",
+        "criterion_059"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.Самозанятый",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_060",
+        "criterion_061"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ФизЛицо",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_062",
+        "criterion_063",
+        "criterion_064"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ТипКонтрагента.ЮрЛицо",
+      "kind": "enumValue",
+      "sourceFile": "CRM/ТипКонтрагента.yaml",
+      "checks": [
+        "criterion_065",
+        "criterion_066"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица",
+      "kind": "Справочник",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_067",
+        "criterion_068"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Имя",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_069",
+        "criterion_070"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Отчество",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_071",
+        "criterion_072"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Почта",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_073"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Телефон",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_074"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "CRM::ФизическиеЛица.Фамилия",
+      "kind": "field",
+      "sourceFile": "CRM/ФизическиеЛица.yaml",
+      "checks": [
+        "criterion_075",
+        "criterion_076"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ",
+      "kind": "Документ",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_077",
+        "criterion_078",
+        "criterion_079"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.АдресДоставки",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_080"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Архивный",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_081",
+        "criterion_082"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Дата",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_083"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.ДатаДоставки",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_084"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Клиент",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_085"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Номер",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_086",
+        "criterion_087",
+        "criterion_088",
+        "criterion_089",
+        "criterion_090",
+        "criterion_091"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Сделка",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_092"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.СтатусЗаказа",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_093",
+        "criterion_094"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_095"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_096"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_097"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_098",
+        "criterion_099"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::Заказ.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Продажи/Заказ.yaml",
+      "checks": [
+        "criterion_100",
+        "criterion_101"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа",
+      "kind": "Перечисление",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_102",
+        "criterion_103"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.ВРаботе",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_104",
+        "criterion_105"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.Закрыт",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_106"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Продажи::СтатусЗаказа.Новый",
+      "kind": "enumValue",
+      "sourceFile": "Продажи/СтатусЗаказа.yaml",
+      "checks": [
+        "criterion_107"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип",
+      "kind": "Перечисление",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_108",
+        "criterion_109"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Вес",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_110"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Длина",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_111"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Объем",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_112"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницаИзмеренияТип.Штуки",
+      "kind": "enumValue",
+      "sourceFile": "Товары/ЕдиницаИзмеренияТип.yaml",
+      "checks": [
+        "criterion_113"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения",
+      "kind": "Справочник",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_114",
+        "criterion_115"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_116"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ЕдиницыИзмерения.ТипЕдиницыИзмерения",
+      "kind": "field",
+      "sourceFile": "Товары/ЕдиницыИзмерения.yaml",
+      "checks": [
+        "criterion_117"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура",
+      "kind": "Справочник",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_118",
+        "criterion_119",
+        "criterion_120"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.ЕдиницаИзмерения",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_121",
+        "criterion_122"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_123"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Номенклатура.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/Номенклатура.yaml",
+      "checks": [
+        "criterion_124",
+        "criterion_125",
+        "criterion_126",
+        "criterion_127",
+        "criterion_128",
+        "criterion_129"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка",
+      "kind": "Документ",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_130",
+        "criterion_131",
+        "criterion_132"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Дата",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_133"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Номер",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_134",
+        "criterion_135",
+        "criterion_136",
+        "criterion_137",
+        "criterion_138",
+        "criterion_139"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Склад",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_140",
+        "criterion_141"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_142"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_143"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_144"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_145",
+        "criterion_146"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Отгрузка.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/Отгрузка.yaml",
+      "checks": [
+        "criterion_147",
+        "criterion_148"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров",
+      "kind": "Документ",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_149",
+        "criterion_150",
+        "criterion_151"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Дата",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_152"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Номер",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_153",
+        "criterion_154",
+        "criterion_155",
+        "criterion_156",
+        "criterion_157",
+        "criterion_158"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Склад",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_159",
+        "criterion_160"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары",
+      "kind": "tableSection",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_161"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Количество",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_162"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Номенклатура",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_163"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Сумма",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_164",
+        "criterion_165"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::ПоступлениеТоваров.Товары.Цена",
+      "kind": "field",
+      "sourceFile": "Товары/ПоступлениеТоваров.yaml",
+      "checks": [
+        "criterion_166",
+        "criterion_167"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады",
+      "kind": "Справочник",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_168",
+        "criterion_169"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады.АдресСклада",
+      "kind": "field",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_170"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Товары::Склады.Наименование",
+      "kind": "field",
+      "sourceFile": "Товары/Склады.yaml",
+      "checks": [
+        "criterion_171"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет",
+      "kind": "Справочник",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_172",
+        "criterion_173"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет.Наименование",
+      "kind": "field",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_174"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::БанковскийСчет.НомерСчета",
+      "kind": "field",
+      "sourceFile": "Финансы/БанковскийСчет.yaml",
+      "checks": [
+        "criterion_175",
+        "criterion_176"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств",
+      "kind": "Документ",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_177",
+        "criterion_178",
+        "criterion_179"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_180"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Клиент",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_181",
+        "criterion_182"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_183",
+        "criterion_184",
+        "criterion_185",
+        "criterion_186",
+        "criterion_187",
+        "criterion_188"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Основание",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_189"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_190",
+        "criterion_191",
+        "criterion_192"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ПоступлениеДенежныхСредств.ТипОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/ПоступлениеДенежныхСредств.yaml",
+      "checks": [
+        "criterion_193",
+        "criterion_194"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств",
+      "kind": "Документ",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_195",
+        "criterion_196",
+        "criterion_197"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_198"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Клиент",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_199",
+        "criterion_200"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_201",
+        "criterion_202",
+        "criterion_203",
+        "criterion_204",
+        "criterion_205",
+        "criterion_206"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_207",
+        "criterion_208",
+        "criterion_209"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::РасходДенежныхСредств.ТипОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/РасходДенежныхСредств.yaml",
+      "checks": [
+        "criterion_210",
+        "criterion_211"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты",
+      "kind": "Перечисление",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_212",
+        "criterion_213"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.НеОплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_214",
+        "criterion_215"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.Оплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_216"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СтатусОплаты.ЧастичноОплачено",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/СтатусОплаты.yaml",
+      "checks": [
+        "criterion_217",
+        "criterion_218"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату",
+      "kind": "Документ",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_219",
+        "criterion_220",
+        "criterion_221"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Дата",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_222"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Контрагент",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_223",
+        "criterion_224"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Номер",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_225",
+        "criterion_226",
+        "criterion_227",
+        "criterion_228",
+        "criterion_229",
+        "criterion_230"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Основание",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_231",
+        "criterion_232"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.СтатусОплаты",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_233",
+        "criterion_234"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::СчетНаОплату.Сумма",
+      "kind": "field",
+      "sourceFile": "Финансы/СчетНаОплату.yaml",
+      "checks": [
+        "criterion_235",
+        "criterion_236",
+        "criterion_237"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты",
+      "kind": "Перечисление",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_238",
+        "criterion_239"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты.Безналичные",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_240"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Финансы::ТипОплаты.Наличные",
+      "kind": "enumValue",
+      "sourceFile": "Финансы/ТипОплаты.yaml",
+      "checks": [
+        "criterion_241"
+      ],
+      "strictSection": "elements"
+    },
+    {
+      "identity": "Движок",
+      "kind": "project",
+      "sourceFile": "Проект.yaml",
+      "checks": [],
+      "strictSection": "project"
+    },
+    {
+      "identity": "CRM",
+      "kind": "subsystems",
+      "sourceFile": "CRM/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Продажи",
+      "kind": "subsystems",
+      "sourceFile": "Продажи/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Товары",
+      "kind": "subsystems",
+      "sourceFile": "Товары/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    },
+    {
+      "identity": "Финансы",
+      "kind": "subsystems",
+      "sourceFile": "Финансы/Подсистема.yaml",
+      "checks": [],
+      "strictSection": "subsystems"
+    }
+  ]
+}

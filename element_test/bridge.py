@@ -74,8 +74,60 @@ def report(data, package=None):
             '<table><tr><th>Проверка</th><th>Статус</th><th>Баллы</th><th>Подробности</th></tr>' + rows + '</table></html>')
 
 
+def prepare_declarative(root, model, work, assignment, plans):
+    from .assignment_names import adapt, lower_local_overloads
+    from .assignment_queries import QueryEngine
+
+    options = assignment.get('executionOptions', {})
+    if not options and not any(c['type'] == 'assertion' for c in assignment['checks']):
+        return root, model, None
+    queries = QueryEngine(root, model, options.get('aliases'))
+    queries.resolve(options.get('resolveAliases', []))
+    for index, check in enumerate(assignment['checks']):
+        if check['type'] != 'runtime' or not (options.get('aliases') or options.get('resolveAliases')):
+            continue
+        if 'formRequirement' in check:
+            form = check['formRequirement']['form']
+            check = adapt({**check, 'target': {'namespace': form.get('namespace', ''), 'module': form['name']}},
+                          queries.aliases)
+            target = check.pop('target')
+            check['formRequirement']['form'].update(namespace=target['namespace'], name=target['module'])
+        elif 'target' in check:
+            check = adapt(check, queries.aliases)
+        assignment['checks'][index] = check
+    runtime_root, edits = root, []
+    runtime_model = model
+    if options.get('lowerLocalOverloads'):
+        runtime_root, edits = lower_local_overloads(root, work / 'runtime-source')
+        if edits:
+            runtime_model = analyze(runtime_root)
+            canonicalize_model_types(runtime_model)
+    if options:
+        plans.append({'sourceHash': model['sourceHash'], 'runtimeSourceHash': runtime_model['sourceHash'],
+                      'sourceAdaptations': edits, 'resolvedAliases': queries.aliases})
+    return runtime_root, runtime_model, queries
+
+
+def evaluate_assertions(checks, queries):
+    queries.executions = {c['id']: c.get('execution', {'status': 'SKIPPED'})
+                          for c in checks if c['type'] == 'runtime'}
+    for check in checks:
+        if check['type'] != 'assertion':
+            continue
+        clauses = check.pop('assertion')['all']
+        dependencies = [queries.executions[clause['query']['criterion']] for clause in clauses
+                        if clause['query']['from'] == 'execution']
+        unavailable = next((item for item in dependencies if item['status'] not in ('EXECUTED', 'FAIL')), None)
+        evidence = {'status': 'EXECUTED', 'observationKind': 'trace' if dependencies else 'structural'}
+        if unavailable:
+            evidence.update({key: unavailable[key] for key in ('status', 'reasonCode', 'message') if key in unavailable})
+        else:
+            evidence['actual'] = queries.assertion(clauses)
+        check.update(type='runtime', expected=True, execution=evidence)
+
+
 def run_test(source, assignment_source, output, *, integration=False, student_id=None,
-             assignment_id=None, run_id=None, project_name=None, _prepared=None):
+             assignment_id=None, run_id=None, project_name=None, _prepared=None, render_html=True, max_criteria_yaml_bytes=4 * 1024 * 1024):
     """Assess one submission; batch may supply its open root and analyzed model."""
     for name, value in (("studentId", student_id), ("assignmentId", assignment_id),
                         ("runId", run_id)):
@@ -94,15 +146,32 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
             canonicalize_model_types(model)
             model_path, assignment_path = temporary / "model.json", temporary / "assignment.json"
             write_json(model_path, model)
-            assignment = load_assignment(assignment_source)
+            assignment = load_assignment(assignment_source, max_yaml_bytes=max_criteria_yaml_bytes)
             plans = []
-            for check in assignment["checks"]:
+            queries = None
+            runtime_root, runtime_model = root, model
+            if 'profile' in assignment:
+                from .profiles import prepare_profile
+                assignment['checks'],plans=prepare_profile(root,model,temporary,assignment['profile'])
+            else:
+                runtime_root, runtime_model, queries = prepare_declarative(root, model, temporary, assignment, plans)
+            known_methods = None
+            if assignment.get('executionOptions', {}).get('missingMethodFails'):
+                known_methods = {(m['namespace'], m['name'], method['name']) for m in runtime_model['modules']
+                                 for method in m['methods']}
+            for check in ([] if 'profile' in assignment else assignment["checks"]):
                 if check["type"] == "runtime" and not check.get("skip"):
                     if 'formRequirement' in check:
                         from .declarative_bindings import preflight
-                        facts = preflight(root, model, check)
+                        facts = preflight(runtime_root, runtime_model, check)
                         if facts is not None:
                             check['execution'] = facts
+                            continue
+                    elif known_methods is not None and 'target' in check and 'library' not in check:
+                        target = check['target']
+                        if (target.get('namespace', ''), target.get('module'), target.get('method')) not in known_methods:
+                            check['execution'] = {'status': 'FAIL', 'reasonCode': 'result_mismatch',
+                                                  'message': 'Не найден требуемый метод'}
                             continue
                     if 'integration' in check:
                         if 'library' in check:
@@ -110,20 +179,28 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
                                                   "message": "Интеграционный runtime для библиотечного метода не поддерживается"}
                         else:
                             prepared = []
-                            check["execution"] = run_integration(check, model, temporary,
-                                                                   enabled=integration, root=root, plan_sink=prepared)
+                            check["execution"] = run_integration(check, runtime_model, temporary,
+                                                                   enabled=integration, root=runtime_root, plan_sink=prepared)
                             if prepared:
                                 plans.append({'criterionId': check['id'], 'plan': prepared[0]})
                     else:
                         prepared = []
-                        check["execution"] = run_pure(root, model, check, temporary, plan_sink=prepared)
+                        check["execution"] = run_pure(runtime_root, runtime_model, check, temporary, plan_sink=prepared)
                         if prepared:
                             plans.append({'criterionId': check['id'], 'plan': prepared[0]})
                         else:
                             plans.append({'criterionId': check['id'], 'unavailable': {
                                 k: check['execution'].get(k) for k in ('status', 'reasonCode', 'message')}})
+            if queries is not None:
+                evaluate_assertions(assignment['checks'], queries)
             write_json(assignment_path, assignment)
             result = execute_engine("test", model_path, assignment_path, temporary)
+            if 'profile' in assignment:
+                by_id={c['id']:c for c in assignment['checks']}
+                for item in result['checks']:
+                    execution=by_id[item['id']].get('execution',{})
+                    if execution.get('message'):
+                        item['message']=execution['message']
             # Add teacher provenance and source diagnostics without changing
             # the status, comparison or score computed by SBSL.
             authored = {c['id']:c for c in assignment['checks'] if 'formRequirement' in c}
@@ -175,7 +252,8 @@ def run_test(source, assignment_source, output, *, integration=False, student_id
     from .grading import safe
     write_json(output / 'runtime-evidence.json', safe([
         {'criterionId': check['id'], **check['execution']} for check in assignment['checks'] if 'execution' in check]))
-    (output / "report.html").write_text(report(result, package), encoding="utf-8")
+    if render_html:
+        (output / "report.html").write_text(report(result, package), encoding="utf-8")
     return result, package
 
 

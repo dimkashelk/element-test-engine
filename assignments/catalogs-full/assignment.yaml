@@ -1,0 +1,416 @@
+name: Справочники — полная структура эталона
+checks:
+- id: project_created
+  type: module
+  module: Проект
+  namespace: ''
+  points: 1
+  failureExplanation: В корне проекта должен присутствовать модуль Проект.xbsl.
+- id: counterparties_exists
+  type: element
+  name: CRM::Контрагенты
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме CRM должен быть создан справочник Контрагенты.
+- id: counterparties_visibility
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника CRM::Контрагенты задайте ОбластьВидимости: ВПодсистеме.'
+- id: counterparties_hierarchy
+  type: element
+  name: CRM::Контрагенты
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У справочника CRM::Контрагенты задайте Иерархический: True.'
+- id: counterparties_module
+  type: module
+  module: Контрагенты
+  namespace: CRM
+  points: 1
+  failureExplanation: У справочника CRM::Контрагенты должен присутствовать модуль
+    Контрагенты.xbsl.
+- id: counterparties_field_1
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В справочнике CRM::Контрагенты должен быть реквизит Наименование.
+- id: counterparties_field_2
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  points: 1
+  failureExplanation: В справочнике CRM::Контрагенты должен быть реквизит ИНН типа
+    Число.
+  expectedType: Число
+- id: counterparties_field_2_precision
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ИНН
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У реквизита CRM::Контрагенты.ИНН задайте ДлинаЦелойЧасти: 10.'
+- id: counterparties_field_3
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  points: 1
+  failureExplanation: В справочнике CRM::Контрагенты должен быть реквизит КПП типа
+    Число.
+  expectedType: Число
+- id: counterparties_field_3_precision
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: КПП
+  properties:
+    ДлинаЦелойЧасти: 9
+  points: 1
+  failureExplanation: 'У реквизита CRM::Контрагенты.КПП задайте ДлинаЦелойЧасти: 9.'
+- id: counterparties_field_4
+  type: field
+  element: CRM::Контрагенты
+  collection: Реквизиты
+  field: ТипКонтрагента
+  points: 1
+  failureExplanation: В справочнике CRM::Контрагенты должен быть реквизит ТипКонтрагента
+    типа Строка.
+  expectedType: Строка
+- id: persons_exists
+  type: element
+  name: CRM::ФизическиеЛица
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме CRM должен быть создан справочник ФизическиеЛица.
+- id: persons_visibility
+  type: element
+  name: CRM::ФизическиеЛица
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника CRM::ФизическиеЛица задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: persons_module
+  type: module
+  module: ФизическиеЛица
+  namespace: CRM
+  points: 1
+  failureExplanation: У справочника CRM::ФизическиеЛица должен присутствовать модуль
+    ФизическиеЛица.xbsl.
+- id: persons_field_1
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  points: 1
+  failureExplanation: В справочнике CRM::ФизическиеЛица должен быть реквизит Фамилия
+    типа Строка.
+  expectedType: Строка
+- id: persons_field_1_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Фамилия
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Фамилия задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: persons_field_2
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  points: 1
+  failureExplanation: В справочнике CRM::ФизическиеЛица должен быть реквизит Имя типа
+    Строка.
+  expectedType: Строка
+- id: persons_field_2_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Имя
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Имя задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: persons_field_3
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  points: 1
+  failureExplanation: В справочнике CRM::ФизическиеЛица должен быть реквизит Отчество
+    типа Строка.
+  expectedType: Строка
+- id: persons_field_3_required
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Отчество
+  properties:
+    НезаполненноеЗначение: Разрешить
+  points: 1
+  failureExplanation: 'У реквизита CRM::ФизическиеЛица.Отчество задайте НезаполненноеЗначение:
+    Разрешить.'
+- id: persons_field_4
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Телефон
+  points: 1
+  failureExplanation: В справочнике CRM::ФизическиеЛица должен быть реквизит Телефон
+    типа Строка.
+  expectedType: Строка
+- id: persons_field_5
+  type: field
+  element: CRM::ФизическиеЛица
+  collection: Реквизиты
+  field: Почта
+  points: 1
+  failureExplanation: В справочнике CRM::ФизическиеЛица должен быть реквизит Почта
+    типа Строка.
+  expectedType: Строка
+- id: units_exists
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть создан справочник ЕдиницыИзмерения.
+- id: units_visibility
+  type: element
+  name: Товары::ЕдиницыИзмерения
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника Товары::ЕдиницыИзмерения задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: units_module
+  type: module
+  module: ЕдиницыИзмерения
+  namespace: Товары
+  points: 1
+  failureExplanation: У справочника Товары::ЕдиницыИзмерения должен присутствовать
+    модуль ЕдиницыИзмерения.xbsl.
+- id: units_field_1
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В справочнике Товары::ЕдиницыИзмерения должен быть реквизит
+    Наименование.
+- id: units_field_2
+  type: field
+  element: Товары::ЕдиницыИзмерения
+  collection: Реквизиты
+  field: ТипЕдиницыИзмерения
+  points: 1
+  failureExplanation: В справочнике Товары::ЕдиницыИзмерения должен быть реквизит
+    ТипЕдиницыИзмерения типа Строка.
+  expectedType: Строка
+- id: products_exists
+  type: element
+  name: Товары::Номенклатура
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть создан справочник Номенклатура.
+- id: products_visibility
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника Товары::Номенклатура задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: products_hierarchy
+  type: element
+  name: Товары::Номенклатура
+  properties:
+    Иерархический: true
+  points: 1
+  failureExplanation: 'У справочника Товары::Номенклатура задайте Иерархический: True.'
+- id: products_module
+  type: module
+  module: Номенклатура
+  namespace: Товары
+  points: 1
+  failureExplanation: У справочника Товары::Номенклатура должен присутствовать модуль
+    Номенклатура.xbsl.
+- id: products_field_1
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В справочнике Товары::Номенклатура должен быть реквизит Наименование.
+- id: products_field_2
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  points: 1
+  failureExplanation: В справочнике Товары::Номенклатура должен быть реквизит Цена
+    типа Число.
+  expectedType: Число
+- id: products_field_2_scale
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаДробнойЧасти: 2
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ДлинаДробнойЧасти:
+    2.'
+- id: products_field_2_precision
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ДлинаЦелойЧасти: 10
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ДлинаЦелойЧасти:
+    10.'
+- id: products_field_2_maximum
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МаксимальноеЗначение: 1000000000
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте МаксимальноеЗначение:
+    1000000000.'
+- id: products_field_2_minimum
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    МинимальноеЗначение: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте МинимальноеЗначение:
+    0.'
+- id: products_field_2_default
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: Цена
+  properties:
+    ЗначениеПоУмолчанию: 0
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.Цена задайте ЗначениеПоУмолчанию:
+    0.'
+- id: products_field_3
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  points: 1
+  failureExplanation: В справочнике Товары::Номенклатура должен быть реквизит ЕдиницаИзмерения
+    типа ЕдиницыИзмерения.Ссылка?.
+  expectedType: ЕдиницыИзмерения.Ссылка?
+- id: products_field_3_required
+  type: field
+  element: Товары::Номенклатура
+  collection: Реквизиты
+  field: ЕдиницаИзмерения
+  properties:
+    НезаполненноеЗначение: ЗапретитьВсегда
+  points: 1
+  failureExplanation: 'У реквизита Товары::Номенклатура.ЕдиницаИзмерения задайте НезаполненноеЗначение:
+    ЗапретитьВсегда.'
+- id: warehouses_exists
+  type: element
+  name: Товары::Склады
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Товары должен быть создан справочник Склады.
+- id: warehouses_visibility
+  type: element
+  name: Товары::Склады
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника Товары::Склады задайте ОбластьВидимости: ВПодсистеме.'
+- id: warehouses_module
+  type: module
+  module: Склады
+  namespace: Товары
+  points: 1
+  failureExplanation: У справочника Товары::Склады должен присутствовать модуль Склады.xbsl.
+- id: warehouses_field_1
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В справочнике Товары::Склады должен быть реквизит Наименование.
+- id: warehouses_field_2
+  type: field
+  element: Товары::Склады
+  collection: Реквизиты
+  field: АдресСклада
+  points: 1
+  failureExplanation: В справочнике Товары::Склады должен быть реквизит АдресСклада
+    типа Строка.
+  expectedType: Строка
+- id: bank_account_exists
+  type: element
+  name: Финансы::БанковскийСчет
+  elementType: Справочник
+  points: 1
+  failureExplanation: В подсистеме Финансы должен быть создан справочник БанковскийСчет.
+- id: bank_account_visibility
+  type: element
+  name: Финансы::БанковскийСчет
+  properties:
+    ОбластьВидимости: ВПодсистеме
+  points: 1
+  failureExplanation: 'У справочника Финансы::БанковскийСчет задайте ОбластьВидимости:
+    ВПодсистеме.'
+- id: bank_account_module
+  type: module
+  module: БанковскийСчет
+  namespace: Финансы
+  points: 1
+  failureExplanation: У справочника Финансы::БанковскийСчет должен присутствовать
+    модуль БанковскийСчет.xbsl.
+- id: bank_account_field_1
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: Наименование
+  points: 1
+  failureExplanation: В справочнике Финансы::БанковскийСчет должен быть реквизит Наименование.
+- id: bank_account_field_2
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  points: 1
+  failureExplanation: В справочнике Финансы::БанковскийСчет должен быть реквизит НомерСчета
+    типа Число.
+  expectedType: Число
+- id: bank_account_field_2_precision
+  type: field
+  element: Финансы::БанковскийСчет
+  collection: Реквизиты
+  field: НомерСчета
+  properties:
+    ДлинаЦелойЧасти: 20
+  points: 1
+  failureExplanation: 'У реквизита Финансы::БанковскийСчет.НомерСчета задайте ДлинаЦелойЧасти:
+    20.'

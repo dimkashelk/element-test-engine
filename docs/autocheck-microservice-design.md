@@ -1,6 +1,7 @@
 # Проект микросервиса автопроверки, версия 1.0
 
-Дата: 14 октября 2026. Статус: проект для финального согласования, без реализации.
+Дата архитектуры: 14 октября 2026. Реализация `element_check_service` добавлена 15 октября 2026.
+Результаты проверок и эксплуатационные ограничения: `autocheck-implementation.md`.
 
 ## 1. Решения и границы
 
@@ -24,7 +25,7 @@
 Файлы проекта:
 
 - `deploy/autocheck/compose.yaml` — контейнеры и связи;
-- `deploy/autocheck/service.yaml` — статическая конфигурация будущего сервиса;
+- `deploy/autocheck/service.yaml` — статическая конфигурация сервиса;
 - `deploy/autocheck/nginx.conf` — HTTP-шлюз;
 - `deploy/autocheck/.env.example` — параметры размещения;
 - `deploy/autocheck/README.md` — подготовка и проверка развёртывания;
@@ -67,6 +68,9 @@ Executor и PostgreSQL каждой SQL-проверки создаёт worker �
 
 ## 3. Контракт ЛК
 
+Все результаты API и callback передаются в JSON. Сервис не генерирует HTML-отчёты;
+ЛК отображает оценку и feedback самостоятельно.
+
 Время в API — RFC 3339 UTC. Идентификаторы сервиса — UUID. `studentId`,
 `assignmentId`, `submissionId`: `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`. `attempt`
 положительное целое: повторная техническая попытка или переоценка имеет новый номер.
@@ -82,7 +86,6 @@ Executor и PostgreSQL каждой SQL-проверки создаёт worker �
   "attempt": 1,
   "studentId": "student-127",
   "assignmentId": "task-orders",
-  "criteriaVersion": "2026-10-14.1",
   "projectName": "Поставщик::УчебныйПроект",
   "runMode": "integration",
   "dump": {
@@ -101,7 +104,13 @@ Executor и PostgreSQL каждой SQL-проверки создаёт worker �
 Хеши примера условные. ЛК вычисляет реальные SHA-256 бинарных файлов до запроса.
 `projectName` необязателен, нужен для выбора приложения в составном дампе.
 `runMode` по умолчанию `isolated`; `integration` разрешается по клиенту и настройке
-сервера. URL callback отсутствует: получатель привязан к авторизованному `clientId`.
+сервера. `webhookUrl` передаётся в reservation и сохраняется в manifest проверки.
+Адрес входит в idempotency fingerprint; его замена при том же ключе даёт 409.
+HMAC-ключ выбирается по авторизованному `clientId`. Разрешён публичный HTTPS;
+credentials, fragment, внутренние IP/DNS и redirects запрещены. При каждой доставке
+DNS проверяется заново, соединение закрепляется за проверенным IP с исходным TLS SNI.
+Для совместимости запрос без `webhookUrl` использует legacy URL клиента; если нет
+обоих адресов, оценка сохраняется, доставка получает `delivery_url_missing`.
 
 Успешный ответ `201`:
 
@@ -176,7 +185,6 @@ Nginx `proxy_request_buffering off` позволяет этой проверке
   "attempt": 1,
   "studentId": "student-127",
   "assignmentId": "task-orders",
-  "criteriaVersion": "2026-10-14.1",
   "status": "completed",
   "acceptedAt": "2026-10-14T18:00:20Z",
   "startedAt": "2026-10-14T18:00:21Z",
@@ -190,8 +198,8 @@ Nginx `proxy_request_buffering off` позволяет этой проверке
     "unavailablePoints": 0, "feedback": []},
   "error": null,
   "delivery": {"status": "pending", "attemptCount": 0},
-  "artifacts": [{"kind": "report.html", "available": true,
-    "url": "/v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe/artifacts/report.html"}]
+  "artifacts": [{"kind": "grading.json", "available": true,
+    "url": "/v1/checks/90566acb-77e0-45d6-835f-e74748e89fbe/artifacts/grading.json"}]
 }
 ```
 
@@ -209,8 +217,8 @@ reservationId/checkId в своей записи и не делает массо
 
 Артефакты выдаются по аутентифицированной ручке
 `GET /v1/checks/{checkId}/artifacts/{kind}`, без клиентского файлового пути.
-Kinds: `grading.json`, `result.json`, `report.html`, `execution-plans.json`,
-`runtime-evidence.json`. Для JSON — attachment; HTML — attachment с CSP sandbox и
+Kinds: `grading.json`, `result.json`, `execution-plans.json`,
+`runtime-evidence.json`. Все артефакты — JSON attachment с
 `X-Content-Type-Options: nosniff`. Истёкший retention: `410 artifact_expired`;
 ещё не созданный артефакт: `404 artifact_not_found`. Исходный дамп и скрытые критерии
 через API не выдаются. Диагностика ограничивается контрактом пакетов; raw stderr,
@@ -405,7 +413,7 @@ intent, ID и labels. Повторный sweep полезен для восст�
 остановку сервис сохраняет место занятым и требует действия оператора.
 
 Имена старых контейнеров сами по себе недостаточны; это обязательное изменение
-runtime orchestration при будущей реализации. Весь create/start/kill проходит через
+runtime orchestration реализовано через приватный Docker CLI proxy. Весь create/start/kill проходит через
 lease-aware адаптер; raw subprocess `docker create` из текущего runtime требует
 переноса под этот контроль. Исполняемый код студента socket не получает.
 
@@ -533,7 +541,7 @@ Claim outbox имеет lease/fence и `nextAttemptAt`; notifier claim чере�
 
 ## 9. Предлагаемая модель БД
 
-Это логическая схема, не migration SQL и не реализация.
+Логическая модель; фактическая миграция находится в `element_check_service/migrations/001.sql`.
 
 | Таблица | Основные поля / ограничения |
 |---|---|
@@ -585,7 +593,7 @@ cap-drop, read-only root, bounded tmpfs. В SQL-проверке дополни�
 производительности восьми SQL-проверок. Генеративные сценарии проверяются отдельно
 на fan-out; адаптер запрещает больше одной executor/SQL пары одновременно на check.
 
-API image содержит будущий service package; worker image дополнительно текущий
+API image содержит service package; worker image дополнительно текущий
 репозиторий Python, `src/*.sbsl`, `bin/script-runtime`, configs, Java 17, Docker CLI.
 Можно собрать общий image для всех ролей; команды и секреты ограничивают роль.
 Script executor 10.0.2-1 хранится отдельным readonly bind mount, не скачивается при
@@ -648,11 +656,12 @@ Housekeeping идемпотентен, не удаляет живые staging/wo
    не требует повторно проверять работу. execution_failed может создать новый attempt
    по политике ЛК; failed/incomplete не перепроверяются автоматически как transport error.
 
-## 13. Что предстоит реализовать после согласования
+## 13. Реализация
 
-Сервисный package, миграции, middleware admission/streaming, схемы и auth, worker
-supervisor, lease-aware Docker adapter/labels, provenance publication, outbox,
-notifier, retention, health/metrics и image build. Алгоритмы оценивания остаются
+Реализованы сервисный package, миграции, admission/streaming, схемы и auth, worker
+supervisor, Docker CLI proxy с lease/labels, публикация результата, outbox,
+notifier, retention, health/metrics и Dockerfile. Подробности и проверенные сценарии —
+в `autocheck-implementation.md`. Алгоритмы оценивания остаются
 существующими. `run_batch` с cap 1..4 не используется диспетчером сервиса: один child
 вызывает `bridge.run_test` для одной check. Динамический лимит сервисного диспетчера
 не зависит от CLI batch workers; CLI можно сохранить без изменения.

@@ -133,7 +133,7 @@ def _cache_key(source_hash, assignment, integration):
 
 def _cacheable(result, assignment):
     # Runtime is deliberately excluded until a contract proves deterministic.
-    return (all(c["type"] != "runtime" for c in assignment["checks"])
+    return ('profile' not in assignment and all(c["type"] != "runtime" for c in assignment["checks"])
             and result.get("unavailablePoints") == 0
             and all(c["status"] in {"PASS", "FAIL"} for c in result.get("checks", [])))
 

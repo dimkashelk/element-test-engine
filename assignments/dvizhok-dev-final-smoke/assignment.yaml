@@ -1,0 +1,8 @@
+name: Движок — простая проверка дампа
+checks:
+  - id: order_exists
+    type: element
+    name: Продажи::Заказ
+    elementType: Документ
+    points: 1
+    failureExplanation: В подсистеме Продажи должен быть создан документ Заказ.

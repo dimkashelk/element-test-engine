@@ -40,6 +40,30 @@ def make_dump(directory, sources=None, name="submission.xdump"):
 
 
 class XdumpLoaderTest(unittest.TestCase):
+    def test_named_translation_files_are_loaded_as_service_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            sources = dict(SOURCES)
+            translation = "Продажи/Локализация/en/ПродажиЛокализация.yaml"
+            sources["src/V/Пример/Продажи/ПродажиЛокализация.yaml"] = (
+                "ВидЭлемента: ЛокализованныеСтроки\nИмя: ПродажиЛокализация\n"
+                "Строки: {Заголовок: Продажи}\n")
+            sources[f"src/V/Пример/{translation}"] = "Строки: {Заголовок: Sales}\n"
+            dump = make_dump(Path(directory), sources)
+            with open_project(dump) as root:
+                model = analyze(root)
+                self.assertEqual(model["serviceFiles"], [{
+                    "kind": "ЛокализованныеСтроки",
+                    "sourceFile": translation,
+                    "properties": {"Строки": {"Заголовок": "Sales"}},
+                }])
+                self.assertIn("ПродажиЛокализация", [element["name"] for element in model["elements"]])
+
+            sources["src/V/Пример/Поврежденный.yaml"] = "Строки: {Заголовок: Продажи}\n"
+            invalid = make_dump(Path(directory), sources, "invalid.xdump")
+            with open_project(invalid) as root, self.assertRaisesRegex(
+                    InputError, "Поврежденный.yaml: требуются Имя и ВидЭлемента"):
+                analyze(root)
+
     def test_service_yaml_errors_keep_source_path_and_line(self):
         with tempfile.TemporaryDirectory() as directory:
             sources = dict(SOURCES)

@@ -11,10 +11,15 @@ ALIASES = {"scale": "ДлинаДробнойЧасти", "precision": "Длин
            "periodicity": "Периодичность"}
 
 
-def load_assignment(source):
+def load_assignment(source, *, max_yaml_bytes=4 * 1024 * 1024):
     source = Path(source)
     main = source / "assignment.yaml" if source.is_dir() else source
-    config = load_yaml(main)
+    config = load_yaml(main, max_bytes=max_yaml_bytes)
+    if 'profile' in config:
+        from .profiles import normalize_profile
+        if source.is_dir() and any((source/d).exists() for d in ('structural','runtime')):
+            raise InputError('Встроенный профиль не принимает дополнительные проверки')
+        return normalize_profile(config)
     checks = list(config.get("checks", []))
     if 'formRequirements' in config:
         from .form_requirements import expand_requirements
@@ -23,12 +28,12 @@ def load_assignment(source):
             contracts = [contracts]
         for contract in contracts:
             if isinstance(contract, str):
-                contract = load_yaml(main.parent / contract)
+                contract = load_yaml(main.parent / contract, max_bytes=max_yaml_bytes)
             checks.extend(expand_requirements(contract))
     if source.is_dir():
         for directory in ("structural", "runtime"):
             for path in sorted((source / directory).glob("*.yaml")):
-                data = load_yaml(path)
+                data = load_yaml(path, max_bytes=max_yaml_bytes)
                 checks.extend(data.get("checks", [data] if "id" in data else []))
     seen = set()
     for check in checks:
@@ -68,4 +73,20 @@ def load_assignment(source):
                 raise InputError(str(exc)) from exc
     if not checks:
         raise InputError("Задание не содержит проверок")
-    return {"name": config.get("name", main.parent.name), "checks": checks}
+    result = {"name": config.get("name", main.parent.name), "checks": checks}
+    if 'executionOptions' in config:
+        from .assignment_queries import normalize_options
+        result['executionOptions'] = normalize_options(config['executionOptions'])
+    runtime_ids = {check['id'] for check in checks if check['type'] == 'runtime'}
+    for check in checks:
+        if check['type'] != 'assertion':
+            continue
+        from .assignment_queries import validate_assertion
+        if 'execution' in check:
+            raise InputError('execution формирует движок проверки')
+        validate_assertion(check.get('assertion'))
+        for clause in check['assertion']['all']:
+            query = clause['query']
+            if query['from'] == 'execution' and query['criterion'] not in runtime_ids:
+                raise InputError('Запрос execution должен ссылаться на runtime-критерий')
+    return result

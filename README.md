@@ -33,7 +33,10 @@ Script executor, а не переводится в Python.
 параллельностью подготовлен отдельно: [архитектура](docs/autocheck-microservice-design.md),
 [API](docs/autocheck-openapi.yaml), [Docker Compose](deploy/autocheck/README.md),
 [отчёт о проверке проекта](docs/autocheck-design-validation.md).
-Это проект для согласования; сервисное приложение и образ пока не реализованы.
+Сервис реализован в `element_check_service`: API, PostgreSQL, worker, outbox/notifier,
+Docker supervisor и Compose. Инструкция сборки и запуска —
+[deploy/autocheck/README.md](deploy/autocheck/README.md); результаты проверок —
+[docs/autocheck-implementation.md](docs/autocheck-implementation.md).
 
 E07/E08 реализованы: [общая транзакция interface/panel и сортировка union-полей отчётов](docs/engine-extensions-e07-e08.md).
 E09–E11 реализованы: [подробные ОстаткиИОбороты, подчинённый РС 10.0 и вычисляемые условия навигации](docs/engine-extensions-e09-e11.md).

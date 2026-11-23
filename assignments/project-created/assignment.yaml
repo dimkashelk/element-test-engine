@@ -1,0 +1,10 @@
+name: Начало работы — проект создан
+checks:
+  - id: project_created
+    type: module
+    module: Проект
+    namespace: ""
+    points: 1
+    failureExplanation: >-
+      В выгрузке должен присутствовать корневой модуль Проект.xbsl.
+      Создайте проект в 1С:Элемент и выгрузите его в файл .xdump.
